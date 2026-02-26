@@ -31,7 +31,12 @@ import {
   formatQuantity,
 } from "@/app/services/formatService";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
-import { evaluateData, noData, notEmpty, safeParse } from "@/app/utils/data-utils";
+import {
+  evaluateData,
+  noData,
+  notEmpty,
+  safeParse,
+} from "@/app/utils/data-utils";
 import {
   evaluateAll,
   evaluateAllReferences,
@@ -224,11 +229,10 @@ const evaluateAdministeredMedication = (
  * @returns - A formatted table React element representing the list of Medications, or undefined if the array is empty.
  */
 export const returnMedicationsTable = (fhirBundle: Bundle) => {
-  const medicationStatements =
-    evaluateAllReferences<MedicationStatement>(
-      fhirBundle,
-      fhirPathMappings.medicationStatementRefs
-    );
+  const medicationStatements = evaluateAllReferences<MedicationStatement>(
+    fhirBundle,
+    fhirPathMappings.medicationStatementRefs,
+  );
   if (medicationStatements.length === 0) return;
 
   sortResourcesByDate(medicationStatements, fhirPathMappings.effectiveX);
@@ -240,32 +244,40 @@ export const returnMedicationsTable = (fhirBundle: Bundle) => {
       items={medicationStatements.map((medicationStatement) => {
         const medRef = evaluateOne(
           medicationStatement,
-          fhirPathMappings.medicationStatementMedicationRef
+          fhirPathMappings.medicationStatementMedicationRef,
         );
         const medication = evaluateReference(fhirBundle, medRef);
         const medRequestRef = evaluateOne(
           medicationStatement,
-          fhirPathMappings.medicationStatementMedicationRequestRef
+          fhirPathMappings.medicationStatementMedicationRequestRef,
         );
         const medicationRequest = evaluateReference(fhirBundle, medRequestRef);
-        const medDosage = evaluateOne(medicationStatement, fhirPathMappings.dosage);
+        const medDosage = evaluateOne(
+          medicationStatement,
+          fhirPathMappings.dosage,
+        );
 
-        const medicationName = toSentenceCase(evaluateValue(medication, fhirPathMappings.code));
+        const medicationName = toSentenceCase(
+          evaluateValue(medication, fhirPathMappings.code),
+        );
         const medicationStatus = toSentenceCase(
-          evaluateValue(medicationStatement, "status")
+          evaluateValue(medicationStatement, "status"),
         );
         const medDosageTimingVal = evaluateOne(
           medDosage,
-          fhirPathMappings.medicationStatementDosageTimingPeriod
+          fhirPathMappings.medicationStatementDosageTimingPeriod,
         );
-        const medDosageTimingUnit = evaluateValue(medDosage, "timing.repeat.periodUnit");
+        const medDosageTimingUnit = evaluateValue(
+          medDosage,
+          "timing.repeat.periodUnit",
+        );
 
         const content = [
           {
             title: "Date/Time",
             value:
               formatDateTime(
-                evaluateValue(medicationStatement, fhirPathMappings.effectiveX)
+                evaluateValue(medicationStatement, fhirPathMappings.effectiveX),
               ) || noData,
           },
           {
@@ -278,9 +290,7 @@ export const returnMedicationsTable = (fhirBundle: Bundle) => {
           },
           {
             title: "Medication Instructions",
-            value:
-              evaluateValue(medDosage, "text") ||
-              noData,
+            value: evaluateValue(medDosage, "text") || noData,
           },
           {
             title: "Dosage Route",
@@ -301,7 +311,7 @@ export const returnMedicationsTable = (fhirBundle: Bundle) => {
             value:
               evaluateValue(
                 medicationRequest,
-                "dispenseRequest.numberOfRepeatsAllowed"
+                "dispenseRequest.numberOfRepeatsAllowed",
               ) || noData,
           },
           {
@@ -333,9 +343,7 @@ export const returnMedicationsTable = (fhirBundle: Bundle) => {
           title: (
             <div className="display-flex flex-row flex-no-wrap flex-justify">
               <span>{medicationName}</span>
-              <span className="font-size-xs text-base">
-                {medicationStatus}
-              </span>
+              <span className="font-size-xs text-base">{medicationStatus}</span>
             </div>
           ),
           expanded: false,
