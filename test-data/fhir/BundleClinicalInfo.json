@@ -49,6 +49,29 @@
             ]
           },
           {
+            "id": "f9d2029b-90dc-4e96-af97-0fbca8033df8",
+            "title": "Medications",
+            "text": {
+              "status": "generated",
+              "div": "<div></div>"
+            },
+            "code": {
+              "coding": [
+                {
+                  "code": "10160-0",
+                  "system": "http://loinc.org",
+                  "display": "History of Medication use Narrative"
+                }
+              ]
+            },
+            "mode": "snapshot",
+            "entry": [
+              {
+                "reference": "MedicationStatement/af5bd386-47c1-43ba-ba13-457b1c1dca64"
+              }
+            ]
+          },
+          {
             "id": "eb08daad-1e00-4280-4846-4276acb00888",
             "title": "Plan of Treatment",
             "text": {
@@ -580,6 +603,114 @@
         },
         "meta": {
           "source": ["ecr"]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:af5bd386-47c1-43ba-ba13-457b1c1dca64",
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "af5bd386-47c1-43ba-ba13-457b1c1dca64",
+        "identifier": [
+          {
+            "system": "urn:oid:identifier-system",
+            "value": "identifier-value"
+          }
+        ],
+        "status": "active",
+        "note": {
+          "text": "Free text"
+        },
+        "effectivePeriod": {
+          "start": "2026-02-25"
+        },
+        "dosage": [
+          {
+            "text": "Medication instructions",
+            "timing": {
+              "repeat": {
+                "period": 1,
+                "periodUnit": "d"
+              }
+            },
+            "route": {
+              "coding": [
+                {
+                  "code": "C38288",
+                  "system": "urn:oid:2.16.840.1.113883.3.26.1.1",
+                  "display": "oral"
+                }
+              ],
+              "text": "oral"
+            },
+            "doseAndRate": [
+              {
+                "doseQuantity": {
+                  "value": 5,
+                  "unit": "mg"
+                }
+              }
+            ]
+          }
+        ],
+        "dateAsserted": "2025-02-25",
+        "medicationReference": {
+          "reference": "Medication/bcf6e934-1896-466a-aa2b-7ea2c6e7b236"
+        },
+        "basedOn": [
+          {
+            "reference": "MedicationRequest/70db9eb2-6bd3-47d6-bb96-24c520844250"
+          }
+        ],
+        "meta": {
+          "source": "ecr"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:bcf6e934-1896-466a-aa2b-7ea2c6e7b236",
+      "resource": {
+        "resourceType": "Medication",
+        "id": "bcf6e934-1896-466a-aa2b-7ea2c6e7b236",
+        "code": {
+          "coding": [
+            {
+              "code": "314076",
+              "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+              "display": "Lisinopril 10 MG Oral Tablet"
+            }
+          ]
+        },
+        "status": "active",
+        "meta": {
+          "source": "ecr"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:70db9eb2-6bd3-47d6-bb96-24c520844250",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "70db9eb2-6bd3-47d6-bb96-24c520844250",
+        "identifier": [
+          {
+            "system": "urn:oid:1.2.840.114350.1.13.478.2.7.2.798268",
+            "value": "554238844"
+          }
+        ],
+        "status": "completed",
+        "intent": "order",
+        "dispenseRequest": {
+          "quantity": {
+            "value": 50,
+            "unit": "mg"
+          }
+        },
+        "medicationReference": {
+          "reference": "Medication/bcf6e934-1896-466a-aa2b-7ea2c6e7b236"
+        },
+        "meta": {
+          "source": "ecr"
         }
       }
     },
