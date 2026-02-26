@@ -175,10 +175,10 @@ describe("UnavailableInfo", () => {
         ]}
         immunizationsUnavailableData={immunizationsUnavailableData}
         vitalUnavailableData={vitalUnavailableData}
-        treatmentData={treatmentUnavailableData}
-        clinicalNotesData={clinicalNotesData}
+        treatmentUnavailableData={treatmentUnavailableData}
+        clinicalNotesUnavailableData={clinicalNotesData}
         ecrMetadataUnavailableData={ecrMetadata}
-        eicrAuthorDetails={ecrAuthorDetails}
+        eicrAuthorUnavailableData={ecrAuthorDetails}
       />,
     ).container;
   });

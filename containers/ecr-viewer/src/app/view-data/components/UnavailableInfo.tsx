@@ -17,11 +17,11 @@ interface UnavailableInfoProps {
   providerUnavailableData: DisplayDataProps[];
   symptomsProblemsUnavailableData: DisplayDataProps[];
   vitalUnavailableData: DisplayDataProps[];
-  treatmentData: DisplayDataProps[];
-  clinicalNotesData: DisplayDataProps[];
+  treatmentUnavailableData: DisplayDataProps[];
+  clinicalNotesUnavailableData: DisplayDataProps[];
   immunizationsUnavailableData: DisplayDataProps[];
   ecrMetadataUnavailableData: DisplayDataProps[];
-  eicrAuthorDetails: DisplayDataProps[][];
+  eicrAuthorUnavailableData: DisplayDataProps[][];
 }
 
 /**
@@ -37,11 +37,10 @@ interface UnavailableInfoProps {
  * @param props.symptomsProblemsUnavailableData The unavailable symptoms and problems data
  * @param props.immunizationsUnavailableData The unavailable immunizations data
  * @param props.vitalUnavailableData The unavailable vital data
- * @param props.treatmentData The unavailable treatment data
- * @param props.clinicalNotesData The unavailable clinical notes
- * @param props.medicationsUnavailableData The unavailable medication data
+ * @param props.treatmentUnavailableData The unavailable treatment data
+ * @param props.clinicalNotesUnavailableData The unavailable clinical notes
  * @param props.ecrMetadataUnavailableData The unavailable ecr meta data
- * @param props.eicrAuthorDetails The unavailable eicrAuthorDetails
+ * @param props.eicrAuthorUnavailableData The unavailable eicrAuthor details
  * @returns The JSX element representing all unavailable data.
  */
 const UnavailableInfo: React.FC<UnavailableInfoProps> = ({
@@ -55,10 +54,10 @@ const UnavailableInfo: React.FC<UnavailableInfoProps> = ({
   symptomsProblemsUnavailableData,
   immunizationsUnavailableData,
   vitalUnavailableData,
-  treatmentData,
-  clinicalNotesData,
+  treatmentUnavailableData,
+  clinicalNotesUnavailableData,
   ecrMetadataUnavailableData,
-  eicrAuthorDetails,
+  eicrAuthorUnavailableData,
 }) => {
   return (
     <AccordionSection>
@@ -83,7 +82,10 @@ const UnavailableInfo: React.FC<UnavailableInfoProps> = ({
         title="Facility Details"
         data={facilityUnavailableData}
       />
-      <UnavailableSection title="Clinical Notes" data={clinicalNotesData} />
+      <UnavailableSection
+        title="Clinical Notes"
+        data={clinicalNotesUnavailableData}
+      />
       <UnavailableSection
         title="Provider Details"
         data={providerUnavailableData}
@@ -100,12 +102,15 @@ const UnavailableInfo: React.FC<UnavailableInfoProps> = ({
         title="Immunizations"
         data={immunizationsUnavailableData}
       />
-      <UnavailableSection title="Treatment Details" data={treatmentData} />
+      <UnavailableSection
+        title="Treatment Details"
+        data={treatmentUnavailableData}
+      />
       <UnavailableSection
         title="eCR Metadata"
         data={ecrMetadataUnavailableData}
       />
-      {eicrAuthorDetails?.map((authorDetails, index) => (
+      {eicrAuthorUnavailableData?.map((authorDetails, index) => (
         <UnavailableSection
           key={index}
           title="eICR Author Details for Practitioner"

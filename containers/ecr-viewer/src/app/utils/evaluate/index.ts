@@ -11,9 +11,7 @@ import {
   Period,
   Quantity,
   Reference,
-  Resource,
-  Timing,
-  TimingRepeat,
+  Resource
 } from "fhir/r4";
 import { Context, evaluate as fhirPathEvaluate } from "fhirpath";
 import fhirpath_r4_model from "fhirpath/fhir-context/r4";
