@@ -114,6 +114,12 @@ describe("UnavailableInfo", () => {
         value: "",
       },
     ];
+    const emergencyOutbreakUnavailableData = [
+      {
+        title: "Emergency Outbreak Info",
+        value: "",
+      }
+    ]
     const immunizationsUnavailableData = [
       {
         title: "Immunization History",
@@ -172,6 +178,7 @@ describe("UnavailableInfo", () => {
         symptomsProblemsUnavailableData={[
           ...reasonForVisitUnavailableData,
           ...activeProblemsUnavailableData,
+          ...emergencyOutbreakUnavailableData,
         ]}
         immunizationsUnavailableData={immunizationsUnavailableData}
         vitalUnavailableData={vitalUnavailableData}
@@ -179,7 +186,7 @@ describe("UnavailableInfo", () => {
         clinicalNotesData={clinicalNotesData}
         ecrMetadataUnavailableData={ecrMetadata}
         eicrAuthorDetails={ecrAuthorDetails}
-      />,
+      />
     ).container;
   });
   it("should match snapshot", () => {
