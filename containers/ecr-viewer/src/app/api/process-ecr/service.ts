@@ -13,6 +13,7 @@ import {
   BundleMetadata,
 } from "@/app/api/save-fhir-data/types";
 import { dbDialect, dbSchema } from "@/app/data/metadataDb/utils/db-config";
+import { getEcrIdFromIdentifier, resolveEcrId } from "@/app/utils/ecrid-utils";
 
 interface OrchestrationRawResponse {
   message: string;
@@ -143,11 +144,17 @@ const saveToSource = (
   bundle: Bundle,
   metadata: BundleMetadata | BundleExtendedMetadata | undefined,
 ) => {
-  const ecrId = bundle.id!;
-  if (metadata) {
-    return saveWithMetadata(bundle, ecrId, process.env.SOURCE, metadata);
+  const identifier = bundle.identifier;
+
+  if (identifier) {
+    const ecrId = getEcrIdFromIdentifier(identifier);
+    if (metadata) {
+      return saveWithMetadata(bundle, ecrId, process.env.SOURCE, metadata);
+    } else {
+      return saveToStorage(bundle, ecrId, process.env.SOURCE, "fhir");
+    }
   } else {
-    return saveToStorage(bundle, ecrId, process.env.SOURCE, "fhir");
+    throw new Error("eCR bundle contains no identifier.");
   }
 };
 
@@ -188,6 +195,7 @@ export const orchestrationRequest = async (
       status: 500,
     };
   }
+
   const res = await saveToSource(
     orchestrationResp.ecr,
     orchestrationResp.metadata,
@@ -201,7 +209,7 @@ export const orchestrationRequest = async (
 };
 
 /**
- * Save the original uploaded XML to storage
+ * Reaches into the eCR xml to grab root and extension ID values and returns an eCR ID string
  * @param body - Parsed body of the request
  * @returns The eCR ID as a string
  */
@@ -233,27 +241,30 @@ export const getEcrIdFromXml = async (body: RequestBody): Promise<string> => {
   // Namespace-aware selector for CDA
   const select = xpath.useNamespaces({ cda: "urn:hl7-org:v3" });
 
-  let id =
-    (select(
-      "string(/cda:ClinicalDocument/cda:id/@extension)",
-      doc,
-    ) as string) ||
-    (select("string(/cda:ClinicalDocument/cda:id/@root)", doc) as string);
+  let root = select(
+    "string(/cda:ClinicalDocument/cda:id/@root)",
+    doc,
+  ) as string;
 
   // Fallback if the document lacks the CDA namespace declaration
-  if (!id) {
-    id =
-      (xpath.select(
-        "string(/ClinicalDocument/id/@extension)",
-        doc,
-      ) as string) ||
-      (xpath.select("string(/ClinicalDocument/id/@root)", doc) as string);
+  if (!root) {
+    root = xpath.select("string(/ClinicalDocument/id/@root)", doc) as string;
   }
 
-  if (!id) {
-    throw new Error("Missing ClinicalDocument id (@extension or @root).");
+  let extension = select(
+    "string(/cda:ClinicalDocument/cda:id/@extension)",
+    doc,
+  ) as string;
+
+  // Fallback if the document lacks the CDA namespace declaration
+  if (!extension) {
+    extension = xpath.select(
+      "string(/ClinicalDocument/id/@extension)",
+      doc,
+    ) as string;
   }
-  return id;
+
+  return resolveEcrId(root, extension);
 };
 
 /**
