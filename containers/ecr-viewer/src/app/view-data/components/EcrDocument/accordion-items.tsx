@@ -204,7 +204,7 @@ export const getEcrDocumentAccordionItems = (
               symptomsProblemsUnavailableData={[
                 ...clinicalData.reasonForVisitDetails.unavailableData,
                 ...clinicalData.activeProblemsDetails.unavailableData,
-                ...clinicalData.emergencyOutbreakInfo.unavailableData
+                ...clinicalData.emergencyOutbreakInfo.unavailableData,
               ]}
               providerUnavailableData={providerData.unavailableData}
               vitalUnavailableData={clinicalData.vitalData.unavailableData}

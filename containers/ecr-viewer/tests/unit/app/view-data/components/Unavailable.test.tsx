@@ -118,8 +118,8 @@ describe("UnavailableInfo", () => {
       {
         title: "Emergency Outbreak Info",
         value: "",
-      }
-    ]
+      },
+    ];
     const immunizationsUnavailableData = [
       {
         title: "Immunization History",
@@ -186,7 +186,7 @@ describe("UnavailableInfo", () => {
         clinicalNotesData={clinicalNotesData}
         ecrMetadataUnavailableData={ecrMetadata}
         eicrAuthorDetails={ecrAuthorDetails}
-      />
+      />,
     ).container;
   });
   it("should match snapshot", () => {
