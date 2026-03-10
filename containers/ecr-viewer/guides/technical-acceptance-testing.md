@@ -138,13 +138,13 @@ In order to apply migrations, you will need the migration secret. This can be se
 
 ```powershell
 $boundary = [guid]::NewGuid().ToString()
+$FormContentType = "multipart/form-data; boundary=$boundary"
 $body = (
     "--$boundary",
     "Content-Disposition: form-data; name=`"migration_secret`"",
     "Content-Type: application/text",
     "",
     "{{ migration-secret }}",
-    "--$boundary--"
     "--$boundary",
     "Content-Disposition: form-data; name=`"init_admin_email`"",
     "Content-Type: application/text",
@@ -159,7 +159,7 @@ $headers = @{
 }
 
 Invoke-RestMethod -Uri "{{ dibbs-url }}/ecr-viewer/api/migrate-db" `
--Method Post -Headers $headers -Body $body
+-Method Post -ContentType $FormContentType -Headers $headers -Body $body
 ```
 
 </details>
