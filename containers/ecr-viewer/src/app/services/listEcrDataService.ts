@@ -470,10 +470,10 @@ export const generateSortStatement = (
     return [
       `first_name ${direction}`,
       `last_name ${direction}`,
-    ] as OrderByExpression<Core, "ecr_data", {}>[];
+    ] as unknown as OrderByExpression<Core, "ecr_data", {}>[];
   }
   // Default case for other columns
-  return [`${columnName} ${direction}`] as OrderByExpression<
+  return [`${columnName} ${direction}`] as unknown as OrderByExpression<
     Core,
     "ecr_data",
     {}
