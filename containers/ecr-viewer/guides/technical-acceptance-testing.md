@@ -154,7 +154,6 @@ $body = (
 ) -join "`r`n"
 
 $headers = @{
-    "Content-Type" = "multipart/form-data; boundary=$boundary",
     "Authorization" = "Bearer {{ token }}"
 }
 
