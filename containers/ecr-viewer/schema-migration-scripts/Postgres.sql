@@ -1,25 +1,18 @@
 BEGIN;
 
-CREATE TABLE ecr_viewer.schema_migration
-AS
-SELECT * FROM ecr_viewer_schema_migration;
+CREATE TABLE IF NOT EXISTS ecr_viewer.schema_migration
+(LIKE public.ecr_viewer_schema_migration INCLUDING ALL);
 
-ALTER TABLE ecr_viewer.schema_migration
-    ADD CONSTRAINT schema_migration_pkey PRIMARY KEY (name),
-    ALTER COLUMN name SET NOT NULL,
-    ALTER COLUMN timestamp SET NOT NULL;
+INSERT INTO ecr_viewer.schema_migration
+SELECT * FROM public.ecr_viewer_schema_migration;
 
-DROP TABLE ecr_viewer_schema_migration;
+CREATE TABLE IF NOT EXISTS ecr_viewer.schema_migration_lock
+(LIKE public.ecr_viewer_schema_migration_lock INCLUDING ALL);
 
-CREATE TABLE ecr_viewer.schema_migration_lock
-AS
-SELECT * FROM ecr_viewer_schema_migration_lock;
+INSERT INTO ecr_viewer.schema_migration_lock
+SELECT * FROM public.ecr_viewer_schema_migration_lock;
 
-ALTER TABLE ecr_viewer.schema_migration_lock
-    ADD CONSTRAINT schema_migration_lock_pkey PRIMARY KEY (id),
-    ALTER COLUMN id SET NOT NULL,
-    ALTER COLUMN is_locked SET NOT NULL;
-
-DROP TABLE ecr_viewer_schema_migration_lock;
+DROP TABLE IF EXISTS public.ecr_viewer_schema_migration;
+DROP TABLE IF EXISTS public.ecr_viewer_schema_migration_lock;
 
 COMMIT;
