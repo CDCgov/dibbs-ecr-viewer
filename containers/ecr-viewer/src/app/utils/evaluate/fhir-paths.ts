@@ -7,10 +7,12 @@ import {
   Condition,
   ContactPoint,
   DiagnosticReport,
+  Dosage,
   EncounterParticipant,
   Extension,
   HumanName,
   Immunization,
+  MedicationStatement,
   Observation,
   ObservationReferenceRange,
   Organization,
@@ -128,6 +130,10 @@ export type PathTypes = {
   medicationDose: ValueX;
   medicationAdministrationPerformerRef: Reference;
   medicationAdministrationReactionRef: Reference;
+  medicationStatementRefs: Reference;
+  medicationStatementMedicationRef: Reference;
+  medicationStatementMedicationRequestRef: Reference;
+  medicationStatementDosageTimingPeriod: number;
   procedures: Procedure;
   procedureHistoryRefs: Reference;
   procedureDate: TimeX;
@@ -176,6 +182,7 @@ export type PathTypes = {
   method: CodeableConcept;
   name: string;
   noteText: string;
+  dosage: Dosage;
   valueX: ValueX;
   occurrenceX: TimeX;
 };
@@ -558,6 +565,24 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   medicationDose: { type: "ValueX", path: "dosage.dose.value" },
 
+  // === Medications ===
+  medicationStatementRefs: {
+    type: "Reference",
+    path: "entry.resource.section.where(code.coding.code = '10160-0').entry.where(reference.startsWith('MedicationStatement/'))",
+  },
+  medicationStatementMedicationRef: {
+    type: "Reference",
+    path: "MedicationStatement.medicationReference",
+  },
+  medicationStatementMedicationRequestRef: {
+    type: "Reference",
+    path: "MedicationStatement.basedOn",
+  },
+  medicationStatementDosageTimingPeriod: {
+    type: "number",
+    path: "timing.repeat.period",
+  },
+
   // === Procedure ===
   procedures: {
     type: "Procedure",
@@ -749,6 +774,11 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "name",
   },
+  dosage: {
+    type: "Dosage",
+    path: "dosage",
+  },
+
   /**
    * A FHIR path that is only the name of a choice element, e.g. `value` for the field `value[x]`, will only return
    * the value of the choice element if it is on a resource, e.g. `Observation`. Otherwise it will return an empty
