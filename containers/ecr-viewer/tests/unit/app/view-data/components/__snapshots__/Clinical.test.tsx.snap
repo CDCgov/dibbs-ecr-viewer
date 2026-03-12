@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Snapshot test for Clinical Notes should match snapshot for non table notes 1`] = `
+exports[`Snapshot tests Snapshot test for Clinical Notes should match snapshot for non table notes 1`] = `
 <div>
   <div
     class="margin-top-0"
@@ -52,7 +52,7 @@ exports[`Snapshot test for Clinical Notes should match snapshot for non table no
 </div>
 `;
 
-exports[`Snapshot test for Clinical Notes should match snapshot for table notes 1`] = `
+exports[`Snapshot tests Snapshot test for Clinical Notes should match snapshot for table notes 1`] = `
 <div>
   <div
     class="margin-top-0"
@@ -191,7 +191,7 @@ exports[`Snapshot test for Clinical Notes should match snapshot for table notes 
 </div>
 `;
 
-exports[`Snapshot test for Procedures (Treatment Details) should match snapshot 1`] = `
+exports[`Snapshot tests Snapshot test for Procedures (Treatment Details) should match snapshot 1`] = `
 <div>
   <div
     class="margin-top-0"
@@ -266,12 +266,12 @@ exports[`Snapshot test for Procedures (Treatment Details) should match snapshot 
                           <td
                             class="text-top text-pre-line"
                           >
-                            HC INFECTIOUS DISEASE PATHOGEN SPECIFIC RNA SARS-COV-2/INF A&B/RSV UPPER RESP SPEC DETECTED OR NOT
+                            HC HETEROPHILE ANTIBODIES SCREENING
                           </td>
                           <td
                             class="text-top text-pre-line"
                           >
-                            06/24/2022 12:50 PM EDT
+                            02/04/2025 12:53 PM EST
                           </td>
                           <td
                             class="text-top text-pre-line"
@@ -281,47 +281,11 @@ exports[`Snapshot test for Procedures (Treatment Details) should match snapshot 
                           <td
                             class="text-top text-pre-line"
                           >
-                            <button
-                              aria-controls="hidden-comment-r:id"
-                              aria-expanded="false"
-                              class="usa-button usa-button--unstyled"
-                              data-test-id="comment-button"
-                              data-testid="button"
-                              type="button"
+                            <span
+                              class="text-italic text-base"
                             >
-                              View
-                               
-                              details
-                            </button>
-                          </td>
-                        </tr>
-                        <tr
-                          hidden=""
-                          id="hidden-comment-r:id"
-                        >
-                          <td
-                            class="p-list"
-                            colspan="4"
-                          >
-                            <div
-                              class="border-top border-base-lighter margin-top-neg-105 margin-bottom-1"
-                            />
-                            <div>
-                              <div
-                                class="grid-row"
-                              >
-                                <div
-                                  class="data-title padding-right-1"
-                                >
-                                  Reason
-                                </div>
-                                <div
-                                  class="grid-col maxw7 text-pre-line p-list"
-                                >
-                                  Struck by nonvenomous lizards, sequela
-                                </div>
-                              </div>
-                            </div>
+                              No data
+                            </span>
                           </td>
                         </tr>
                         <tr>
@@ -618,6 +582,986 @@ Work Fax: 555-555-3333
                 <div
                   class="section__line_gray"
                 />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Snapshot tests Snapshot tests for Clinical Info components should match snapshot for all Clinical Info components 1`] = `
+<div>
+  <div
+    class="margin-top-0"
+  >
+    <div
+      class="padding-bottom-3"
+    >
+      <div
+        class="usa-summary-box__body"
+      >
+        <div
+          class="gutter-3"
+        >
+          <h4
+            class="usa-summary-box__heading padding-y-105"
+            id="symptoms-and-problems"
+          >
+            Symptoms and Problems
+          </h4>
+          <div
+            class="usa-summary-box__text"
+          >
+            <div
+              data-testid="reason-for-visit"
+            >
+              <div>
+                <div
+                  class="grid-row"
+                >
+                  <div
+                    class="data-title padding-right-1"
+                  >
+                    Reason for Visit
+                  </div>
+                  <div
+                    class="grid-col maxw7 text-pre-line p-list"
+                  >
+                    <div>
+                      Abdominal Cramping
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="section__line_gray"
+                />
+              </div>
+            </div>
+            <div
+              data-testid="active-problems"
+            >
+              <div>
+                <div>
+                  <div
+                    class="grid-col-auto text-pre-line table-clinical-problems"
+                  >
+                    <table
+                      class="usa-table usa-table--borderless width-full table-caption-margin margin-y-0 border-top border-left border-right"
+                      data-testid="table"
+                    >
+                      <caption>
+                        Problems List
+                      </caption>
+                      <thead>
+                        <tr>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Active Problem
+                          </th>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Status
+                          </th>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Onset Date/Time
+                          </th>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Onset Age
+                          </th>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Comments
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            Cleft hard palate
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            Recurrence
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            04/13/2021
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            <span
+                              class="text-italic text-base"
+                            >
+                              No data
+                            </span>
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            <span
+                              class="text-italic text-base"
+                            >
+                              No data
+                            </span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            Sprain of calcaneofibular ligament of right ankle
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            Active
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            08/02/2018
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            <span
+                              class="text-italic text-base"
+                            >
+                              No data
+                            </span>
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            <span
+                              class="text-italic text-base"
+                            >
+                              No data
+                            </span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              data-testid="emergency-outbreak-info"
+            >
+              <div>
+                <div
+                  class="grid-row"
+                >
+                  <div
+                    class="data-title padding-right-1"
+                  >
+                    Emergency Outbreak Info
+                  </div>
+                  <div
+                    class="grid-col maxw7 text-pre-line p-list"
+                  >
+                    Start: 11/01/2020
+Type: Employee desk distance from mail sorter
+Result: 2 m
+                  </div>
+                </div>
+                <div
+                  class="section__line_gray"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="gutter-3"
+        >
+          <h4
+            class="usa-summary-box__heading padding-y-105"
+            id="treatment-details"
+          >
+            Treatment Details
+          </h4>
+          <div
+            class="usa-summary-box__text"
+          >
+            <div
+              data-testid="treatment-details"
+            >
+              <div>
+                <div
+                  class="grid-row flex-column"
+                >
+                  <div
+                    class="data-title padding-right-1"
+                  >
+                    Procedures
+                  </div>
+                  <div
+                    class="grid-col width-full text-pre-line p-list"
+                  >
+                    <table
+                      class="usa-table usa-table--borderless width-full _fixed_1khz6_1 table-caption-margin margin-y-0 border-top border-left border-right"
+                      data-testid="table"
+                    >
+                      <thead>
+                        <tr>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Name
+                          </th>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Date/Time Performed
+                          </th>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Status
+                          </th>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Details
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            HC HETEROPHILE ANTIBODIES SCREENING
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            02/04/2025 12:53 PM EST
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            completed
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            <span
+                              class="text-italic text-base"
+                            >
+                              No data
+                            </span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div
+                  class="section__line_gray"
+                />
+              </div>
+              <div>
+                <div
+                  class="grid-row flex-column"
+                >
+                  <div
+                    class="data-title padding-right-1"
+                  >
+                    Plan of Treatment
+                  </div>
+                  <div
+                    class="grid-col width-full text-pre-line p-list"
+                  >
+                    <table
+                      class="usa-table usa-table--borderless width-full _fixed_1khz6_1 table-caption-margin border-top border-left border-right"
+                      data-testid="table"
+                    >
+                      <caption>
+                        Planned Activities & Appointments
+                      </caption>
+                      <thead>
+                        <tr>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Name
+                          </th>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Scheduled Time
+                          </th>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Type
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            <span
+                              class="text-italic text-base"
+                            >
+                              No data
+                            </span>
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            02/04/2024 4:08 PM EST
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            <span
+                              class="text-italic text-base"
+                            >
+                              No data
+                            </span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            Ammonia plas
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            02/04/2024 3:03 PM EST
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            <span
+                              class="text-italic text-base"
+                            >
+                              No data
+                            </span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div
+                  class="section__line_gray"
+                />
+              </div>
+              <div>
+                <div
+                  class="grid-row flex-column"
+                >
+                  <div
+                    class="data-title padding-right-1"
+                  >
+                    Administered Medications
+                  </div>
+                  <div
+                    class="grid-col width-full text-pre-line p-list"
+                  >
+                    <table
+                      class="usa-table usa-table--borderless width-full table-caption-margin margin-y-0 border-top border-left border-right"
+                      data-testid="table"
+                    >
+                      <thead>
+                        <tr>
+                          <th
+                            class="table-header bg-gray-5 minw-15"
+                            scope="col"
+                          >
+                            Medication Name
+                          </th>
+                          <th
+                            class="table-header bg-gray-5 minw-15"
+                            scope="col"
+                          >
+                            Medication Start Date/Time
+                          </th>
+                          <th
+                            class="table-header bg-gray-5 minw-15"
+                            scope="col"
+                          >
+                            Dose
+                          </th>
+                          <th
+                            class="table-header bg-gray-5 minw-15"
+                            scope="col"
+                          >
+                            Route
+                          </th>
+                          <th
+                            class="table-header bg-gray-5 minw-15"
+                            scope="col"
+                          >
+                            Therapeutic Response Observation
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <span
+                              class="text-italic text-base"
+                            >
+                              No data
+                            </span>
+                          </td>
+                          <td>
+                            02/01/2025 11:00 PM EST
+                          </td>
+                          <td>
+                            325 mg
+                          </td>
+                          <td>
+                            Oral
+                          </td>
+                          <td>
+                            <span
+                              class="text-italic text-base"
+                            >
+                              No data
+                            </span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div
+                  class="section__line_gray"
+                />
+              </div>
+              <div>
+                <div
+                  class="grid-row flex-column"
+                >
+                  <div
+                    class="data-title padding-right-1"
+                  >
+                    Medications
+                  </div>
+                  <div
+                    class="grid-col width-full text-pre-line p-list"
+                  >
+                    <div
+                      class="display-flex"
+                    >
+                      <div
+                        class="margin-left-auto padding-top-1"
+                      >
+                        <button
+                          class="usa-button usa-button--unstyled"
+                          data-testid="button"
+                          type="button"
+                        >
+                          Expand all 
+                          medications
+                        </button>
+                        <span
+                          class="vertical-line"
+                        />
+                        <button
+                          class="usa-button usa-button--unstyled"
+                          data-testid="button"
+                          type="button"
+                        >
+                          Collapse all 
+                          medications
+                        </button>
+                      </div>
+                    </div>
+                    <div
+                      class="usa-accordion accordion-rr"
+                      data-allow-multiple="true"
+                      data-testid="accordion"
+                    >
+                      <h5
+                        class="usa-accordion__heading side-nav-ignore"
+                      >
+                        <button
+                          aria-controls="af5bd386-47c1-43ba-ba13-457b1c1dca64-r:id-0"
+                          aria-expanded="false"
+                          class="usa-accordion__button"
+                          data-testid="accordionButton_af5bd386-47c1-43ba-ba13-457b1c1dca64-r:id-0"
+                          type="button"
+                        >
+                          <div
+                            class="display-flex flex-row flex-no-wrap flex-justify"
+                          >
+                            <span>
+                              Lisinopril 10 mg oral tablet
+                            </span>
+                            <span
+                              class="font-size-xs text-base"
+                            >
+                              Active
+                            </span>
+                          </div>
+                        </button>
+                      </h5>
+                      <div
+                        class="usa-accordion__content usa-prose side-nav-ignore"
+                        data-testid="accordionItem_af5bd386-47c1-43ba-ba13-457b1c1dca64-r:id-0"
+                        hidden=""
+                        id="af5bd386-47c1-43ba-ba13-457b1c1dca64-r:id-0"
+                      >
+                        <div>
+                          <div
+                            class="grid-row"
+                          >
+                            <div
+                              class="data-title padding-right-1"
+                            >
+                              Date/Time
+                            </div>
+                            <div
+                              class="grid-col maxw7 text-pre-line p-list"
+                            >
+                              02/25/2026 12:00 AM
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <div
+                            class="grid-row"
+                          >
+                            <div
+                              class="data-title padding-right-1"
+                            >
+                              Timing
+                            </div>
+                            <div
+                              class="grid-col maxw7 text-pre-line p-list"
+                            >
+                              1 d
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <div
+                            class="grid-row"
+                          >
+                            <div
+                              class="data-title padding-right-1"
+                            >
+                              Medication Instructions
+                            </div>
+                            <div
+                              class="grid-col maxw7 text-pre-line p-list"
+                            >
+                              Medication instructions
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <div
+                            class="grid-row"
+                          >
+                            <div
+                              class="data-title padding-right-1"
+                            >
+                              Dosage Route
+                            </div>
+                            <div
+                              class="grid-col maxw7 text-pre-line p-list"
+                            >
+                              Oral
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <div
+                            class="grid-row"
+                          >
+                            <div
+                              class="data-title padding-right-1"
+                            >
+                              Dose Quantity
+                            </div>
+                            <div
+                              class="grid-col maxw7 text-pre-line p-list"
+                            >
+                              5 mg
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <div
+                            class="grid-row"
+                          >
+                            <div
+                              class="data-title padding-right-1"
+                            >
+                              Rate Quantity
+                            </div>
+                            <div
+                              class="grid-col maxw7 text-pre-line p-list"
+                            >
+                              5 mg
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <div
+                            class="grid-row"
+                          >
+                            <div
+                              class="data-title padding-right-1"
+                            >
+                              Number of refills
+                            </div>
+                            <div
+                              class="grid-col maxw7 text-pre-line p-list"
+                            >
+                              <span
+                                class="text-italic text-base"
+                              >
+                                No data
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <div
+                            class="grid-row"
+                          >
+                            <div
+                              class="data-title padding-right-1"
+                            >
+                              Amount of medication to supply per dispense
+                            </div>
+                            <div
+                              class="grid-col maxw7 text-pre-line p-list"
+                            >
+                              50 mg
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <div
+                            class="grid-row"
+                          >
+                            <div
+                              class="data-title padding-right-1"
+                            >
+                              Text
+                            </div>
+                            <div
+                              class="grid-col maxw7 text-pre-line p-list"
+                            >
+                              Free text
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="section__line_gray"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="gutter-3"
+        >
+          <h4
+            class="usa-summary-box__heading padding-y-105"
+            id="immunizations"
+          >
+            Immunizations
+          </h4>
+          <div
+            class="usa-summary-box__text"
+          >
+            <div
+              class="immunization_table"
+              data-testid="immunization-history"
+            >
+              <div>
+                <div>
+                  <div
+                    class="grid-col-auto text-pre-line"
+                  >
+                    <table
+                      class="usa-table usa-table--borderless width-full _fixed_1khz6_1 table-caption-margin margin-y-0 border-top border-left border-right"
+                      data-testid="table"
+                    >
+                      <caption>
+                        Immunization History
+                      </caption>
+                      <thead>
+                        <tr>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Name
+                          </th>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Administration Dates
+                          </th>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Dose Number
+                          </th>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Manufacturer
+                          </th>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Lot Number
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            <span
+                              class="text-italic text-base"
+                            >
+                              No data
+                            </span>
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            04/04/2004
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            <span
+                              class="text-italic text-base"
+                            >
+                              No data
+                            </span>
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            <span
+                              class="text-italic text-base"
+                            >
+                              No data
+                            </span>
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            <span
+                              class="text-italic text-base"
+                            >
+                              No data
+                            </span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="gutter-3"
+        >
+          <h4
+            class="usa-summary-box__heading padding-y-105"
+            id="diagnostics-and-vital-signs"
+          >
+            Diagnostics and Vital Signs
+          </h4>
+          <div
+            class="usa-summary-box__text"
+          >
+            <div
+              data-testid="vital-signs"
+            >
+              <div>
+                <div>
+                  <div
+                    class="grid-col-auto text-pre-line"
+                  >
+                    <table
+                      class="usa-table usa-table--borderless width-full table-caption-margin margin-y-0 border-top border-left border-right"
+                      data-testid="table"
+                    >
+                      <caption>
+                        Vital Signs
+                      </caption>
+                      <thead>
+                        <tr>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Vital Reading
+                          </th>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Result
+                          </th>
+                          <th
+                            class="table-header"
+                            scope="col"
+                          >
+                            Date/Time
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            Weight
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            140 lb
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            02/04/2025 12:48 PM EST
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            Weight
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            63.5 kg
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            02/04/2025 12:48 PM EST
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            Bmi (body mass index)
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            20 kg/m2
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            02/04/2025 12:48 PM EST
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            Height
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            60 in
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            02/04/2025 12:48 PM EST
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            Height
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            152.4 cm
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            02/04/2025 12:48 PM EST
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
               </div>
             </div>
           </div>

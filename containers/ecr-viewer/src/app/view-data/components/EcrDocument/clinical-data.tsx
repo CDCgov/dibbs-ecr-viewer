@@ -2,15 +2,18 @@ import {
   Bundle,
   CareTeamParticipant,
   Device,
+  Dosage,
   Element,
   Location,
   Medication,
   MedicationAdministration,
   MedicationRequest,
+  MedicationStatement,
   Observation,
   Organization,
   Period,
   Practitioner,
+  Quantity,
   Reference,
   ServiceRequest,
 } from "fhir/r4";
@@ -28,7 +31,12 @@ import {
   formatQuantity,
 } from "@/app/services/formatService";
 import { formatTablesToJSON } from "@/app/services/htmlTableService";
-import { evaluateData, notEmpty, safeParse } from "@/app/utils/data-utils";
+import {
+  evaluateData,
+  noData,
+  notEmpty,
+  safeParse,
+} from "@/app/utils/data-utils";
 import {
   evaluateAll,
   evaluateAllReferences,
@@ -54,6 +62,8 @@ import {
   returnImmunizations,
   returnProblemsTable,
 } from "@/app/view-data/components/common";
+import { sortResourcesByDate } from "../../utils/fhir-data-utils";
+import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
 
 /**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.
@@ -123,6 +133,11 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
       ),
     },
     {
+      title: "Medications",
+      fullWidthContent: true,
+      value: returnMedicationsTable(fhirBundle),
+    },
+    {
       title: "Care Team",
       fullWidthContent: true,
       value: returnCareTeamTable(fhirBundle),
@@ -146,6 +161,7 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
       ),
     },
   ];
+
   return {
     clinicalNotes: evaluateData(clinicalNotes),
     reasonForVisitDetails: evaluateData(reasonForVisitData),
@@ -205,6 +221,139 @@ const evaluateAdministeredMedication = (
       therapeuticResponse: therapeuticResponseText,
     };
   });
+};
+
+/**
+ * Generates a formatted table representing the (History of) Medications.
+ * @param fhirBundle - The FHIR bundle
+ * @returns - A formatted table React element representing the list of Medications, or undefined if the array is empty.
+ */
+export const returnMedicationsTable = (fhirBundle: Bundle) => {
+  const medicationStatements = evaluateAllReferences<MedicationStatement>(
+    fhirBundle,
+    fhirPathMappings.medicationStatementRefs,
+  );
+  if (medicationStatements.length === 0) return;
+
+  sortResourcesByDate(medicationStatements, fhirPathMappings.effectiveX);
+
+  return (
+    <ExpandCollapseAccordion
+      className="accordion-rr"
+      descriptor="medications"
+      items={medicationStatements.map((medicationStatement) => {
+        const medRef = evaluateOne(
+          medicationStatement,
+          fhirPathMappings.medicationStatementMedicationRef,
+        );
+        const medication = evaluateReference(fhirBundle, medRef);
+        const medRequestRef = evaluateOne(
+          medicationStatement,
+          fhirPathMappings.medicationStatementMedicationRequestRef,
+        );
+        const medicationRequest = evaluateReference(fhirBundle, medRequestRef);
+        const medDosage = evaluateOne(
+          medicationStatement,
+          fhirPathMappings.dosage,
+        );
+
+        const medicationName = toSentenceCase(
+          evaluateValue(medication, fhirPathMappings.code),
+        );
+        const medicationStatus = toSentenceCase(
+          evaluateValue(medicationStatement, "status"),
+        );
+        const medDosageTimingVal = evaluateOne(
+          medDosage,
+          fhirPathMappings.medicationStatementDosageTimingPeriod,
+        );
+        const medDosageTimingUnit = evaluateValue(
+          medDosage,
+          "timing.repeat.periodUnit",
+        );
+
+        const content = [
+          {
+            title: "Date/Time",
+            value:
+              formatDateTime(
+                evaluateValue(medicationStatement, fhirPathMappings.effectiveX),
+              ) || noData,
+          },
+          {
+            title: "Timing",
+            value:
+              formatQuantity({
+                value: medDosageTimingVal,
+                unit: medDosageTimingUnit,
+              }) || noData,
+          },
+          {
+            title: "Medication Instructions",
+            value: evaluateValue(medDosage, "text") || noData,
+          },
+          {
+            title: "Dosage Route",
+            value: toSentenceCase(evaluateValue(medDosage, "route")) || noData,
+          },
+          {
+            title: "Dose Quantity",
+            value:
+              evaluateValue(medDosage, "doseAndRate.doseQuantity") || noData,
+          },
+          {
+            title: "Rate Quantity",
+            value:
+              evaluateValue(medDosage, "doseAndRate.doseQuantity") || noData,
+          },
+          {
+            title: "Number of refills",
+            value:
+              evaluateValue(
+                medicationRequest,
+                "dispenseRequest.numberOfRepeatsAllowed",
+              ) || noData,
+          },
+          {
+            title: "Amount of medication to supply per dispense",
+            value:
+              evaluateValue(medicationRequest, "dispenseRequest.quantity") ||
+              noData,
+          },
+          {
+            title: "Text",
+            value:
+              evaluateValue(medicationStatement, fhirPathMappings.noteText) ||
+              noData,
+          },
+        ];
+
+        const contentDataDisplay = content.map(({ title, value }, i) => (
+          <DataDisplay
+            key={`wi-${i}`}
+            item={{
+              title,
+              value,
+              dividerLine: false,
+            }}
+          />
+        ));
+
+        return {
+          title: (
+            <div className="display-flex flex-row flex-no-wrap flex-justify">
+              <span>{medicationName}</span>
+              <span className="font-size-xs text-base">{medicationStatus}</span>
+            </div>
+          ),
+          expanded: false,
+          content: contentDataDisplay,
+          id: medicationStatement.id || `${Math.random()}`,
+          headingLevel: "h5",
+        };
+      })}
+    />
+  );
 };
 
 type ModifiedCareTeamParticipant = Omit<
