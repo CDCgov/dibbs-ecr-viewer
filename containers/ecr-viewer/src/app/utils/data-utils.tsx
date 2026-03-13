@@ -52,7 +52,7 @@ export const isDataAvailable = (item: DisplayDataProps): Boolean => {
     "tobacco smoking consumption unknown",
     "do not know",
     "no history of present illness information available",
-    "no information available"
+    "no information available",
   ];
   const valStr = removeHtmlElements(`${item.value}`).trim().toLowerCase();
   return !unavailableTerms.some((t) => t === valStr);
