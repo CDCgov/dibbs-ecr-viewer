@@ -45,15 +45,16 @@ export const isDataAvailable = (item: DisplayDataProps): Boolean => {
   )
     return false;
   const unavailableTerms = [
-    "Not on file",
-    "Not on file documented in this encounter",
-    "Unknown",
-    "Unknown if ever smoked",
-    "Tobacco smoking consumption unknown",
-    "Do not know",
-    "No history of present illness information available",
+    "not on file",
+    "not on file documented in this encounter",
+    "unknown",
+    "unknown if ever smoked",
+    "tobacco smoking consumption unknown",
+    "do not know",
+    "no history of present illness information available",
+    "no information available"
   ];
-  const valStr = removeHtmlElements(`${item.value}`).trim();
+  const valStr = removeHtmlElements(`${item.value}`).trim().toLowerCase();
   return !unavailableTerms.some((t) => t === valStr);
 };
 
