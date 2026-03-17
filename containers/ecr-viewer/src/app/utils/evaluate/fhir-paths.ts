@@ -159,7 +159,6 @@ export type PathTypes = {
   observationDeviceReference: Reference;
   observationOrganismMethod: ValueX;
   observationResultStatus: string;
-  observationMember: Reference;
   observationDerivedFrom: Reference;
   labReportInterpretation: ValueX;
   observationInterpretation: Coding;
@@ -168,7 +167,7 @@ export type PathTypes = {
   patientTravelHistory: Observation;
   travelHistoryLocation: string;
   travelHistoryPurpose: ValueX;
-  travelHistoryMember: Reference;
+  hasMember: Reference;
   exposureObservations: Observation;
   exposureAgent: ValueX;
   exposureAddress: ValueX;
@@ -335,10 +334,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   historyOfSocialFunction: {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8689-2'))",
-  },
-  observationMember: {
-    type: "Reference",
-    path: "hasMember",
   },
   observationDerivedFrom: {
     type: "Reference",
@@ -713,7 +708,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "ValueX",
     path: "component.where(code.coding.code = '280147009').value",
   },
-  travelHistoryMember: {
+  hasMember: {
     type: "Reference",
     path: "hasMember",
   },

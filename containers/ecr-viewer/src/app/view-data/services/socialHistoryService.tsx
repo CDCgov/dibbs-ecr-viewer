@@ -59,10 +59,7 @@ const evaluateTravelHistoryDetails = (
   fhirBundle: Bundle,
   travelObs: Element,
 ) => {
-  const memberRefs = evaluateAll(
-    travelObs,
-    fhirPathMappings.travelHistoryMember,
-  );
+  const memberRefs = evaluateAll(travelObs, fhirPathMappings.hasMember);
   const obs = memberRefs
     .map((ref) => evaluateReference<Observation>(fhirBundle, ref))
     .filter(notEmpty);

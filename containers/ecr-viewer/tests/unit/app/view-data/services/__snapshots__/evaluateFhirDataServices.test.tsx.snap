@@ -564,6 +564,785 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Hospital Encount
 }
 `;
 
+exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details Social Determinants of Health should display sdoh data  1`] = `
+<div>
+  <div
+    class="display-flex"
+  >
+    <div
+      class="margin-left-auto padding-top-1"
+    >
+      <button
+        class="usa-button usa-button--unstyled"
+        data-testid="button"
+        type="button"
+      >
+        Expand all 
+        social determinants of health
+      </button>
+      <span
+        class="vertical-line"
+      />
+      <button
+        class="usa-button usa-button--unstyled"
+        data-testid="button"
+        type="button"
+      >
+        Collapse all 
+        social determinants of health
+      </button>
+    </div>
+  </div>
+  <div
+    class="usa-accordion accordion-rr"
+    data-allow-multiple="true"
+    data-testid="accordion"
+  >
+    <h5
+      class="usa-accordion__heading side-nav-ignore"
+    >
+      <button
+        aria-controls="6043782e-cc31-f47e-c11a-4f0fcd97983f-r:id-0"
+        aria-expanded="false"
+        class="usa-accordion__button"
+        data-testid="accordionButton_6043782e-cc31-f47e-c11a-4f0fcd97983f-r:id-0"
+        type="button"
+      >
+        <div
+          class="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span>
+            B1300 Health Literacy
+             
+            <span
+              class="usa-tag margin-left-105"
+              data-testid="tag"
+            >
+              Adequate Health Literacy
+            </span>
+          </span>
+          <span
+            class="font-size-xs text-base"
+          >
+            02/05/2025
+          </span>
+        </div>
+      </button>
+    </h5>
+    <div
+      class="usa-accordion__content usa-prose side-nav-ignore"
+      data-testid="accordionItem_6043782e-cc31-f47e-c11a-4f0fcd97983f-r:id-0"
+      hidden=""
+      id="6043782e-cc31-f47e-c11a-4f0fcd97983f-r:id-0"
+    >
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            How often do you need to have someone help you when you read instructions, pamphlets, or other written material from your doctor or pharmacy?
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            Never
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+    </div>
+    <h5
+      class="usa-accordion__heading side-nav-ignore"
+    >
+      <button
+        aria-controls="3333c99c-14b0-43f5-e33f-033776972414-r:id-1"
+        aria-expanded="false"
+        class="usa-accordion__button"
+        data-testid="accordionButton_3333c99c-14b0-43f5-e33f-033776972414-r:id-1"
+        type="button"
+      >
+        <div
+          class="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span>
+            Tobacco use panel
+             
+            <span
+              class="usa-tag margin-left-105"
+              data-testid="tag"
+            >
+              Unknown
+            </span>
+          </span>
+          <span
+            class="font-size-xs text-base"
+          >
+            02/05/2025
+          </span>
+        </div>
+      </button>
+    </h5>
+    <div
+      class="usa-accordion__content usa-prose side-nav-ignore"
+      data-testid="accordionItem_3333c99c-14b0-43f5-e33f-033776972414-r:id-1"
+      hidden=""
+      id="3333c99c-14b0-43f5-e33f-033776972414-r:id-1"
+    >
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            Smoking Tobacco Use
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            Never Assessed
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            Smokeless Tobacco Use
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            Unknown
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            Passive Exposure
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            Never
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+    </div>
+    <h5
+      class="usa-accordion__heading side-nav-ignore"
+    >
+      <button
+        aria-controls="08e83857-21a3-e9df-c6cc-78b769a91ff1-r:id-2"
+        aria-expanded="false"
+        class="usa-accordion__button"
+        data-testid="accordionButton_08e83857-21a3-e9df-c6cc-78b769a91ff1-r:id-2"
+        type="button"
+      >
+        <div
+          class="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span>
+            Overall Financial Resource Strain (CARDIA)
+             
+            <span
+              class="usa-tag margin-left-105"
+              data-testid="tag"
+            >
+              At Risk
+            </span>
+          </span>
+          <span
+            class="font-size-xs text-base"
+          >
+            02/05/2025
+          </span>
+        </div>
+      </button>
+    </h5>
+    <div
+      class="usa-accordion__content usa-prose side-nav-ignore"
+      data-testid="accordionItem_08e83857-21a3-e9df-c6cc-78b769a91ff1-r:id-2"
+      hidden=""
+      id="08e83857-21a3-e9df-c6cc-78b769a91ff1-r:id-2"
+    >
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            How hard is it for you to pay for the very basics like food, housing, medical care, and heating?
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            Somewhat hard
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+    </div>
+    <h5
+      class="usa-accordion__heading side-nav-ignore"
+    >
+      <button
+        aria-controls="3e459b71-e0fc-f678-a439-ea4ebf040e88-r:id-3"
+        aria-expanded="false"
+        class="usa-accordion__button"
+        data-testid="accordionButton_3e459b71-e0fc-f678-a439-ea4ebf040e88-r:id-3"
+        type="button"
+      >
+        <div
+          class="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span>
+            Hunger Vital Sign
+             
+            <span
+              class="usa-tag margin-left-105"
+              data-testid="tag"
+            >
+              Food Insecurity Present
+            </span>
+          </span>
+          <span
+            class="font-size-xs text-base"
+          >
+            02/05/2025
+          </span>
+        </div>
+      </button>
+    </h5>
+    <div
+      class="usa-accordion__content usa-prose side-nav-ignore"
+      data-testid="accordionItem_3e459b71-e0fc-f678-a439-ea4ebf040e88-r:id-3"
+      hidden=""
+      id="3e459b71-e0fc-f678-a439-ea4ebf040e88-r:id-3"
+    >
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            Within the past 12 months, you worried that your food would run out before you got the money to buy more.
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            Often true
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            Within the past 12 months, the food you bought just didn't last and you didn't have money to get more.
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            Often true
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+    </div>
+    <h5
+      class="usa-accordion__heading side-nav-ignore"
+    >
+      <button
+        aria-controls="1c0861e7-d64c-6177-110b-2550659bd8e5-r:id-4"
+        aria-expanded="false"
+        class="usa-accordion__button"
+        data-testid="accordionButton_1c0861e7-d64c-6177-110b-2550659bd8e5-r:id-4"
+        type="button"
+      >
+        <div
+          class="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span>
+            PRAPARE - Transportation
+             
+            <span
+              class="usa-tag margin-left-105"
+              data-testid="tag"
+            >
+              Has Transportation Needs
+            </span>
+          </span>
+          <span
+            class="font-size-xs text-base"
+          >
+            02/05/2025
+          </span>
+        </div>
+      </button>
+    </h5>
+    <div
+      class="usa-accordion__content usa-prose side-nav-ignore"
+      data-testid="accordionItem_1c0861e7-d64c-6177-110b-2550659bd8e5-r:id-4"
+      hidden=""
+      id="1c0861e7-d64c-6177-110b-2550659bd8e5-r:id-4"
+    >
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            In the past 12 months, has lack of transportation kept you from medical appointments or from getting medications?
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            Yes
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            In the past 12 months, has lack of transportation kept you from meetings, work, or from getting things needed for daily living?
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            Yes
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+    </div>
+    <h5
+      class="usa-accordion__heading side-nav-ignore"
+    >
+      <button
+        aria-controls="507ca0e7-4ab0-25c7-ba20-065e745180b3-r:id-5"
+        aria-expanded="false"
+        class="usa-accordion__button"
+        data-testid="accordionButton_507ca0e7-4ab0-25c7-ba20-065e745180b3-r:id-5"
+        type="button"
+      >
+        <div
+          class="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span>
+            Housing Stability Vital Sign
+             
+            <span
+              class="usa-tag margin-left-105"
+              data-testid="tag"
+            >
+              High Risk
+            </span>
+          </span>
+          <span
+            class="font-size-xs text-base"
+          >
+            02/05/2025
+          </span>
+        </div>
+      </button>
+    </h5>
+    <div
+      class="usa-accordion__content usa-prose side-nav-ignore"
+      data-testid="accordionItem_507ca0e7-4ab0-25c7-ba20-065e745180b3-r:id-5"
+      hidden=""
+      id="507ca0e7-4ab0-25c7-ba20-065e745180b3-r:id-5"
+    >
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            In the last 12 months, was there a time when you were not able to pay the mortgage or rent on time?
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            Yes
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            In the past 12 months, how many times have you moved where you were living?
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            0
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            At any time in the past 12 months, were you homeless or living in a shelter (including now)?
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            No
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+    </div>
+    <h5
+      class="usa-accordion__heading side-nav-ignore"
+    >
+      <button
+        aria-controls="38da63a4-0813-4467-1d2e-a271402e4e3e-r:id-6"
+        aria-expanded="false"
+        class="usa-accordion__button"
+        data-testid="accordionButton_38da63a4-0813-4467-1d2e-a271402e4e3e-r:id-6"
+        type="button"
+      >
+        <div
+          class="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span>
+            Caregiver Education and Work
+             
+            <span
+              class="usa-tag margin-left-105"
+              data-testid="tag"
+            >
+              Low Risk
+            </span>
+          </span>
+          <span
+            class="font-size-xs text-base"
+          >
+            02/05/2025
+          </span>
+        </div>
+      </button>
+    </h5>
+    <div
+      class="usa-accordion__content usa-prose side-nav-ignore"
+      data-testid="accordionItem_38da63a4-0813-4467-1d2e-a271402e4e3e-r:id-6"
+      hidden=""
+      id="38da63a4-0813-4467-1d2e-a271402e4e3e-r:id-6"
+    >
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            Do you have a high school degree?
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            Yes
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            Do you ever need help reading hospital materials?
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            No
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+    </div>
+    <h5
+      class="usa-accordion__heading side-nav-ignore"
+    >
+      <button
+        aria-controls="bc920363-0b1b-f8cb-9977-e19de455b82c-r:id-7"
+        aria-expanded="false"
+        class="usa-accordion__button"
+        data-testid="accordionButton_bc920363-0b1b-f8cb-9977-e19de455b82c-r:id-7"
+        type="button"
+      >
+        <div
+          class="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span>
+            Safety and Environment
+             
+            <span
+              class="usa-tag margin-left-105"
+              data-testid="tag"
+            >
+              Low Risk
+            </span>
+          </span>
+          <span
+            class="font-size-xs text-base"
+          >
+            02/05/2025
+          </span>
+        </div>
+      </button>
+    </h5>
+    <div
+      class="usa-accordion__content usa-prose side-nav-ignore"
+      data-testid="accordionItem_bc920363-0b1b-f8cb-9977-e19de455b82c-r:id-7"
+      hidden=""
+      id="bc920363-0b1b-f8cb-9977-e19de455b82c-r:id-7"
+    >
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            Do you worry that your child may have been physically abused?
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            No
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            Do you worry that your child may have been sexually abused?
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            No
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            Are there any guns kept in or around your home or where your child spends time?
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            No
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            Guns Unloaded or Locked Away
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            Not on file
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+    </div>
+    <h5
+      class="usa-accordion__heading side-nav-ignore"
+    >
+      <button
+        aria-controls="56badf14-c5b2-f6c4-5b8c-15d77989efc4-r:id-8"
+        aria-expanded="false"
+        class="usa-accordion__button"
+        data-testid="accordionButton_56badf14-c5b2-f6c4-5b8c-15d77989efc4-r:id-8"
+        type="button"
+      >
+        <div
+          class="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span>
+            Caregiver Health
+             
+            <span
+              class="usa-tag margin-left-105"
+              data-testid="tag"
+            >
+              Low Risk
+            </span>
+          </span>
+          <span
+            class="font-size-xs text-base"
+          >
+            02/05/2025
+          </span>
+        </div>
+      </button>
+    </h5>
+    <div
+      class="usa-accordion__content usa-prose side-nav-ignore"
+      data-testid="accordionItem_56badf14-c5b2-f6c4-5b8c-15d77989efc4-r:id-8"
+      hidden=""
+      id="56badf14-c5b2-f6c4-5b8c-15d77989efc4-r:id-8"
+    >
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            Over the past two weeks, how often have you felt little interest or pleasure in doing things?
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            Not at all
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            Over the past two weeks have you been bothered by feeling down, depressed, or hopeless?
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            Not at all
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="flex-auto padding-right-1 text-bold"
+          >
+            Does anyone in your home have a problem with alcohol, marijuana, other substances?
+          </div>
+          <div
+            class="grid-col-auto maxw7 text-pre-line p-list"
+          >
+            No
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`evaluateFhirDataService tests Evaluate Patient Info: Social History Evaluate Occupation History should match snapshot when all fields present 1`] = `
 <ExpandCollapseAccordion
   className="accordion-rr"

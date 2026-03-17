@@ -710,10 +710,7 @@ export const evaluateSocialDeterminantsOfHealth = (fhirBundle: Bundle) => {
       className="accordion-rr"
       descriptor="social determinants of health"
       items={socialFuncObs.map((socialFunc) => {
-        const domainRef = evaluateOne(
-          socialFunc,
-          fhirPathMappings.observationMember,
-        );
+        const domainRef = evaluateOne(socialFunc, fhirPathMappings.hasMember);
 
         const domain = evaluateReference<Observation>(fhirBundle, domainRef);
 

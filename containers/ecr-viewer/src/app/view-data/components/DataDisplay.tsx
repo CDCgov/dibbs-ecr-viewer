@@ -44,7 +44,7 @@ export interface DisplayDataProps {
   fullWidthContent?: boolean;
 
   /**
-   * Whether the title should grow to its full width. Usefull for long titles.
+   * Whether the title should grow to its full width. Useful for long titles.
    */
   fullWidthTitle?: boolean;
 
@@ -81,12 +81,12 @@ export const DataDisplay = ({
       >
         <div
           className={classNames(
-            item.fullWidthTitle ? "flex-auto" : "data-title",
-            "text-bold",
-            "padding-right-1",
             {
               "text-normal": item.titleNormal,
             },
+            item.fullWidthTitle ? "flex-auto" : "data-title",
+            "padding-right-1",
+            item.fullWidthTitle ? "text-bold" : "",
           )}
         >
           <ToolTipElement toolTip={item.toolTip}>{item.title}</ToolTipElement>

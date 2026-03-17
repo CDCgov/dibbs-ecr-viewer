@@ -369,8 +369,10 @@ export const formatQuantity = (
 ): string | undefined => {
   if (!data) return;
 
-  if (!data.value) {
+  if (!data.value && data.unit) {
     data.value = 0;
+  } else if (!data.value) {
+    return;
   }
 
   let unit = data.unit || "";
