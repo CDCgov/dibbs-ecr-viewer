@@ -8,9 +8,11 @@ import {
   Element,
   Encounter,
   Location,
+  Observation,
   Organization,
   Practitioner,
   PractitionerRole,
+  QuestionnaireResponse,
   RelatedPerson,
 } from "fhir/r4";
 import { DateTime } from "luxon";
@@ -691,6 +693,106 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
 };
 
 /**
+ * Evaluates Social Determinants of Health (SDOH) from the FHIR bundle and formats it into structured data for display.
+ * @param fhirBundle - The FHIR bundle containing SDOH data.
+ * @returns An array of evaluated and formatted SDOH questionnaire data.
+ */
+export const evaluateSocialDeterminantsOfHealth = (fhirBundle: Bundle) => {
+  const socialFuncObs = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.historyOfSocialFunction,
+  );
+
+  if (socialFuncObs.length === 0) return;
+
+  return (
+    <ExpandCollapseAccordion
+      className="accordion-rr"
+      descriptor="social determinants of health"
+      items={socialFuncObs.map((socialFunc) => {
+        const domainRef = evaluateOne(
+          socialFunc,
+          fhirPathMappings.observationMember,
+        );
+
+        const domain = evaluateReference<Observation>(fhirBundle, domainRef);
+
+        const questionnaireResponsesRefs = evaluateAll(
+          domain,
+          fhirPathMappings.observationDerivedFrom,
+        );
+
+        const content = questionnaireResponsesRefs.map((ref, i) => {
+          const questionnaireResponse =
+            evaluateReference<QuestionnaireResponse>(fhirBundle, ref);
+
+          const items = evaluateAll(
+            questionnaireResponse,
+            fhirPathMappings.questionnaireItem,
+          );
+
+          const questionsAndAnswers = items.map((item, j) => {
+            const question = item.text;
+
+            const answers = item.answer || [];
+            const answer = answers
+              .map((a) =>
+                evaluateValue(
+                  a,
+                  fhirPathMappings.valueX,
+                  "QuestionnaireResponse.item.answer",
+                ),
+              )
+              // Filter out any repeated values (this can happen when valueCoding and valueString are set)
+              .filter((item, index, self) => {
+                return self.indexOf(item) === index;
+              })
+              .join("\n");
+
+            return (
+              <DataDisplay
+                key={`${domain?.id}-${i}-${j}`}
+                item={{
+                  title: question,
+                  value: answer,
+                  fullWidthTitle: true,
+                }}
+              />
+            );
+          });
+
+          return questionsAndAnswers;
+        });
+
+        const domainTitle = evaluateValue(domain, fhirPathMappings.code);
+        const riskValue = evaluateValue(domain, fhirPathMappings.valueX);
+
+        return {
+          title: (
+            <div className="display-flex flex-row flex-no-wrap flex-justify">
+              <span>
+                {domainTitle}{" "}
+                {riskValue && (
+                  <Tag className="margin-left-105">{riskValue}</Tag>
+                )}
+              </span>
+
+              <span className="font-size-xs text-base">
+                {evaluateValue(domain, fhirPathMappings.effectiveX)}
+              </span>
+            </div>
+          ),
+          expanded: false,
+          content,
+          id: socialFunc.id ?? "ID goes here",
+          headingLevel: "h5",
+        };
+      })}
+    />
+  );
+};
+
+/**
  * Evaluates social data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing social data.
  * @returns An array of evaluated and formatted social data.
@@ -759,7 +861,13 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
       value: returnDisabilityStatusTable(fhirBundle),
       fullWidthContent: true,
     },
+    {
+      title: "Social Determinants of Health",
+      value: evaluateSocialDeterminantsOfHealth(fhirBundle),
+      fullWidthContent: true,
+    },
   ];
+
   return evaluateData(socialData);
 };
 

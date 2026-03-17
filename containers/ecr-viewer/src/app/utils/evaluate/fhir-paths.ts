@@ -19,6 +19,7 @@ import {
   Period,
   Procedure,
   Quantity,
+  QuestionnaireResponseItem,
   Reference,
   RelatedPerson,
 } from "fhir/r4";
@@ -78,6 +79,8 @@ export type PathTypes = {
   patientNationality: ValueX;
   patientCountryResidence: ValueX;
   patientDisabilityStatus: Observation;
+  historyOfSocialFunction: Observation;
+  questionnaireItem: QuestionnaireResponseItem;
   eicrIdentifier: string;
   eicrReleaseVersion: ValueX;
   eicrCustodianRef: string;
@@ -156,6 +159,8 @@ export type PathTypes = {
   observationDeviceReference: Reference;
   observationOrganismMethod: ValueX;
   observationResultStatus: string;
+  observationMember: Reference;
+  observationDerivedFrom: Reference;
   labReportInterpretation: ValueX;
   observationInterpretation: Coding;
   organizations: Organization;
@@ -326,6 +331,22 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   patientDisabilityStatus: {
     type: "Observation",
     path: "entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-disability-status')",
+  },
+  historyOfSocialFunction: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8689-2'))",
+  },
+  observationMember: {
+    type: "Reference",
+    path: "hasMember",
+  },
+  observationDerivedFrom: {
+    type: "Reference",
+    path: "derivedFrom",
+  },
+  questionnaireItem: {
+    type: "QuestionnaireResponseItem",
+    path: "item",
   },
 
   // Pregnancy Data
