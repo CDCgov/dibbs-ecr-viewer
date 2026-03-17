@@ -114,6 +114,12 @@ describe("UnavailableInfo", () => {
         value: "",
       },
     ];
+    const emergencyOutbreakUnavailableData = [
+      {
+        title: "Emergency Outbreak Info",
+        value: "",
+      },
+    ];
     const immunizationsUnavailableData = [
       {
         title: "Immunization History",
@@ -172,13 +178,14 @@ describe("UnavailableInfo", () => {
         symptomsProblemsUnavailableData={[
           ...reasonForVisitUnavailableData,
           ...activeProblemsUnavailableData,
+          ...emergencyOutbreakUnavailableData,
         ]}
         immunizationsUnavailableData={immunizationsUnavailableData}
         vitalUnavailableData={vitalUnavailableData}
-        treatmentData={treatmentUnavailableData}
-        clinicalNotesData={clinicalNotesData}
+        treatmentUnavailableData={treatmentUnavailableData}
+        clinicalNotesUnavailableData={clinicalNotesData}
         ecrMetadataUnavailableData={ecrMetadata}
-        eicrAuthorDetails={ecrAuthorDetails}
+        eicrAuthorUnavailableData={ecrAuthorDetails}
       />,
     ).container;
   });

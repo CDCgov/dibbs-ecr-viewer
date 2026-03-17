@@ -1313,7 +1313,7 @@ export const returnAdmissionMedicationsTable = (
  * Generates details sections for the Admission Medications table rows.
  * @param fhirBundle - The fhir bundle
  * @param element - The current row being processed
- * @returns - A details element for the current row of the of Admission Medications table, or undefined if there's no data
+ * @returns - A details element for the current row of the Admission Medications table, or undefined if there's no data
  */
 const evaluateAdmissionMedicationDetails = (
   fhirBundle: Bundle,
