@@ -3,10 +3,7 @@ import { Kysely, sql } from "kysely";
 import { AnyDb } from "@/app/data/metadataDb/database";
 import { getSql } from "@/app/data/metadataDb/dialects/common";
 import { dbDialect, dbNamespace } from "@/app/data/metadataDb/utils/db-config";
-import {
-  schemaExistsByName,
-  getTables,
-} from "@/app/data/metadataDb/utils/db-metadata";
+import { getTables } from "@/app/data/metadataDb/utils/db-metadata";
 
 /**
  * Core schema initialization.
@@ -14,15 +11,6 @@ import {
  */
 export async function up(db: Kysely<AnyDb>): Promise<void> {
   const schema = dbNamespace();
-  const schemaExists = await schemaExistsByName(db, schema);
-
-  try {
-    if (!schemaExists) {
-      await db.schema.createSchema(schema).execute(); // first instance of schema mutation
-    }
-  } catch (error) {
-    throw new Error("Failed to create schema or already exists: " + error);
-  }
 
   if (dbDialect() === "postgres") {
     // Install uuid-ossp extension (Postgres-specific)
@@ -79,5 +67,4 @@ export async function down(db: Kysely<AnyDb>): Promise<void> {
   await _db.schema.dropTable("ecr_rr_rule_summaries").ifExists().execute();
   await _db.schema.dropTable("ecr_rr_conditions").ifExists().execute();
   await _db.schema.dropTable("ecr_data").ifExists().execute();
-  await _db.schema.dropSchema(dbNamespace()).ifExists().execute();
 }
