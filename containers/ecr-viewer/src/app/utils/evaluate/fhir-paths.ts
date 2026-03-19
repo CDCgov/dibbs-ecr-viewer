@@ -116,7 +116,7 @@ export type PathTypes = {
   adminMedicationTherapeuticResponseObs: CodeableConcept;
   careTeamParticipants: CareTeamParticipant;
   careTeamParticipantMemberName: string;
-  careTeamParticipantRole: string;
+  careTeamParticipantRole: CodeableConcept;
   careTeamParticipantStatus: string;
   careTeamParticipantPeriod: string;
   immunizations: Immunization;
@@ -515,7 +515,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "entry.resource.CareTeam.participant",
   },
   careTeamParticipantMemberName: { type: "string", path: "member.name" },
-  careTeamParticipantRole: { type: "string", path: "role.text" },
+  careTeamParticipantRole: {
+    type: "CodeableConcept",
+    path: "role",
+  },
   careTeamParticipantStatus: {
     type: "string",
     path: "modifierExtension.where(url = 'participant.status').valueString",
