@@ -914,7 +914,7 @@
         </section>
       </component>
 
-      <!-- Care Teams Section (V2) -->
+      <!-- Care Teams Section (V2) - Synthetic example from https://build.fhir.org/ig/HL7/CDA-Examples/ -->
       <component>
         <section>
           <templateId root="2.16.840.1.113883.10.20.22.2.500" extension="2019-07-01"/>
