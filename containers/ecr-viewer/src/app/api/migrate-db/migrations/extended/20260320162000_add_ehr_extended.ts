@@ -5,7 +5,7 @@ import { dbNamespace, dbSchema } from "@/app/data/metadataDb/utils/db-config";
 import { getTable } from "@/app/data/metadataDb/utils/db-metadata";
 
 /**
- * Add EHR and Immunization related columns to extended schema
+ * Add EHR related columns to extended schema
  * @param db - the database connection
  */
 export async function up(db: Kysely<AnyDb>): Promise<void> {
@@ -23,7 +23,7 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
 }
 
 /**
- * Drop EHR and Immunization related columns to extended schema
+ * Drop EHR related columns to extended schema
  * @param db - the database connection
  */
 export async function down(db: Kysely<AnyDb>): Promise<void> {
