@@ -243,6 +243,8 @@ const saveExtendedMetadata = async (
       eicr_version_number: metadata.eicr_version_number,
       authoring_date: asDate(metadata.authoring_date),
       authoring_provider: metadata.provider_id,
+      ehr_software: metadata.ehr_software,
+      ehr_manufacturer_model: metadata.ehr_manufacturer_model,
       provider_id: metadata.provider_id,
       facility_id: metadata.facility_id,
       facility_name: metadata.facility_name,

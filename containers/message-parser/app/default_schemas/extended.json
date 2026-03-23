@@ -126,6 +126,16 @@
     "data_type": "datetime",
     "nullable": true
   },
+  "ehr_software": {
+    "fhir_path": "Bundle.entry.resource.where(resourceType='Device').where(property.type.coding.exists(system = 'http://hl7.org/fhir/device-category' and code = 'software')).version.value",
+    "data_type": "string",
+    "nullable": true
+  },
+  "ehr_manufacturer_model": {
+    "fhir_path": "Bundle.entry.resource.where(resourceType='Device').where(property.type.coding.exists(system = 'http://hl7.org/fhir/device-category' and code = 'software')).manufacturer",
+    "data_type": "string",
+    "nullable": true
+  },
   "provider_id": {
     "fhir_path": "Bundle.entry.resource.where(resourceType='Practitioner').where(extension.valueString='Responsible Party').identifier.value",
     "data_type": "string",
