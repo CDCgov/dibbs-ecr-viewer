@@ -4,16 +4,28 @@ import { render, screen } from "@testing-library/react";
 import { Bundle } from "fhir/r4";
 
 import BundleWithClinicalInfo from "../../../../../../../test-data/fhir/BundleClinicalInfo.json";
-import BundleEcrSummary from "../../../../../../../test-data/fhir/BundleEcrSummary.json";
-import BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
+import _BundleEcrSummary from "../../../../../../../test-data/fhir/BundleEcrSummary.json";
+import _BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
 import BundlePatient from "../../../../../../../test-data/fhir/BundlePatient.json";
-import BundleRRConditionValueString from "../../../../../../../test-data/fhir/BundleRRConditionValueString.json";
+import _BundleRRConditionValueString from "../../../../../../../test-data/fhir/BundleRRConditionValueString.json";
 import {
   evaluateEcrSummaryConditionSummary,
   evaluateEcrSummaryPatientDetails,
   evaluateEcrSummaryRelevantClinicalDetails,
   evaluateEcrSummaryRelevantLabResults,
 } from "@/app/view-data/services/ecrSummaryService";
+import { FhirIndex, getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
+
+const BundleLab = _BundleLab as unknown as Bundle;
+const fhirIndexBundleLab = getFhirIndex(BundleLab);
+
+const BundleEcrSummary = _BundleEcrSummary as unknown as Bundle;
+const fhirIndexBundleEcrSummary = getFhirIndex(BundleEcrSummary);
+
+const BundleRRConditionValueString = _BundleRRConditionValueString as unknown as Bundle;
+const fhirIndexBundleRRConditionValueString = getFhirIndex(
+  BundleRRConditionValueString
+);
 
 describe("ecrSummaryService Tests", () => {
   describe("Evaluate eCR Summary Relevant Clinical Details", () => {
@@ -57,8 +69,9 @@ describe("ecrSummaryService Tests", () => {
   describe("Evaluate eCR Summary Relevant Lab Results", () => {
     it("should return an empty list when no SNOMED code is provided", () => {
       const actual = evaluateEcrSummaryRelevantLabResults(
-        BundleLab as unknown as Bundle,
-        "",
+        BundleLab,
+        fhirIndexBundleLab,
+        ""
       );
 
       expect(actual).toBeEmpty();
@@ -66,8 +79,9 @@ describe("ecrSummaryService Tests", () => {
 
     it("should return 'No Data' string when the provided SNOMED code has no matches", () => {
       const actual = evaluateEcrSummaryRelevantLabResults(
-        BundleLab as unknown as Bundle,
-        "invalid-snomed-code",
+        BundleLab,
+        fhirIndexBundleLab,
+        "invalid-snomed-code"
       );
 
       expect(actual).toBeEmpty();
@@ -75,7 +89,8 @@ describe("ecrSummaryService Tests", () => {
 
     it("should return the correct lab result(s) when the provided SNOMED code matches", () => {
       const result = evaluateEcrSummaryRelevantLabResults(
-        BundleLab as unknown as Bundle,
+        BundleLab,
+        fhirIndexBundleLab,
         "test-snomed",
       );
       expect(result).toHaveLength(3); // 2 results, plus last item is divider line
@@ -95,7 +110,8 @@ describe("ecrSummaryService Tests", () => {
 
     it("should not include the last empty divider line when lastDividerLine is false", () => {
       const result = evaluateEcrSummaryRelevantLabResults(
-        BundleLab as unknown as Bundle,
+        BundleLab,
+        fhirIndexBundleLab,
         "test-snomed",
         false,
       );
@@ -107,7 +123,8 @@ describe("ecrSummaryService Tests", () => {
   describe("Evaluate eCR Summary Condition Summary", () => {
     it("should return titles based on snomed code, and return human-readable name if available", () => {
       const actual = evaluateEcrSummaryConditionSummary(
-        BundleEcrSummary as unknown as Bundle,
+        BundleEcrSummary,
+        fhirIndexBundleEcrSummary
       );
 
       expect(actual[0].title).toEqual("Hepatitis C");
@@ -117,14 +134,16 @@ describe("ecrSummaryService Tests", () => {
     });
     it("should return human-readable name if available", () => {
       const actual = evaluateEcrSummaryConditionSummary(
-        BundleRRConditionValueString as unknown as Bundle,
+        BundleRRConditionValueString,
+        fhirIndexBundleRRConditionValueString
       );
 
       expect(actual[0].title).toEqual("COVID");
     });
     it("should return summaries based on snomed code", () => {
       const actual = evaluateEcrSummaryConditionSummary(
-        BundleEcrSummary as unknown as Bundle,
+        BundleEcrSummary,
+        fhirIndexBundleEcrSummary
       );
       render(
         actual[1].conditionDetails.map((detail, i) => (
@@ -148,7 +167,8 @@ describe("ecrSummaryService Tests", () => {
     });
     it("should return clinical details based on snomed code", () => {
       const actual = evaluateEcrSummaryConditionSummary(
-        BundleEcrSummary as unknown as Bundle,
+        BundleEcrSummary,
+        fhirIndexBundleEcrSummary
       );
 
       render(
@@ -161,7 +181,8 @@ describe("ecrSummaryService Tests", () => {
     });
     it("should return lab details based on snomed code", () => {
       const actual = evaluateEcrSummaryConditionSummary(
-        BundleEcrSummary as unknown as Bundle,
+        BundleEcrSummary,
+        fhirIndexBundleEcrSummary
       );
 
       render(
@@ -177,7 +198,8 @@ describe("ecrSummaryService Tests", () => {
     });
     it("should return immunization details based on snomed code", () => {
       const actual = evaluateEcrSummaryConditionSummary(
-        BundleEcrSummary as unknown as Bundle,
+        BundleEcrSummary,
+        fhirIndexBundleEcrSummary,
       );
       render(
         actual[1].immunizationDetails.map((detail) => (
@@ -188,10 +210,10 @@ describe("ecrSummaryService Tests", () => {
       expect(screen.getByText("SARS-CoV-2 PCR Vaccine")).toBeInTheDocument();
     });
     it("should not display non-related immunization details", () => {
-      const actual = evaluateEcrSummaryConditionSummary({
-        ...BundleEcrSummary,
+      const BundleNonRelatedImmuns = {
+        ..._BundleEcrSummary,
         entry: [
-          ...BundleEcrSummary.entry,
+          ..._BundleEcrSummary.entry,
           {
             fullUrl: "urn:uuid:6689c3f5-f256-9c28-bd98-89905630f28d",
             resource: {
@@ -219,7 +241,14 @@ describe("ecrSummaryService Tests", () => {
             },
           },
         ],
-      } as unknown as Bundle);
+      } as unknown as Bundle;
+      const fhirIndexBundleNonRelatedImmuns = getFhirIndex(
+        BundleNonRelatedImmuns
+      );
+      const actual = evaluateEcrSummaryConditionSummary(
+        BundleNonRelatedImmuns,
+        fhirIndexBundleNonRelatedImmuns
+      );
       render(
         actual[1].immunizationDetails.map((detail) => (
           <React.Fragment key={Math.random()}>{detail.value}</React.Fragment>
@@ -230,13 +259,14 @@ describe("ecrSummaryService Tests", () => {
       expect(screen.queryByText("anthrax")).not.toBeInTheDocument();
     });
     it("should return empty array if none found", () => {
-      const actual = evaluateEcrSummaryConditionSummary({} as Bundle);
+      const actual = evaluateEcrSummaryConditionSummary({} as Bundle, {} as FhirIndex);
 
       expect(actual).toBeEmpty();
     });
     it("should return the the requested snomed first", () => {
       const verifyNotFirst = evaluateEcrSummaryConditionSummary(
-        BundleEcrSummary as unknown as Bundle,
+        BundleEcrSummary,
+        fhirIndexBundleEcrSummary
       );
 
       expect(verifyNotFirst[0].title).not.toEqual(
@@ -244,7 +274,8 @@ describe("ecrSummaryService Tests", () => {
       );
 
       const actual = evaluateEcrSummaryConditionSummary(
-        BundleEcrSummary as unknown as Bundle,
+        BundleEcrSummary,
+        fhirIndexBundleEcrSummary,
         "840539006",
       );
       expect(actual[0].title).toEqual(
