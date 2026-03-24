@@ -13,7 +13,10 @@ import {
   evaluateLabInfoData,
   LabReportElementData,
 } from "@/app/view-data/services/labsService";
-import { getFhirIndex, getResourcesByType } from "@/app/view-data/services/fhirResourcesIndexService";
+import {
+  getFhirIndex,
+  getResourcesByType,
+} from "@/app/view-data/services/fhirResourcesIndexService";
 
 const BundleLab = _BundleLab as unknown as Bundle;
 const fhirIndexBundleLab = getFhirIndex(BundleLab);
@@ -24,11 +27,14 @@ describe("LabInfo", () => {
   describe("when labResults is LabReportElementData[]", () => {
     let labInfoJsx: React.ReactElement;
     beforeAll(() => {
-      const diagnosticReports = getResourcesByType<DiagnosticReport>(fhirIndexBundleLab, "DiagnosticReport");
+      const diagnosticReports = getResourcesByType<DiagnosticReport>(
+        fhirIndexBundleLab,
+        "DiagnosticReport",
+      );
       const labInfoOrg = evaluateLabInfoData(
         BundleLab,
         fhirIndexBundleLab,
-        diagnosticReports
+        diagnosticReports,
       ) as LabReportElementData[];
 
       // Empty out one of the lab names for testing
@@ -112,12 +118,12 @@ describe("LabInfo", () => {
     beforeAll(() => {
       const diagnosticReports = getResourcesByType<DiagnosticReport>(
         fhirIndexBundleLabNoLabIds,
-        "DiagnosticReport"
+        "DiagnosticReport",
       );
       labInfo = evaluateLabInfoData(
         BundleLabNoLabIds,
         fhirIndexBundleLabNoLabIds,
-        diagnosticReports
+        diagnosticReports,
       );
     });
     it("should be collapsed by default", () => {

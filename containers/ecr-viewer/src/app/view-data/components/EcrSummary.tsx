@@ -6,7 +6,11 @@ import { AccordionItem } from "@/app/types";
 import { toKebabCase } from "@/app/utils/format-utils";
 
 import { DataDisplay, DataTableDisplay, DisplayDataProps } from "./DataDisplay";
-import { evaluateEcrSummaryConditionSummary, evaluateEcrSummaryEncounterDetails, evaluateEcrSummaryPatientDetails } from "@/app/view-data/services/ecrSummaryService";
+import {
+  evaluateEcrSummaryConditionSummary,
+  evaluateEcrSummaryEncounterDetails,
+  evaluateEcrSummaryPatientDetails,
+} from "@/app/view-data/services/ecrSummaryService";
 import { Bundle } from "fhir/r4";
 import { FhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
@@ -39,9 +43,8 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
   patientDetails,
   encounterDetails,
   conditionSummary,
-  snomed
+  snomed,
 }) => {
-  
   const conditionSummaryAccordionItems: AccordionItem[] = conditionSummary.map(
     (condition) => {
       const hasImmunizationDetails = condition.immunizationDetails.length > 0;
@@ -104,7 +107,7 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
       };
     },
   );
-  
+
   return (
     <div
       className="usa-summary-box padding-3"

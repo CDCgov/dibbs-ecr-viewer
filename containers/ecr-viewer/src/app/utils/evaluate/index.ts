@@ -30,7 +30,10 @@ import {
 import { notEmpty } from "@/app/utils/data-utils";
 
 import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
-import { FhirIndex, getResourceById } from "@/app/view-data/services/fhirResourcesIndexService";
+import {
+  FhirIndex,
+  getResourceById,
+} from "@/app/view-data/services/fhirResourcesIndexService";
 
 // TODO: Follow up on FHIR/fhirpath typing
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -345,7 +348,7 @@ export const evaluateReference = <T extends Resource>(
 // TODO ANGELA: Add JSdoc
 export const evaluateReference2 = <T extends Resource>(
   fhirIndex: FhirIndex,
-  ref?: string | Reference
+  ref?: string | Reference,
 ): T | undefined => {
   if (typeof ref !== "string") {
     ref = formatReference(ref);
@@ -353,11 +356,15 @@ export const evaluateReference2 = <T extends Resource>(
   if (!ref) return undefined;
 
   const [resourceType, id] = ref.split("/");
-  const result = getResourceById<T>(fhirIndex, resourceType as T["resourceType"], id);
-  
+  const result = getResourceById<T>(
+    fhirIndex,
+    resourceType as T["resourceType"],
+    id,
+  );
+
   if (result && result?.resourceType !== resourceType) {
     console.error(
-      `Resource type mismatch: Expected ${resourceType}, but got ${result?.resourceType}`
+      `Resource type mismatch: Expected ${resourceType}, but got ${result?.resourceType}`,
     );
   }
 

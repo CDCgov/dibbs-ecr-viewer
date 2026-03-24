@@ -31,7 +31,11 @@ import {
   getObservations,
   LabInterpretationTag,
 } from "@/app/view-data/services/labsService";
-import { FhirIndex, getFhirIndex, getResourcesByType } from "@/app/view-data/services/fhirResourcesIndexService";
+import {
+  FhirIndex,
+  getFhirIndex,
+  getResourcesByType,
+} from "@/app/view-data/services/fhirResourcesIndexService";
 
 const BundleLab = _BundleLab as unknown as Bundle;
 const fhirIndexBundleLab = getFhirIndex(BundleLab);
@@ -39,7 +43,7 @@ const fhirIndexBundleLab = getFhirIndex(BundleLab);
 const BundleLabInvalidResultsDiv =
   _BundleLabInvalidResultsDiv as unknown as Bundle;
 const fhirIndexBundleLabInvalidResultsDiv = getFhirIndex(
-  BundleLabInvalidResultsDiv
+  BundleLabInvalidResultsDiv,
 );
 
 const BundleLabNoLabIds = _BundleLabNoLabIds as unknown as Bundle;
@@ -185,7 +189,7 @@ const labReportAbnormal = evaluateOneAndCheck<DiagnosticReport>(
 const jsonLabs = getAllLabJsonObjects(fhirIndexBundleLab);
 const labReportAbnormalJsonObject = getJsonLab(
   jsonLabs,
-  getObservations(labReportAbnormal!, fhirIndexBundleLab)
+  getObservations(labReportAbnormal!, fhirIndexBundleLab),
 );
 
 const pathLabOrganismsTableAndNarr =
@@ -211,7 +215,7 @@ describe("LabsService tests", () => {
             code: {},
             status: "entered-in-error",
           },
-          fhirIndexBundleLab
+          fhirIndexBundleLab,
         );
 
         const expectedObservationPath =
@@ -236,7 +240,7 @@ describe("LabsService tests", () => {
             code: {},
             status: "final",
           },
-          fhirIndexBundleLab
+          fhirIndexBundleLab,
         );
         expect(result).toStrictEqual([]);
       });
@@ -249,7 +253,7 @@ describe("LabsService tests", () => {
         const jsonLabs = getAllLabJsonObjects(fhirIndexBundleLab);
         const result = getJsonLab(
           jsonLabs,
-          getObservations(labReportNormal!, fhirIndexBundleLab)
+          getObservations(labReportNormal!, fhirIndexBundleLab),
         );
 
         expect(result).toEqual(expectedResult);
@@ -265,7 +269,7 @@ describe("LabsService tests", () => {
         const jsonLabs = getAllLabJsonObjects(fhirIndexBundleLabNoLabIds);
         const result = getJsonLab(
           jsonLabs,
-          getObservations(labReportWithoutIds!, fhirIndexBundleLabNoLabIds)
+          getObservations(labReportWithoutIds!, fhirIndexBundleLabNoLabIds),
         );
 
         expect(result).toBeUndefined();
@@ -275,7 +279,10 @@ describe("LabsService tests", () => {
         const jsonLabs = getAllLabJsonObjects(fhirIndexBundleLab);
         const result = getJsonLab(
           jsonLabs,
-          getObservations(labReportNormal!, fhirIndexBundleLabInvalidResultsDiv)
+          getObservations(
+            labReportNormal!,
+            fhirIndexBundleLabInvalidResultsDiv,
+          ),
         );
 
         expect(result).toBeUndefined();
@@ -493,10 +500,10 @@ describe("LabsService tests", () => {
           <LabInterpretationTag
             observations={getObservations(
               labReportAbnormal!,
-              fhirIndexBundleLab
+              fhirIndexBundleLab,
             )}
             labReportJson={labReportAbnormalJsonObject}
-          />
+          />,
         );
         const tagElement = screen.getByText("Abnormal");
         expect(tagElement).toBeInTheDocument();
@@ -671,7 +678,7 @@ describe("LabsService tests", () => {
   describe("evaluateOrganismsReportData", () => {
     it("should return the correct organisms table when the data exists for a lab report", () => {
       const result = evaluateOrganismsReportData(
-        getObservations(labOrganismsTableAndNarr!, fhirIndexBundleLab)
+        getObservations(labOrganismsTableAndNarr!, fhirIndexBundleLab),
       )!;
       render(result);
 
@@ -683,7 +690,7 @@ describe("LabsService tests", () => {
     });
     it("should return undefined if lab organisms data does not exist for a lab report", () => {
       const result = evaluateOrganismsReportData(
-        getObservations(labReportNormal!, fhirIndexBundleLab)
+        getObservations(labReportNormal!, fhirIndexBundleLab),
       );
 
       expect(result).toBeUndefined();
@@ -692,10 +699,13 @@ describe("LabsService tests", () => {
 
   describe("Evaluate Diagnostic Report", () => {
     it("should evaluate diagnostic report results", () => {
-      const report = getResourcesByType<DiagnosticReport>(fhirIndexBundleLab, 'DiagnosticReport')[0];
+      const report = getResourcesByType<DiagnosticReport>(
+        fhirIndexBundleLab,
+        "DiagnosticReport",
+      )[0];
       const actual = evaluateDiagnosticReportData(
         getObservations(report, fhirIndexBundleLab),
-        fhirIndexBundleLab
+        fhirIndexBundleLab,
       );
 
       render(actual);
@@ -724,11 +734,11 @@ describe("LabsService tests", () => {
     it("should evaluate test method results", () => {
       const report = getResourcesByType<DiagnosticReport>(
         fhirIndexBundleLab,
-        "DiagnosticReport"
+        "DiagnosticReport",
       )[0];
       const actual = evaluateDiagnosticReportData(
         getObservations(report, fhirIndexBundleLab),
-        fhirIndexBundleLab
+        fhirIndexBundleLab,
       );
 
       render(actual);
@@ -740,7 +750,7 @@ describe("LabsService tests", () => {
     it("should display comment", async () => {
       const report = getResourcesByType<DiagnosticReport>(
         fhirIndexBundleLab,
-        "DiagnosticReport"
+        "DiagnosticReport",
       )[2];
       const actual = evaluateDiagnosticReportData(
         getObservations(report, fhirIndexBundleLab),
@@ -786,7 +796,7 @@ describe("LabsService tests", () => {
       };
       const result = combineOrgAndReportData(
         testResultObject,
-        fhirIndexBundleLab
+        fhirIndexBundleLab,
       );
       expect(result[0].organizationDisplayDataProps).toBeArray();
     });
@@ -797,7 +807,10 @@ describe("LabsService tests", () => {
       const result = evaluateLabInfoData(
         BundleLab,
         fhirIndexBundleLab,
-        getResourcesByType<DiagnosticReport>(fhirIndexBundleLab, 'DiagnosticReport')
+        getResourcesByType<DiagnosticReport>(
+          fhirIndexBundleLab,
+          "DiagnosticReport",
+        ),
       );
       expect(result[0]).toHaveProperty("diagnosticReportDataItems");
       expect(result[0]).toHaveProperty("organizationDisplayDataProps");
@@ -807,7 +820,10 @@ describe("LabsService tests", () => {
       const result = evaluateLabInfoData(
         BundleLabNoLabIds,
         fhirIndexBundleLabNoLabIds,
-        getResourcesByType<DiagnosticReport>(fhirIndexBundleLabNoLabIds, 'DiagnosticReport')
+        getResourcesByType<DiagnosticReport>(
+          fhirIndexBundleLabNoLabIds,
+          "DiagnosticReport",
+        ),
       );
       expect(result[0]).toHaveProperty("diagnosticReportDataItems");
       expect(result[0]).toHaveProperty("organizationDisplayDataProps");
@@ -819,8 +835,8 @@ describe("LabsService tests", () => {
         fhirIndexBundleLab,
         getResourcesByType<DiagnosticReport>(
           fhirIndexBundleLab,
-          "DiagnosticReport"
-        )
+          "DiagnosticReport",
+        ),
       );
       const props = (result[0] as LabReportElementData)
         .organizationDisplayDataProps;
