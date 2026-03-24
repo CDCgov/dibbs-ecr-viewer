@@ -25,6 +25,8 @@ export interface extended_ecr_data extends ecr_data {
   eicr_version_number: string | undefined;
   authoring_date: Date | undefined;
   authoring_provider: string | undefined;
+  ehr_software: string | undefined;
+  ehr_manufacturer_model: string | undefined;
   provider_id: string | undefined;
   facility_id: string | undefined;
   facility_name: string | undefined;

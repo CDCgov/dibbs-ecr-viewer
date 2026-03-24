@@ -24,6 +24,8 @@
     "replaced_eicr_id": null,
     "replaced_eicr_version": null,
     "authoring_datetime": "2020-05-05T11:05:15-04:00",
+    "ehr_manufacturer_model": "EpicCore Galactic - Version 45.7",
+    "ehr_software": "EpicCore Galactic - Version 45.7",
     "provider_id": "66666666666",
     "facility_id_number": "2.16.840.1.113883.4.6",
     "facility_name": "Sacramento Hospital",
