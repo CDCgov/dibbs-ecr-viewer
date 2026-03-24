@@ -55,7 +55,7 @@ import EvaluateTable, {
 } from "@/app/view-data/components/EvaluateTable";
 import { FieldValue } from "@/app/view-data/components/FieldValue";
 import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
-import { FhirIndex, getResourcesByType } from "@/app/view-data/services/fhirResourcesIndexService";
+import { FhirIndex, getResourceById, getResourcesByType } from "@/app/view-data/services/fhirResourcesIndexService";
 
 export interface ResultObject {
   [key: string]: AccordionItem[];
@@ -90,7 +90,7 @@ export const evaluateLabInfoData = (
   labReports: DiagnosticReport[],
   accordionHeadingLevel: HeadingLevel = "h5"
 ): LabReportElementData[] => {
-
+  // the keys are the organization id, the value is an array of jsx elements of diagnostic reports
   let organizationItems: ResultObject = {};
   const jsonLabs = getAllLabJsonObjects(fhirIndex);
 
@@ -101,12 +101,7 @@ export const evaluateLabInfoData = (
     const labReportJson = getJsonLab(jsonLabs, obs);
     ensureReportHasDateTime(report, obs);
 
-    const content = getLabsContent(
-      report,
-      obs,
-      fhirIndex,
-      labReportJson
-    );
+    const content = getLabsContent(report, obs, fhirIndex, labReportJson);
     const organizationId = (report.performer?.[0].reference ?? "").replace(
       "Organization/",
       ""
@@ -143,7 +138,7 @@ export const evaluateLabInfoData = (
     organizationItems = groupItemByOrgId(
       organizationItems,
       organizationId,
-      item,
+      item
     );
   }
 
@@ -166,7 +161,7 @@ export const getObservations = (
     .map((obsRef) => {
       if (obsRef.reference) {
         const [_, id] = obsRef.reference.split("/");
-        return fhirIndex.fhirResourcesById[id] as Observation;
+        return getResourceById<Observation>(fhirIndex, "Observation", id)
       }
     })
     .filter(notEmpty);
@@ -259,8 +254,6 @@ export const getAllLabJsonObjects = (fhirIndex: FhirIndex): HtmlTableJson[] => {
     compositionLabs,
     fhirPathMappings.labResultDiv
   );
-  // const labsString = evaluateValue(fhirBundle, fhirPathMappings.labResultDiv);
-  // console.log(labsString);
   return formatTablesToJSON(labsString);
 };
 

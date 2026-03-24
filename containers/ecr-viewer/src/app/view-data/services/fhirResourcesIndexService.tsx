@@ -1,18 +1,19 @@
 import { Bundle, Resource } from "fhir/r4";
 
-export type ResourceType = Resource["resourceType"];
-export type FhirResourceByTypeIndex = {
-  // This says: If the key is 'Patient', the value is Record<string, Patient>
-  [K in ResourceType]?: Record<string, Extract<Resource, { resourceType: K }>>;
+type ResourceType = Resource["resourceType"];
+type ResourceWithType<K extends ResourceType> = Resource & { resourceType: K };
+
+export type FhirIndexByType = {
+  [K in ResourceType]?: ResourceWithType<K>[];
 };
 
-export interface FhirResourceByIdIndex {
-  [id: string]: Resource
-}
+export type FhirIndexByTypeAndId = {
+  [K in ResourceType]?: Record<string, ResourceWithType<K>>;
+};
 
 export interface FhirIndex {
-  fhirResourcesByType: FhirResourceByTypeIndex;
-  fhirResourcesById: FhirResourceByIdIndex;
+  fhirIndexByType: FhirIndexByType;
+  fhirIndexByTypeAndId: FhirIndexByTypeAndId;
 }
 
 /**
@@ -22,8 +23,8 @@ export interface FhirIndex {
  * If no matching observations are found, an empty object is returned.
  */
 export const getFhirIndex = (fhirBundle: Bundle): FhirIndex => {
-  const fhirResourcesByType: FhirResourceByTypeIndex = {};
-  const fhirResourcesById: FhirResourceByIdIndex = {};
+  const fhirIndexByType: FhirIndexByType = {};
+  const fhirIndexByTypeAndId: FhirIndexByTypeAndId = {};
 
   fhirBundle.entry?.forEach((entry) => {
     const resource = entry.resource;
@@ -31,28 +32,45 @@ export const getFhirIndex = (fhirBundle: Bundle): FhirIndex => {
     const resourceId = resource?.id;
 
     if (resourceType && resourceId) {
-      fhirResourcesById[resourceId] = resource;
+      // by Type (array)
+      fhirIndexByType[resourceType] ??= [];
+      fhirIndexByType[resourceType].push(resource);
 
-      fhirResourcesByType[resourceType] ??= {};
-      fhirResourcesByType[resourceType][resourceId] = resource;
+      // by Type and ID (map)
+      fhirIndexByTypeAndId[resourceType] ??= {};
+      fhirIndexByTypeAndId[resourceType][resourceId] = resource;
     }
   });
 
-  return { fhirResourcesByType, fhirResourcesById };
+  return { fhirIndexByType, fhirIndexByTypeAndId };
 };
 
 /**
- * Grabs all resources of a specific type.
+ * Returns array of all resources of a specific type.
  */
+// TODO ANGELA: ADD TESTS
 export function getResourcesByType<T extends Resource>(
   fhirIndex: FhirIndex,
   type: T["resourceType"]
 ): T[] {
-  const resourceMap = fhirIndex.fhirResourcesByType[type];
+  const resourceMap = fhirIndex.fhirIndexByType[type];
   
   if (!resourceMap) return [];
 
-  // We cast to 'any' internally to satisfy the complex mapped type,
-  // but the external return type is perfectly narrowed to T[]
-  return Object.values(resourceMap ?? {}) as T[];
+  return resourceMap as T[];
+}
+
+/**
+ * Returns FHIR resource by ID and check resource type.
+ */
+// TODO ANGELA: ADD TESTS. Returns undefined if the ID doesn’t exist. Returns undefined if the ID exists but is the wrong resourceType.
+export function getResourceById<T extends Resource>(
+  fhirIndex: FhirIndex,
+  type: T["resourceType"],
+  id: string
+): T | undefined {
+  
+  const resource = fhirIndex.fhirIndexByTypeAndId[type]?.[id];
+  if (resource?.resourceType === type) return resource as T;
+  return undefined;
 }

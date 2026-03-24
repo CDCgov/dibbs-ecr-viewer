@@ -25,6 +25,7 @@ import { evaluateEcrSummaryConditionSummary, evaluateEcrSummaryEncounterDetails,
  * @param params.searchParams searchParams for page
  * @returns The main eCR Viewer JSX component.
  */
+// TODO ANGELA: Remove performance.now() calls
 const ECRViewerPage = async ({
   searchParams,
 }: {
