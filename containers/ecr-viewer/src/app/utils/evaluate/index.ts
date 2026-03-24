@@ -342,7 +342,18 @@ export const evaluateReference = <T extends Resource>(
   return result;
 };
 
-// TODO ANGELA: Add JSdoc
+/**
+ * Evaluates a reference to return a resource. The resulting type of the expected resource
+ * must be provided as a type parameter. This will also be checked at runtime and an
+ * error logged if it does not match.
+ *
+ * Expects a single element to be returned from the reference.
+ * 
+ * @param fhirIndex - FHIR resources indexed by type & by ID
+ * @param ref - The reference string (e.g., "Patient/123").
+ * @returns The FHIR Resource or undefined if not found.
+ */
+// TODO ANGELA: Eventually want this to replace evaluateReference completely
 export const evaluateReference2 = <T extends Resource>(
   fhirIndex: FhirIndex,
   ref?: string | Reference

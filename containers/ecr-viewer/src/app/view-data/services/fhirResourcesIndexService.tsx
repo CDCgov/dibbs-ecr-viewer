@@ -17,10 +17,17 @@ export interface FhirIndex {
 }
 
 /**
- * Extracts all lab `Observation` resources from a given FHIR bundle across all diagnostic reports.
- * @param fhirBundle - The FHIR bundle containing related resources for the lab report.
- * @returns An object of `Observation` resources with the observation `id` (string) as the key.
- * If no matching observations are found, an empty object is returned.
+ * Builds an index of FHIR resources from a given FHIR bundle.
+ * 
+ * Extracts all resources from a given FHIR bundle and organizes them into two maps:
+ * 1. `fhirIndexByType` – an map of resources keyed by `resourceType` mapping to an array of all resources of that type.
+ * 2. `fhirIndexByTypeAndId` – a map of resources keyed by `resourceType` and then by `id`.
+ *
+ * @param fhirBundle - FHIR bundle
+ * @returns A `FhirIndex` object containing:
+ *   - `fhirIndexByType`: FHIR resources grouped by type as arrays.
+ *   - `fhirIndexByTypeAndId`: FHIR resources grouped by type and ID for fast lookup.
+ * Both will return empty arrays/objects if no resources of a given type exist.
  */
 export const getFhirIndex = (fhirBundle: Bundle): FhirIndex => {
   const fhirIndexByType: FhirIndexByType = {};
@@ -46,9 +53,15 @@ export const getFhirIndex = (fhirBundle: Bundle): FhirIndex => {
 };
 
 /**
- * Returns array of all resources of a specific type.
+ * Returns array of all resources of a specific type (i.e. "Observation").
+ * 
+ * @template T - The expected FHIR Resource type (e.g., Observation, Patient).
+ * @param fhirIndex - FHIR resources indexed by type & by ID
+ * @param type - The resourceType to retrieve (e.g., "Observation").
+ * 
+ * @returns Array of FHIR resources of type `T`, or empty array if 
+ * no resources of specified type exist.
  */
-// TODO ANGELA: ADD TESTS
 export function getResourcesByType<T extends Resource>(
   fhirIndex: FhirIndex,
   type: T["resourceType"]
@@ -62,6 +75,15 @@ export function getResourcesByType<T extends Resource>(
 
 /**
  * Returns FHIR resource by ID and check resource type.
+ * Expects only one resource to be returned.
+ * 
+ * @template T - The expected FHIR Resource type (e.g., Observation, Patient).
+ * @param fhirIndex - FHIR resources indexed by type & by ID
+ * @param type - The resourceType to retrieve (e.g., "Observation").
+ * @param id - The unique identifier of the resource.
+ * 
+ * @returns FHIR resource of type `T` if it exists and resourceType matches `type`
+ * Returns undefined if no resource exists with given ID and resourceType
  */
 // TODO ANGELA: ADD TESTS. Returns undefined if the ID doesn’t exist. Returns undefined if the ID exists but is the wrong resourceType.
 export function getResourceById<T extends Resource>(

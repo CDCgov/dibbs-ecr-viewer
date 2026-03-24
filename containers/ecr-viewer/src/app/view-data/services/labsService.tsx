@@ -481,7 +481,6 @@ export const evaluateDiagnosticReportData = (
       columnName: "Test Method",
       infoPath: "observationDeviceReference",
       applyToValue: (ref) => {
-        // TODO ANGELA: review evaluateReference2
         const device = evaluateReference2<Device>(fhirIndex, ref);
         return safeParse(device?.deviceName?.[0]?.name ?? "");
       },
