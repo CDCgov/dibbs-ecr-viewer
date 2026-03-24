@@ -17,6 +17,7 @@ import {
 } from "./services/evaluateFhirDataService";
 import { getFhirData, isSuccessResponse } from "./services/fhirDataService";
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
+import { evaluateEcrSummaryConditionSummary, evaluateEcrSummaryEncounterDetails, evaluateEcrSummaryPatientDetails } from "./services/ecrSummaryService";
 
 /**
  * Functional component for rendering the eCR Viewer page.
@@ -81,8 +82,17 @@ const ECRViewerPage = async ({
             </div>
           </div>
           <EcrSummary
-            fhirBundle={fhirBundle}
-            fhirIndex={fhirIndex}
+            patientDetails={
+              evaluateEcrSummaryPatientDetails(fhirBundle).availableData
+            }
+            encounterDetails={
+              evaluateEcrSummaryEncounterDetails(fhirBundle).availableData
+            }
+            conditionSummary={evaluateEcrSummaryConditionSummary(
+              fhirBundle,
+              fhirIndex,
+              snomedCode
+            )}
             snomed={snomedCode}
           />
           <EcrDocument initialAccordionItems={accordionItems} />

@@ -342,8 +342,8 @@ export const evaluateReference = <T extends Resource>(
   return result;
 };
 
+// TODO ANGELA: Add JSdoc
 export const evaluateReference2 = <T extends Resource>(
-  // fhirData: FhirData,
   fhirIndex: FhirIndex,
   ref?: string | Reference
 ): T | undefined => {
@@ -354,7 +354,7 @@ export const evaluateReference2 = <T extends Resource>(
 
   const [resourceType, id] = ref.split("/");
   const result = fhirIndex.fhirResourcesById[id];
-  // TODO: Add type checking
+  // TODO ANGELA: Add type checking
 
   if (result && result?.resourceType !== resourceType) {
     console.error(

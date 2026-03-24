@@ -3,8 +3,6 @@ import React from "react";
 import { Bundle, DiagnosticReport } from "fhir/r4";
 
 import { AccordionItem } from "@/app/types";
-import { evaluateAll } from "@/app/utils/evaluate";
-import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toKebabCase } from "@/app/utils/format-utils";
 import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
 import Demographics from "@/app/view-data/components/Demographics";
@@ -32,56 +30,29 @@ import { evaluateClinicalData } from "./clinical-data";
 /**
  * Functional component for an accordion container displaying various sections of eCR information.
  * @param fhirBundle - The FHIR bundle containing patient information.
+ * @param fhirIndex - FHIR resources indexed by type & by ID
  * @returns The JSX element representing the accordion container.
  */
 export const getEcrDocumentAccordionItems = (
   fhirBundle: Bundle,
   fhirIndex: FhirIndex
 ): AccordionItem[] => {
-  const t0 = performance.now();
   const demographicsData = evaluateDemographicsData(fhirBundle);
-  const t11 = performance.now();
-  console.log("Time to run evaluateDemographics", t11 - t0);
   const socialData = evaluateSocialData(fhirBundle);
-  const t12 = performance.now();
-  console.log("Time to run evaluateSocialData", t12 - t0);
   const pregnancyData = evaluatePregnancyData(fhirBundle);
-  const t13 = performance.now();
-  console.log("Time to run evaluatePregnancyData", t13 - t0);
   const hospitalEncounterData = evaluateHospitalEncounterData(fhirBundle);
-  const t14 = performance.now();
-  console.log("Time to run evaluateHospitalEncounterData", t14 - t0);
   const encounterData = evaluateEncounterData(fhirBundle);
-  const t15 = performance.now();
-  console.log("Time to run evaluateEncounterData", t15 - t0);
   const providerData = evaluateProviderData(fhirBundle);
-  const t16 = performance.now();
-  console.log("Time to run evaluateProviderData", t16 - t0);
   const clinicalData = evaluateClinicalData(fhirBundle);
-  const t17 = performance.now();
-  console.log("Time to run evaluateClinicalData", t17 - t0);
   const ecrMetadata = evaluateEcrMetadata(fhirBundle);
-  const t18 = performance.now();
-  console.log("Time to run evaluateEcrMetadata", t18 - t0);
   const facilityData = evaluateFacilityData(fhirBundle);
-  const t19 = performance.now();
-  console.log("Time to run evaluateFacilityData", t19 - t0);
-  const lab0 = performance.now();
-
   const diagnosticReports = getResourcesByType<DiagnosticReport>(fhirIndex, 'DiagnosticReport')
-  const lab1 = performance.now();
-  console.log("Time to evaluate diagnosticReports", lab1 - lab0);
   const labInfoData = evaluateLabInfoData(
     fhirBundle,
-    diagnosticReports,
-    fhirIndex
+    fhirIndex,
+    diagnosticReports
   );
-  const t20 = performance.now();
-  console.log("Time to run evaluateLabInfoData", t20 - t0);
-
-  const t1 = performance.now();
-  console.log("Time to evaluate all : ", t1 - t0);
-
+  
   const hasUnavailableData = () => {
     const unavailableDataArrays = [
       demographicsData.unavailableData,
@@ -106,7 +77,6 @@ export const getEcrDocumentAccordionItems = (
     );
   };
 
-  const t2 = performance.now();
   const accordionItems: AccordionItem[] = [
     {
       title: "Patient Info",
@@ -280,8 +250,6 @@ export const getEcrDocumentAccordionItems = (
       headingLevel: "h3",
     };
   });
-  const t3 = performance.now();
-  console.log("Time to build accordion components", t3 - t2);
-
+  
   return accordionItems;
 };
