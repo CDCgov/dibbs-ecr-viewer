@@ -6,11 +6,13 @@ import { AccordionItem } from "@/app/types";
 import { toKebabCase } from "@/app/utils/format-utils";
 
 import { DataDisplay, DataTableDisplay, DisplayDataProps } from "./DataDisplay";
+import { evaluateEcrSummaryConditionSummary, evaluateEcrSummaryEncounterDetails, evaluateEcrSummaryPatientDetails } from "@/app/view-data/services/ecrSummaryService";
+import { Bundle } from "fhir/r4";
+import { FhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
 interface EcrSummaryProps {
-  patientDetails: DisplayDataProps[];
-  encounterDetails: DisplayDataProps[];
-  conditionSummary: ConditionSummary[];
+  fhirBundle: Bundle;
+  fhirIndex: FhirIndex;
   snomed?: string;
 }
 
@@ -33,125 +35,135 @@ export interface ConditionSummary {
  * @returns a react element for eCR Summary
  */
 const EcrSummary: React.FC<EcrSummaryProps> = ({
-  patientDetails,
-  encounterDetails,
-  conditionSummary,
-  snomed,
+  fhirBundle,
+  fhirIndex,
+  snomed
 }) => {
-  const conditionSummaryAccordionItems: AccordionItem[] = conditionSummary.map(
-    (condition) => {
-      const hasImmunizationDetails = condition.immunizationDetails.length > 0;
-      const hasClinicalDetails = condition.clinicalDetails.length > 0;
-      return {
-        title: condition.title,
-        id: toKebabCase(condition.title),
-        headingLevel: "h4",
-        className: "side-nav-ignore border-1px border-accent-cool-darker",
-        expanded: snomed === condition.snomed || conditionSummary.length === 1,
-        content: (
-          <>
-            {condition.conditionDetails.map((item, i) => (
-              <DataDisplay item={item} key={`condition-${i}`} />
+  const t0 = performance.now();
+  const patientDetails = evaluateEcrSummaryPatientDetails(fhirBundle).availableData;
+  const encounterDetails = evaluateEcrSummaryEncounterDetails(fhirBundle).availableData;
+  const conditionSummary = evaluateEcrSummaryConditionSummary(fhirBundle, fhirIndex, snomed);
+  const t1 = performance.now();
+  console.log("Evaluate eCR summary: ", t1 - t0);
+  try {
+    const conditionSummaryAccordionItems: AccordionItem[] = conditionSummary.map(
+      (condition) => {
+        const hasImmunizationDetails = condition.immunizationDetails.length > 0;
+        const hasClinicalDetails = condition.clinicalDetails.length > 0;
+        return {
+          title: condition.title,
+          id: toKebabCase(condition.title),
+          headingLevel: "h4",
+          className: "side-nav-ignore border-1px border-accent-cool-darker",
+          expanded: snomed === condition.snomed || conditionSummary.length === 1,
+          content: (
+            <>
+              {condition.conditionDetails.map((item, i) => (
+                <DataDisplay item={item} key={`condition-${i}`} />
+              ))}
+              {(hasImmunizationDetails || hasClinicalDetails) && (
+                <>
+                  <h5
+                    className="text-bold margin-top-0 margin-bottom-1"
+                    id="relevant-clinical"
+                  >
+                    Clinical Sections Relevant to Reportable Condition
+                  </h5>
+                  {hasImmunizationDetails && (
+                    <div className="margin-top-0">
+                      {condition.immunizationDetails.map((item, i) => (
+                        <DataTableDisplay item={item} key={`imx-${i}`} />
+                      ))}
+                    </div>
+                  )}
+                  {hasClinicalDetails && (
+                    <div className="margin-top-0">
+                      {condition.clinicalDetails.map((item, i) => (
+                        <DataTableDisplay item={item} key={`detail-${i}`} />
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+              {condition.labDetails.length > 0 && (
+                <>
+                  <h5
+                    className="text-bold margin-0 margin-bottom-1"
+                    id="relevant-labs"
+                  >
+                    Lab Results Relevant to Reportable Condition
+                  </h5>
+                  <div className="margin-top-0">
+                    {condition.labDetails.map((item, index) => (
+                      <DataTableDisplay
+                        item={item}
+                        key={`${item.title}-${index}`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </>
+          ),
+        };
+      },
+    );
+    return (
+      <div
+        className="usa-summary-box padding-3"
+        aria-labelledby="summary-box-key-information"
+      >
+        <div className="usa-summary-box__body margin-bottom-05">
+          <h3
+            className="summary-box-key-information side-nav-ignore"
+            id="patient-summary"
+          >
+            Patient Summary
+          </h3>
+          <div className="usa-summary-box__text">
+            {patientDetails.map((item, i) => (
+              <DataDisplay item={item} key={`pat-${i}`} themeColor="blue" />
             ))}
-            {(hasImmunizationDetails || hasClinicalDetails) && (
-              <>
-                <h5
-                  className="text-bold margin-top-0 margin-bottom-1"
-                  id="relevant-clinical"
-                >
-                  Clinical Sections Relevant to Reportable Condition
-                </h5>
-                {hasImmunizationDetails && (
-                  <div className="margin-top-0">
-                    {condition.immunizationDetails.map((item, i) => (
-                      <DataTableDisplay item={item} key={`imx-${i}`} />
-                    ))}
-                  </div>
-                )}
-                {hasClinicalDetails && (
-                  <div className="margin-top-0">
-                    {condition.clinicalDetails.map((item, i) => (
-                      <DataTableDisplay item={item} key={`detail-${i}`} />
-                    ))}
-                  </div>
-                )}
-              </>
-            )}
-            {condition.labDetails.length > 0 && (
-              <>
-                <h5
-                  className="text-bold margin-0 margin-bottom-1"
-                  id="relevant-labs"
-                >
-                  Lab Results Relevant to Reportable Condition
-                </h5>
-                <div className="margin-top-0">
-                  {condition.labDetails.map((item, index) => (
-                    <DataTableDisplay
-                      item={item}
-                      key={`${item.title}-${index}`}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-          </>
-        ),
-      };
-    },
-  );
-  return (
-    <div
-      className="usa-summary-box padding-3"
-      aria-labelledby="summary-box-key-information"
-    >
-      <div className="usa-summary-box__body margin-bottom-05">
-        <h3
-          className="summary-box-key-information side-nav-ignore"
-          id="patient-summary"
-        >
-          Patient Summary
-        </h3>
-        <div className="usa-summary-box__text">
-          {patientDetails.map((item, i) => (
-            <DataDisplay item={item} key={`pat-${i}`} themeColor="blue" />
-          ))}
-        </div>
-      </div>
-      <div className="usa-summary-box__body">
-        <h3
-          className="summary-box-key-information side-nav-ignore"
-          id="encounter-summary"
-        >
-          Encounter Summary
-        </h3>
-        <div className="usa-summary-box__text">
-          {encounterDetails.map((item, i) => (
-            <DataDisplay item={item} key={`enc-${i}`} themeColor="blue" />
-          ))}
-        </div>
-      </div>
-      <div className="usa-summary-box__body">
-        <h3
-          className="summary-box-key-information side-nav-ignore header-with-tag"
-          id="condition-summary"
-        >
-          <div>Condition Summary</div>
-          <div>
-            <Tag className="tag-info">
-              {numConditionsText(conditionSummaryAccordionItems.length)}
-            </Tag>
           </div>
-        </h3>
-        <div className="usa-summary-box__text condition-details-accordion">
-          <Accordion
-            items={conditionSummaryAccordionItems}
-            className="accordion-primary"
-          />
+        </div>
+        <div className="usa-summary-box__body">
+          <h3
+            className="summary-box-key-information side-nav-ignore"
+            id="encounter-summary"
+          >
+            Encounter Summary
+          </h3>
+          <div className="usa-summary-box__text">
+            {encounterDetails.map((item, i) => (
+              <DataDisplay item={item} key={`enc-${i}`} themeColor="blue" />
+            ))}
+          </div>
+        </div>
+        <div className="usa-summary-box__body">
+          <h3
+            className="summary-box-key-information side-nav-ignore header-with-tag"
+            id="condition-summary"
+          >
+            <div>Condition Summary</div>
+            <div>
+              <Tag className="tag-info">
+                {numConditionsText(conditionSummaryAccordionItems.length)}
+              </Tag>
+            </div>
+          </h3>
+          <div className="usa-summary-box__text condition-details-accordion">
+            <Accordion
+              items={conditionSummaryAccordionItems}
+              className="accordion-primary"
+            />
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  } finally {
+    const t2 = performance.now()
+    console.log("EcrSummary: ", t2 - t0);
+  }
 };
 
 /**

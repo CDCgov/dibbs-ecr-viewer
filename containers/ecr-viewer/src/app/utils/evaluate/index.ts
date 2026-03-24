@@ -30,6 +30,7 @@ import {
 import { notEmpty } from "@/app/utils/data-utils";
 
 import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
+import { FhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
 // TODO: Follow up on FHIR/fhirpath typing
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -339,6 +340,29 @@ export const evaluateReference = <T extends Resource>(
   }
 
   return result;
+};
+
+export const evaluateReference2 = <T extends Resource>(
+  // fhirData: FhirData,
+  fhirIndex: FhirIndex,
+  ref?: string | Reference
+): T | undefined => {
+  if (typeof ref !== "string") {
+    ref = formatReference(ref);
+  }
+  if (!ref) return undefined;
+
+  const [resourceType, id] = ref.split("/");
+  const result = fhirIndex.fhirResourcesById[id];
+  // TODO: Add type checking
+
+  if (result && result?.resourceType !== resourceType) {
+    console.error(
+      `Resource type mismatch: Expected ${resourceType}, but got ${result?.resourceType}`
+    );
+  }
+
+  return result as T;
 };
 
 type RefPathTypes = {
