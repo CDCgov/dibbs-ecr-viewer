@@ -29,85 +29,75 @@ import {
  * @param params.searchParams searchParams for page
  * @returns The main eCR Viewer JSX component.
  */
-// TODO ANGELA: Remove performance.now() calls
 const ECRViewerPage = async ({
   searchParams,
 }: {
   searchParams: Promise<{ id?: string; "snomed-code"?: string }>;
 }) => {
-  const t0 = performance.now();
-  try {
-    const _searchParams = await searchParams;
-    const fhirId = _searchParams.id ?? "";
-    const snomedCode = _searchParams["snomed-code"] ?? "";
+  const _searchParams = await searchParams;
+  const fhirId = _searchParams.id ?? "";
+  const snomedCode = _searchParams["snomed-code"] ?? "";
 
-    const user = await getLoggedInUserSession();
-    // If we have a user that means we're using IDP auth and not NBS Auth, so we
-    // need to check if they're authorized to view this eCR
-    if (user) {
-      const authed = await isLoggedInUserEcrAuthed(fhirId);
-      if (!authed) notFound();
-    }
-
-    const resp = await getFhirData({ eicr_id: fhirId });
-    if (!isSuccessResponse(resp)) {
-      if (resp.status === 404) {
-        return <RetrievalFailed />;
-      } else {
-        return (
-          <GenericError>
-            <pre>
-              <code>{`${resp.status}: ${resp.payload.message}`}</code>
-            </pre>
-          </GenericError>
-        );
-      }
-    }
-
-    const fhirBundle = resp.payload.fhirBundle;
-    const fhirIndex = getFhirIndex(fhirBundle);
-    const patientName = evaluatePatientName(fhirBundle, true);
-    const patientDOB = evaluatePatientDOB(fhirBundle);
-
-    const t2 = performance.now();
-    const accordionItems = getEcrDocumentAccordionItems(fhirBundle, fhirIndex);
-    const t3 = performance.now();
-    console.log("Time to run getEcrDocumentAccordionItems: ", t3 - t2);
-    return (
-      <ECRViewerLayout patientName={patientName} patientDOB={patientDOB}>
-        <SideNav />
-        <div className="ecr-viewer-container">
-          <div className="margin-bottom-3">
-            <h2 className="margin-bottom-05 margin-top-3" id="ecr-summary">
-              eCR Summary
-            </h2>
-            <div className="text-base-darker line-height-sans-5">
-              Provides key info upfront to help you understand the eCR at a
-              glance
-            </div>
-          </div>
-          <EcrSummary
-            patientDetails={
-              evaluateEcrSummaryPatientDetails(fhirBundle).availableData
-            }
-            encounterDetails={
-              evaluateEcrSummaryEncounterDetails(fhirBundle).availableData
-            }
-            conditionSummary={evaluateEcrSummaryConditionSummary(
-              fhirBundle,
-              fhirIndex,
-              snomedCode,
-            )}
-            snomed={snomedCode}
-          />
-          <EcrDocument initialAccordionItems={accordionItems} />
-        </div>
-      </ECRViewerLayout>
-    );
-  } finally {
-    const t1 = performance.now();
-    console.log("Time to run EcrViewerPage: ", t1 - t0);
+  const user = await getLoggedInUserSession();
+  // If we have a user that means we're using IDP auth and not NBS Auth, so we
+  // need to check if they're authorized to view this eCR
+  if (user) {
+    const authed = await isLoggedInUserEcrAuthed(fhirId);
+    if (!authed) notFound();
   }
+
+  const resp = await getFhirData({ eicr_id: fhirId });
+  if (!isSuccessResponse(resp)) {
+    if (resp.status === 404) {
+      return <RetrievalFailed />;
+    } else {
+      return (
+        <GenericError>
+          <pre>
+            <code>{`${resp.status}: ${resp.payload.message}`}</code>
+          </pre>
+        </GenericError>
+      );
+    }
+  }
+
+  const fhirBundle = resp.payload.fhirBundle;
+  const fhirIndex = getFhirIndex(fhirBundle);
+  const patientName = evaluatePatientName(fhirBundle, true);
+  const patientDOB = evaluatePatientDOB(fhirBundle);
+
+  const accordionItems = getEcrDocumentAccordionItems(fhirBundle, fhirIndex);
+  return (
+    <ECRViewerLayout patientName={patientName} patientDOB={patientDOB}>
+      <SideNav />
+      <div className="ecr-viewer-container">
+        <div className="margin-bottom-3">
+          <h2 className="margin-bottom-05 margin-top-3" id="ecr-summary">
+            eCR Summary
+          </h2>
+          <div className="text-base-darker line-height-sans-5">
+            Provides key info upfront to help you understand the eCR at a
+            glance
+          </div>
+        </div>
+        <EcrSummary
+          patientDetails={
+            evaluateEcrSummaryPatientDetails(fhirBundle).availableData
+          }
+          encounterDetails={
+            evaluateEcrSummaryEncounterDetails(fhirBundle).availableData
+          }
+          conditionSummary={evaluateEcrSummaryConditionSummary(
+            fhirBundle,
+            fhirIndex,
+            snomedCode,
+          )}
+          snomed={snomedCode}
+        />
+        <EcrDocument initialAccordionItems={accordionItems} />
+      </div>
+    </ECRViewerLayout>
+  );
 };
 
 export default ECRViewerPage;

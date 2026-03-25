@@ -323,7 +323,6 @@ describe("Evaluate Reference", () => {
   });
 });
 
-// TODO ANGELA: Rename?
 describe("Evaluate Reference 2", () => {
   const resource1 = {
     fullUrl: "urn:uuid:1",

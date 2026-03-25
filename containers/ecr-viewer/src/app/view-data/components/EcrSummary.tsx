@@ -6,13 +6,6 @@ import { AccordionItem } from "@/app/types";
 import { toKebabCase } from "@/app/utils/format-utils";
 
 import { DataDisplay, DataTableDisplay, DisplayDataProps } from "./DataDisplay";
-import {
-  evaluateEcrSummaryConditionSummary,
-  evaluateEcrSummaryEncounterDetails,
-  evaluateEcrSummaryPatientDetails,
-} from "@/app/view-data/services/ecrSummaryService";
-import { Bundle } from "fhir/r4";
-import { FhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
 interface EcrSummaryProps {
   patientDetails: DisplayDataProps[];
@@ -107,7 +100,6 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
       };
     },
   );
-
   return (
     <div
       className="usa-summary-box padding-3"

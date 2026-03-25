@@ -104,15 +104,12 @@ export const evaluateLabInfoData = (
     const obs = getObservations(report, fhirIndex);
     const labReportJson = getJsonLab(jsonLabs, obs);
     ensureReportHasDateTime(report, obs);
-
     const content = getLabsContent(report, obs, fhirIndex, labReportJson);
     const organizationId = (report.performer?.[0].reference ?? "").replace(
       "Organization/",
       "",
     );
-
     const title = formatCodeableConcept(report.code) ?? "Unknown";
-
     const item = {
       title: (
         <div className="display-flex flex-row flex-justify flex-align-center gap-05">
