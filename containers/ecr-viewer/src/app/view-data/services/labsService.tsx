@@ -55,7 +55,11 @@ import EvaluateTable, {
 } from "@/app/view-data/components/EvaluateTable";
 import { FieldValue } from "@/app/view-data/components/FieldValue";
 import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
-import { FhirIndex, getResourceById, getResourcesByType } from "@/app/view-data/services/fhirResourcesIndexService";
+import {
+  FhirIndex,
+  getResourceById,
+  getResourcesByType,
+} from "@/app/view-data/services/fhirResourcesIndexService";
 
 export interface ResultObject {
   [key: string]: AccordionItem[];
@@ -88,7 +92,7 @@ export const evaluateLabInfoData = (
   fhirBundle: Bundle,
   fhirIndex: FhirIndex,
   labReports: DiagnosticReport[],
-  accordionHeadingLevel: HeadingLevel = "h5"
+  accordionHeadingLevel: HeadingLevel = "h5",
 ): LabReportElementData[] => {
   // the keys are the organization id, the value is an array of jsx elements of diagnostic reports
   let organizationItems: ResultObject = {};
@@ -104,7 +108,7 @@ export const evaluateLabInfoData = (
     const content = getLabsContent(report, obs, fhirIndex, labReportJson);
     const organizationId = (report.performer?.[0].reference ?? "").replace(
       "Organization/",
-      ""
+      "",
     );
 
     const title = formatCodeableConcept(report.code) ?? "Unknown";
@@ -138,7 +142,7 @@ export const evaluateLabInfoData = (
     organizationItems = groupItemByOrgId(
       organizationItems,
       organizationId,
-      item
+      item,
     );
   }
 
@@ -161,7 +165,7 @@ export const getObservations = (
     .map((obsRef) => {
       if (obsRef.reference) {
         const [_, id] = obsRef.reference.split("/");
-        return getResourceById<Observation>(fhirIndex, "Observation", id)
+        return getResourceById<Observation>(fhirIndex, "Observation", id);
       }
     })
     .filter(notEmpty);
@@ -170,7 +174,6 @@ export const getObservations = (
   } finally {
   }
 };
-
 
 const ensureReportHasDateTime = (
   report: DiagnosticReport,
@@ -249,10 +252,13 @@ export const getJsonLab = (
  */
 export const getAllLabJsonObjects = (fhirIndex: FhirIndex): HtmlTableJson[] => {
   // Get lab reports HTML String (for all lab reports) & convert to JSON
-  const compositionLabs = getResourcesByType<Composition>(fhirIndex, 'Composition')[0];
+  const compositionLabs = getResourcesByType<Composition>(
+    fhirIndex,
+    "Composition",
+  )[0];
   const labsString = evaluateValue(
     compositionLabs,
-    fhirPathMappings.labResultDiv
+    fhirPathMappings.labResultDiv,
   );
   return formatTablesToJSON(labsString);
 };
@@ -610,7 +616,10 @@ export const evaluateLabOrganizationData = (
   fhirIndex: FhirIndex,
   labReportCount: number,
 ) => {
-  const orgMappings = getResourcesByType<Organization>(fhirIndex, 'Organization');
+  const orgMappings = getResourcesByType<Organization>(
+    fhirIndex,
+    "Organization",
+  );
   let matchingOrg: Organization = orgMappings.filter(
     (organization) => organization.id === id,
   )[0];
@@ -746,7 +755,7 @@ const getLabsContent = (
         evaluateValue(labSpecimen, fhirPathMappings.specimenBodySite) ||
         returnFieldValueFromLabHtmlString(
           labReportJson,
-          "Anatomical Location / Laterality"
+          "Anatomical Location / Laterality",
         ),
       className: "lab-text-content",
     },
@@ -754,7 +763,7 @@ const getLabsContent = (
       title: "Collection Method/Volume",
       value: returnFieldValueFromLabHtmlString(
         labReportJson,
-        "Collection Method / Volume"
+        "Collection Method / Volume",
       ),
       className: "lab-text-content",
     },
@@ -762,7 +771,7 @@ const getLabsContent = (
       title: "Resulting Agency Comment",
       value: returnFieldValueFromLabHtmlString(
         labReportJson,
-        "Resulting Agency Comment"
+        "Resulting Agency Comment",
       ),
       className: "lab-text-content",
     },
@@ -770,7 +779,7 @@ const getLabsContent = (
       title: "Authorizing Provider",
       value: returnFieldValueFromLabHtmlString(
         labReportJson,
-        "Authorizing Provider"
+        "Authorizing Provider",
       ),
       className: "lab-text-content",
     },

@@ -17,7 +17,11 @@ import {
 } from "./services/evaluateFhirDataService";
 import { getFhirData, isSuccessResponse } from "./services/fhirDataService";
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
-import { evaluateEcrSummaryConditionSummary, evaluateEcrSummaryEncounterDetails, evaluateEcrSummaryPatientDetails } from "./services/ecrSummaryService";
+import {
+  evaluateEcrSummaryConditionSummary,
+  evaluateEcrSummaryEncounterDetails,
+  evaluateEcrSummaryPatientDetails,
+} from "./services/ecrSummaryService";
 
 /**
  * Functional component for rendering the eCR Viewer page.
@@ -31,12 +35,12 @@ const ECRViewerPage = async ({
 }: {
   searchParams: Promise<{ id?: string; "snomed-code"?: string }>;
 }) => {
-  const t0 = performance.now()
+  const t0 = performance.now();
   try {
     const _searchParams = await searchParams;
     const fhirId = _searchParams.id ?? "";
     const snomedCode = _searchParams["snomed-code"] ?? "";
-  
+
     const user = await getLoggedInUserSession();
     // If we have a user that means we're using IDP auth and not NBS Auth, so we
     // need to check if they're authorized to view this eCR
@@ -44,7 +48,7 @@ const ECRViewerPage = async ({
       const authed = await isLoggedInUserEcrAuthed(fhirId);
       if (!authed) notFound();
     }
-  
+
     const resp = await getFhirData({ eicr_id: fhirId });
     if (!isSuccessResponse(resp)) {
       if (resp.status === 404) {
@@ -59,16 +63,16 @@ const ECRViewerPage = async ({
         );
       }
     }
-  
+
     const fhirBundle = resp.payload.fhirBundle;
     const fhirIndex = getFhirIndex(fhirBundle);
     const patientName = evaluatePatientName(fhirBundle, true);
     const patientDOB = evaluatePatientDOB(fhirBundle);
-    
-    const t2 = performance.now()
+
+    const t2 = performance.now();
     const accordionItems = getEcrDocumentAccordionItems(fhirBundle, fhirIndex);
-    const t3 = performance.now()
-    console.log("Time to run getEcrDocumentAccordionItems: ", t3 - t2 );
+    const t3 = performance.now();
+    console.log("Time to run getEcrDocumentAccordionItems: ", t3 - t2);
     return (
       <ECRViewerLayout patientName={patientName} patientDOB={patientDOB}>
         <SideNav />
@@ -92,7 +96,7 @@ const ECRViewerPage = async ({
             conditionSummary={evaluateEcrSummaryConditionSummary(
               fhirBundle,
               fhirIndex,
-              snomedCode
+              snomedCode,
             )}
             snomed={snomedCode}
           />
@@ -101,8 +105,8 @@ const ECRViewerPage = async ({
       </ECRViewerLayout>
     );
   } finally {
-    const t1 = performance.now()
-    console.log("Time to run EcrViewerPage: ", t1 - t0 );
+    const t1 = performance.now();
+    console.log("Time to run EcrViewerPage: ", t1 - t0);
   }
 };
 

@@ -163,7 +163,7 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
 export const evaluateEcrSummaryConditionSummary = (
   fhirBundle: Bundle,
   fhirIndex: FhirIndex,
-  snomedCode?: string
+  snomedCode?: string,
 ): ConditionSummary[] => {
   const rrConditions = evaluateAll(fhirBundle, fhirPathMappings.rrConditions);
   const conditionsList: {
@@ -171,7 +171,7 @@ export const evaluateEcrSummaryConditionSummary = (
   } = {};
   for (const observation of rrConditions) {
     const coding = observation?.valueCodeableConcept?.coding?.find(
-      (coding) => coding.system === "http://snomed.info/sct"
+      (coding) => coding.system === "http://snomed.info/sct",
     );
 
     const displayText =
@@ -190,12 +190,12 @@ export const evaluateEcrSummaryConditionSummary = (
     observation?.hasMember?.forEach((ref) => {
       const rrInfoObs: Observation | undefined = evaluateReference(
         fhirBundle,
-        ref.reference
+        ref.reference,
       );
       const { rules } = getReportabilityRulesReasons(rrInfoObs);
 
       rules.forEach((rule: string) =>
-        conditionsList[conditionListKey].ruleSummaries.add(rule)
+        conditionsList[conditionListKey].ruleSummaries.add(rule),
       );
     });
   }
@@ -215,7 +215,7 @@ export const evaluateEcrSummaryConditionSummary = (
               {[...conditionsList[conditionsListKey].ruleSummaries].map(
                 (summary) => (
                   <p key={summary}>{summary}</p>
-                )
+                ),
               )}
             </div>
           ),
@@ -227,13 +227,13 @@ export const evaluateEcrSummaryConditionSummary = (
       ),
       clinicalDetails: evaluateEcrSummaryRelevantClinicalDetails(
         fhirBundle,
-        conditionsListKey
+        conditionsListKey,
       ),
       labDetails: evaluateEcrSummaryRelevantLabResults(
         fhirBundle,
         fhirIndex,
         conditionsListKey,
-        false
+        false,
       ),
     };
 
@@ -302,7 +302,7 @@ export const evaluateEcrSummaryRelevantLabResults = (
   fhirBundle: Bundle,
   fhirIndex: FhirIndex,
   snomedCode: string,
-  lastDividerLine: boolean = true
+  lastDividerLine: boolean = true,
 ): DisplayDataProps[] => {
   let resultsArray: DisplayDataProps[] = [];
 
@@ -310,16 +310,19 @@ export const evaluateEcrSummaryRelevantLabResults = (
     return [];
   }
 
-  const labReports = getResourcesByType<DiagnosticReport>(fhirIndex, 'DiagnosticReport');
+  const labReports = getResourcesByType<DiagnosticReport>(
+    fhirIndex,
+    "DiagnosticReport",
+  );
   const labsWithCode = getRelevantResources(labReports, snomedCode);
   const labsWithCodeIds = new Set(labsWithCode.map((lab) => lab.id));
 
   const observationsList = getResourcesByType<Observation>(
     fhirIndex,
-    "Observation"
+    "Observation",
   );
   const relevantObsIds = new Set(
-    getRelevantResources(observationsList, snomedCode).map((entry) => entry.id)
+    getRelevantResources(observationsList, snomedCode).map((entry) => entry.id),
   );
 
   const labsFromObsWithCode = labReports.filter((lab) => {
@@ -345,14 +348,14 @@ export const evaluateEcrSummaryRelevantLabResults = (
     fhirBundle,
     fhirIndex,
     relevantLabs,
-    "h4"
+    "h4",
   );
 
   resultsArray = relevantLabElements.flatMap((element) =>
     element.diagnosticReportDataItems.map((reportItem) => ({
       value: <LabAccordion items={[reportItem]} />,
       dividerLine: false,
-    }))
+    })),
   );
 
   if (lastDividerLine) {

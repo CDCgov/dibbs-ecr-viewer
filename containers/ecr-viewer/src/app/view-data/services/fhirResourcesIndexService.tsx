@@ -66,10 +66,10 @@ export const getFhirIndex = (fhirBundle: Bundle): FhirIndex => {
 // Is it enough to get this? Argument of type '"Composition"' is not assignable to parameter of type '"Observation"'.
 export function getResourcesByType<T extends Resource>(
   fhirIndex: FhirIndex,
-  type: T["resourceType"]
+  type: T["resourceType"],
 ): T[] {
   const resourceMap = fhirIndex.fhirIndexByType[type];
-  
+
   if (!resourceMap) return [];
 
   return resourceMap as T[];
@@ -91,9 +91,8 @@ export function getResourcesByType<T extends Resource>(
 export function getResourceById<T extends Resource>(
   fhirIndex: FhirIndex,
   type: T["resourceType"],
-  id: string
+  id: string,
 ): T | undefined {
-  
   const resource = fhirIndex.fhirIndexByTypeAndId[type]?.[id];
   if (resource?.resourceType === type) return resource as T;
   return undefined;

@@ -32,7 +32,7 @@ describe("Snapshot test for eCR Document", () => {
 
     const items = getEcrDocumentAccordionItems(
       bundleEmpty,
-      fhirIndexBundleEmpty
+      fhirIndexBundleEmpty,
     );
 
     const { container } = render(<EcrDocument initialAccordionItems={items} />);

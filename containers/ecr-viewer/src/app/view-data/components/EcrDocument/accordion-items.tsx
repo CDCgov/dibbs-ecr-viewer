@@ -23,7 +23,10 @@ import {
   evaluatePregnancyData,
 } from "@/app/view-data/services/evaluateFhirDataService";
 import { evaluateLabInfoData } from "@/app/view-data/services/labsService";
-import { FhirIndex, getResourcesByType } from "@/app/view-data/services/fhirResourcesIndexService";
+import {
+  FhirIndex,
+  getResourcesByType,
+} from "@/app/view-data/services/fhirResourcesIndexService";
 
 import { evaluateClinicalData } from "./clinical-data";
 
@@ -35,7 +38,7 @@ import { evaluateClinicalData } from "./clinical-data";
  */
 export const getEcrDocumentAccordionItems = (
   fhirBundle: Bundle,
-  fhirIndex: FhirIndex
+  fhirIndex: FhirIndex,
 ): AccordionItem[] => {
   const demographicsData = evaluateDemographicsData(fhirBundle);
   const socialData = evaluateSocialData(fhirBundle);
@@ -46,13 +49,16 @@ export const getEcrDocumentAccordionItems = (
   const clinicalData = evaluateClinicalData(fhirBundle);
   const ecrMetadata = evaluateEcrMetadata(fhirBundle);
   const facilityData = evaluateFacilityData(fhirBundle);
-  const diagnosticReports = getResourcesByType<DiagnosticReport>(fhirIndex, 'DiagnosticReport')
+  const diagnosticReports = getResourcesByType<DiagnosticReport>(
+    fhirIndex,
+    "DiagnosticReport",
+  );
   const labInfoData = evaluateLabInfoData(
     fhirBundle,
     fhirIndex,
-    diagnosticReports
+    diagnosticReports,
   );
-  
+
   const hasUnavailableData = () => {
     const unavailableDataArrays = [
       demographicsData.unavailableData,
@@ -73,7 +79,7 @@ export const getEcrDocumentAccordionItems = (
       ecrMetadata.eicrAuthorDetails.map((details) => details.unavailableData),
     ];
     return unavailableDataArrays.some(
-      (array) => Array.isArray(array) && array.length > 0
+      (array) => Array.isArray(array) && array.length > 0,
     );
   };
 
@@ -127,7 +133,7 @@ export const getEcrDocumentAccordionItems = (
     {
       title: "Clinical Info",
       content: Object.values(clinicalData).some(
-        (section) => section.availableData.length > 0
+        (section) => section.availableData.length > 0,
       ) ? (
         <ClinicalInfo
           clinicalNotes={clinicalData.clinicalNotes.availableData}
@@ -169,7 +175,7 @@ export const getEcrDocumentAccordionItems = (
           ecrMetadata.eRSDProcessingInfo ||
           ecrMetadata.eicrDetails.availableData.length > 0 ||
           ecrMetadata.eicrAuthorDetails.find(
-            (authorDetails) => authorDetails.availableData.length > 0
+            (authorDetails) => authorDetails.availableData.length > 0,
           ) ||
           ecrMetadata.ecrCustodianDetails.availableData.length > 0 ? (
             <EcrMetadata
@@ -229,7 +235,7 @@ export const getEcrDocumentAccordionItems = (
                 ...ecrMetadata.ecrCustodianDetails.unavailableData,
               ]}
               eicrAuthorUnavailableData={ecrMetadata.eicrAuthorDetails.map(
-                (authorDetails) => authorDetails.unavailableData
+                (authorDetails) => authorDetails.unavailableData,
               )}
             />
           ) : (
@@ -250,6 +256,6 @@ export const getEcrDocumentAccordionItems = (
       headingLevel: "h3",
     };
   });
-  
+
   return accordionItems;
 };
