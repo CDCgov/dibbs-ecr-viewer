@@ -1,6 +1,9 @@
 import { Bundle, Composition, Observation, Patient } from "fhir/r4";
-import { getFhirIndex, getResourceById, getResourcesByType } from "@/app/view-data/services/fhirResourcesIndexService";
-
+import {
+  getFhirIndex,
+  getResourceById,
+  getResourcesByType,
+} from "@/app/view-data/services/fhirResourcesIndexService";
 
 const resource1 = {
   fullUrl: "urn:uuid:1",
@@ -26,9 +29,7 @@ const resource3 = {
 const BundleSample = {
   resourceType: "Bundle",
   type: "document",
-  entry: [
-    resource1, resource2, resource3
-  ],
+  entry: [resource1, resource2, resource3],
 } as unknown as Bundle;
 const fhirIndexBundleSample = {
   fhirIndexByType: {
@@ -58,8 +59,8 @@ describe("fhirResourcesIndexService Tests", () => {
       const actual = getFhirIndex(bundleEmpty);
       const expected = {
         fhirIndexByType: {},
-        fhirIndexByTypeAndId: {}
-      }
+        fhirIndexByTypeAndId: {},
+      };
       expect(actual).toEqual(expected);
     });
     it("Does not index resources with no id", () => {
@@ -67,9 +68,9 @@ describe("fhirResourcesIndexService Tests", () => {
         fullUrl: "urn:uuid:",
         resource: {
           resourceType: "Observation",
-          id: ""
-        }
-      }
+          id: "",
+        },
+      };
       const bundleWithResourceNoId = {
         ...BundleSample,
         entry: [...(BundleSample.entry ?? []), resourceNoId],
@@ -98,12 +99,18 @@ describe("fhirResourcesIndexService Tests", () => {
   });
   describe("getResourcesByType Tests", () => {
     it("Returns all resources of a specified type", () => {
-      const actual = getResourcesByType<Observation>(fhirIndexBundleSample, "Observation");
+      const actual = getResourcesByType<Observation>(
+        fhirIndexBundleSample,
+        "Observation",
+      );
       expect(actual.length).toEqual(2);
       expect(actual).toEqual([resource2.resource, resource3.resource]);
     });
     it("Returns an empty array when no resources exist of specified type", () => {
-      const actual = getResourcesByType<Patient>(fhirIndexBundleSample, "Patient");
+      const actual = getResourcesByType<Patient>(
+        fhirIndexBundleSample,
+        "Patient",
+      );
       expect(actual).toEqual([]);
     });
   });
@@ -112,7 +119,7 @@ describe("fhirResourcesIndexService Tests", () => {
       const actual = getResourceById<Composition>(
         fhirIndexBundleSample,
         "Composition",
-        "1"
+        "1",
       );
       expect(actual).toEqual(resource1.resource);
     });
@@ -120,17 +127,17 @@ describe("fhirResourcesIndexService Tests", () => {
       const actual = getResourceById<Observation>(
         fhirIndexBundleSample,
         "Observation",
-        "4"
+        "4",
       );
-      expect(actual).toEqual(undefined);      
+      expect(actual).toEqual(undefined);
     });
     it("Returns undefined if resource exists with specified ID BUT has the wrong resource Type", () => {
       const actual = getResourceById<Composition>(
         fhirIndexBundleSample,
         "Composition",
-        "2"
+        "2",
       );
-      expect(actual).toEqual(undefined);      
+      expect(actual).toEqual(undefined);
     });
   });
 });

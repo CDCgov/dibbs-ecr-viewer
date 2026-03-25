@@ -354,7 +354,7 @@ describe("Evaluate Reference 2", () => {
   it("should return undefined if resource not found", () => {
     const actual = evaluateReference2<Observation>(
       fhirIndexBundleSample,
-      "Observation/not-valid-id"
+      "Observation/not-valid-id",
     );
 
     expect(actual).toBeUndefined();
@@ -362,7 +362,7 @@ describe("Evaluate Reference 2", () => {
   it("should return the resource if the resource is available", () => {
     const actual = evaluateReference2<Observation>(
       fhirIndexBundleSample,
-      "Observation/2"
+      "Observation/2",
     );
 
     expect(actual?.id).toEqual("2");

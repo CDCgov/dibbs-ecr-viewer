@@ -351,7 +351,7 @@ export const evaluateReference = <T extends Resource>(
  * error logged if it does not match.
  *
  * Expects a single element to be returned from the reference.
- * 
+ *
  * @param fhirIndex - FHIR resources indexed by type & by ID
  * @param ref - The reference string (e.g., "Patient/123").
  * @returns The FHIR Resource or undefined if not found.

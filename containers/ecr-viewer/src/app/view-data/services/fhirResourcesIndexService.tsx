@@ -18,7 +18,7 @@ export interface FhirIndex {
 
 /**
  * Builds an index of FHIR resources from a given FHIR bundle.
- * 
+ *
  * Extracts all resources from a given FHIR bundle and organizes them into two maps:
  * 1. `fhirIndexByType` – an map of resources keyed by `resourceType` mapping to an array of all resources of that type.
  * 2. `fhirIndexByTypeAndId` – a map of resources keyed by `resourceType` and then by `id`.
@@ -54,12 +54,12 @@ export const getFhirIndex = (fhirBundle: Bundle): FhirIndex => {
 
 /**
  * Returns array of all resources of a specific type (i.e. "Observation").
- * 
+ *
  * @template T - The expected FHIR Resource type (e.g., Observation, Patient).
  * @param fhirIndex - FHIR resources indexed by type & by ID
  * @param type - The resourceType to retrieve (e.g., "Observation").
- * 
- * @returns Array of FHIR resources of type `T`, or empty array if 
+ *
+ * @returns Array of FHIR resources of type `T`, or empty array if
  * no resources of specified type exist.
  */
 // TODO ANGELA: How to guarantee that type & `T` match? `T` only exists at compile, whereas type exists at `runtime`
@@ -78,12 +78,12 @@ export function getResourcesByType<T extends Resource>(
 /**
  * Returns FHIR resource by ID and check resource type.
  * Expects only one resource to be returned.
- * 
+ *
  * @template T - The expected FHIR Resource type (e.g., Observation, Patient).
  * @param fhirIndex - FHIR resources indexed by type & by ID
  * @param type - The resourceType to retrieve (e.g., "Observation").
  * @param id - The unique identifier of the resource.
- * 
+ *
  * @returns FHIR resource of type `T` if it exists and resourceType matches `type`
  * Returns undefined if no resource exists with given ID and resourceType
  */
