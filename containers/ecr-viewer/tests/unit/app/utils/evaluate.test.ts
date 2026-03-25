@@ -8,6 +8,7 @@ import {
   evaluateAllAndCheck,
   evaluateOne,
   evaluateReference,
+  evaluateReference2,
   evaluateValue,
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
@@ -319,5 +320,52 @@ describe("Evaluate Reference", () => {
 
     expect(actual?.id).toEqual("99999999-4p89-4b96-b6ab-c46406839cea");
     expect(actual?.resourceType).toEqual("Patient");
+  });
+});
+
+// TODO ANGELA: Rename?
+describe("Evaluate Reference 2", () => {
+  const resource1 = {
+    fullUrl: "urn:uuid:1",
+    resource: {
+      resourceType: "Observation",
+      id: "1",
+    },
+  };
+  const resource2 = {
+    fullUrl: "urn:uuid:2",
+    resource: {
+      resourceType: "Observation",
+      id: "2",
+    },
+  };
+  const fhirIndexBundleSample = {
+    fhirIndexByType: {
+      Observation: [resource1.resource, resource2.resource],
+    },
+    fhirIndexByTypeAndId: {
+      Observation: {
+        "1": resource1.resource,
+        "2": resource2.resource,
+      },
+    },
+  };
+
+  it("should return undefined if resource not found", () => {
+    const actual = evaluateReference2<Observation>(
+      fhirIndexBundleSample,
+      "Observation/not-valid-id"
+    );
+
+    expect(actual).toBeUndefined();
+  });
+  it("should return the resource if the resource is available", () => {
+    const actual = evaluateReference2<Observation>(
+      fhirIndexBundleSample,
+      "Observation/2"
+    );
+
+    expect(actual?.id).toEqual("2");
+    expect(actual?.resourceType).toEqual("Observation");
   });
 });

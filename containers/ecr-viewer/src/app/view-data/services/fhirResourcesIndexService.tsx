@@ -62,6 +62,8 @@ export const getFhirIndex = (fhirBundle: Bundle): FhirIndex => {
  * @returns Array of FHIR resources of type `T`, or empty array if 
  * no resources of specified type exist.
  */
+// TODO ANGELA: How to guarantee that type & `T` match? `T` only exists at compile, whereas type exists at `runtime`
+// Is it enough to get this? Argument of type '"Composition"' is not assignable to parameter of type '"Observation"'.
 export function getResourcesByType<T extends Resource>(
   fhirIndex: FhirIndex,
   type: T["resourceType"]
@@ -85,7 +87,7 @@ export function getResourcesByType<T extends Resource>(
  * @returns FHIR resource of type `T` if it exists and resourceType matches `type`
  * Returns undefined if no resource exists with given ID and resourceType
  */
-// TODO ANGELA: ADD TESTS. Returns undefined if the ID doesn’t exist. Returns undefined if the ID exists but is the wrong resourceType.
+// TODO ANGELA: How to guarantee that type & `T` match? `T` only exists at compile, whereas type exists at `runtime`
 export function getResourceById<T extends Resource>(
   fhirIndex: FhirIndex,
   type: T["resourceType"],
