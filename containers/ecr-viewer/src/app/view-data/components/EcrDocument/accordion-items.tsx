@@ -1,10 +1,8 @@
 import React from "react";
 
-import { Bundle } from "fhir/r4";
+import { Bundle, DiagnosticReport } from "fhir/r4";
 
 import { AccordionItem } from "@/app/types";
-import { evaluateAll } from "@/app/utils/evaluate";
-import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toKebabCase } from "@/app/utils/format-utils";
 import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
 import Demographics from "@/app/view-data/components/Demographics";
@@ -25,16 +23,22 @@ import {
   evaluatePregnancyData,
 } from "@/app/view-data/services/evaluateFhirDataService";
 import { evaluateLabInfoData } from "@/app/view-data/services/labsService";
+import {
+  FhirIndex,
+  getResourcesByType,
+} from "@/app/view-data/services/fhirResourcesIndexService";
 
 import { evaluateClinicalData } from "./clinical-data";
 
 /**
  * Functional component for an accordion container displaying various sections of eCR information.
  * @param fhirBundle - The FHIR bundle containing patient information.
+ * @param fhirIndex - FHIR resources indexed by type & by ID
  * @returns The JSX element representing the accordion container.
  */
 export const getEcrDocumentAccordionItems = (
   fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
 ): AccordionItem[] => {
   const demographicsData = evaluateDemographicsData(fhirBundle);
   const socialData = evaluateSocialData(fhirBundle);
@@ -45,10 +49,11 @@ export const getEcrDocumentAccordionItems = (
   const clinicalData = evaluateClinicalData(fhirBundle);
   const ecrMetadata = evaluateEcrMetadata(fhirBundle);
   const facilityData = evaluateFacilityData(fhirBundle);
-  const labInfoData = evaluateLabInfoData(
-    fhirBundle,
-    evaluateAll(fhirBundle, fhirPathMappings.diagnosticReports),
+  const diagnosticReports = getResourcesByType<DiagnosticReport>(
+    fhirIndex,
+    "DiagnosticReport",
   );
+  const labInfoData = evaluateLabInfoData(fhirIndex, diagnosticReports);
 
   const hasUnavailableData = () => {
     const unavailableDataArrays = [
@@ -73,6 +78,7 @@ export const getEcrDocumentAccordionItems = (
       (array) => Array.isArray(array) && array.length > 0,
     );
   };
+
   const accordionItems: AccordionItem[] = [
     {
       title: "Patient Info",
