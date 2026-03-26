@@ -18,6 +18,7 @@ export interface FhirIndex {
 
 /**
  * Builds an index of FHIR resources from a given FHIR bundle.
+ * NOTE: Index should only be accessed indirectly via helper functions below.
  *
  * Extracts all resources from a given FHIR bundle and organizes them into two maps:
  * 1. `fhirIndexByType` – an map of resources keyed by `resourceType` mapping to an array of all resources of that type.
@@ -76,6 +77,7 @@ export function getResourcesByType<T extends Resource>(
 /**
  * Returns FHIR resource by ID and check resource type.
  * Expects only one resource to be returned.
+ * NOTE: should only be accessed by evaluateReference2
  *
  * @template T - The expected FHIR Resource type (e.g., Observation, Patient).
  * @param fhirIndex - FHIR resources indexed by type & by ID
@@ -91,6 +93,5 @@ export function getResourceById<T extends Resource>(
   id: string,
 ): T | undefined {
   const resource = fhirIndex.fhirIndexByTypeAndId[type]?.[id];
-  if (resource?.resourceType === type) return resource as T;
-  return undefined;
+  return resource as T | undefined;
 }

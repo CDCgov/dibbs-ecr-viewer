@@ -356,7 +356,7 @@ export const evaluateReference = <T extends Resource>(
  * @param ref - The reference string (e.g., "Patient/123").
  * @returns The FHIR Resource or undefined if not found.
  */
-// TODO ANGELA: Eventually want this to replace evaluateReference completely
+// TODO: Eventually want this to replace evaluateReference completely
 export const evaluateReference2 = <T extends Resource>(
   fhirIndex: FhirIndex,
   ref?: string | Reference,

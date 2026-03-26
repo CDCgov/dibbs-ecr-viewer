@@ -57,7 +57,6 @@ import { FieldValue } from "@/app/view-data/components/FieldValue";
 import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 import {
   FhirIndex,
-  getResourceById,
   getResourcesByType,
 } from "@/app/view-data/services/fhirResourcesIndexService";
 
@@ -159,12 +158,9 @@ export const getObservations = (
   fhirIndex: FhirIndex,
 ): Observation[] => {
   const test = (report.result || [])
-    .map((obsRef) => {
-      if (obsRef.reference) {
-        const [_, id] = obsRef.reference.split("/");
-        return getResourceById<Observation>(fhirIndex, "Observation", id);
-      }
-    })
+    .map((obsRef) => 
+      evaluateReference2<Observation>(fhirIndex, obsRef.reference)
+    )
     .filter(notEmpty);
   try {
     return sortResourcesByDate(test, fhirPathMappings.effectiveX);
