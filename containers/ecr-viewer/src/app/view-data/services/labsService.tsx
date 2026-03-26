@@ -36,7 +36,6 @@ import {
 import {
   evaluateAll,
   evaluateOne,
-  evaluateReference,
   evaluateReference2,
   evaluateValue,
 } from "@/app/utils/evaluate";
@@ -81,14 +80,12 @@ const ABNORMAL_OBSERVATION_INTERPRETATIONS: Record<string, string> = {
 
 /**
  * Evaluates lab information and RR data from the provided FHIR bundle and mappings.
- * @param fhirBundle - The FHIR bundle containing lab and RR data.
  * @param fhirIndex - FHIR resources indexed by type & by ID
  * @param labReports - An array of DiagnosticReport objects
  * @param accordionHeadingLevel - Heading level for the title of AccordionLabResults.
  * @returns An array of the Diagnostic reports Elements and Organization Display Data
  */
 export const evaluateLabInfoData = (
-  fhirBundle: Bundle,
   fhirIndex: FhirIndex,
   labReports: DiagnosticReport[],
   accordionHeadingLevel: HeadingLevel = "h5",

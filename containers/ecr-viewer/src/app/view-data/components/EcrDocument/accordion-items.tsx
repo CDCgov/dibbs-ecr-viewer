@@ -54,7 +54,6 @@ export const getEcrDocumentAccordionItems = (
     "DiagnosticReport",
   );
   const labInfoData = evaluateLabInfoData(
-    fhirBundle,
     fhirIndex,
     diagnosticReports,
   );

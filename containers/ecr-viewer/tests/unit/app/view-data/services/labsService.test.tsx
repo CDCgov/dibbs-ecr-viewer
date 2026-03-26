@@ -8,11 +8,9 @@ import _BundleLabNoLabIds from "../../../../../../../test-data/fhir/BundleLabNoL
 import { AccordionItem } from "@/app/types";
 import { noData } from "@/app/utils/data-utils";
 import {
-  evaluateAll,
   evaluateAllAndCheck,
   evaluateOneAndCheck,
 } from "@/app/utils/evaluate";
-import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import {
   checkAbnormalTag,
   searchResultRecord,
@@ -805,7 +803,6 @@ describe("LabsService tests", () => {
   describe("Evaluate the lab info section", () => {
     it("should return a list of LabReportElementData if the lab results in the HTML table have ID's", () => {
       const result = evaluateLabInfoData(
-        BundleLab,
         fhirIndexBundleLab,
         getResourcesByType<DiagnosticReport>(
           fhirIndexBundleLab,
@@ -818,7 +815,6 @@ describe("LabsService tests", () => {
 
     it("should return a list of LabReportElementData even if the lab results in the HTML table do not have ID's", () => {
       const result = evaluateLabInfoData(
-        BundleLabNoLabIds,
         fhirIndexBundleLabNoLabIds,
         getResourcesByType<DiagnosticReport>(
           fhirIndexBundleLabNoLabIds,
@@ -831,7 +827,6 @@ describe("LabsService tests", () => {
 
     it("should properly count the number of labs", () => {
       const result = evaluateLabInfoData(
-        BundleLab,
         fhirIndexBundleLab,
         getResourcesByType<DiagnosticReport>(
           fhirIndexBundleLab,

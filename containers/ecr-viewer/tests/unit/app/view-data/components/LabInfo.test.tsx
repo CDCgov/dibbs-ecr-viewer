@@ -6,8 +6,6 @@ import { Bundle, DiagnosticReport } from "fhir/r4";
 
 import _BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
 import _BundleLabNoLabIds from "../../../../../../../test-data/fhir/BundleLabNoLabIds.json";
-import { evaluateAll } from "@/app/utils/evaluate";
-import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import LabInfo from "@/app/view-data/components/LabInfo";
 import {
   evaluateLabInfoData,
@@ -32,7 +30,6 @@ describe("LabInfo", () => {
         "DiagnosticReport",
       );
       const labInfoOrg = evaluateLabInfoData(
-        BundleLab,
         fhirIndexBundleLab,
         diagnosticReports,
       ) as LabReportElementData[];
@@ -121,7 +118,6 @@ describe("LabInfo", () => {
         "DiagnosticReport",
       );
       labInfo = evaluateLabInfoData(
-        BundleLabNoLabIds,
         fhirIndexBundleLabNoLabIds,
         diagnosticReports,
       );
