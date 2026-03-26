@@ -155,8 +155,8 @@ export const getObservations = (
   fhirIndex: FhirIndex,
 ): Observation[] => {
   const test = (report.result || [])
-    .map((obsRef) => 
-      evaluateReference2<Observation>(fhirIndex, obsRef.reference)
+    .map((obsRef) =>
+      evaluateReference2<Observation>(fhirIndex, obsRef.reference),
     )
     .filter(notEmpty);
   try {
