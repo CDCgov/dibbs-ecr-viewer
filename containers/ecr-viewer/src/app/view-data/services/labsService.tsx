@@ -95,7 +95,6 @@ export const evaluateLabInfoData = (
   const jsonLabs = getAllLabJsonObjects(fhirIndex);
 
   for (const report of labReports) {
-    let t;
 
     const obs = getObservations(report, fhirIndex);
     const labReportJson = getJsonLab(jsonLabs, obs);
@@ -143,7 +142,7 @@ export const evaluateLabInfoData = (
 };
 
 /**
- * Extracts an array of `Observation` resources from a the FHIR index based on a list of observation references.
+ * Extracts an array of `Observation` resources from the FHIR index based on a list of observation references.
  * @param report - The lab report containing the results to be processed.
  * @param fhirIndex - FHIR resources indexed by type & by ID
  * @returns An array of `Observation` resources from the FHIR bundle that correspond to the
@@ -154,15 +153,13 @@ export const getObservations = (
   report: DiagnosticReport,
   fhirIndex: FhirIndex,
 ): Observation[] => {
-  const test = (report.result || [])
+    return sortResourcesByDate(
+    (report.result || [])
     .map((obsRef) =>
       evaluateReference2<Observation>(fhirIndex, obsRef.reference),
     )
-    .filter(notEmpty);
-  try {
-    return sortResourcesByDate(test, fhirPathMappings.effectiveX);
-  } finally {
-  }
+    .filter(notEmpty), fhirPathMappings.effectiveX
+    );
 };
 
 const ensureReportHasDateTime = (
