@@ -998,4 +998,24 @@ describe("LabsService tests", () => {
       ).not.toBeDefined();
     });
   });
+
+  describe("Using FhirIndex in labsService", () => {
+    // Might be able to remove these tests down the line
+    const fhirIndexEmpty: FhirIndex = {
+      fhirIndexByType: {},
+      fhirIndexByTypeAndId: {}
+    }
+    it("getAllLabJsonObjects should return [] when FhirIndex is empty", () => {
+      const actual = getAllLabJsonObjects(fhirIndexEmpty);
+      expect(actual).toEqual([]);
+    });
+    it("evaluateDiagnosticReportData should return undefined when FhirIndex is empty and no observation resources", () => {
+      const actual = evaluateDiagnosticReportData([], fhirIndexEmpty);
+      expect(actual).toEqual(undefined);
+    });
+    it("combineOrgAndReportData should return [] when FhirIndex is empty and no organizationItems", () => {
+      const actual = combineOrgAndReportData({}, fhirIndexEmpty);
+      expect(actual).toEqual([]);
+    });
+  });
 });
