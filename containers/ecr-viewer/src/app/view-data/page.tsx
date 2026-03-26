@@ -76,8 +76,7 @@ const ECRViewerPage = async ({
             eCR Summary
           </h2>
           <div className="text-base-darker line-height-sans-5">
-            Provides key info upfront to help you understand the eCR at a
-            glance
+            Provides key info upfront to help you understand the eCR at a glance
           </div>
         </div>
         <EcrSummary
