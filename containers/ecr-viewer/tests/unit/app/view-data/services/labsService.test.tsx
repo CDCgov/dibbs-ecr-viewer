@@ -7,10 +7,7 @@ import _BundleLabInvalidResultsDiv from "../../../../../../../test-data/fhir/Bun
 import _BundleLabNoLabIds from "../../../../../../../test-data/fhir/BundleLabNoLabIds.json";
 import { AccordionItem } from "@/app/types";
 import { noData } from "@/app/utils/data-utils";
-import {
-  evaluateAllAndCheck,
-  evaluateOneAndCheck,
-} from "@/app/utils/evaluate";
+import { evaluateAllAndCheck, evaluateOneAndCheck } from "@/app/utils/evaluate";
 import {
   checkAbnormalTag,
   searchResultRecord,

@@ -53,10 +53,7 @@ export const getEcrDocumentAccordionItems = (
     fhirIndex,
     "DiagnosticReport",
   );
-  const labInfoData = evaluateLabInfoData(
-    fhirIndex,
-    diagnosticReports,
-  );
+  const labInfoData = evaluateLabInfoData(fhirIndex, diagnosticReports);
 
   const hasUnavailableData = () => {
     const unavailableDataArrays = [
