@@ -163,7 +163,7 @@
     ]
   },
   "encounter_type": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Encounter' and id = %ref).class.where(system = 'urn:oid:2.16.840.1.113883.5.4').display",
+    "fhir_path": "Bundle.entry.resource.where(resourceType='Encounter' and id = %ref).class.where(system = 'http://terminology.hl7.org/CodeSystem/v3-ActCode').display",
     "data_type": "string",
     "nullable": true,
     "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
@@ -298,12 +298,12 @@
     }
   },
   "birth_sex": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url='http: //hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex').extension.value.coding.display",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url='http://hl7.org/fhir/us/core/StructureDefinition/us-core-birthsex').valueCode",
     "data_type": "string",
     "nullable": true
   },
   "gender_identity": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url='http: //hl7.org/fhir/us/ecr/StructureDefinition/us-ph-genderidentity-extension').extension.value.coding.display",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-genderidentity-extension').extension.valueCodeableConcept.coding.display | Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-genderidentity-extension').extension.valueString",
     "data_type": "string",
     "nullable": true
   },
@@ -318,12 +318,12 @@
     "nullable": true
   },
   "tribal_affiliation": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url='http: //hl7.org/fhir/us/ecr/StructureDefinition/us-ph-tribal-affiliation-extension').extension.where(url='TribeName').value.display",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url='http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-tribal-affiliation-extension').extension.where(url='TribeName').valueCoding.display",
     "data_type": "string",
     "nullable": true
   },
   "tribal_enrollment_status": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url='http: //hl7.org/fhir/us/ecr/StructureDefinition/us-ph-tribal-affiliation-extension').extension.where(url='EnrolledTribeMember').value",
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url='http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-tribal-affiliation-extension').extension.where(url='EnrolledTribeMember').valueBoolean | Bundle.entry.resource.where(resourceType = 'Patient').extension.where(url='http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-tribal-affiliation-extension').extension.where(url='EnrolledTribeMember').valueString",
     "data_type": "string",
     "nullable": true
   },
@@ -333,17 +333,17 @@
     "nullable": true
   },
   "current_job_industry": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile='http: //hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob').where(effectivePeriod.end.exists().not()).component.where(code.coding.code='86188-0').value.coding.display",
+    "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile='http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob').where(effectivePeriod.end.exists().not()).component.where(code.coding.code='86188-0').valueCodeableConcept.coding.display | Bundle.entry.resource.where(resourceType='Observation').where(meta.profile='http://hl7.org/fhir/us/odh/StructureDefinition/odh-PastOrPresentJob').where(effectivePeriod.end.exists().not()).component.where(code.coding.code='86188-0').valueString",
     "data_type": "string",
     "nullable": true
   },
   "usual_occupation": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile='http: //hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork').valueCodeableConcept.coding.display",
+    "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile='http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork').valueCodeableConcept.coding.display | Bundle.entry.resource.where(resourceType='Observation').where(meta.profile='http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork').valueString",
     "data_type": "string",
     "nullable": true
   },
   "usual_industry": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile='http: //hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork').component.where(code.coding.code='21844-6').value.coding.display",
+    "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile='http://hl7.org/fhir/us/odh/StructureDefinition/odh-UsualWork').component.where(code.coding.code='21844-6').valueCodeableConcept.coding.display",
     "data_type": "string",
     "nullable": true
   },
@@ -353,7 +353,7 @@
     "nullable": true
   },
   "pregnancy_status": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile='http: //hl7.org/fhir/us/ecr/StructureDefinition/us-ph-pregnancy-status-observation').value.coding.display",
+    "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile='http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-pregnancy-status-observation').valueCodeableConcept.coding.display | Bundle.entry.resource.where(resourceType='Observation').where(meta.profile='http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-pregnancy-status-observation').valueString",
     "data_type": "string",
     "nullable": true
   },
