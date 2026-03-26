@@ -95,7 +95,6 @@ export const evaluateLabInfoData = (
   const jsonLabs = getAllLabJsonObjects(fhirIndex);
 
   for (const report of labReports) {
-
     const obs = getObservations(report, fhirIndex);
     const labReportJson = getJsonLab(jsonLabs, obs);
     ensureReportHasDateTime(report, obs);
@@ -153,13 +152,14 @@ export const getObservations = (
   report: DiagnosticReport,
   fhirIndex: FhirIndex,
 ): Observation[] => {
-    return sortResourcesByDate(
+  return sortResourcesByDate(
     (report.result || [])
-    .map((obsRef) =>
-      evaluateReference2<Observation>(fhirIndex, obsRef.reference),
-    )
-    .filter(notEmpty), fhirPathMappings.effectiveX
-    );
+      .map((obsRef) =>
+        evaluateReference2<Observation>(fhirIndex, obsRef.reference),
+      )
+      .filter(notEmpty),
+    fhirPathMappings.effectiveX,
+  );
 };
 
 const ensureReportHasDateTime = (
