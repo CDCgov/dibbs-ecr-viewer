@@ -117,12 +117,9 @@ describe("fhirResourcesIndexService Tests", () => {
     it("Returns an empty array when FHIR index is empty", () => {
       const fhirIndexEmpty: FhirIndex = {
         fhirIndexByType: {},
-        fhirIndexByTypeAndId: {}
+        fhirIndexByTypeAndId: {},
       };
-      const actual = getResourcesByType<Patient>(
-        fhirIndexEmpty,
-        "Patient"
-      )
+      const actual = getResourcesByType<Patient>(fhirIndexEmpty, "Patient");
       expect(actual).toEqual([]);
     });
   });

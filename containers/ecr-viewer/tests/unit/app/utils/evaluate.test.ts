@@ -374,18 +374,18 @@ describe("Evaluate Reference 2", () => {
       .mockImplementation(() => {});
     const fhirIndexMismatch: FhirIndex = {
       fhirIndexByType: {
-        "Patient": [resource1.resource] // Resource 1 = Observation
+        Patient: [resource1.resource], // Resource 1 = Observation
       },
       fhirIndexByTypeAndId: {
-        "Patient": {
-          "1": resource1.resource
-        }
-      }
-    }
+        Patient: {
+          "1": resource1.resource,
+        },
+      },
+    };
     evaluateReference2<Patient>(fhirIndexMismatch, "Patient/1");
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining("Resource type mismatch")
+      expect.stringContaining("Resource type mismatch"),
     );
     consoleSpy.mockRestore();
-  })
+  });
 });

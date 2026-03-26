@@ -1003,8 +1003,8 @@ describe("LabsService tests", () => {
     // Might be able to remove these tests down the line
     const fhirIndexEmpty: FhirIndex = {
       fhirIndexByType: {},
-      fhirIndexByTypeAndId: {}
-    }
+      fhirIndexByTypeAndId: {},
+    };
     it("getAllLabJsonObjects should return [] when FhirIndex is empty", () => {
       const actual = getAllLabJsonObjects(fhirIndexEmpty);
       expect(actual).toEqual([]);
