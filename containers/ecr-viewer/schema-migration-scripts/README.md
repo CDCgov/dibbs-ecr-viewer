@@ -2,7 +2,7 @@
 
 [!IMPORTANT]
 
-When **upgrading from DIBBs version 8.0.0 or earlier to version 9.0.0 or later**, if you are using a configuration that includes a database (non-integrated or dual), you MUST run the correct script for your database type before applying migrations. 
+When **upgrading from DIBBs version 8.0.0 or earlier to version 9.0.0 or later**, if you are using a configuration that includes a database (non-integrated or dual), you MUST run the correct script for your database type before applying migrations.
 
 This script will move the `ecr_viewer_schema_migration` and `ecr_viewer_schema_migration_lock` tables used by Kysely for managing migrations from the database's default schema into the `ecr_viewer` schema where the other tables are located.
 
