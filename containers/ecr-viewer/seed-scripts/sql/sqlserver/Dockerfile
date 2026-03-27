@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/mssql/server:2022-latest
 
 USER root
-COPY init.sql /init.sql
+COPY sql/sqlserver/init.sql /init.sql
 RUN chmod +x /init.sql
 
 USER mssql
