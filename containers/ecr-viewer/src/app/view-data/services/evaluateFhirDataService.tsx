@@ -193,10 +193,10 @@ export const createPatientAgeDataProp = (
   let value;
 
   // If patient has death date, return empty object
-  if (isPatientDeceased(fhirBundle)) {
+  if (isPatientDeceased(patient)) {
     title = "Age at Death";
     const patientDODString = evaluateOne(
-      fhirBundle,
+      patient,
       fhirPathMappings.patientDOD,
     );
     if (patientDOBString && patientDODString) {
@@ -259,8 +259,8 @@ export const createPatientAgeDataProp = (
  * @param fhirBundle The FHIR bundle containing the patient's vital status
  * @returns The vital status of the patient, either `Alive`, `Deceased`, or `""` (if not found)
  */
-export const evaluatePatientVitalStatus = (fhirBundle: Bundle) => {
-  const isDeceased = isPatientDeceased(fhirBundle);
+export const evaluatePatientVitalStatus = (patient: Patient | undefined) => {
+  const isDeceased = isPatientDeceased(patient);
   if (isDeceased === undefined) {
     return "";
   } else {
@@ -272,12 +272,12 @@ export const evaluatePatientVitalStatus = (fhirBundle: Bundle) => {
  * A patient is deceased if `patient.deceasedBoolean` is true or if there is a date of death. If both are `undefined`
  * return `undefined`.
  */
-const isPatientDeceased = (fhirBundle: Bundle) => {
+const isPatientDeceased = (patient: Patient | undefined) => {
   const vitalStatus = evaluateOne(
-    fhirBundle,
+    patient,
     fhirPathMappings.patientVitalStatus,
   );
-  const dod = evaluateOne(fhirBundle, fhirPathMappings.patientDOD);
+  const dod = evaluateOne(patient, fhirPathMappings.patientDOD);
 
   return dod ? true : vitalStatus;
 };
@@ -408,11 +408,11 @@ export const evaluateDemographicsData = (fhirBundle: Bundle, fhirIndex: FhirInde
     createPatientAgeDataProp(fhirBundle, patient),
     {
       title: "Vital Status",
-      value: evaluatePatientVitalStatus(fhirBundle),
+      value: evaluatePatientVitalStatus(patient),
     },
     {
       title: "Date of Death",
-      value: evaluateOne(fhirBundle, fhirPathMappings.patientDOD),
+      value: evaluateOne(patient, fhirPathMappings.patientDOD),
     },
     {
       title: "Sex",

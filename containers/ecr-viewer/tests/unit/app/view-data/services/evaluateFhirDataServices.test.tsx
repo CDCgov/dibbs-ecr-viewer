@@ -133,30 +133,33 @@ describe("evaluateFhirDataService tests", () => {
           entry: [
             {
               resource: {
+                id: "1",
                 resourceType: "Patient",
                 deceasedBoolean: deceased,
               },
             },
           ],
-        };
+        } as unknown as Bundle;
       }
 
       it("should return an empty string when no `deceasedBoolean` value is present", () => {
-        const actual = evaluatePatientVitalStatus(BundleWithPatient);
+        const actual = evaluatePatientVitalStatus(patient);
         expect(actual).toEqual("");
       });
 
       it("should return `Alive` when `deceasedBoolean` is `false`", () => {
-        const actual = evaluatePatientVitalStatus(
-          getPatientBundle(false) as unknown as Bundle,
-        );
+        const bundleDeceasedFalse = getPatientBundle(false);
+        const fhirIndexDeceasedFalse = getFhirIndex(bundleDeceasedFalse);
+        const patientDeceasedFalse = getPatient(fhirIndexDeceasedFalse);
+        const actual = evaluatePatientVitalStatus(patientDeceasedFalse);
         expect(actual).toEqual("Alive");
       });
 
       it("should return `Deceased` when `deceasedBoolean` is `true`", () => {
-        const actual = evaluatePatientVitalStatus(
-          getPatientBundle(true) as unknown as Bundle,
-        );
+        const bundleDeceasedTrue = getPatientBundle(true);
+        const fhirIndexDeceasedTrue = getFhirIndex(bundleDeceasedTrue);
+        const patientDeceasedTrue = getPatient(fhirIndexDeceasedTrue);
+        const actual = evaluatePatientVitalStatus(patientDeceasedTrue);
         expect(actual).toEqual("Deceased");
       });
     });
