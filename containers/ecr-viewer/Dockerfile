@@ -53,6 +53,13 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
+# Copy SQL scripts for entrypoint migrations
+COPY --from=builder --chown=nextjs:nodejs /app/sql ./sql
+
+# Copy entrypoint script
+COPY --chown=nextjs:nodejs docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 USER nextjs
 
 EXPOSE 3000
@@ -60,7 +67,6 @@ EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/next-config-js/output
+# Use entrypoint script to run migrations before starting the app
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["node", "server.js"]
