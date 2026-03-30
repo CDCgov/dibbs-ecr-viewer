@@ -53,8 +53,11 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
-# Copy SQL scripts for entrypoint migrations
+# Copy SQL scripts for migrations
 COPY --from=builder --chown=nextjs:nodejs /app/sql ./sql
+
+# Copy migration script
+COPY --from=builder --chown=nextjs:nodejs /app/scripts/run-migrations.js ./scripts/run-migrations.js
 
 # Copy entrypoint script
 COPY --chown=nextjs:nodejs docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
