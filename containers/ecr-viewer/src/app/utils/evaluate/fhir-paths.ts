@@ -197,7 +197,7 @@ export interface FhirPath<K> {
 const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   patientNameList: {
     type: "HumanName",
-    path: "entry.resource.Patient.name",
+    path: "Patient.name",
   },
   patientAddressList: {
     type: "Address",
@@ -214,7 +214,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientDOB: {
     type: "string",
-    path: "entry.resource.Patient.birthDate",
+    path: "Patient.birthDate",
   },
   patientVitalStatus: {
     type: "boolean",
@@ -226,7 +226,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientGender: {
     type: "string",
-    path: "entry.resource.Patient.gender",
+    path: "Patient.gender",
   },
   patientRace: {
     type: "ValueX",

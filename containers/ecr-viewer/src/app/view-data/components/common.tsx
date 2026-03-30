@@ -14,11 +14,12 @@ import { safeParse } from "@/app/utils/data-utils";
 import { evaluateReference } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { makePlural } from "@/app/utils/format-utils";
-import { calculatePatientAge } from "@/app/view-data/services/evaluateFhirDataService";
+import { calculatePatientAge, getPatient } from "@/app/view-data/services/evaluateFhirDataService";
 import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 
 import EvaluateTable, { ColumnInfoInput } from "./EvaluateTable";
 import { FieldValue } from "./FieldValue";
+import { FhirIndex } from "../services/fhirResourcesIndexService";
 
 type ModifiedImmunization = Omit<Immunization, "manufacturer"> & {
   manufacturer?: Reference & {
@@ -101,6 +102,7 @@ export const returnImmunizations = (
  */
 export const returnProblemsTable = (
   fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
   problemsArray: Condition[],
 ): React.JSX.Element | undefined => {
   problemsArray = problemsArray.filter((entry) =>
@@ -128,7 +130,7 @@ export const returnProblemsTable = (
   ];
 
   const conditions: ConditionWithFormattedOnsetAge[] = problemsArray.map((pr) =>
-    createFormattedCondition(pr, fhirBundle),
+    createFormattedCondition(pr, fhirBundle, fhirIndex),
   );
 
   if (conditions.length === 0) {
@@ -159,6 +161,7 @@ type ConditionWithFormattedOnsetAge = Omit<Condition, "onsetAge"> & {
 const createFormattedCondition = (
   condition: Condition,
   fhirBundle: Bundle,
+  fhirIndex: FhirIndex
 ): ConditionWithFormattedOnsetAge => {
   const formattedOnsetDateTime = formatDateTime(condition.onsetDateTime);
 
@@ -169,6 +172,7 @@ const createFormattedCondition = (
       condition.onsetAge,
       formattedOnsetDateTime,
       fhirBundle,
+      fhirIndex
     ),
   };
 
@@ -179,7 +183,10 @@ const getFormattedOnsetAge = (
   onsetAge: Condition["onsetAge"],
   onsetDateTime: Condition["onsetDateTime"],
   fhirBundle: Bundle,
+  fhirIndex: FhirIndex
 ) => {
+  const patient = getPatient(fhirIndex);
+
   // when an onset age value is provided in the patient data (in years) we'll use that
   if (onsetAge?.value) {
     return {
@@ -190,6 +197,6 @@ const getFormattedOnsetAge = (
   if (!onsetDateTime) return undefined;
 
   return {
-    value: formatAge(calculatePatientAge(fhirBundle, onsetDateTime)),
+    value: formatAge(calculatePatientAge(patient, onsetDateTime)),
   };
 };

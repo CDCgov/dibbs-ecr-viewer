@@ -239,6 +239,7 @@ export const getJsonLab = (
  */
 export const getAllLabJsonObjects = (fhirIndex: FhirIndex): HtmlTableJson[] => {
   // Get lab reports HTML String (for all lab reports) & convert to JSON
+  // TODO ANGELA 2: Change call to get composition to use getOneResourceByType
   const compositionLabs = getResourcesByType<Composition>(
     fhirIndex,
     "Composition",

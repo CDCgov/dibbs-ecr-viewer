@@ -15,12 +15,15 @@ import {
   ToolTipElement,
 } from "@/app/view-data/components/ToolTipElement";
 import { returnProblemsTable } from "@/app/view-data/components/common";
+import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
 describe("Utils", () => {
   describe("Render Active Problem table", () => {
     it("should return empty if active problem name is undefined", () => {
+      const fhirIndex = getFhirIndex(BundleNoActiveProblems as unknown as Bundle);
       const actual = returnProblemsTable(
         BundleNoActiveProblems as unknown as Bundle,
+        fhirIndex,
         evaluateAll(
           BundleNoActiveProblems as unknown as Bundle,
           fhirPathMappings.activeProblems,

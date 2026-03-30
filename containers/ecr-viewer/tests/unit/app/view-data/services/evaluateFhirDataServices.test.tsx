@@ -14,7 +14,7 @@ import * as _BundleAdmissionMedications from "@/../../../test-data/fhir/BundleAd
 import BundleEcrMetadata from "@/../../../test-data/fhir/BundleEcrMetadata.json";
 import * as _BundleWithPatient from "@/../../../test-data/fhir/BundlePatient.json";
 import * as _BundleWithDeceasedPatient from "@/../../../test-data/fhir/BundlePatientDeceased.json";
-import BundlePatientMultiple from "@/../../../test-data/fhir/BundlePatientMultiple.json";
+import * as _BundlePatientMultiple from "@/../../../test-data/fhir/BundlePatientMultiple.json";
 import * as _BundlePatientWithCovid from "@/../../../test-data/fhir/BundlePatientWithCovid.json";
 import BundlePractitionerRole from "@/../../../test-data/fhir/BundlePractitionerRole.json";
 import BundleWithSexualOrientation from "@/../../../test-data/fhir/BundleSexualOrientation.json";
@@ -46,38 +46,46 @@ import {
   getLocationName,
   evaluateEncounterDiagnosis,
   evaluateFacilityData,
+  getPatient,
 } from "@/app/view-data/services/evaluateFhirDataService";
+import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
 const BundleWithPatient = _BundleWithPatient as Bundle;
+const fhirIndexBundleWithPatient = getFhirIndex(BundleWithPatient);
+const BundlePatientMultiple = _BundlePatientMultiple as unknown as Bundle;
+const fhirIndexBundleWithPatientMultiple = getFhirIndex(BundlePatientMultiple);
 const BundleWithAdmissionMedications = _BundleAdmissionMedications as Bundle;
 const BundleWithDeceasedPatient = _BundleWithDeceasedPatient as Bundle;
+const fhirIndexBundleWithDeceasedPatient = getFhirIndex(
+  BundleWithDeceasedPatient
+);
 const BundlePatientWithCovid = _BundlePatientWithCovid as Bundle;
 
 describe("evaluateFhirDataService tests", () => {
   describe("Evaluate Patient Info: Demographics", () => {
+    const patient = getPatient(fhirIndexBundleWithPatient);
+    const patientMultiple = getPatient(fhirIndexBundleWithPatientMultiple);
+    const patientDeceased = getPatient(fhirIndexBundleWithDeceasedPatient);
+
     describe("Evaluate Patient Name", () => {
+
       it("should return the 1 name", () => {
-        const actual = evaluatePatientName(BundleWithPatient, false);
+        
+        const actual = evaluatePatientName(patient, false);
         expect(actual).toEqual("Han Solo");
       });
       it("should return all 2 of the names", () => {
-        const actual = evaluatePatientName(
-          BundlePatientMultiple as unknown as Bundle,
-          false,
-        );
+        const actual = evaluatePatientName(patientMultiple, false);
         expect(actual).toEqual(
           "Official: Anakin Skywalker\n" + "Nickname: Darth Vader",
         );
       });
       it("should only return the official name for the banner", () => {
-        const actual = evaluatePatientName(
-          BundlePatientMultiple as unknown as Bundle,
-          true,
-        );
+        const actual = evaluatePatientName(patientMultiple, true);
         expect(actual).toEqual("Anakin Skywalker");
       });
       it("should only return the official name for the banner", () => {
-        const actual = evaluatePatientName(BundleWithPatient, true);
+        const actual = evaluatePatientName(patient, true);
         expect(actual).toEqual("Han Solo");
       });
     });
@@ -87,7 +95,7 @@ describe("evaluateFhirDataService tests", () => {
         // Fixed "today" for testing purposes
         jest.useFakeTimers().setSystemTime(new Date("2024-03-12"));
 
-        const patientAge = calculatePatientAge(BundleWithPatient);
+        const patientAge = calculatePatientAge(patient);
 
         expect(patientAge).toEqual({ years: 146, months: 9, days: 16 });
 
@@ -104,13 +112,13 @@ describe("evaluateFhirDataService tests", () => {
       it("when date is given, should return age at given date", () => {
         const givenDate = "2020-01-01";
 
-        const patientAge = calculatePatientAge(BundleWithPatient, givenDate);
+        const patientAge = calculatePatientAge(patient, givenDate);
 
         expect(patientAge).toEqual({ years: 142, months: 7, days: 7 });
       });
 
       it("should return a value that can display only in days", () => {
-        const patientAge = calculatePatientAge(BundleWithPatient, "1877-05-30");
+        const patientAge = calculatePatientAge(patient, "1877-05-30");
 
         const formattedPatientAge = formatAge(patientAge);
 
@@ -171,6 +179,7 @@ describe("evaluateFhirDataService tests", () => {
       it("should return Age at Death if there is a date of death", () => {
         const patientAgeProp = createPatientAgeDataProp(
           BundleWithDeceasedPatient,
+          patientDeceased
         );
         expect(patientAgeProp).toEqual({
           title: "Age at Death",
@@ -215,9 +224,12 @@ describe("evaluateFhirDataService tests", () => {
             },
           ],
         };
+        const fhirIndexPatientBundleWithEncounter = getFhirIndex(patientBundleWithEncounter);
+        const patientResource = getPatient(fhirIndexPatientBundleWithEncounter);
 
         const patientAgeProp = createPatientAgeDataProp(
           patientBundleWithEncounter,
+          patientResource
         );
 
         expect(patientAgeProp).toEqual({
@@ -260,9 +272,16 @@ describe("evaluateFhirDataService tests", () => {
             },
           ],
         };
+        const fhirIndexPatientBundleWithEncounter = getFhirIndex(
+          patientBundleWithEncounter
+        );
+        const patientResource = getPatient(
+          fhirIndexPatientBundleWithEncounter
+        );
 
         const patientAgeProp = createPatientAgeDataProp(
           patientBundleWithEncounter,
+          patientResource
         );
 
         expect(patientAgeProp).toEqual({
@@ -309,9 +328,16 @@ describe("evaluateFhirDataService tests", () => {
             },
           ],
         };
+        const fhirIndexPatientBundleWithEncounter = getFhirIndex(
+          patientBundleWithEncounter
+        );
+        const patientResource = getPatient(
+          fhirIndexPatientBundleWithEncounter
+        );
 
         const patientAgeProp = createPatientAgeDataProp(
           patientBundleWithEncounter,
+          patientResource
         );
 
         expect(patientAgeProp).toEqual({
@@ -342,8 +368,17 @@ describe("evaluateFhirDataService tests", () => {
             },
           ],
         };
+        const fhirIndexPatientBundleWithCreatedDate = getFhirIndex(
+          patientBundleWithCreatedDate
+        );
+        const patientResource = getPatient(
+          fhirIndexPatientBundleWithCreatedDate
+        );
+
+
         const patientAgeProp = createPatientAgeDataProp(
           patientBundleWithCreatedDate,
+          patientResource
         );
 
         expect(patientAgeProp).toEqual({
@@ -366,7 +401,7 @@ describe("evaluateFhirDataService tests", () => {
     });
 
     it("should return Tribal Affiliation if available", () => {
-      const actual = evaluateDemographicsData(BundleWithPatient);
+      const actual = evaluateDemographicsData(BundleWithPatient, fhirIndexBundleWithPatient);
       const ext = actual.availableData.filter(
         (d) => d.title === "Tribal Affiliation",
       );
@@ -512,7 +547,7 @@ describe("evaluateFhirDataService tests", () => {
     });
 
     it("should return Parent/Guardian if available", () => {
-      const actual = evaluateDemographicsData(BundleWithPatient);
+      const actual = evaluateDemographicsData(BundleWithPatient, fhirIndexBundleWithPatient);
       const ext = actual.availableData.filter(
         (d) => d.title === "Parent/Guardian",
       );

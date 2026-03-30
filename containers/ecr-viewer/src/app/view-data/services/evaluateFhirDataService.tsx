@@ -9,6 +9,7 @@ import {
   Encounter,
   Location,
   Organization,
+  Patient,
   Practitioner,
   PractitionerRole,
   RelatedPerson,
@@ -75,10 +76,19 @@ import {
   evaluateTravelHistoryTable,
   returnDisabilityStatusTable,
 } from "./socialHistoryService";
+import { FhirIndex, getOneResourceByType } from "./fhirResourcesIndexService";
 
 // =============================================================================
 // Patient Info: Demographics
 // =============================================================================
+
+// TODO ANGELA 2: Add test
+// TODO ANGELA 2: Add JSDoc
+export const getPatient = (
+  fhirIndex: FhirIndex
+): Patient | undefined => {
+  return getOneResourceByType<Patient>(fhirIndex, "Patient");
+}
 
 /**
  * Evaluates patient name from the FHIR bundle and formats it into structured data for display.
@@ -87,10 +97,10 @@ import {
  * @returns The formatted patient name
  */
 export const evaluatePatientName = (
-  fhirBundle: Bundle,
+  patient: Patient | undefined,
   isPatientBanner: boolean,
 ) => {
-  const nameList = evaluateAll(fhirBundle, fhirPathMappings.patientNameList);
+  const nameList = evaluateAll(patient, fhirPathMappings.patientNameList);
 
   // Return early if there's no name
   if (nameList.length === 0) {
@@ -110,8 +120,8 @@ export const evaluatePatientName = (
  * @param fhirBundle - The FHIR bundle containing patient information.
  * @returns - The formatted patient DOB.
  */
-export const evaluatePatientDOB = (fhirBundle: Bundle) =>
-  formatDate(evaluateOne(fhirBundle, fhirPathMappings.patientDOB));
+export const evaluatePatientDOB = (patient: Patient | undefined) =>
+  formatDate(evaluateOne(patient, fhirPathMappings.patientDOB));
 
 /**
  * Calculates the patient's age at a specific point in time or the current date.
@@ -120,10 +130,10 @@ export const evaluatePatientDOB = (fhirBundle: Bundle) =>
  * @returns The patient's age in years, or undefined if patient has no birth date.
  */
 export const calculatePatientAge = (
-  fhirBundle: Bundle,
+  patient: Patient | undefined,
   givenDate?: string,
 ): Age | undefined => {
-  const patientDOBString = evaluateOne(fhirBundle, fhirPathMappings.patientDOB);
+  const patientDOBString = evaluateOne(patient, fhirPathMappings.patientDOB);
 
   // If no patient DOB is available, return undefined.
   if (!patientDOBString) {
@@ -170,12 +180,13 @@ const calculateAge = (laterDate: DateTime, earlierDate: DateTime): Age => {
  */
 export const createPatientAgeDataProp = (
   fhirBundle: Bundle,
+  patient: Patient | undefined,
 ): DisplayDataProps => {
   const encounter = evaluateOneReference<Encounter>(
     fhirBundle,
     fhirPathMappings.compositionEncounterRef,
   );
-  const patientDOBString = evaluateOne(fhirBundle, fhirPathMappings.patientDOB);
+  const patientDOBString = evaluateOne(patient, fhirPathMappings.patientDOB);
 
   let title = "Age at Encounter";
   let toolTip;
@@ -189,7 +200,7 @@ export const createPatientAgeDataProp = (
       fhirPathMappings.patientDOD,
     );
     if (patientDOBString && patientDODString) {
-      value = formatAge(calculatePatientAge(fhirBundle, patientDODString));
+      value = formatAge(calculatePatientAge(patient, patientDODString));
     }
 
     return {
@@ -201,7 +212,7 @@ export const createPatientAgeDataProp = (
 
   // Handle encounter start date
   if (encounter?.period?.start) {
-    value = formatAge(calculatePatientAge(fhirBundle, encounter.period.start));
+    value = formatAge(calculatePatientAge(patient, encounter.period.start));
     return { title, toolTip, value };
   }
 
@@ -212,11 +223,11 @@ export const createPatientAgeDataProp = (
     if (encounterEnd <= DateTime.now()) {
       toolTip =
         "Age at end date of encounter. Start date of encounter is not available.";
-      value = formatAge(calculatePatientAge(fhirBundle, encounter.period.end));
+      value = formatAge(calculatePatientAge(patient, encounter.period.end));
     } else {
       value = formatAge(
         calculatePatientAge(
-          fhirBundle,
+          patient,
           evaluateOne(fhirBundle, fhirPathMappings.dateTimeEcrCreated),
         ),
       );
@@ -231,7 +242,7 @@ export const createPatientAgeDataProp = (
   // Handle no encounter dates
   value = formatAge(
     calculatePatientAge(
-      fhirBundle,
+      patient,
       evaluateOne(fhirBundle, fhirPathMappings.dateTimeEcrCreated),
     ),
   );
@@ -378,21 +389,23 @@ export const evaluatePatientAddress = (fhirBundle: Bundle) => {
  * @param fhirBundle - The FHIR bundle containing demographic data.
  * @returns An array of evaluated and formatted demographic data.
  */
-export const evaluateDemographicsData = (fhirBundle: Bundle) => {
+export const evaluateDemographicsData = (fhirBundle: Bundle, fhirIndex: FhirIndex) => {
+  const patient = getPatient(fhirIndex);
+
   const patientSex = toTitleCase(
-    evaluateOne(fhirBundle, fhirPathMappings.patientGender),
+    evaluateOne(patient, fhirPathMappings.patientGender)
   );
 
   const demographicsData: DisplayDataProps[] = [
     {
       title: "Patient Name",
-      value: evaluatePatientName(fhirBundle, false),
+      value: evaluatePatientName(patient, false),
     },
     {
       title: "DOB",
-      value: evaluatePatientDOB(fhirBundle),
+      value: evaluatePatientDOB(patient),
     },
-    createPatientAgeDataProp(fhirBundle),
+    createPatientAgeDataProp(fhirBundle, patient),
     {
       title: "Vital Status",
       value: evaluatePatientVitalStatus(fhirBundle),
@@ -418,7 +431,7 @@ export const evaluateDemographicsData = (fhirBundle: Bundle) => {
       title: "Tribal Affiliation",
       value: evaluateValue(
         fhirBundle,
-        fhirPathMappings.patientTribalAffiliation,
+        fhirPathMappings.patientTribalAffiliation
       ),
     },
     {
@@ -432,26 +445,26 @@ export const evaluateDemographicsData = (fhirBundle: Bundle) => {
     {
       title: "Recent County",
       value: findCurrentAddress(
-        evaluateAll(fhirBundle, fhirPathMappings.patientAddressList),
+        evaluateAll(fhirBundle, fhirPathMappings.patientAddressList)
       )?.district,
     },
     {
       title: "Contact",
       value: formatContactPoint(
-        evaluateAll(fhirBundle, fhirPathMappings.patientTelecom),
+        evaluateAll(fhirBundle, fhirPathMappings.patientTelecom)
       ),
     },
     {
       title: "Parent/Guardian",
       value: formatPatientContactList(
         evaluateAll(fhirBundle, fhirPathMappings.patientGuardian),
-        true,
+        true
       ),
     },
     {
       title: "Emergency Contact",
       value: formatPatientContactList(
-        evaluateAll(fhirBundle, fhirPathMappings.patientEmergencyContact),
+        evaluateAll(fhirBundle, fhirPathMappings.patientEmergencyContact)
       ),
     },
     {

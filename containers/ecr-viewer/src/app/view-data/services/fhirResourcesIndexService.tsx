@@ -63,6 +63,7 @@ export const getFhirIndex = (fhirBundle: Bundle): FhirIndex => {
  * @returns Array of FHIR resources of type `T`, or empty array if
  * no resources of specified type exist.
  */
+// TODO ANGELA 2: Rename to getAllResourcesByType
 export function getResourcesByType<T extends Resource>(
   fhirIndex: FhirIndex,
   type: T["resourceType"],
@@ -72,6 +73,38 @@ export function getResourcesByType<T extends Resource>(
   if (!resourceMap) return [];
 
   return resourceMap as T[];
+}
+
+/**
+ * Returns a single resources of a specific type (i.e. "Patient").
+ * Expects one result or none. If multiple results, will error.
+ *
+ * @template T - The expected FHIR Resource type (e.g. Patient).
+ * @param fhirIndex - FHIR resources indexed by type & by ID
+ * @param type - The resourceType to retrieve (e.g., "Patient").
+ *
+ * @returns A single FHIR resource of type `T`, or undefined if
+ * no resources of specified type exist.
+ * @error When multiple resources are found for the resource type
+ */
+// TODO ANGELA 2: Add test
+export function getOneResourceByType<T extends Resource>(
+  fhirIndex: FhirIndex,
+  type: T["resourceType"],
+): T | undefined {
+  const resourceMap = fhirIndex.fhirIndexByType[type];
+
+  if (resourceMap && resourceMap.length > 1) {
+    throw new Error(
+      `Expected one result of type ${type}, but got ${resourceMap.length}.`
+    );
+  }
+
+  if (!resourceMap || resourceMap.length === 0) {
+    return undefined;
+  }
+
+  return (resourceMap[0]) as T;
 }
 
 /**

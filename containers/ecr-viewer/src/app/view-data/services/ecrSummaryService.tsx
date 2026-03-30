@@ -46,6 +46,8 @@ import {
   calculatePatientAge,
   evaluateEncounterDiagnosis,
   getLocationName,
+  getPatient,
+  evaluatePatientDOB,
 } from "./evaluateFhirDataService";
 import { evaluateLabInfoData } from "./labsService";
 import { getReportabilityRulesReasons } from "./reportabilityService";
@@ -56,12 +58,13 @@ import { FhirIndex, getResourcesByType } from "./fhirResourcesIndexService";
  * @param fhirBundle - The FHIR bundle containing patient data.
  * @returns An array of patient details objects containing title and value pairs.
  */
-export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
-  const patientSex = toTitleCase(
-    evaluateOne(fhirBundle, fhirPathMappings.patientGender),
-  );
+export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle, fhirIndex: FhirIndex) => {
+  const patient = getPatient(fhirIndex);
 
-  const age = calculatePatientAge(fhirBundle);
+  const patientSex = toTitleCase(
+    evaluateOne(patient, fhirPathMappings.patientGender)
+  );
+  const age = calculatePatientAge(patient);
   const parentGuardian =
     !age || age.years < 18
       ? [
@@ -77,11 +80,11 @@ export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
   return evaluateData([
     {
       title: "Patient Name",
-      value: evaluatePatientName(fhirBundle, false),
+      value: evaluatePatientName(patient, false),
     },
     {
       title: "DOB",
-      value: formatDate(evaluateOne(fhirBundle, fhirPathMappings.patientDOB)),
+      value: evaluatePatientDOB(patient),
     },
     {
       title: "Sex",
@@ -226,6 +229,7 @@ export const evaluateEcrSummaryConditionSummary = (
       ),
       clinicalDetails: evaluateEcrSummaryRelevantClinicalDetails(
         fhirBundle,
+        fhirIndex,
         conditionsListKey,
       ),
       labDetails: evaluateEcrSummaryRelevantLabResults(
@@ -268,6 +272,7 @@ const getRelevantResources = <T extends DomainResource>(
  */
 export const evaluateEcrSummaryRelevantClinicalDetails = (
   fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
   snomedCode: string,
 ): DisplayDataProps[] => {
   if (!snomedCode) {
@@ -283,6 +288,7 @@ export const evaluateEcrSummaryRelevantClinicalDetails = (
 
   const problemsElement = returnProblemsTable(
     fhirBundle,
+    fhirIndex,
     problemsListFiltered as Condition[],
   );
 
