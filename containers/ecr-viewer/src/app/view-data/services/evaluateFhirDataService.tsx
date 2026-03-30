@@ -296,13 +296,13 @@ export const censorGender = (gender: string | undefined) => {
  * @param fhirBundle - The FHIR bundle containing patient contact info.
  * @returns - The patient's race information, including race OMB category and detailed extension (if available).
  */
-export const evaluatePatientRace = (fhirBundle: Bundle) => {
+export const evaluatePatientRace = (patient: Patient | undefined) => {
   const raceCat: string = evaluateValue(
-    fhirBundle,
+    patient,
     fhirPathMappings.patientRace,
   );
   const raceDetailed: string = evaluateValue(
-    fhirBundle,
+    patient,
     fhirPathMappings.patientRaceDetailed,
   );
 
@@ -314,15 +314,17 @@ export const evaluatePatientRace = (fhirBundle: Bundle) => {
  * @param fhirBundle - The FHIR bundle containing patient contact info.
  * @returns - The patient's ethnicity information, including additional ethnicity extension (if available).
  */
-export const evaluatePatientEthnicity = (fhirBundle: Bundle) => {
+export const evaluatePatientEthnicity = (patient: Patient | undefined) => {
   const ethnicity: string = evaluateValue(
-    fhirBundle,
-    fhirPathMappings.patientEthnicity,
+    patient,
+    fhirPathMappings.patientEthnicity
   );
   const ethnicityDetailed = evaluateValue(
-    fhirBundle,
-    fhirPathMappings.patientEthnicityDetailed,
+    patient,
+    fhirPathMappings.patientEthnicityDetailed
   );
+  console.log("eth: ", ethnicity);
+  console.log("eth detailed: ", ethnicityDetailed);
 
   return [ethnicity, ethnicityDetailed].filter(Boolean).join("\n");
 };
@@ -421,11 +423,11 @@ export const evaluateDemographicsData = (fhirBundle: Bundle, fhirIndex: FhirInde
     },
     {
       title: "Race",
-      value: evaluatePatientRace(fhirBundle),
+      value: evaluatePatientRace(patient),
     },
     {
       title: "Ethnicity",
-      value: evaluatePatientEthnicity(fhirBundle),
+      value: evaluatePatientEthnicity(patient),
     },
     {
       title: "Tribal Affiliation",

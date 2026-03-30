@@ -93,11 +93,11 @@ export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle, fhirIndex: 
     },
     {
       title: "Race",
-      value: evaluatePatientRace(fhirBundle),
+      value: evaluatePatientRace(patient),
     },
     {
       title: "Ethnicity",
-      value: evaluatePatientEthnicity(fhirBundle),
+      value: evaluatePatientEthnicity(patient),
     },
     {
       title: "Patient Address",

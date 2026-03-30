@@ -394,12 +394,12 @@ describe("evaluateFhirDataService tests", () => {
     });
 
     it("should return race category and extension if available", () => {
-      const actual = evaluatePatientRace(BundleWithPatient);
+      const actual = evaluatePatientRace(patient);
       expect(actual).toEqual("Black or African American\nAfrican");
     });
 
     it("should return ethnicity category and extension if available", () => {
-      const actual = evaluatePatientEthnicity(BundleWithPatient);
+      const actual = evaluatePatientEthnicity(patient);
       expect(actual).toEqual("Hispanic or Latino\nWhite");
     });
 
