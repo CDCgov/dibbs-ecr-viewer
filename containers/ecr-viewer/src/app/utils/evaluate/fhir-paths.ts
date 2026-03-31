@@ -260,7 +260,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "PatientContact",
     path: "Patient.contact",
   },
-  // TODO ANGELA: many to many
+  // TODO ANGELA: many finds many
   patientGuardian: {
     type: "RelatedPerson",
     path: "entry.resource.RelatedPerson.where(relationship.coding.exists(system = 'http://terminology.hl7.org/CodeSystem/v3-RoleCode' and code = 'GUARD'))",
@@ -310,15 +310,15 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientGenderIdentity: {
     type: "ValueX",
-    path: "entry.resource.Patient.extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-genderidentity-extension').value",
+    path: "Patient.extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-genderidentity-extension').value",
   },
   patientReligion: {
     type: "ValueX",
-    path: "entry.resource.Patient.extension('http://hl7.org/fhir/StructureDefinition/patient-religion').value",
+    path: "Patient.extension('http://hl7.org/fhir/StructureDefinition/patient-religion').value",
   },
   patientMaritalStatus: {
     type: "ValueX",
-    path: "entry.resource.Patient.maritalStatus",
+    path: "Patient.maritalStatus",
   },
   patientNationality: {
     type: "ValueX",

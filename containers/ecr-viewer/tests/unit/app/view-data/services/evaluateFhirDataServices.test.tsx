@@ -17,8 +17,8 @@ import * as _BundleWithDeceasedPatient from "@/../../../test-data/fhir/BundlePat
 import * as _BundlePatientMultiple from "@/../../../test-data/fhir/BundlePatientMultiple.json";
 import * as _BundlePatientWithCovid from "@/../../../test-data/fhir/BundlePatientWithCovid.json";
 import BundlePractitionerRole from "@/../../../test-data/fhir/BundlePractitionerRole.json";
-import BundleWithSexualOrientation from "@/../../../test-data/fhir/BundleSexualOrientation.json";
-import BundleWithTravelHistory from "@/../../../test-data/fhir/BundleTravelHistory.json";
+import * as _BundleWithSexualOrientation from "@/../../../test-data/fhir/BundleSexualOrientation.json";
+import * as _BundleWithTravelHistory from "@/../../../test-data/fhir/BundleTravelHistory.json";
 import { formatAge } from "@/app/services/formatService";
 import { evaluateValue } from "@/app/utils/evaluate";
 import mappings from "@/app/utils/evaluate/fhir-paths";
@@ -52,14 +52,25 @@ import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService
 
 const BundleWithPatient = _BundleWithPatient as Bundle;
 const fhirIndexBundleWithPatient = getFhirIndex(BundleWithPatient);
+
 const BundlePatientMultiple = _BundlePatientMultiple as unknown as Bundle;
 const fhirIndexBundleWithPatientMultiple = getFhirIndex(BundlePatientMultiple);
+
 const BundleWithAdmissionMedications = _BundleAdmissionMedications as Bundle;
+const BundlePatientWithCovid = _BundlePatientWithCovid as Bundle;
+
 const BundleWithDeceasedPatient = _BundleWithDeceasedPatient as Bundle;
 const fhirIndexBundleWithDeceasedPatient = getFhirIndex(
   BundleWithDeceasedPatient
 );
-const BundlePatientWithCovid = _BundlePatientWithCovid as Bundle;
+
+const BundleWithTravelHistory = _BundleWithTravelHistory as unknown as Bundle;
+const fhirIndexBundleWithTravelHistory = getFhirIndex(BundleWithTravelHistory);
+
+const BundleWithSexualOrientation = _BundleWithSexualOrientation as unknown as Bundle;
+const fhirIndexBundleWithSexualOrientation = getFhirIndex(
+  BundleWithSexualOrientation
+);
 
 describe("evaluateFhirDataService tests", () => {
   describe("Evaluate Patient Info: Demographics", () => {
@@ -595,7 +606,7 @@ Home: 123-456-6909`,
 
   describe("Evaluate Patient Info: Social History", () => {
     it("should have no available data when there is no data", () => {
-      const actual = evaluateSocialData(undefined as any);
+      const actual = evaluateSocialData(undefined as any, {fhirIndexByType: {}, fhirIndexByTypeAndId: {}});
 
       expect(actual.availableData).toBeEmpty();
       expect(actual.unavailableData).not.toBeEmpty();
@@ -603,7 +614,8 @@ Home: 123-456-6909`,
 
     it("should have exposure contact when there is a exposure contact observation present", () => {
       const actual = evaluateSocialData(
-        BundleWithTravelHistory as unknown as Bundle,
+        BundleWithTravelHistory,
+        fhirIndexBundleWithTravelHistory
       );
 
       render(actual.availableData[0].value);
@@ -613,7 +625,8 @@ Home: 123-456-6909`,
 
     it("should have travel history when there is a travel history observation present", () => {
       const actual = evaluateSocialData(
-        BundleWithTravelHistory as unknown as Bundle,
+        BundleWithTravelHistory,
+        fhirIndexBundleWithTravelHistory
       );
 
       render(actual.availableData[1].value);
@@ -640,7 +653,8 @@ Home: 123-456-6909`,
 
     it("should have patient sexual orientation when available", () => {
       const actual = evaluateSocialData(
-        BundleWithSexualOrientation as unknown as Bundle,
+        BundleWithSexualOrientation,
+        fhirIndexBundleWithSexualOrientation
       );
 
       expect(actual.availableData[0].value).toEqual("Other");
@@ -1467,7 +1481,7 @@ Home: 123-456-6909`,
     });
 
     it("should return religion if available", () => {
-      const actual = evaluateSocialData(BundleWithPatient as unknown as Bundle);
+      const actual = evaluateSocialData(BundleWithPatient, fhirIndexBundleWithPatient);
       const ext = actual.availableData.filter(
         (d) => d.title === "Religious Affiliation",
       );
@@ -1476,7 +1490,7 @@ Home: 123-456-6909`,
     });
 
     it("should return marital status if available", () => {
-      const actual = evaluateSocialData(BundleWithPatient as unknown as Bundle);
+      const actual = evaluateSocialData(BundleWithPatient, fhirIndexBundleWithPatient);
       const ext = actual.availableData.filter(
         (d) => d.title === "Marital Status",
       );

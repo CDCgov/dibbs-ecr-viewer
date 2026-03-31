@@ -323,8 +323,6 @@ export const evaluatePatientEthnicity = (patient: Patient | undefined) => {
     patient,
     fhirPathMappings.patientEthnicityDetailed
   );
-  console.log("eth: ", ethnicity);
-  console.log("eth detailed: ", ethnicityDetailed);
 
   return [ethnicity, ethnicityDetailed].filter(Boolean).join("\n");
 };
@@ -711,7 +709,9 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
  * @param fhirBundle - The FHIR bundle containing social data.
  * @returns An array of evaluated and formatted social data.
  */
-export const evaluateSocialData = (fhirBundle: Bundle) => {
+export const evaluateSocialData = (fhirBundle: Bundle, fhirIndex: FhirIndex) => {
+  const patient = getPatient(fhirIndex);
+
   const socialData: DisplayDataProps[] = [
     {
       title: "Exposure Contacts",
@@ -753,11 +753,11 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
     },
     {
       title: "Religious Affiliation",
-      value: evaluateValue(fhirBundle, fhirPathMappings.patientReligion),
+      value: evaluateValue(patient, fhirPathMappings.patientReligion),
     },
     {
       title: "Marital Status",
-      value: evaluateValue(fhirBundle, fhirPathMappings.patientMaritalStatus),
+      value: evaluateValue(patient, fhirPathMappings.patientMaritalStatus),
     },
     {
       title: "Nationality",

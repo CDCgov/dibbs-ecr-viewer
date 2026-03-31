@@ -41,7 +41,7 @@ export const getEcrDocumentAccordionItems = (
   fhirIndex: FhirIndex,
 ): AccordionItem[] => {
   const demographicsData = evaluateDemographicsData(fhirBundle, fhirIndex);
-  const socialData = evaluateSocialData(fhirBundle);
+  const socialData = evaluateSocialData(fhirBundle, fhirIndex);
   const pregnancyData = evaluatePregnancyData(fhirBundle);
   const hospitalEncounterData = evaluateHospitalEncounterData(fhirBundle);
   const encounterData = evaluateEncounterData(fhirBundle);
