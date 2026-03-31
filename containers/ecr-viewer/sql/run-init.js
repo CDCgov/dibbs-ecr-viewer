@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const { Client } = require('pg');
-const fs = require('fs');
-const path = require('path');
+const { Client } = require("pg");
+const fs = require("fs");
+const path = require("path");
 
 async function runPostgresInit() {
   // Validate DATABASE_URL before attempting connection
@@ -57,7 +57,7 @@ async function runSqlServerInit() {
   }
 
   // Use mssql package for SQL Server
-  const mssql = require('mssql');
+  const mssql = require("mssql");
 
   // Get database name from env var or fallback to master
   const database = process.env.SQL_SERVER_DATABASE || 'master';
@@ -122,7 +122,7 @@ async function main() {
     await runSqlServerInit();
   } else {
     console.error('ERROR: CONFIG_NAME must contain "_PG_" or "_SQLSERVER"');
-    console.error('Current CONFIG_NAME:', configName || '(not set)');
+    console.error("Current CONFIG_NAME:", configName || '(not set)');
     process.exit(1);
   }
 }
