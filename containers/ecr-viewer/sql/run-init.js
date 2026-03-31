@@ -1,20 +1,22 @@
 #!/usr/bin/env node
 
-const { Client } = require('pg');
-const fs = require('fs');
-const path = require('path');
+const { Client } = require("pg");
+const fs = require("fs");
+const path = require("path");
 
 // Validate required environment variables for PostgreSQL
 function validatePostgresConfig() {
   const url = process.env.DATABASE_URL;
   if (!url || url.length === 0) {
-    console.error('ERROR: DATABASE_URL environment variable is required but not set');
+    console.error(
+      "ERROR: DATABASE_URL environment variable is required but not set",
+    );
     return false;
   }
   try {
     new URL(url); // Validates URL format
   } catch (_) {
-    console.error('ERROR: DATABASE_URL is not a valid URL:', url);
+    console.error("ERROR: DATABASE_URL is not a valid URL:", url);
     return false;
   }
   return true;
@@ -22,10 +24,14 @@ function validatePostgresConfig() {
 
 // Validate required environment variables for SQL Server
 function validateSqlServerConfig() {
-  const required = ['SQL_SERVER_HOST', 'SQL_SERVER_USER', 'SQL_SERVER_PASSWORD'];
-  const missing = required.filter(k => !process.env[k]);
+  const required = [
+    "SQL_SERVER_HOST",
+    "SQL_SERVER_USER",
+    "SQL_SERVER_PASSWORD",
+  ];
+  const missing = required.filter((k) => !process.env[k]);
   if (missing.length > 0) {
-    console.error('ERROR: Missing SQL Server config:', missing.join(', '));
+    console.error("ERROR: Missing SQL Server config:", missing.join(", "));
     return false;
   }
   return true;
@@ -44,23 +50,24 @@ async function runPostgresInit() {
 
   try {
     await client.connect();
-    console.log('Connected to PostgreSQL');
+    console.log("Connected to PostgreSQL");
 
-    const sqlPath = path.join(__dirname, 'sql', 'postgres', 'init.sql');
+    const sqlPath = path.join(__dirname, "sql", "postgres", "init.sql");
     if (!fs.existsSync(sqlPath)) {
       throw new Error(`PostgreSQL init SQL file not found: ${sqlPath}`);
     }
-    const sql = fs.readFileSync(sqlPath, 'utf8');
+    const sql = fs.readFileSync(sqlPath, "utf8");
 
     await client.query(sql);
-    console.log('PostgreSQL init completed successfully');
+    console.log("PostgreSQL init completed successfully");
   } catch (err) {
-    console.error('PostgreSQL init failed:', err.message);
+    console.error("PostgreSQL init failed:", err.message);
     // Don't fail the build if schema already exists
-    if (err.code !== '42P06') { // 42P06 = schema already exists
+    if (err.code !== "42P06") {
+      // 42P06 = schema already exists
       throw err;
     }
-    console.warn('Init skipped - PostgreSQL schema already exists');
+    console.warn("Init skipped - PostgreSQL schema already exists");
   } finally {
     await client.end();
   }
@@ -73,17 +80,20 @@ async function runSqlServerInit() {
   }
 
   // Use mssql package for SQL Server
-  const mssql = require('mssql');
+  const mssql = require("mssql");
 
   // Extract database name from DATABASE_URL or use SQL_SERVER_DATABASE env var
   let database = process.env.SQL_SERVER_DATABASE;
   if (!database) {
     // Fallback to parsing DATABASE_URL if set (PostgreSQL format)
     try {
-      const urlParts = process.env.DATABASE_URL?.split('/');
-      database = urlParts && urlParts.length > 0 ? urlParts[urlParts.length - 1] : 'master';
+      const urlParts = process.env.DATABASE_URL?.split("/");
+      database =
+        urlParts && urlParts.length > 0
+          ? urlParts[urlParts.length - 1]
+          : "master";
     } catch (_) {
-      database = 'master';
+      database = "master";
     }
   }
 
@@ -103,18 +113,18 @@ async function runSqlServerInit() {
   let pool;
   try {
     pool = await mssql.connect(config);
-    console.log('Connected to SQL Server');
+    console.log("Connected to SQL Server");
 
-    const sqlPath = path.join(__dirname, 'sql', 'sqlserver', 'init.sql');
+    const sqlPath = path.join(__dirname, "sql", "sqlserver", "init.sql");
     if (!fs.existsSync(sqlPath)) {
       throw new Error(`SQL Server init SQL file not found: ${sqlPath}`);
     }
-    const sql = fs.readFileSync(sqlPath, 'utf8');
+    const sql = fs.readFileSync(sqlPath, "utf8");
 
     await pool.request().query(sql);
-    console.log('SQL Server init completed successfully');
+    console.log("SQL Server init completed successfully");
   } catch (err) {
-    console.error('SQL Server init failed:', err.message);
+    console.error("SQL Server init failed:", err.message);
 
     // Check for SQL Server schema exists errors using error numbers
     // 2714 = There is already an object named '...' in the database
@@ -122,13 +132,13 @@ async function runSqlServerInit() {
     const isSchemaExists =
       err.number === 2714 ||
       err.number === 15151 ||
-      err.message.includes('already exists') ||
-      err.message.includes('Cannot find the schema');
+      err.message.includes("already exists") ||
+      err.message.includes("Cannot find the schema");
 
     if (!isSchemaExists) {
       throw err;
     }
-    console.warn('Init skipped - Schema already exists');
+    console.warn("Init skipped - Schema already exists");
   } finally {
     if (pool) {
       await pool.close();
@@ -137,21 +147,21 @@ async function runSqlServerInit() {
 }
 
 async function main() {
-  const configName = process.env.CONFIG_NAME || '';
+  const configName = process.env.CONFIG_NAME || "";
 
   // Use more specific matching to avoid false positives
-  const isPostgresConfig = configName.includes('_PG_');
-  const isSqlServerConfig = configName.includes('_SQLSERVER_');
+  const isPostgresConfig = configName.includes("_PG_");
+  const isSqlServerConfig = configName.includes("_SQLSERVER_");
 
   if (isPostgresConfig) {
-    console.log('Running PostgreSQL init...');
+    console.log("Running PostgreSQL init...");
     await runPostgresInit();
   } else if (isSqlServerConfig) {
-    console.log('Running SQL Server init...');
+    console.log("Running SQL Server init...");
     await runSqlServerInit();
   } else {
     console.error('ERROR: CONFIG_NAME must contain "_PG_" or "_SQLSERVER"');
-    console.error('Current CONFIG_NAME:', configName || '(not set)');
+    console.error("Current CONFIG_NAME:", configName || "(not set)");
     process.exit(1);
   }
 }
