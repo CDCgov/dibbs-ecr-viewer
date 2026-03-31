@@ -56,9 +56,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 # Copy SQL scripts for migrations
 COPY --from=builder --chown=nextjs:nodejs /app/sql ./sql
 
-# Copy migration script
-COPY --from=builder --chown=nextjs:nodejs /app/scripts/run-migrations.js ./scripts/run-migrations.js
-
 # Copy entrypoint script
 COPY --chown=nextjs:nodejs docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh

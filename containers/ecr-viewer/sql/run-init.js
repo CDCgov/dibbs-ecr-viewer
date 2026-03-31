@@ -31,7 +31,7 @@ function validateSqlServerConfig() {
   return true;
 }
 
-async function runPostgresMigration() {
+async function runPostgresInit() {
   // Validate DATABASE_URL before attempting connection
   if (!validatePostgresConfig()) {
     process.exit(1);
@@ -46,27 +46,27 @@ async function runPostgresMigration() {
     await client.connect();
     console.log('Connected to PostgreSQL');
 
-    const sqlPath = path.join(__dirname, '..', 'sql', 'postgres', 'init.sql');
+    const sqlPath = path.join(__dirname, 'sql', 'postgres', 'init.sql');
     if (!fs.existsSync(sqlPath)) {
-      throw new Error(`PostgreSQL migration SQL file not found: ${sqlPath}`);
+      throw new Error(`PostgreSQL init SQL file not found: ${sqlPath}`);
     }
     const sql = fs.readFileSync(sqlPath, 'utf8');
 
     await client.query(sql);
-    console.log('PostgreSQL migrations completed successfully');
+    console.log('PostgreSQL init completed successfully');
   } catch (err) {
-    console.error('PostgreSQL migration failed:', err.message);
+    console.error('PostgreSQL init failed:', err.message);
     // Don't fail the build if schema already exists
     if (err.code !== '42P06') { // 42P06 = schema already exists
       throw err;
     }
-    console.warn('Migration skipped - PostgreSQL schema already exists');
+    console.warn('Init skipped - PostgreSQL schema already exists');
   } finally {
     await client.end();
   }
 }
 
-async function runSqlServerMigration() {
+async function runSqlServerInit() {
   // Validate required environment variables before attempting connection
   if (!validateSqlServerConfig()) {
     process.exit(1);
@@ -96,7 +96,7 @@ async function runSqlServerMigration() {
       encrypt: false,
       trustServerCertificate: true,
       connectTimeout: 10000, // 10 seconds
-      requestTimeout: 300000, // 5 minutes for queries
+      requestTimeout: 30000, // 30 seconds for queries
     },
   };
 
@@ -105,16 +105,16 @@ async function runSqlServerMigration() {
     pool = await mssql.connect(config);
     console.log('Connected to SQL Server');
 
-    const sqlPath = path.join(__dirname, '..', 'sql', 'sqlserver', 'init.sql');
+    const sqlPath = path.join(__dirname, 'sql', 'sqlserver', 'init.sql');
     if (!fs.existsSync(sqlPath)) {
-      throw new Error(`SQL Server migration SQL file not found: ${sqlPath}`);
+      throw new Error(`SQL Server init SQL file not found: ${sqlPath}`);
     }
     const sql = fs.readFileSync(sqlPath, 'utf8');
 
     await pool.request().query(sql);
-    console.log('SQL Server migrations completed successfully');
+    console.log('SQL Server init completed successfully');
   } catch (err) {
-    console.error('SQL Server migration failed:', err.message);
+    console.error('SQL Server init failed:', err.message);
 
     // Check for SQL Server schema exists errors using error numbers
     // 2714 = There is already an object named '...' in the database
@@ -128,7 +128,7 @@ async function runSqlServerMigration() {
     if (!isSchemaExists) {
       throw err;
     }
-    console.warn('Migration skipped - SQL Server schema already exists');
+    console.warn('Init skipped - Schema already exists');
   } finally {
     if (pool) {
       await pool.close();
@@ -140,15 +140,15 @@ async function main() {
   const configName = process.env.CONFIG_NAME || '';
 
   // Use more specific matching to avoid false positives
-  const isPostgresConfig = configName.includes('_PG_') || /_(PG)$/.test(configName);
-  const isSqlServerConfig = configName.includes('_SQLSERVER_') || /_(SQLSERVER)$/.test(configName);
+  const isPostgresConfig = configName.includes('_PG_');
+  const isSqlServerConfig = configName.includes('_SQLSERVER_');
 
   if (isPostgresConfig) {
-    console.log('Running PostgreSQL migrations...');
-    await runPostgresMigration();
+    console.log('Running PostgreSQL init...');
+    await runPostgresInit();
   } else if (isSqlServerConfig) {
-    console.log('Running SQL Server migrations...');
-    await runSqlServerMigration();
+    console.log('Running SQL Server init...');
+    await runSqlServerInit();
   } else {
     console.error('ERROR: CONFIG_NAME must contain "_PG_" or "_SQLSERVER"');
     console.error('Current CONFIG_NAME:', configName || '(not set)');
