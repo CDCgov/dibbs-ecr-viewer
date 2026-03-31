@@ -195,22 +195,22 @@ export interface FhirPath<K> {
 // Make sure the "type" here matches the type-land type described in `PathTypes`
 // "name" field is added programmatically below
 const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
+  // Demographics
   patientNameList: {
     type: "HumanName",
     path: "Patient.name",
   },
   patientAddressList: {
     type: "Address",
-    path: "entry.resource.Patient.address",
+    path: "Patient.address",
   },
   patientTelecom: {
     type: "ContactPoint",
-    path: "entry.resource.Patient.telecom",
+    path: "Patient.telecom",
   },
-
   patientIds: {
     type: "string",
-    path: "entry.resource.Patient.identifier.where(system != 'urn:ietf:rfc:3986').value.join('\n')",
+    path: "Patient.identifier.where(system != 'urn:ietf:rfc:3986').value.join('\n')",
   },
   patientDOB: {
     type: "string",
@@ -246,7 +246,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientCommunication: {
     type: "PatientCommunication",
-    path: "entry.resource.Patient.communication",
+    path: "Patient.communication",
   },
   patientProficiencyExtension: {
     type: "Extension",
@@ -254,12 +254,13 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientTribalAffiliation: {
     type: "ValueX",
-    path: "entry.resource.Patient.extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-tribal-affiliation-extension').extension('TribeName').value",
+    path: "Patient.extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-tribal-affiliation-extension').extension('TribeName').value",
   },
   patientEmergencyContact: {
     type: "PatientContact",
-    path: "entry.resource.Patient.contact",
+    path: "Patient.contact",
   },
+  // TODO ANGELA: many to many
   patientGuardian: {
     type: "RelatedPerson",
     path: "entry.resource.RelatedPerson.where(relationship.coding.exists(system = 'http://terminology.hl7.org/CodeSystem/v3-RoleCode' and code = 'GUARD'))",

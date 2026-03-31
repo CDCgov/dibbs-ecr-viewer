@@ -416,17 +416,18 @@ describe("evaluateFhirDataService tests", () => {
 
     describe("Evaluate Patient Language", () => {
       it("Should display language, proficiency, and mode", () => {
-        const actual = evaluatePatientLanguage(BundleWithPatient);
+        const actual = evaluatePatientLanguage(patient);
 
         expect(actual).toEqual("English\nGood\nExpressed spoken");
       });
 
       it("Should only display preferred languages", () => {
-        const patient = {
+        const bundlePatientLanguage = {
           resourceType: "Bundle",
           entry: [
             {
               resource: {
+                id: "1",
                 resourceType: "Patient",
                 communication: [
                   {
@@ -468,18 +469,21 @@ describe("evaluateFhirDataService tests", () => {
               },
             },
           ],
-        };
+        } as unknown as Bundle;
+        const fhirIndexBundlePatientLanguage = getFhirIndex(bundlePatientLanguage);
+        const patientLanguage = getPatient(fhirIndexBundlePatientLanguage);
 
-        const actual = evaluatePatientLanguage(patient as unknown as Bundle);
+        const actual = evaluatePatientLanguage(patientLanguage);
 
         expect(actual).toEqual("English\n\nHindi");
       });
       it("Should display language when there are no preferred languages", () => {
-        const patient = {
+        const bundlePatientNoLanguage = {
           resourceType: "Bundle",
           entry: [
             {
               resource: {
+                id: "1",
                 resourceType: "Patient",
                 communication: [
                   {
@@ -508,9 +512,13 @@ describe("evaluateFhirDataService tests", () => {
               },
             },
           ],
-        };
+        } as unknown as Bundle;
+        const fhirIndexBundlePatientNoLanguage = getFhirIndex(
+          bundlePatientNoLanguage
+        );
+        const patientNoLanguage = getPatient(fhirIndexBundlePatientNoLanguage);
 
-        const actual = evaluatePatientLanguage(patient as unknown as Bundle);
+        const actual = evaluatePatientLanguage(patientNoLanguage);
 
         expect(actual).toEqual("Spanish\n\nEnglish");
       });
@@ -523,13 +531,11 @@ describe("evaluateFhirDataService tests", () => {
         expect(actual).toBeEmpty();
       });
       it("should return the 1 address", () => {
-        const actual = evaluatePatientAddress(BundleWithPatient);
+        const actual = evaluatePatientAddress(patient);
         expect(actual).toEqual("1 Main St\nCloud City, CA 00000\nUS");
       });
       it("should return all 3 of the addresses", () => {
-        const actual = evaluatePatientAddress(
-          BundlePatientMultiple as unknown as Bundle,
-        );
+        const actual = evaluatePatientAddress(patientMultiple);
         expect(actual).toEqual(
           "Home:\n" +
             "1 Mos Espa\n" +
@@ -572,9 +578,18 @@ Home: 123-456-6909`,
     });
 
     it("should return the Patient Identifier value", () => {
-      const actual = evaluateValue(BundleWithPatient, mappings.patientIds);
+      const actual = evaluateValue(patient, mappings.patientIds);
 
       expect(actual).toEqual("1234567890");
+    });
+
+    it("should return all correct demographic info not covered by other tests", () => {
+      const actual = evaluateDemographicsData(BundleWithPatient, fhirIndexBundleWithPatient);
+      const expectedContact = [{"title": "Contact", "value": "Home: 555-555-5555\nfakefakenotreal@example.com"}];
+
+      expect(actual.availableData.filter((d) => d.title === "Contact")).toEqual(expectedContact);
+      
+      console.log(actual);
     });
   });
 

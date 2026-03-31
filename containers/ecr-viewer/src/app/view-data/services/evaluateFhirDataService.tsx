@@ -76,7 +76,7 @@ import {
   evaluateTravelHistoryTable,
   returnDisabilityStatusTable,
 } from "./socialHistoryService";
-import { FhirIndex, getOneResourceByType } from "./fhirResourcesIndexService";
+import { FhirIndex, getOneResourceByType, getResourcesByType } from "./fhirResourcesIndexService";
 
 // =============================================================================
 // Patient Info: Demographics
@@ -334,9 +334,9 @@ export const evaluatePatientEthnicity = (patient: Patient | undefined) => {
  * @param fhirBundle - The FHIR bundle containing resources.
  * @returns String containing language, proficiency, and mode
  */
-export const evaluatePatientLanguage = (fhirBundle: Bundle) => {
+export const evaluatePatientLanguage = (patient: Patient | undefined) => {
   let patientCommunication = evaluateAll(
-    fhirBundle,
+    patient,
     fhirPathMappings.patientCommunication,
   );
   const preferredPatientCommunication = patientCommunication.filter(
@@ -377,9 +377,9 @@ export const evaluatePatientLanguage = (fhirBundle: Bundle) => {
  * @param fhirBundle - The FHIR bundle containing patient contact info.
  * @returns The formatted patient address
  */
-export const evaluatePatientAddress = (fhirBundle: Bundle) => {
+export const evaluatePatientAddress = (patient: Patient | undefined) => {
   const addresses = evaluateAll(
-    fhirBundle,
+    patient,
     fhirPathMappings.patientAddressList,
   );
 
@@ -393,6 +393,7 @@ export const evaluatePatientAddress = (fhirBundle: Bundle) => {
  */
 export const evaluateDemographicsData = (fhirBundle: Bundle, fhirIndex: FhirIndex) => {
   const patient = getPatient(fhirIndex);
+  const resourcesRelatedPerson = getResourcesByType<RelatedPerson>(fhirIndex, "RelatedPerson");
 
   const patientSex = toTitleCase(
     evaluateOne(patient, fhirPathMappings.patientGender)
@@ -432,28 +433,28 @@ export const evaluateDemographicsData = (fhirBundle: Bundle, fhirIndex: FhirInde
     {
       title: "Tribal Affiliation",
       value: evaluateValue(
-        fhirBundle,
+        patient,
         fhirPathMappings.patientTribalAffiliation
       ),
     },
     {
       title: "Preferred Language",
-      value: evaluatePatientLanguage(fhirBundle),
+      value: evaluatePatientLanguage(patient),
     },
     {
       title: "Patient Address",
-      value: evaluatePatientAddress(fhirBundle),
+      value: evaluatePatientAddress(patient),
     },
     {
       title: "Recent County",
       value: findCurrentAddress(
-        evaluateAll(fhirBundle, fhirPathMappings.patientAddressList)
+        evaluateAll(patient, fhirPathMappings.patientAddressList)
       )?.district,
     },
     {
       title: "Contact",
       value: formatContactPoint(
-        evaluateAll(fhirBundle, fhirPathMappings.patientTelecom)
+        evaluateAll(patient, fhirPathMappings.patientTelecom)
       ),
     },
     {
@@ -466,14 +467,14 @@ export const evaluateDemographicsData = (fhirBundle: Bundle, fhirIndex: FhirInde
     {
       title: "Emergency Contact",
       value: formatPatientContactList(
-        evaluateAll(fhirBundle, fhirPathMappings.patientEmergencyContact)
+        evaluateAll(patient, fhirPathMappings.patientEmergencyContact)
       ),
     },
     {
       title: "Patient IDs",
       toolTip:
         "Unique patient identifier(s) from their medical record. For example, a patient's social security number or medical record number.",
-      value: evaluateValue(fhirBundle, fhirPathMappings.patientIds),
+      value: evaluateValue(patient, fhirPathMappings.patientIds),
     },
   ];
   return evaluateData(demographicsData);

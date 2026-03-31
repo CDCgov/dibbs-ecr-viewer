@@ -102,13 +102,13 @@ export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle, fhirIndex: 
     {
       title: "Patient Address",
       value: formatCurrentAddress(
-        evaluateAll(fhirBundle, fhirPathMappings.patientAddressList),
+        evaluateAll(patient, fhirPathMappings.patientAddressList),
       ),
     },
     {
       title: "Patient Contact",
       value: formatContactPoint(
-        evaluateAll(fhirBundle, fhirPathMappings.patientTelecom),
+        evaluateAll(patient, fhirPathMappings.patientTelecom),
       ),
     },
     ...parentGuardian,
