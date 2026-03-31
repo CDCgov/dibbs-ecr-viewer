@@ -4,36 +4,17 @@ const { Client } = require('pg');
 const fs = require('fs');
 const path = require('path');
 
-// Validate required environment variables for PostgreSQL
-function validatePostgresConfig() {
+async function runPostgresInit() {
+  // Validate DATABASE_URL before attempting connection
   const url = process.env.DATABASE_URL;
   if (!url || url.length === 0) {
     console.error('ERROR: DATABASE_URL environment variable is required but not set');
-    return false;
+    process.exit(1);
   }
   try {
     new URL(url); // Validates URL format
   } catch (_) {
     console.error('ERROR: DATABASE_URL is not a valid URL:', url);
-    return false;
-  }
-  return true;
-}
-
-// Validate required environment variables for SQL Server
-function validateSqlServerConfig() {
-  const required = ['SQL_SERVER_HOST', 'SQL_SERVER_USER', 'SQL_SERVER_PASSWORD'];
-  const missing = required.filter(k => !process.env[k]);
-  if (missing.length > 0) {
-    console.error('ERROR: Missing SQL Server config:', missing.join(', '));
-    return false;
-  }
-  return true;
-}
-
-async function runPostgresInit() {
-  // Validate DATABASE_URL before attempting connection
-  if (!validatePostgresConfig()) {
     process.exit(1);
   }
 
@@ -46,7 +27,7 @@ async function runPostgresInit() {
     await client.connect();
     console.log('Connected to PostgreSQL');
 
-    const sqlPath = path.join(__dirname, 'sql', 'postgres', 'init.sql');
+    const sqlPath = path.join(__dirname, '..', 'postgres', 'init.sql');
     if (!fs.existsSync(sqlPath)) {
       throw new Error(`PostgreSQL init SQL file not found: ${sqlPath}`);
     }
@@ -68,24 +49,18 @@ async function runPostgresInit() {
 
 async function runSqlServerInit() {
   // Validate required environment variables before attempting connection
-  if (!validateSqlServerConfig()) {
+  const required = ['SQL_SERVER_HOST', 'SQL_SERVER_USER', 'SQL_SERVER_PASSWORD'];
+  const missing = required.filter(k => !process.env[k]);
+  if (missing.length > 0) {
+    console.error('ERROR: Missing SQL Server config:', missing.join(', '));
     process.exit(1);
   }
 
   // Use mssql package for SQL Server
   const mssql = require('mssql');
 
-  // Extract database name from DATABASE_URL or use SQL_SERVER_DATABASE env var
-  let database = process.env.SQL_SERVER_DATABASE;
-  if (!database) {
-    // Fallback to parsing DATABASE_URL if set (PostgreSQL format)
-    try {
-      const urlParts = process.env.DATABASE_URL?.split('/');
-      database = urlParts && urlParts.length > 0 ? urlParts[urlParts.length - 1] : 'master';
-    } catch (_) {
-      database = 'master';
-    }
-  }
+  // Get database name from env var or fallback to master
+  const database = process.env.SQL_SERVER_DATABASE || 'master';
 
   const config = {
     user: process.env.SQL_SERVER_USER,
@@ -105,7 +80,7 @@ async function runSqlServerInit() {
     pool = await mssql.connect(config);
     console.log('Connected to SQL Server');
 
-    const sqlPath = path.join(__dirname, 'sql', 'sqlserver', 'init.sql');
+    const sqlPath = path.join(__dirname, '..', 'sqlserver', 'init.sql');
     if (!fs.existsSync(sqlPath)) {
       throw new Error(`SQL Server init SQL file not found: ${sqlPath}`);
     }
@@ -116,12 +91,8 @@ async function runSqlServerInit() {
   } catch (err) {
     console.error('SQL Server init failed:', err.message);
 
-    // Check for SQL Server schema exists errors using error numbers
-    // 2714 = There is already an object named '...' in the database
-    // 15151 = Cannot find the schema ... because it does not exist
+    // Check for SQL Server schema exists errors
     const isSchemaExists =
-      err.number === 2714 ||
-      err.number === 15151 ||
       err.message.includes('already exists') ||
       err.message.includes('Cannot find the schema');
 
@@ -139,7 +110,7 @@ async function runSqlServerInit() {
 async function main() {
   const configName = process.env.CONFIG_NAME || '';
 
-  // Use more specific matching to avoid false positives
+  // Use simple string matching to determine database type
   const isPostgresConfig = configName.includes('_PG_');
   const isSqlServerConfig = configName.includes('_SQLSERVER_');
 
