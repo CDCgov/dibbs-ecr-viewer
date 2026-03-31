@@ -3,16 +3,12 @@ name: ecr-viewer
 include:
   - ../docker-compose.yaml
 services:
-  ecr-viewer:
-    environment:
-      - ORCHESTRATION_URL=http://localhost:2080
-
   fhir-converter-service:
     platform: linux/amd64
     build:
       context: ../../fhir-converter/
     ports:
-      - "2082:8080"
+      - "8082:8080"
     environment:
       - WEB_CONCURRENCY=${WEB_CONCURRENCY:-3}
 
@@ -21,7 +17,7 @@ services:
     build:
       context: ../../ingestion
     ports:
-      - "2083:8080"
+      - "8083:8080"
     logging:
       driver: "json-file"
     environment:
@@ -34,7 +30,7 @@ services:
     build:
       context: ../../message-parser
     ports:
-      - "2085:8080"
+      - "8085:8080"
     environment:
       - WEB_CONCURRENCY=${WEB_CONCURRENCY:-3}
     logging:
@@ -45,7 +41,7 @@ services:
     build:
       context: ../../trigger-code-reference
     ports:
-      - "2086:8080"
+      - "8086:8080"
     environment:
       - WEB_CONCURRENCY=${WEB_CONCURRENCY:-3}
     logging:
@@ -61,7 +57,7 @@ services:
       - message-parser-service
       - ecr-viewer
     ports:
-      - "2080:8080"
+      - "8080:8080"
     logging:
       driver: "json-file"
     env_file:
@@ -85,7 +81,7 @@ services:
       keycloak:
         condition: service_healthy
     ports:
-      - "2081:8081"
+      - "8081:8081"
     volumes:
       - ./baseECR:/code/baseECR
     environment:
