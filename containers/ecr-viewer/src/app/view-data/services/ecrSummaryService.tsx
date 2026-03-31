@@ -6,7 +6,6 @@ import {
   DiagnosticReport,
   DomainResource,
   Encounter,
-  Immunization,
   Observation,
   Organization,
 } from "fhir/r4";
@@ -345,7 +344,6 @@ export const evaluateEcrSummaryRelevantLabResults = (
     return [];
   }
   const relevantLabElements = evaluateLabInfoData(
-    fhirBundle,
     fhirIndex,
     relevantLabs,
     "h4",

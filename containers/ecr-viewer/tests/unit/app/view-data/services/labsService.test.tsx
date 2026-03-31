@@ -7,12 +7,7 @@ import _BundleLabInvalidResultsDiv from "../../../../../../../test-data/fhir/Bun
 import _BundleLabNoLabIds from "../../../../../../../test-data/fhir/BundleLabNoLabIds.json";
 import { AccordionItem } from "@/app/types";
 import { noData } from "@/app/utils/data-utils";
-import {
-  evaluateAll,
-  evaluateAllAndCheck,
-  evaluateOneAndCheck,
-} from "@/app/utils/evaluate";
-import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
+import { evaluateAllAndCheck, evaluateOneAndCheck } from "@/app/utils/evaluate";
 import {
   checkAbnormalTag,
   searchResultRecord,
@@ -805,7 +800,6 @@ describe("LabsService tests", () => {
   describe("Evaluate the lab info section", () => {
     it("should return a list of LabReportElementData if the lab results in the HTML table have ID's", () => {
       const result = evaluateLabInfoData(
-        BundleLab,
         fhirIndexBundleLab,
         getResourcesByType<DiagnosticReport>(
           fhirIndexBundleLab,
@@ -818,7 +812,6 @@ describe("LabsService tests", () => {
 
     it("should return a list of LabReportElementData even if the lab results in the HTML table do not have ID's", () => {
       const result = evaluateLabInfoData(
-        BundleLabNoLabIds,
         fhirIndexBundleLabNoLabIds,
         getResourcesByType<DiagnosticReport>(
           fhirIndexBundleLabNoLabIds,
@@ -831,7 +824,6 @@ describe("LabsService tests", () => {
 
     it("should properly count the number of labs", () => {
       const result = evaluateLabInfoData(
-        BundleLab,
         fhirIndexBundleLab,
         getResourcesByType<DiagnosticReport>(
           fhirIndexBundleLab,
@@ -996,6 +988,26 @@ describe("LabsService tests", () => {
       expect(
         findIdenticalOrg(orgMappings, matchedOrg2)?.telecom?.[0].value,
       ).not.toBeDefined();
+    });
+  });
+
+  describe("Using FhirIndex in labsService", () => {
+    // Might be able to remove these tests down the line
+    const fhirIndexEmpty: FhirIndex = {
+      fhirIndexByType: {},
+      fhirIndexByTypeAndId: {},
+    };
+    it("getAllLabJsonObjects should return [] when FhirIndex is empty", () => {
+      const actual = getAllLabJsonObjects(fhirIndexEmpty);
+      expect(actual).toEqual([]);
+    });
+    it("evaluateDiagnosticReportData should return undefined when FhirIndex is empty and no observation resources", () => {
+      const actual = evaluateDiagnosticReportData([], fhirIndexEmpty);
+      expect(actual).toEqual(undefined);
+    });
+    it("combineOrgAndReportData should return [] when FhirIndex is empty and no organizationItems", () => {
+      const actual = combineOrgAndReportData({}, fhirIndexEmpty);
+      expect(actual).toEqual([]);
     });
   });
 });

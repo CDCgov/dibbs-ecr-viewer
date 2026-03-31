@@ -1,5 +1,6 @@
 import { Bundle, Composition, Observation, Patient } from "fhir/r4";
 import {
+  FhirIndex,
   getFhirIndex,
   getResourceById,
   getResourcesByType,
@@ -113,6 +114,14 @@ describe("fhirResourcesIndexService Tests", () => {
       );
       expect(actual).toEqual([]);
     });
+    it("Returns an empty array when FHIR index is empty", () => {
+      const fhirIndexEmpty: FhirIndex = {
+        fhirIndexByType: {},
+        fhirIndexByTypeAndId: {},
+      };
+      const actual = getResourcesByType<Patient>(fhirIndexEmpty, "Patient");
+      expect(actual).toEqual([]);
+    });
   });
   describe("getResourceById Tests", () => {
     it("Returns resource with specified ID", () => {
@@ -137,6 +146,14 @@ describe("fhirResourcesIndexService Tests", () => {
         "Composition",
         "2",
       );
+      expect(actual).toEqual(undefined);
+    });
+    it("Returns undefined if when FHIR index is empty", () => {
+      const fhirIndexEmpty: FhirIndex = {
+        fhirIndexByType: {},
+        fhirIndexByTypeAndId: {},
+      };
+      const actual = getResourceById<Patient>(fhirIndexEmpty, "Patient", "1");
       expect(actual).toEqual(undefined);
     });
   });

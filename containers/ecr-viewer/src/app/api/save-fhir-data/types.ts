@@ -70,6 +70,8 @@ export interface BundleExtendedMetadata extends BundleMetadata {
   replaced_eicr_id: string | undefined;
   replaced_eicr_version: string | undefined;
   authoring_date: string | undefined;
+  ehr_software: string | undefined;
+  ehr_manufacturer_model: string | undefined;
   provider_id: string | undefined;
   facility_id: string | undefined;
   facility_name: string | undefined;

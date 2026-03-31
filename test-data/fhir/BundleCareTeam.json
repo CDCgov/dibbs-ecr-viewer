@@ -124,9 +124,15 @@
         },
         "participant": [
           {
-            "role": {
-              "text": "admitting physician"
-            },
+            "role": [
+              {
+                "coding": [
+                  {
+                    "display": "admitting physician"
+                  }
+                ]
+              }
+            ],
             "member": {
               "reference": "Practitioner/1234"
             },
@@ -142,9 +148,15 @@
             ]
           },
           {
-            "role": {
-              "text": "family"
-            },
+            "role": [
+              {
+                "coding": [
+                  {
+                    "display": "family"
+                  }
+                ]
+              }
+            ],
             "member": {
               "reference": "Practitioner/5f309332-9f4a-405f-bc7c-9d9bb2fccd52"
             },

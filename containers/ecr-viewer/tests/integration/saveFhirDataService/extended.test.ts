@@ -42,6 +42,8 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
   replaced_eicr_id: "23423",
   replaced_eicr_version: "23432",
   authoring_date: "2024-01-01",
+  ehr_manufacturer_model: "EHR Manufacturer Model",
+  ehr_software: "EHR Software",
   provider_id: "12345",
   facility_id: "12345",
   facility_name: "Hospital A",

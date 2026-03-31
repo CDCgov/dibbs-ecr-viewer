@@ -12,6 +12,7 @@ import {
   evaluateValue,
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
+import { FhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
 describe("evaluate", () => {
   let fhirPathEvaluateSpy: jest.SpyInstance;
@@ -323,7 +324,6 @@ describe("Evaluate Reference", () => {
   });
 });
 
-// TODO ANGELA: Rename?
 describe("Evaluate Reference 2", () => {
   const resource1 = {
     fullUrl: "urn:uuid:1",
@@ -339,7 +339,7 @@ describe("Evaluate Reference 2", () => {
       id: "2",
     },
   };
-  const fhirIndexBundleSample = {
+  const fhirIndexBundleSample: FhirIndex = {
     fhirIndexByType: {
       Observation: [resource1.resource, resource2.resource],
     },
@@ -367,5 +367,25 @@ describe("Evaluate Reference 2", () => {
 
     expect(actual?.id).toEqual("2");
     expect(actual?.resourceType).toEqual("Observation");
+  });
+  it("should error when resource is found but resourceType does not match expected resourceType", () => {
+    const consoleSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+    const fhirIndexMismatch: FhirIndex = {
+      fhirIndexByType: {
+        Patient: [resource1.resource], // Resource 1 = Observation
+      },
+      fhirIndexByTypeAndId: {
+        Patient: {
+          "1": resource1.resource,
+        },
+      },
+    };
+    evaluateReference2<Patient>(fhirIndexMismatch, "Patient/1");
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining("Resource type mismatch"),
+    );
+    consoleSpy.mockRestore();
   });
 });

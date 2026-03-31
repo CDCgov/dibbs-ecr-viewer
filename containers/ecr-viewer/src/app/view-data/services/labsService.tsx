@@ -36,7 +36,6 @@ import {
 import {
   evaluateAll,
   evaluateOne,
-  evaluateReference,
   evaluateReference2,
   evaluateValue,
 } from "@/app/utils/evaluate";
@@ -57,7 +56,6 @@ import { FieldValue } from "@/app/view-data/components/FieldValue";
 import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 import {
   FhirIndex,
-  getResourceById,
   getResourcesByType,
 } from "@/app/view-data/services/fhirResourcesIndexService";
 
@@ -82,14 +80,12 @@ const ABNORMAL_OBSERVATION_INTERPRETATIONS: Record<string, string> = {
 
 /**
  * Evaluates lab information and RR data from the provided FHIR bundle and mappings.
- * @param fhirBundle - The FHIR bundle containing lab and RR data.
  * @param fhirIndex - FHIR resources indexed by type & by ID
  * @param labReports - An array of DiagnosticReport objects
  * @param accordionHeadingLevel - Heading level for the title of AccordionLabResults.
  * @returns An array of the Diagnostic reports Elements and Organization Display Data
  */
 export const evaluateLabInfoData = (
-  fhirBundle: Bundle,
   fhirIndex: FhirIndex,
   labReports: DiagnosticReport[],
   accordionHeadingLevel: HeadingLevel = "h5",
@@ -99,20 +95,15 @@ export const evaluateLabInfoData = (
   const jsonLabs = getAllLabJsonObjects(fhirIndex);
 
   for (const report of labReports) {
-    let t;
-
     const obs = getObservations(report, fhirIndex);
     const labReportJson = getJsonLab(jsonLabs, obs);
     ensureReportHasDateTime(report, obs);
-
     const content = getLabsContent(report, obs, fhirIndex, labReportJson);
     const organizationId = (report.performer?.[0].reference ?? "").replace(
       "Organization/",
       "",
     );
-
     const title = formatCodeableConcept(report.code) ?? "Unknown";
-
     const item = {
       title: (
         <div className="display-flex flex-row flex-justify flex-align-center gap-05">
@@ -150,7 +141,7 @@ export const evaluateLabInfoData = (
 };
 
 /**
- * Extracts an array of `Observation` resources from a the FHIR index based on a list of observation references.
+ * Extracts an array of `Observation` resources from the FHIR index based on a list of observation references.
  * @param report - The lab report containing the results to be processed.
  * @param fhirIndex - FHIR resources indexed by type & by ID
  * @returns An array of `Observation` resources from the FHIR bundle that correspond to the
@@ -161,18 +152,14 @@ export const getObservations = (
   report: DiagnosticReport,
   fhirIndex: FhirIndex,
 ): Observation[] => {
-  const test = (report.result || [])
-    .map((obsRef) => {
-      if (obsRef.reference) {
-        const [_, id] = obsRef.reference.split("/");
-        return getResourceById<Observation>(fhirIndex, "Observation", id);
-      }
-    })
-    .filter(notEmpty);
-  try {
-    return sortResourcesByDate(test, fhirPathMappings.effectiveX);
-  } finally {
-  }
+  return sortResourcesByDate(
+    (report.result || [])
+      .map((obsRef) =>
+        evaluateReference2<Observation>(fhirIndex, obsRef.reference),
+      )
+      .filter(notEmpty),
+    fhirPathMappings.effectiveX,
+  );
 };
 
 const ensureReportHasDateTime = (

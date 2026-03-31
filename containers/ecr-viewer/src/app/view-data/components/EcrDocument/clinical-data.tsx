@@ -381,7 +381,20 @@ export const returnCareTeamTable = (
 
   const columnInfo: ColumnInfoInput[] = [
     { columnName: "Member", infoPath: "careTeamParticipantMemberName" },
-    { columnName: "Role", infoPath: "careTeamParticipantRole" },
+    {
+      columnName: "Role",
+      evaluateEntry: (el) => {
+        const p = el as CareTeamParticipant;
+
+        const roleStr = p.role
+          ?.map((r) => {
+            return formatCodeableConcept(r);
+          })
+          .join("\n");
+
+        return roleStr;
+      },
+    },
     {
       columnName: "Status",
       infoPath: "careTeamParticipantStatus",

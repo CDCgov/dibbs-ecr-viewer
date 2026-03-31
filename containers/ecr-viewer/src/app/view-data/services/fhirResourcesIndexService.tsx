@@ -18,6 +18,7 @@ export interface FhirIndex {
 
 /**
  * Builds an index of FHIR resources from a given FHIR bundle.
+ * NOTE: Index should only be accessed indirectly via helper functions below.
  *
  * Extracts all resources from a given FHIR bundle and organizes them into two maps:
  * 1. `fhirIndexByType` – an map of resources keyed by `resourceType` mapping to an array of all resources of that type.
@@ -62,8 +63,6 @@ export const getFhirIndex = (fhirBundle: Bundle): FhirIndex => {
  * @returns Array of FHIR resources of type `T`, or empty array if
  * no resources of specified type exist.
  */
-// TODO ANGELA: How to guarantee that type & `T` match? `T` only exists at compile, whereas type exists at `runtime`
-// Is it enough to get this? Argument of type '"Composition"' is not assignable to parameter of type '"Observation"'.
 export function getResourcesByType<T extends Resource>(
   fhirIndex: FhirIndex,
   type: T["resourceType"],
@@ -78,6 +77,7 @@ export function getResourcesByType<T extends Resource>(
 /**
  * Returns FHIR resource by ID and check resource type.
  * Expects only one resource to be returned.
+ * NOTE: should only be accessed by evaluateReference2
  *
  * @template T - The expected FHIR Resource type (e.g., Observation, Patient).
  * @param fhirIndex - FHIR resources indexed by type & by ID
@@ -87,13 +87,11 @@ export function getResourcesByType<T extends Resource>(
  * @returns FHIR resource of type `T` if it exists and resourceType matches `type`
  * Returns undefined if no resource exists with given ID and resourceType
  */
-// TODO ANGELA: How to guarantee that type & `T` match? `T` only exists at compile, whereas type exists at `runtime`
 export function getResourceById<T extends Resource>(
   fhirIndex: FhirIndex,
   type: T["resourceType"],
   id: string,
 ): T | undefined {
   const resource = fhirIndex.fhirIndexByTypeAndId[type]?.[id];
-  if (resource?.resourceType === type) return resource as T;
-  return undefined;
+  return resource as T | undefined;
 }
