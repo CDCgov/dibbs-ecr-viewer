@@ -1579,7 +1579,8 @@
           "rateQuantity": {
             "value": 12,
             "unit": "h"
-          }
+          },
+          "text": "Take with water once daily"
         },
         "extension": [
           {
