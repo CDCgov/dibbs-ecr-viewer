@@ -138,7 +138,9 @@ describe("Snapshot test for eCR Document", () => {
         (d) => d.title === "Administered Medications",
       );
       render(adminMedsItem!.value as React.JSX.Element);
-      expect(screen.getByText("Take with water once daily")).toBeInTheDocument();
+      expect(
+        screen.getByText("Take with water once daily"),
+      ).toBeInTheDocument();
     });
   });
 
