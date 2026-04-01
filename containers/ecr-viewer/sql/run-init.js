@@ -117,19 +117,26 @@ async function runSqlServerInit() {
 
 async function main() {
   const configName = process.env.CONFIG_NAME || "";
+  const configsIntegrated = ["AZURE_INTEGRATED", "AWS_INTEGRATED", "GCP_INTEGRATED"];
 
   // Use simple string matching to determine database type
+  const isIntegrated = configsIntegrated.includes(configName);
   const isPostgresConfig = configName.includes("_PG_");
   const isSqlServerConfig = configName.includes("_SQLSERVER_");
 
-  if (isPostgresConfig) {
+  if (isIntegrated) {
+    console.log(
+      `Current CONFIG_NAME ${configName} does not include a database setup. Skipping db initialization.`
+    );
+    process.exit(0);
+  } else if (isPostgresConfig) {
     console.log("Running PostgreSQL init...");
     await runPostgresInit();
   } else if (isSqlServerConfig) {
     console.log("Running SQL Server init...");
     await runSqlServerInit();
   } else {
-    console.error('ERROR: CONFIG_NAME must contain "_PG_" or "_SQLSERVER"');
+    console.error('ERROR: CONFIG_NAME must contain "PG" or "SQLSERVER"');
     console.error("Current CONFIG_NAME:", configName || "(not set)");
     process.exit(1);
   }
