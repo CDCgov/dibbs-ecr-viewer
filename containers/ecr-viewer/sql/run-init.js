@@ -3,10 +3,13 @@
 const fs = require("fs");
 const path = require("path");
 
+const mssql = require("mssql"); // Use mssql package for SQL Server
 const { Client } = require("pg");
 
 async function runPostgresInit() {
   // Validate DATABASE_URL before attempting connection
+  // TODO ANGELA: make DATABASE_URL required or error out
+
   const url = process.env.DATABASE_URL;
   if (!url || url.length === 0) {
     console.error(
@@ -52,28 +55,28 @@ async function runPostgresInit() {
 }
 
 async function runSqlServerInit() {
+  // TODO ANGELA: This can be simplified to just check process.env for DATABASE_URL I think
   // Validate required environment variables before attempting connection
-  const required = [
-    "SQL_SERVER_HOST",
-    "SQL_SERVER_USER",
-    "SQL_SERVER_PASSWORD",
-  ];
+  const required = ["DATABASE_URL"];
   const missing = required.filter((k) => !process.env[k]);
   if (missing.length > 0) {
     console.error("ERROR: Missing SQL Server config:", missing.join(", "));
     process.exit(1);
   }
 
-  // Use mssql package for SQL Server
-  const mssql = require("mssql");
-
   // Get database name from env var or fallback to master
-  const database = process.env.SQL_SERVER_DATABASE || "master";
+  const database = process.env.DATABASE_URL || "master";
+
+  // Get config variables
+  const dbURL = new URL(database);
+  const server = dbURL.hostname;
+  const user = dbURL.username;
+  const password = dbURL.password;
 
   const config = {
-    user: process.env.SQL_SERVER_USER,
-    password: process.env.SQL_SERVER_PASSWORD,
-    server: process.env.SQL_SERVER_HOST,
+    user,
+    password,
+    server,
     database,
     options: {
       encrypt: false,
