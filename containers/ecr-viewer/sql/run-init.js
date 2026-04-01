@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
-const { Client } = require("pg");
 const fs = require("fs");
 const path = require("path");
+
+const { Client } = require("pg");
 
 async function runPostgresInit() {
   // Validate DATABASE_URL before attempting connection
@@ -15,7 +16,7 @@ async function runPostgresInit() {
   }
   try {
     new URL(url); // Validates URL format
-  } catch (_) {
+  } catch {
     console.error("ERROR: DATABASE_URL is not a valid URL:", url);
     process.exit(1);
   }
@@ -73,7 +74,7 @@ async function runSqlServerInit() {
     user: process.env.SQL_SERVER_USER,
     password: process.env.SQL_SERVER_PASSWORD,
     server: process.env.SQL_SERVER_HOST,
-    database: database,
+    database,
     options: {
       encrypt: false,
       trustServerCertificate: true,
