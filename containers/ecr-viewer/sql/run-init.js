@@ -8,7 +8,10 @@ const { Client } = require("pg");
 
 async function runPostgresInit() {
   // Validate DATABASE_URL before attempting connection
-  // TODO ANGELA: make DATABASE_URL required or error out
+  if (!process.env.DATABASE_URL) {
+    console.error("ERROR: DATABASE_URL is required");
+    process.exit(1);
+  }
 
   const url = process.env.DATABASE_URL;
   if (!url || url.length === 0) {
@@ -33,7 +36,7 @@ async function runPostgresInit() {
     await client.connect();
     console.log("Connected to PostgreSQL");
 
-    const sqlPath = path.join(__dirname, "..", "postgres", "init.sql");
+    const sqlPath = path.join(__dirname, "postgres", "init.sql");
     if (!fs.existsSync(sqlPath)) {
       throw new Error(`PostgreSQL init SQL file not found: ${sqlPath}`);
     }
@@ -57,10 +60,8 @@ async function runPostgresInit() {
 async function runSqlServerInit() {
   // TODO ANGELA: This can be simplified to just check process.env for DATABASE_URL I think
   // Validate required environment variables before attempting connection
-  const required = ["DATABASE_URL"];
-  const missing = required.filter((k) => !process.env[k]);
-  if (missing.length > 0) {
-    console.error("ERROR: Missing SQL Server config:", missing.join(", "));
+  if (!process.env.DATABASE_URL) {
+    console.error("ERROR: DATABASE_URL is required");
     process.exit(1);
   }
 
@@ -91,7 +92,7 @@ async function runSqlServerInit() {
     pool = await mssql.connect(config);
     console.log("Connected to SQL Server");
 
-    const sqlPath = path.join(__dirname, "..", "sqlserver", "init.sql");
+    const sqlPath = path.join(__dirname, "sqlserver", "init.sql");
     if (!fs.existsSync(sqlPath)) {
       throw new Error(`SQL Server init SQL file not found: ${sqlPath}`);
     }
