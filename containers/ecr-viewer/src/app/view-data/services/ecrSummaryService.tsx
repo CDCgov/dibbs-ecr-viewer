@@ -3,6 +3,7 @@ import React from "react";
 import {
   Bundle,
   Condition,
+  DiagnosticReport,
   DomainResource,
   Encounter,
   Observation,
@@ -48,6 +49,7 @@ import {
 } from "./evaluateFhirDataService";
 import { evaluateLabInfoData } from "./labsService";
 import { getReportabilityRulesReasons } from "./reportabilityService";
+import { FhirIndex, getResourcesByType } from "./fhirResourcesIndexService";
 
 /**
  * Evaluates and retrieves patient details from the FHIR bundle using the provided path mappings.
@@ -153,11 +155,13 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
 /**
  * Evaluates and retrieves all condition details in a bundle.
  * @param fhirBundle - The FHIR bundle containing patient data.
- * @param snomedCode - The SNOMED code identifying the main snomed code.
+ * @param fhirIndex - FHIR resources indexed by type & by ID
+ * @param snomedCode - (Optional) The SNOMED code identifying the main snomed code.
  * @returns An array of condition summary objects.
  */
 export const evaluateEcrSummaryConditionSummary = (
   fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
   snomedCode?: string,
 ): ConditionSummary[] => {
   const rrConditions = evaluateAll(fhirBundle, fhirPathMappings.rrConditions);
@@ -226,6 +230,7 @@ export const evaluateEcrSummaryConditionSummary = (
       ),
       labDetails: evaluateEcrSummaryRelevantLabResults(
         fhirBundle,
+        fhirIndex,
         conditionsListKey,
         false,
       ),
@@ -287,12 +292,14 @@ export const evaluateEcrSummaryRelevantClinicalDetails = (
 /**
  * Evaluates and retrieves relevant lab results from the FHIR bundle using the provided SNOMED code and path mappings.
  * @param fhirBundle - The FHIR bundle containing patient data.
+ * @param fhirIndex - FHIR resources indexed by type & by ID
  * @param snomedCode - String containing the SNOMED code search parameter.
  * @param lastDividerLine - Boolean to determine if a divider line should be added to the end of the lab results. Default to true
  * @returns An array of lab result details objects containing title and value pairs.
  */
 export const evaluateEcrSummaryRelevantLabResults = (
   fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
   snomedCode: string,
   lastDividerLine: boolean = true,
 ): DisplayDataProps[] => {
@@ -302,16 +309,16 @@ export const evaluateEcrSummaryRelevantLabResults = (
     return [];
   }
 
-  const labReports = evaluateAll(
-    fhirBundle,
-    fhirPathMappings.diagnosticReports,
+  const labReports = getResourcesByType<DiagnosticReport>(
+    fhirIndex,
+    "DiagnosticReport",
   );
   const labsWithCode = getRelevantResources(labReports, snomedCode);
   const labsWithCodeIds = new Set(labsWithCode.map((lab) => lab.id));
 
-  const observationsList = evaluateAll(
-    fhirBundle,
-    fhirPathMappings.observations,
+  const observationsList = getResourcesByType<Observation>(
+    fhirIndex,
+    "Observation",
   );
   const relevantObsIds = new Set(
     getRelevantResources(observationsList, snomedCode).map((entry) => entry.id),
@@ -337,7 +344,7 @@ export const evaluateEcrSummaryRelevantLabResults = (
     return [];
   }
   const relevantLabElements = evaluateLabInfoData(
-    fhirBundle,
+    fhirIndex,
     relevantLabs,
     "h4",
   );

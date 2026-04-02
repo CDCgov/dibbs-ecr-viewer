@@ -30,6 +30,10 @@ import {
 import { notEmpty } from "@/app/utils/data-utils";
 
 import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
+import {
+  FhirIndex,
+  getResourceById,
+} from "@/app/view-data/services/fhirResourcesIndexService";
 
 // TODO: Follow up on FHIR/fhirpath typing
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -339,6 +343,43 @@ export const evaluateReference = <T extends Resource>(
   }
 
   return result;
+};
+
+/**
+ * Evaluates a reference to return a resource. The resulting type of the expected resource
+ * must be provided as a type parameter. This will also be checked at runtime and an
+ * error logged if it does not match.
+ *
+ * Expects a single element to be returned from the reference.
+ *
+ * @param fhirIndex - FHIR resources indexed by type & by ID
+ * @param ref - The reference string (e.g., "Patient/123").
+ * @returns The FHIR Resource or undefined if not found.
+ */
+// TODO: Eventually want this to replace evaluateReference completely
+export const evaluateReference2 = <T extends Resource>(
+  fhirIndex: FhirIndex,
+  ref?: string | Reference,
+): T | undefined => {
+  if (typeof ref !== "string") {
+    ref = formatReference(ref);
+  }
+  if (!ref) return undefined;
+
+  const [resourceType, id] = ref.split("/");
+  const result = getResourceById<T>(
+    fhirIndex,
+    resourceType as T["resourceType"],
+    id,
+  );
+
+  if (result && result?.resourceType !== resourceType) {
+    console.error(
+      `Resource type mismatch: Expected ${resourceType}, but got ${result?.resourceType}`,
+    );
+  }
+
+  return result as T;
 };
 
 type RefPathTypes = {

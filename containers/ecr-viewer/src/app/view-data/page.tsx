@@ -12,15 +12,16 @@ import { getEcrDocumentAccordionItems } from "./components/EcrDocument/accordion
 import EcrSummary from "./components/EcrSummary";
 import SideNav from "./components/SideNav";
 import {
-  evaluateEcrSummaryConditionSummary,
-  evaluateEcrSummaryEncounterDetails,
-  evaluateEcrSummaryPatientDetails,
-} from "./services/ecrSummaryService";
-import {
   evaluatePatientDOB,
   evaluatePatientName,
 } from "./services/evaluateFhirDataService";
 import { getFhirData, isSuccessResponse } from "./services/fhirDataService";
+import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
+import {
+  evaluateEcrSummaryConditionSummary,
+  evaluateEcrSummaryEncounterDetails,
+  evaluateEcrSummaryPatientDetails,
+} from "./services/ecrSummaryService";
 
 /**
  * Functional component for rendering the eCR Viewer page.
@@ -61,10 +62,11 @@ const ECRViewerPage = async ({
   }
 
   const fhirBundle = resp.payload.fhirBundle;
+  const fhirIndex = getFhirIndex(fhirBundle);
   const patientName = evaluatePatientName(fhirBundle, true);
   const patientDOB = evaluatePatientDOB(fhirBundle);
 
-  const accordionItems = getEcrDocumentAccordionItems(fhirBundle);
+  const accordionItems = getEcrDocumentAccordionItems(fhirBundle, fhirIndex);
   return (
     <ECRViewerLayout patientName={patientName} patientDOB={patientDOB}>
       <SideNav />
@@ -86,6 +88,7 @@ const ECRViewerPage = async ({
           }
           conditionSummary={evaluateEcrSummaryConditionSummary(
             fhirBundle,
+            fhirIndex,
             snomedCode,
           )}
           snomed={snomedCode}
