@@ -339,10 +339,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8689-2'))",
   },
-  observationDerivedFrom: {
-    type: "Reference",
-    path: "derivedFrom",
-  },
   questionnaireItem: {
     type: "QuestionnaireResponseItem",
     path: "item",
@@ -721,10 +717,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "ValueX",
     path: "component.where(code.coding.code = '280147009').value",
   },
-  hasMember: {
-    type: "Reference",
-    path: "hasMember",
-  },
 
   // Exposure Details
   exposureObservations: {
@@ -781,6 +773,14 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   dosage: {
     type: "Dosage",
     path: "dosage",
+  },
+  hasMember: {
+    type: "Reference",
+    path: "hasMember",
+  },
+  observationDerivedFrom: {
+    type: "Reference",
+    path: "derivedFrom",
   },
 
   /**
