@@ -105,6 +105,8 @@ services:
       context: ./
       dockerfile: seed-scripts/sql/sqlserver/Dockerfile
     environment:
+      - CONFIG_NAME=${CONFIG_NAME}
+      - DATABASE_URL=${DATABASE_URL}
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=${SQL_SERVER_PASSWORD:-Password1!}
     ports:

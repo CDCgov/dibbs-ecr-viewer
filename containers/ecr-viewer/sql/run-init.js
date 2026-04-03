@@ -78,7 +78,7 @@ async function runSqlServerInit() {
     user,
     password,
     server,
-    database,
+    database: dbURL.pathname.replace("/", ""),
     options: {
       encrypt: false,
       trustServerCertificate: true,
