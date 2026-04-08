@@ -53,6 +53,7 @@ export const isDataAvailable = (item: DisplayDataProps): Boolean => {
     "do not know",
     "no history of present illness information available",
     "no information available",
+    "no information"
   ];
   const valStr = removeHtmlElements(`${item.value}`).trim().toLowerCase();
   return !unavailableTerms.some((t) => t === valStr);
