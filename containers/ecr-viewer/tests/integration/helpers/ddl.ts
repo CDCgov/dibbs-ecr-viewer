@@ -4,7 +4,6 @@ import { Core } from "@/app/data/metadataDb/types/core";
 import { Extended } from "@/app/data/metadataDb/types/extended";
 import { dbSchema } from "@/app/data/metadataDb/utils/db-config";
 
-
 /**
  * Drops the common schema tables
  */
