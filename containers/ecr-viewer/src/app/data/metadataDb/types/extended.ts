@@ -79,6 +79,13 @@ export interface ecr_labs {
   performing_lab: string | undefined;
 }
 
+export interface ecr_immunizations {
+  uuid: Generated<string>;
+  eicr_id: string;
+  name: string | undefined;
+  administration_date: Date | undefined;
+}
+
 export type ExtendedECR = Selectable<extended_ecr_data>;
 export type NewExtendedECR = Insertable<extended_ecr_data>;
 
@@ -88,8 +95,12 @@ export type NewPatientAddress = Insertable<patient_address>;
 export type ECRLabs = Selectable<ecr_labs>;
 export type NewECRLabs = Insertable<ecr_labs>;
 
+export type ImmunizationLabs = Selectable<ecr_immunizations>;
+export type NewImmunizationLabs = Insertable<ecr_immunizations>;
+
 export interface Extended extends Core {
   ecr_data: extended_ecr_data;
   patient_address: patient_address;
   ecr_labs: ecr_labs;
+  ecr_immunizations: ecr_immunizations;
 }

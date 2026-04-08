@@ -4,12 +4,13 @@ import { Core } from "@/app/data/metadataDb/types/core";
 import { Extended } from "@/app/data/metadataDb/types/extended";
 import { dbSchema } from "@/app/data/metadataDb/utils/db-config";
 
+
 /**
  * Drops the common schema tables
  */
 export const dropExisting = async () => {
   if (dbSchema()) {
-    migrateDown("all");
+    await migrateDown("all");
   }
 };
 
@@ -58,6 +59,7 @@ export const clearExtended = async () => {
   const db = getDb<Extended>();
   await db.deleteFrom("patient_address").execute();
   await db.deleteFrom("ecr_labs").execute();
+  await db.deleteFrom("ecr_immunizations").execute();
   await clearCore();
 };
 
@@ -68,5 +70,6 @@ export const clearEcrExtended = async () => {
   const db = getDb<Extended>();
   await db.deleteFrom("patient_address").execute();
   await db.deleteFrom("ecr_labs").execute();
+  await db.deleteFrom("ecr_immunizations").execute();
   await clearEcrCore();
 };

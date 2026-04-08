@@ -40,6 +40,11 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
         .select("name")
         .where("type", "=", "PK")
         .where(sql`OBJECT_NAME(parent_object_id)`, "=", table)
+        .where(
+          sql`OBJECT_SCHEMA_NAME(parent_object_id)`,
+          "=",
+          dbNamespace(),
+        )
         .executeTakeFirstOrThrow();
       pkey_name = name;
 
