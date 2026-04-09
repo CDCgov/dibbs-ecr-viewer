@@ -65,16 +65,32 @@
         },
         "status": "final",
         "effectiveDateTime": "2025-02-05",
-        "valueCodeableConcept": {
-          "coding": [
-            {
-              "code": "X-SDOH-RISK-3",
-              "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-              "display": "Low Risk"
-            }
-          ],
-          "text": "Adequate Health Literacy"
-        },
+        "component": [
+          {
+            "code": {
+              "coding": [
+                {
+                  "code": "X-SDOH-SDC-95000",
+                  "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                  "display": "B1300 Health Literacy"
+                }
+              ],
+              "text": "B1300 Health Literacy"
+            },
+            "interpretation": [
+              {
+                "coding": [
+                  {
+                    "code": "X-SDOH-RISK-3",
+                    "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                    "display": "Low Risk"
+                  }
+                ],
+                "text": "Adequate Health Literacy"
+              }
+            ]
+          }
+        ],
         "derivedFrom": [
           {
             "reference": "QuestionnaireResponse/791543a4-f04f-1812-efcc-a99bdcf8e16f"
@@ -94,7 +110,7 @@
         "item": [
           {
             "linkId": "empty",
-            "text": "How often do you need to have someone help you when you read instructions, pamphlets, or other written material from your doctor or pharmacy?",
+            "text": "How often do you need to have someone help you when you read instructions, pamphlets, or other written material from your doctor or pharmacy [SILS]",
             "answer": [
               {
                 "valueCoding": {
@@ -102,9 +118,6 @@
                   "system": "http://loinc.org",
                   "display": "Never"
                 }
-              },
-              {
-                "valueString": "Never"
               }
             ]
           }
@@ -182,16 +195,32 @@
         },
         "status": "final",
         "effectiveDateTime": "2025-02-05",
-        "valueCodeableConcept": {
-          "coding": [
-            {
-              "code": "X-SDOH-RISK-0",
-              "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-              "display": "Unknown"
-            }
-          ],
-          "text": "Unknown"
-        },
+        "component": [
+          {
+            "code": {
+              "coding": [
+                {
+                  "code": "88028-6",
+                  "system": "http://loinc.org",
+                  "display": "Tobacco use panel"
+                }
+              ],
+              "text": "Tobacco use panel"
+            },
+            "interpretation": [
+              {
+                "coding": [
+                  {
+                    "code": "X-SDOH-RISK-0",
+                    "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                    "display": "Unknown"
+                  }
+                ],
+                "text": "Unknown"
+              }
+            ]
+          }
+        ],
         "derivedFrom": [
           {
             "reference": "QuestionnaireResponse/d4d70bcf-43ed-d485-0b04-0e1c8277d681"
@@ -217,7 +246,7 @@
         "item": [
           {
             "linkId": "empty",
-            "text": "Smoking Tobacco Use",
+            "text": "Tobacco smoking status",
             "answer": [
               {
                 "valueString": "Never Assessed"
@@ -244,7 +273,7 @@
         "item": [
           {
             "linkId": "empty",
-            "text": "Smokeless Tobacco Use",
+            "text": "Smokeless tobacco status",
             "answer": [
               {
                 "valueCoding": {
@@ -252,9 +281,6 @@
                   "system": "http://loinc.org",
                   "display": "Unknown"
                 }
-              },
-              {
-                "valueString": "Unknown"
               }
             ]
           }
@@ -359,16 +385,32 @@
         },
         "status": "final",
         "effectiveDateTime": "2025-02-05",
-        "valueCodeableConcept": {
-          "coding": [
-            {
-              "code": "X-SDOH-RISK-1",
-              "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-              "display": "At Risk"
-            }
-          ],
-          "text": "At Risk"
-        },
+        "component": [
+          {
+            "code": {
+              "coding": [
+                {
+                  "code": "X-SDOH-SDC-97004",
+                  "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                  "display": "Overall Financial Resource Strain (CARDIA)"
+                }
+              ],
+              "text": "Overall Financial Resource Strain (CARDIA)"
+            },
+            "interpretation": [
+              {
+                "coding": [
+                  {
+                    "code": "X-SDOH-RISK-1",
+                    "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                    "display": "At Risk"
+                  }
+                ],
+                "text": "At Risk"
+              }
+            ]
+          }
+        ],
         "derivedFrom": [
           {
             "reference": "QuestionnaireResponse/c065b14d-5531-ab06-ebfa-657b9546200a"
@@ -388,7 +430,7 @@
         "item": [
           {
             "linkId": "empty",
-            "text": "How hard is it for you to pay for the very basics like food, housing, medical care, and heating?",
+            "text": "How hard is it for you to pay for the very basics like food, housing, medical care, and heating",
             "answer": [
               {
                 "valueCoding": {
@@ -396,9 +438,6 @@
                   "system": "http://loinc.org",
                   "display": "Somewhat hard"
                 }
-              },
-              {
-                "valueString": "Somewhat hard"
               }
             ]
           }
@@ -476,16 +515,32 @@
         },
         "status": "final",
         "effectiveDateTime": "2025-02-05",
-        "valueCodeableConcept": {
-          "coding": [
-            {
-              "code": "X-SDOH-RISK-3",
-              "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-              "display": "High Risk"
-            }
-          ],
-          "text": "Food Insecurity Present"
-        },
+        "component": [
+          {
+            "code": {
+              "coding": [
+                {
+                  "code": "88121-9",
+                  "system": "http://loinc.org",
+                  "display": "Hunger Vital Sign [HVS]"
+                }
+              ],
+              "text": "Hunger Vital Sign"
+            },
+            "interpretation": [
+              {
+                "coding": [
+                  {
+                    "code": "X-SDOH-RISK-3",
+                    "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                    "display": "High Risk"
+                  }
+                ],
+                "text": "Food Insecurity Present"
+              }
+            ]
+          }
+        ],
         "derivedFrom": [
           {
             "reference": "QuestionnaireResponse/32605bec-7f6b-7b0f-1201-5dd64aa25d66"
@@ -508,7 +563,7 @@
         "item": [
           {
             "linkId": "empty",
-            "text": "Within the past 12 months, you worried that your food would run out before you got the money to buy more.",
+            "text": "(I/We) worried whether (my/our) food would run out before (I/we) got money to buy more. ",
             "answer": [
               {
                 "valueCoding": {
@@ -516,9 +571,6 @@
                   "system": "http://loinc.org",
                   "display": "Often true"
                 }
-              },
-              {
-                "valueString": "Often true"
               }
             ]
           }
@@ -542,7 +594,7 @@
         "item": [
           {
             "linkId": "empty",
-            "text": "Within the past 12 months, the food you bought just didn't last and you didn't have money to get more.",
+            "text": "The food that (I/we) bought just didn't last, and (I/we) didn't have money to get more.",
             "answer": [
               {
                 "valueCoding": {
@@ -550,9 +602,6 @@
                   "system": "http://loinc.org",
                   "display": "Often true"
                 }
-              },
-              {
-                "valueString": "Often true"
               }
             ]
           }
@@ -630,16 +679,32 @@
         },
         "status": "final",
         "effectiveDateTime": "2025-02-05",
-        "valueCodeableConcept": {
-          "coding": [
-            {
-              "code": "X-SDOH-RISK-1",
-              "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-              "display": "High Risk"
-            }
-          ],
-          "text": "Has Transportation Needs"
-        },
+        "component": [
+          {
+            "code": {
+              "coding": [
+                {
+                  "code": "X-SDOH-SDC-97009",
+                  "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                  "display": "PRAPARE - Transportation"
+                }
+              ],
+              "text": "PRAPARE - Transportation"
+            },
+            "interpretation": [
+              {
+                "coding": [
+                  {
+                    "code": "X-SDOH-RISK-1",
+                    "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                    "display": "High Risk"
+                  }
+                ],
+                "text": "Has Transportation Needs"
+              }
+            ]
+          }
+        ],
         "derivedFrom": [
           {
             "reference": "QuestionnaireResponse/795db4d2-7335-aef8-a383-7c0ca531ed7c"
@@ -670,9 +735,6 @@
                   "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
                   "display": "Yes"
                 }
-              },
-              {
-                "valueString": "Yes"
               }
             ]
           }
@@ -704,9 +766,6 @@
                   "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
                   "display": "Yes"
                 }
-              },
-              {
-                "valueString": "Yes"
               }
             ]
           }
@@ -784,16 +843,32 @@
         },
         "status": "final",
         "effectiveDateTime": "2025-02-05",
-        "valueCodeableConcept": {
-          "coding": [
-            {
-              "code": "X-SDOH-RISK-1",
-              "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-              "display": "High Risk"
-            }
-          ],
-          "text": "High Risk"
-        },
+        "component": [
+          {
+            "code": {
+              "coding": [
+                {
+                  "code": "98975-6",
+                  "system": "http://loinc.org",
+                  "display": "Children's HealthWatch Housing Stability Vital Sign [Housing Stability Vital Sign]"
+                }
+              ],
+              "text": "Housing Stability Vital Sign"
+            },
+            "interpretation": [
+              {
+                "coding": [
+                  {
+                    "code": "X-SDOH-RISK-1",
+                    "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                    "display": "High Risk"
+                  }
+                ],
+                "text": "High Risk"
+              }
+            ]
+          }
+        ],
         "derivedFrom": [
           {
             "reference": "QuestionnaireResponse/5f0c98ec-81d5-beaa-8438-dec4c470ab86"
@@ -819,7 +894,7 @@
         "item": [
           {
             "linkId": "empty",
-            "text": "In the last 12 months, was there a time when you were not able to pay the mortgage or rent on time?",
+            "text": "In the past 12 months, was there a time when you were not able to pay the mortgage or rent on time?",
             "answer": [
               {
                 "valueCoding": {
@@ -827,9 +902,6 @@
                   "system": "http://loinc.org",
                   "display": "Yes"
                 }
-              },
-              {
-                "valueString": "Yes"
               }
             ]
           }
@@ -880,7 +952,7 @@
         "item": [
           {
             "linkId": "empty",
-            "text": "At any time in the past 12 months, were you homeless or living in a shelter (including now)?",
+            "text": "At any time in the past 12 months, were you homeless or living in shelter [including now]?",
             "answer": [
               {
                 "valueCoding": {
@@ -888,9 +960,6 @@
                   "system": "http://loinc.org",
                   "display": "No"
                 }
-              },
-              {
-                "valueString": "No"
               }
             ]
           }
@@ -961,16 +1030,25 @@
         },
         "status": "final",
         "effectiveDateTime": "2025-02-05",
-        "valueCodeableConcept": {
-          "coding": [
-            {
-              "code": "X-SDOH-RISK-2",
-              "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-              "display": "Low Risk"
-            }
-          ],
-          "text": "Low Risk"
-        },
+        "component": [
+          {
+            "code": {
+              "text": "Caregiver Education and Work"
+            },
+            "interpretation": [
+              {
+                "coding": [
+                  {
+                    "code": "X-SDOH-RISK-2",
+                    "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                    "display": "Low Risk"
+                  }
+                ],
+                "text": "Low Risk"
+              }
+            ]
+          }
+        ],
         "derivedFrom": [
           {
             "reference": "QuestionnaireResponse/ea0d16b1-b2cb-03be-5d20-a3ab34536b69"
@@ -1094,16 +1172,25 @@
         },
         "status": "final",
         "effectiveDateTime": "2025-02-05",
-        "valueCodeableConcept": {
-          "coding": [
-            {
-              "code": "X-SDOH-RISK-1",
-              "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-              "display": "Low Risk"
-            }
-          ],
-          "text": "Low Risk"
-        },
+        "component": [
+          {
+            "code": {
+              "text": "Safety and Environment"
+            },
+            "interpretation": [
+              {
+                "coding": [
+                  {
+                    "code": "X-SDOH-RISK-1",
+                    "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                    "display": "Low Risk"
+                  }
+                ],
+                "text": "Low Risk"
+              }
+            ]
+          }
+        ],
         "derivedFrom": [
           {
             "reference": "QuestionnaireResponse/b359cf4b-33ef-198d-b811-75e00e3ce697"
@@ -1287,16 +1374,25 @@
         },
         "status": "final",
         "effectiveDateTime": "2025-02-05",
-        "valueCodeableConcept": {
-          "coding": [
-            {
-              "code": "X-SDOH-RISK-1",
-              "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-              "display": "Low Risk"
-            }
-          ],
-          "text": "Low Risk"
-        },
+        "component": [
+          {
+            "code": {
+              "text": "Caregiver Health"
+            },
+            "interpretation": [
+              {
+                "coding": [
+                  {
+                    "code": "X-SDOH-RISK-1",
+                    "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                    "display": "Low Risk"
+                  }
+                ],
+                "text": "Low Risk"
+              }
+            ]
+          }
+        ],
         "derivedFrom": [
           {
             "reference": "QuestionnaireResponse/9658ef45-fcd6-025c-367d-3b6c4dea682a"
@@ -1389,89 +1485,6 @@
             "reference": "Observation/3743d347-6736-62de-8d56-44b1b5ac7e6b"
           }
         ],
-        "meta": {
-          "source": "ecr"
-        }
-      }
-    },
-    {
-      "fullUrl": "urn:uuid:232ce17d-7317-3bf6-3d9d-0ca976975fb4",
-      "resource": {
-        "resourceType": "Encounter",
-        "id": "232ce17d-7317-3bf6-3d9d-0ca976975fb4",
-        "status": "finished",
-        "class": {
-          "code": "99213",
-          "system": "http://www.ama-assn.org/go/cpt",
-          "display": "Office outpatient visit 15 minutes"
-        },
-        "identifier": [
-          {
-            "system": "urn:ietf:rfc:3986",
-            "value": "urn:uuid:fd7ee2ec-4d8e-4169-aeb6-836731cc7201"
-          }
-        ],
-        "period": {
-          "start": "2025-02-05"
-        },
-        "subject": {
-          "reference": "Patient/ddf58aa4-ad11-d4e4-ff39-60c7473418ad"
-        },
-        "meta": {
-          "source": "ecr"
-        }
-      }
-    },
-    {
-      "fullUrl": "urn:uuid:e9037dc1-7328-1f9e-bbdc-f313f637f90d",
-      "resource": {
-        "resourceType": "Immunization",
-        "id": "e9037dc1-7328-1f9e-bbdc-f313f637f90d",
-        "identifier": [
-          {
-            "system": "urn:ietf:rfc:3986",
-            "value": "urn:uuid:e6f1ba43-c0ed-4b9b-9f12-f435d8ad8f92"
-          }
-        ],
-        "occurrenceDateTime": "2025-01-15",
-        "vaccineCode": {
-          "coding": [
-            {
-              "code": "207",
-              "system": "urn:oid:2.16.840.1.113883.12.292",
-              "display": "SARS-COV-2 (COVID-19) vaccine, mRNA, spike protein, LNP, preservative free, 30 mcg/0.3mL dose"
-            }
-          ]
-        },
-        "lotNumber": "GR789456",
-        "manufacturer": {
-          "reference": "Organization/7d2ad2db-a128-1b97-1d07-0f38227f142a"
-        },
-        "status": "completed",
-        "primarySource": true,
-        "route": {
-          "coding": [
-            {
-              "code": "C28161",
-              "system": "urn:oid:2.16.840.1.113883.3.26.1.1",
-              "display": "Intramuscular injection"
-            }
-          ]
-        },
-        "patient": {
-          "reference": "Patient/ddf58aa4-ad11-d4e4-ff39-60c7473418ad"
-        },
-        "meta": {
-          "source": "ecr"
-        }
-      }
-    },
-    {
-      "fullUrl": "urn:uuid:7d2ad2db-a128-1b97-1d07-0f38227f142a",
-      "resource": {
-        "resourceType": "Organization",
-        "id": "7d2ad2db-a128-1b97-1d07-0f38227f142a",
-        "name": "Grand Republic Medical Systems",
         "meta": {
           "source": "ecr"
         }

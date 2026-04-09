@@ -740,10 +740,6 @@ export const evaluateSocialDeterminantsOfHealth = (fhirBundle: Bundle) => {
                   "QuestionnaireResponse.item.answer",
                 ),
               )
-              // Filter out any repeated values (this can happen when valueCoding and valueString are set)
-              .filter((item, index, self) => {
-                return self.indexOf(item) === index;
-              })
               .join("\n");
 
             return (
@@ -762,7 +758,16 @@ export const evaluateSocialDeterminantsOfHealth = (fhirBundle: Bundle) => {
         });
 
         const domainTitle = evaluateValue(domain, fhirPathMappings.code);
-        const riskValue = evaluateValue(domain, fhirPathMappings.valueX);
+
+        const riskValue = domain?.component
+          ?.at(0)
+          ?.interpretation?.map((i) => {
+            if (i.text) {
+              return i.text;
+            }
+            return evaluateValue(i, fhirPathMappings.codingDisplay);
+          })
+          .join(" - ");
 
         return {
           title: (

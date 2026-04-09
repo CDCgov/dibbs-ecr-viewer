@@ -642,7 +642,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           <div
             class="flex-auto padding-right-1 text-bold"
           >
-            How often do you need to have someone help you when you read instructions, pamphlets, or other written material from your doctor or pharmacy?
+            How often do you need to have someone help you when you read instructions, pamphlets, or other written material from your doctor or pharmacy [SILS]
           </div>
           <div
             class="grid-col-auto maxw7 text-pre-line p-list"
@@ -699,7 +699,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           <div
             class="flex-auto padding-right-1 text-bold"
           >
-            Smoking Tobacco Use
+            Tobacco smoking status
           </div>
           <div
             class="grid-col-auto maxw7 text-pre-line p-list"
@@ -718,7 +718,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           <div
             class="flex-auto padding-right-1 text-bold"
           >
-            Smokeless Tobacco Use
+            Smokeless tobacco status
           </div>
           <div
             class="grid-col-auto maxw7 text-pre-line p-list"
@@ -794,7 +794,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           <div
             class="flex-auto padding-right-1 text-bold"
           >
-            How hard is it for you to pay for the very basics like food, housing, medical care, and heating?
+            How hard is it for you to pay for the very basics like food, housing, medical care, and heating
           </div>
           <div
             class="grid-col-auto maxw7 text-pre-line p-list"
@@ -851,7 +851,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           <div
             class="flex-auto padding-right-1 text-bold"
           >
-            Within the past 12 months, you worried that your food would run out before you got the money to buy more.
+            (I/We) worried whether (my/our) food would run out before (I/we) got money to buy more. 
           </div>
           <div
             class="grid-col-auto maxw7 text-pre-line p-list"
@@ -870,7 +870,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           <div
             class="flex-auto padding-right-1 text-bold"
           >
-            Within the past 12 months, the food you bought just didn't last and you didn't have money to get more.
+            The food that (I/we) bought just didn't last, and (I/we) didn't have money to get more.
           </div>
           <div
             class="grid-col-auto maxw7 text-pre-line p-list"
@@ -1003,7 +1003,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           <div
             class="flex-auto padding-right-1 text-bold"
           >
-            In the last 12 months, was there a time when you were not able to pay the mortgage or rent on time?
+            In the past 12 months, was there a time when you were not able to pay the mortgage or rent on time?
           </div>
           <div
             class="grid-col-auto maxw7 text-pre-line p-list"
@@ -1041,7 +1041,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           <div
             class="flex-auto padding-right-1 text-bold"
           >
-            At any time in the past 12 months, were you homeless or living in a shelter (including now)?
+            At any time in the past 12 months, were you homeless or living in shelter [including now]?
           </div>
           <div
             class="grid-col-auto maxw7 text-pre-line p-list"

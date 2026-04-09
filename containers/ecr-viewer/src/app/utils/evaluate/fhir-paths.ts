@@ -184,6 +184,7 @@ export type PathTypes = {
   name: string;
   noteText: string;
   dosage: Dosage;
+  codingDisplay: string;
   valueX: ValueX;
   occurrenceX: TimeX;
 };
@@ -781,6 +782,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   observationDerivedFrom: {
     type: "Reference",
     path: "derivedFrom",
+  },
+  codingDisplay: {
+    type: "string",
+    path: "coding.display",
   },
 
   /**
