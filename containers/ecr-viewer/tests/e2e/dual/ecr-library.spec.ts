@@ -224,14 +224,19 @@ test.describe("ecr library page", () => {
 
   test.describe("eCR grouping", () => {
     test("expanding group", async ({ page }) => {
-      await expect(
-        page.getByRole("button", { name: "View Related eCRs" }),
-      ).toBeVisible();
-      await page.getByRole("button", { name: "View Related eCRs" }).click();
+      const expandButton = page
+        .getByRole("button", { name: "View Related eCRs" })
+        .first();
+
+      await expect(expandButton).toBeVisible();
+      await expandButton.click();
       await expect(page.getByRole("row", { level: 2 })).toHaveCount(2);
 
       // collapse it back down
-      await page.getByRole("button", { name: "Hide Related eCRs" }).click();
+      await page
+        .getByRole("button", { name: "Hide Related eCRs" })
+        .first()
+        .click();
       await expect(page.getByRole("row", { level: 2 })).toHaveCount(0);
     });
   });
