@@ -242,7 +242,7 @@ export const getAllLabJsonObjects = (fhirIndex: FhirIndex): HtmlTableJson[] => {
   // Get lab reports HTML String (for all lab reports) & convert to JSON
   const compositionLabs = getOneResourceByType<Composition>(
     fhirIndex,
-    "Composition"
+    "Composition",
   );
   const labsString = evaluateValue(
     compositionLabs,

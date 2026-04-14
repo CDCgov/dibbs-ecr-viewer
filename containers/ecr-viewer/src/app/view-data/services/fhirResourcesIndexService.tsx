@@ -94,7 +94,7 @@ export function getOneResourceByType<T extends Resource>(
 
   if (resourceMap && resourceMap.length > 1) {
     throw new Error(
-      `Expected one result of type ${type}, but got ${resourceMap.length}.`
+      `Expected one result of type ${type}, but got ${resourceMap.length}.`,
     );
   }
 
@@ -102,7 +102,7 @@ export function getOneResourceByType<T extends Resource>(
     return undefined;
   }
 
-  return (resourceMap[0]) as T;
+  return resourceMap[0] as T;
 }
 
 /**

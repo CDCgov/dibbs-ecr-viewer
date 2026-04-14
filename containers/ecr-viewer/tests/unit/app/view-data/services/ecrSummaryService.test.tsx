@@ -304,7 +304,7 @@ describe("ecrSummaryService Tests", () => {
     it("should get all relevant patient details", () => {
       const actual = evaluateEcrSummaryPatientDetails(
         BundlePatient,
-        fhirIndexBundlePatient
+        fhirIndexBundlePatient,
       );
 
       expect(actual.unavailableData).toBeEmpty();
@@ -313,7 +313,7 @@ describe("ecrSummaryService Tests", () => {
     it("should not show parent/guardian info if adult", () => {
       const actual = evaluateEcrSummaryPatientDetails(
         BundlePatient,
-        fhirIndexBundlePatient
+        fhirIndexBundlePatient,
       );
 
       const guardian = actual.availableData.find(
@@ -339,10 +339,7 @@ describe("ecrSummaryService Tests", () => {
         ],
       } as unknown as Bundle;
       const fhirIndexBundle = getFhirIndex(bundle);
-      const actual = evaluateEcrSummaryPatientDetails(
-        bundle,
-        fhirIndexBundle
-      );
+      const actual = evaluateEcrSummaryPatientDetails(bundle, fhirIndexBundle);
 
       const guardian = actual.availableData.find(
         (d) => d.title === "Parent/Guardian",

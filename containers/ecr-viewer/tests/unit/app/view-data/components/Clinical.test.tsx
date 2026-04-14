@@ -13,12 +13,13 @@ import {
 } from "@/app/view-data/components/EcrDocument/clinical-data";
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
-const BundleClinicalInfo = require("../../../../../../../test-data/fhir/BundleClinicalInfo.json") as unknown as Bundle;
-const fhirIndexBundleClinicalInfo = getFhirIndex(BundleClinicalInfo)
+const BundleClinicalInfo =
+  require("../../../../../../../test-data/fhir/BundleClinicalInfo.json") as unknown as Bundle;
+const fhirIndexBundleClinicalInfo = getFhirIndex(BundleClinicalInfo);
 
 const testClinicalData = evaluateClinicalData(
   BundleClinicalInfo,
-  fhirIndexBundleClinicalInfo
+  fhirIndexBundleClinicalInfo,
 );
 
 const testImmunizationsData =

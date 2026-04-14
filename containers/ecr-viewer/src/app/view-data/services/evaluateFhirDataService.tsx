@@ -76,7 +76,11 @@ import {
   evaluateTravelHistoryTable,
   returnDisabilityStatusTable,
 } from "./socialHistoryService";
-import { FhirIndex, getOneResourceByType, getResourcesByType } from "./fhirResourcesIndexService";
+import {
+  FhirIndex,
+  getOneResourceByType,
+  getResourcesByType,
+} from "./fhirResourcesIndexService";
 
 // =============================================================================
 // Patient Info: Demographics
@@ -87,11 +91,9 @@ import { FhirIndex, getOneResourceByType, getResourcesByType } from "./fhirResou
  * @param fhirIndex - FHIR resources indexed by tpe & by ID
  * @returns Patient resource if it exists, or undefined if not
  */
-export const getPatient = (
-  fhirIndex: FhirIndex
-): Patient | undefined => {
+export const getPatient = (fhirIndex: FhirIndex): Patient | undefined => {
   return getOneResourceByType<Patient>(fhirIndex, "Patient");
-}
+};
 
 /**
  * Evaluates patient name from the FHIR bundle and formats it into structured data for display.
@@ -198,10 +200,7 @@ export const createPatientAgeDataProp = (
   // If patient has death date, return empty object
   if (isPatientDeceased(patient)) {
     title = "Age at Death";
-    const patientDODString = evaluateOne(
-      patient,
-      fhirPathMappings.patientDOD,
-    );
+    const patientDODString = evaluateOne(patient, fhirPathMappings.patientDOD);
     if (patientDOBString && patientDODString) {
       value = formatAge(calculatePatientAge(patient, patientDODString));
     }
@@ -276,10 +275,7 @@ export const evaluatePatientVitalStatus = (patient: Patient | undefined) => {
  * return `undefined`.
  */
 const isPatientDeceased = (patient: Patient | undefined) => {
-  const vitalStatus = evaluateOne(
-    patient,
-    fhirPathMappings.patientVitalStatus,
-  );
+  const vitalStatus = evaluateOne(patient, fhirPathMappings.patientVitalStatus);
   const dod = evaluateOne(patient, fhirPathMappings.patientDOD);
 
   return dod ? true : vitalStatus;
@@ -300,10 +296,7 @@ export const censorGender = (gender: string | undefined) => {
  * @returns - The patient's race information, including race OMB category and detailed extension (if available).
  */
 export const evaluatePatientRace = (patient: Patient | undefined) => {
-  const raceCat: string = evaluateValue(
-    patient,
-    fhirPathMappings.patientRace,
-  );
+  const raceCat: string = evaluateValue(patient, fhirPathMappings.patientRace);
   const raceDetailed: string = evaluateValue(
     patient,
     fhirPathMappings.patientRaceDetailed,
@@ -320,11 +313,11 @@ export const evaluatePatientRace = (patient: Patient | undefined) => {
 export const evaluatePatientEthnicity = (patient: Patient | undefined) => {
   const ethnicity: string = evaluateValue(
     patient,
-    fhirPathMappings.patientEthnicity
+    fhirPathMappings.patientEthnicity,
   );
   const ethnicityDetailed = evaluateValue(
     patient,
-    fhirPathMappings.patientEthnicityDetailed
+    fhirPathMappings.patientEthnicityDetailed,
   );
 
   return [ethnicity, ethnicityDetailed].filter(Boolean).join("\n");
@@ -379,10 +372,7 @@ export const evaluatePatientLanguage = (patient: Patient | undefined) => {
  * @returns The formatted patient address
  */
 export const evaluatePatientAddress = (patient: Patient | undefined) => {
-  const addresses = evaluateAll(
-    patient,
-    fhirPathMappings.patientAddressList,
-  );
+  const addresses = evaluateAll(patient, fhirPathMappings.patientAddressList);
 
   return formatAddressList(addresses);
 };
@@ -392,12 +382,18 @@ export const evaluatePatientAddress = (patient: Patient | undefined) => {
  * @param fhirBundle - The FHIR bundle containing demographic data.
  * @returns An array of evaluated and formatted demographic data.
  */
-export const evaluateDemographicsData = (fhirBundle: Bundle, fhirIndex: FhirIndex) => {
+export const evaluateDemographicsData = (
+  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
+) => {
   const patient = getPatient(fhirIndex);
-  const resourcesRelatedPerson = getResourcesByType<RelatedPerson>(fhirIndex, "RelatedPerson");
+  const resourcesRelatedPerson = getResourcesByType<RelatedPerson>(
+    fhirIndex,
+    "RelatedPerson",
+  );
 
   const patientSex = toTitleCase(
-    evaluateOne(patient, fhirPathMappings.patientGender)
+    evaluateOne(patient, fhirPathMappings.patientGender),
   );
 
   const demographicsData: DisplayDataProps[] = [
@@ -433,10 +429,7 @@ export const evaluateDemographicsData = (fhirBundle: Bundle, fhirIndex: FhirInde
     },
     {
       title: "Tribal Affiliation",
-      value: evaluateValue(
-        patient,
-        fhirPathMappings.patientTribalAffiliation
-      ),
+      value: evaluateValue(patient, fhirPathMappings.patientTribalAffiliation),
     },
     {
       title: "Preferred Language",
@@ -449,26 +442,26 @@ export const evaluateDemographicsData = (fhirBundle: Bundle, fhirIndex: FhirInde
     {
       title: "Recent County",
       value: findCurrentAddress(
-        evaluateAll(patient, fhirPathMappings.patientAddressList)
+        evaluateAll(patient, fhirPathMappings.patientAddressList),
       )?.district,
     },
     {
       title: "Contact",
       value: formatContactPoint(
-        evaluateAll(patient, fhirPathMappings.patientTelecom)
+        evaluateAll(patient, fhirPathMappings.patientTelecom),
       ),
     },
     {
       title: "Parent/Guardian",
       value: formatPatientContactList(
         evaluateAll(fhirBundle, fhirPathMappings.patientGuardian),
-        true
+        true,
       ),
     },
     {
       title: "Emergency Contact",
       value: formatPatientContactList(
-        evaluateAll(patient, fhirPathMappings.patientEmergencyContact)
+        evaluateAll(patient, fhirPathMappings.patientEmergencyContact),
       ),
     },
     {
@@ -712,7 +705,10 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
  * @param fhirBundle - The FHIR bundle containing social data.
  * @returns An array of evaluated and formatted social data.
  */
-export const evaluateSocialData = (fhirBundle: Bundle, fhirIndex: FhirIndex) => {
+export const evaluateSocialData = (
+  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
+) => {
   const patient = getPatient(fhirIndex);
 
   const socialData: DisplayDataProps[] = [
