@@ -38,7 +38,7 @@ from app.utils import format_service_url
 # Locations of the various services the service will delegate
 SERVICE_URLS = {
     "ingestion": os.environ.get("INGESTION_URL"),
-    "fhir_converter": os.environ.get("FHIR_CONVERTER_URL"),
+    "fhir_converter": os.environ.get("FHIR_CONVERTER_PROXY_URL"),
     "message_parser": os.environ.get("MESSAGE_PARSER_URL"),
     "trigger_code_reference": os.environ.get("TRIGGER_CODE_REFERENCE_URL"),
     "save_bundle": os.environ.get("ECR_VIEWER_URL"),

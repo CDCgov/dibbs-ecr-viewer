@@ -11,6 +11,25 @@ services:
       - "8082:8080"
     environment:
       - WEB_CONCURRENCY=${WEB_CONCURRENCY:-3}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://fhir-converter-service:8080/"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s # Give it 10s to boot
+
+  fhir-converter-proxy-service:
+    platform: linux/amd64
+    build:
+      context: ../../fhir-converter-proxy/
+    depends_on:
+      fhir-converter-service:
+        condition: service_healthy
+    ports:
+      - "8087:8080"
+    environment:
+      FHIR_CONVERTER_PROXY_PORT: ${FHIR_CONVERTER_PROXY_PORT:-8080}
+      FHIR_CONVERTER_PORT: ${FHIR_CONVERTER_PORT:-8080}
 
   ingestion-service:
     platform: linux/amd64
@@ -52,7 +71,7 @@ services:
     build:
       context: ../../orchestration/
     depends_on:
-      - fhir-converter-service
+      - fhir-converter-proxy-service
       - ingestion-service
       - message-parser-service
       - ecr-viewer
