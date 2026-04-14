@@ -79,7 +79,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./seed-scripts/sql/postgres/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./sql/postgres/init.sql:/docker-entrypoint-initdb.d/01-init.sql
       - ./seed-scripts/sql/postgres/.pgpass/:/usr/local/lib/.pgpass # Keep if needed
       - db:/var/lib/postgresql/data
     environment:
@@ -102,8 +102,8 @@ services:
 
   sqlserver:
     build:
-      context: ./seed-scripts/sql/sqlserver
-      dockerfile: Dockerfile
+      context: ./
+      dockerfile: seed-scripts/sql/sqlserver/Dockerfile
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=${SQL_SERVER_PASSWORD:-Password1!}

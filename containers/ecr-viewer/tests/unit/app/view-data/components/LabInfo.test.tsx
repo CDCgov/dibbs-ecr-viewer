@@ -2,25 +2,36 @@ import React from "react";
 
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Bundle } from "fhir/r4";
+import { Bundle, DiagnosticReport } from "fhir/r4";
 
-import BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
-import BundleLabNoLabIds from "../../../../../../../test-data/fhir/BundleLabNoLabIds.json";
-import { evaluateAll } from "@/app/utils/evaluate";
-import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
+import _BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
+import _BundleLabNoLabIds from "../../../../../../../test-data/fhir/BundleLabNoLabIds.json";
 import LabInfo from "@/app/view-data/components/LabInfo";
 import {
   evaluateLabInfoData,
   LabReportElementData,
 } from "@/app/view-data/services/labsService";
+import {
+  getFhirIndex,
+  getResourcesByType,
+} from "@/app/view-data/services/fhirResourcesIndexService";
+
+const BundleLab = _BundleLab as unknown as Bundle;
+const fhirIndexBundleLab = getFhirIndex(BundleLab);
+const BundleLabNoLabIds = _BundleLabNoLabIds as unknown as Bundle;
+const fhirIndexBundleLabNoLabIds = getFhirIndex(BundleLabNoLabIds);
 
 describe("LabInfo", () => {
   describe("when labResults is LabReportElementData[]", () => {
     let labInfoJsx: React.ReactElement;
     beforeAll(() => {
+      const diagnosticReports = getResourcesByType<DiagnosticReport>(
+        fhirIndexBundleLab,
+        "DiagnosticReport",
+      );
       const labInfoOrg = evaluateLabInfoData(
-        BundleLab as unknown as Bundle,
-        evaluateAll(BundleLab as Bundle, fhirPathMappings.diagnosticReports),
+        fhirIndexBundleLab,
+        diagnosticReports,
       ) as LabReportElementData[];
 
       // Empty out one of the lab names for testing
@@ -100,15 +111,18 @@ describe("LabInfo", () => {
   });
 
   describe("when labResults is DisplayDataProps[]", () => {
-    it("should be collapsed by default", () => {
-      const labInfo = evaluateLabInfoData(
-        BundleLabNoLabIds as unknown as Bundle,
-        evaluateAll(
-          BundleLabNoLabIds as Bundle,
-          fhirPathMappings.diagnosticReports,
-        ),
+    let labInfo: LabReportElementData[];
+    beforeAll(() => {
+      const diagnosticReports = getResourcesByType<DiagnosticReport>(
+        fhirIndexBundleLabNoLabIds,
+        "DiagnosticReport",
       );
-
+      labInfo = evaluateLabInfoData(
+        fhirIndexBundleLabNoLabIds,
+        diagnosticReports,
+      );
+    });
+    it("should be collapsed by default", () => {
       render(<LabInfo labResults={labInfo} />);
       screen
         .getAllByTestId("accordionButton", { exact: false })
@@ -129,14 +143,6 @@ describe("LabInfo", () => {
     });
 
     it("should match snapshot test", () => {
-      const labInfo = evaluateLabInfoData(
-        BundleLabNoLabIds as unknown as Bundle,
-        evaluateAll(
-          BundleLabNoLabIds as Bundle,
-          fhirPathMappings.diagnosticReports,
-        ),
-      );
-
       const { container } = render(<LabInfo labResults={labInfo} />);
       expect(container).toMatchSnapshot();
     });

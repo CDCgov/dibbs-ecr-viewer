@@ -4,6 +4,7 @@ import React, { ReactNode } from "react";
 import { HeadingLevel, Tag } from "@trussworks/react-uswds";
 import {
   Bundle,
+  Composition,
   Device,
   DiagnosticReport,
   Observation,
@@ -35,7 +36,7 @@ import {
 import {
   evaluateAll,
   evaluateOne,
-  evaluateReference,
+  evaluateReference2,
   evaluateValue,
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
@@ -53,6 +54,10 @@ import EvaluateTable, {
 } from "@/app/view-data/components/EvaluateTable";
 import { FieldValue } from "@/app/view-data/components/FieldValue";
 import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
+import {
+  FhirIndex,
+  getResourcesByType,
+} from "@/app/view-data/services/fhirResourcesIndexService";
 
 export interface ResultObject {
   [key: string]: AccordionItem[];
@@ -75,26 +80,25 @@ const ABNORMAL_OBSERVATION_INTERPRETATIONS: Record<string, string> = {
 
 /**
  * Evaluates lab information and RR data from the provided FHIR bundle and mappings.
- * @param fhirBundle - The FHIR bundle containing lab and RR data.
+ * @param fhirIndex - FHIR resources indexed by type & by ID
  * @param labReports - An array of DiagnosticReport objects
  * @param accordionHeadingLevel - Heading level for the title of AccordionLabResults.
  * @returns An array of the Diagnostic reports Elements and Organization Display Data
  */
 export const evaluateLabInfoData = (
-  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
   labReports: DiagnosticReport[],
   accordionHeadingLevel: HeadingLevel = "h5",
 ): LabReportElementData[] => {
   // the keys are the organization id, the value is an array of jsx elements of diagnostic reports
   let organizationItems: ResultObject = {};
-  const jsonLabs = getAllLabJsonObjects(fhirBundle);
+  const jsonLabs = getAllLabJsonObjects(fhirIndex);
 
   for (const report of labReports) {
-    const obs = getObservations(report, fhirBundle);
+    const obs = getObservations(report, fhirIndex);
     const labReportJson = getJsonLab(jsonLabs, obs);
-
     ensureReportHasDateTime(report, obs);
-    const content = getLabsContent(report, obs, fhirBundle, labReportJson);
+    const content = getLabsContent(report, obs, fhirIndex, labReportJson);
     const organizationId = (report.performer?.[0].reference ?? "").replace(
       "Organization/",
       "",
@@ -133,25 +137,25 @@ export const evaluateLabInfoData = (
     );
   }
 
-  return combineOrgAndReportData(organizationItems, fhirBundle);
+  return combineOrgAndReportData(organizationItems, fhirIndex);
 };
 
 /**
- * Extracts an array of `Observation` resources from a given FHIR bundle based on a list of observation references.
+ * Extracts an array of `Observation` resources from the FHIR index based on a list of observation references.
  * @param report - The lab report containing the results to be processed.
- * @param fhirBundle - The FHIR bundle containing related resources for the lab report.
+ * @param fhirIndex - FHIR resources indexed by type & by ID
  * @returns An array of `Observation` resources from the FHIR bundle that correspond to the
  * given references. If no matching observations are found or if the input references array is empty, an empty array
  * is returned.
  */
 export const getObservations = (
   report: DiagnosticReport,
-  fhirBundle: Bundle,
-): Array<Observation> => {
+  fhirIndex: FhirIndex,
+): Observation[] => {
   return sortResourcesByDate(
     (report.result || [])
       .map((obsRef) =>
-        evaluateReference<Observation>(fhirBundle, obsRef.reference),
+        evaluateReference2<Observation>(fhirIndex, obsRef.reference),
       )
       .filter(notEmpty),
     fhirPathMappings.effectiveX,
@@ -230,12 +234,19 @@ export const getJsonLab = (
 
 /**
  * Retrieves the JSON representation of a lab report from the labs HTML string.
- * @param fhirBundle - The FHIR Bundle object containing relevant FHIR resources.
+ * @param fhirIndex - FHIR resources indexed by type & by ID
  * @returns The JSON representation of the lab report.
  */
-export const getAllLabJsonObjects = (fhirBundle: Bundle): HtmlTableJson[] => {
+export const getAllLabJsonObjects = (fhirIndex: FhirIndex): HtmlTableJson[] => {
   // Get lab reports HTML String (for all lab reports) & convert to JSON
-  const labsString = evaluateValue(fhirBundle, fhirPathMappings.labResultDiv);
+  const compositionLabs = getResourcesByType<Composition>(
+    fhirIndex,
+    "Composition",
+  )[0];
+  const labsString = evaluateValue(
+    compositionLabs,
+    fhirPathMappings.labResultDiv,
+  );
   return formatTablesToJSON(labsString);
 };
 
@@ -434,12 +445,12 @@ export const returnAnalysisTime = (
 /**
  * Evaluates diagnostic report data and generates the lab observations for each report.
  * @param obs - An object containing an array of result observations.
- * @param fhirBundle - The FHIR bundle containing diagnostic report data.
+ * @param fhirIndex - FHIR resources indexed by type & by ID
  * @returns - An array of React elements representing the lab observations.
  */
 export const evaluateDiagnosticReportData = (
   obs: Observation[],
-  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
 ): React.JSX.Element | undefined => {
   if (!obs.length) return undefined;
 
@@ -463,7 +474,7 @@ export const evaluateDiagnosticReportData = (
       columnName: "Test Method",
       infoPath: "observationDeviceReference",
       applyToValue: (ref) => {
-        const device = evaluateReference<Device>(fhirBundle, ref);
+        const device = evaluateReference2<Device>(fhirIndex, ref);
         return safeParse(device?.deviceName?.[0]?.name ?? "");
       },
       className: "minw-10 width-20",
@@ -558,18 +569,18 @@ export const evaluateOrganismsReportData = (
 /**
  * Combines the org display data with the diagnostic report elements
  * @param organizationItems - Object containing the keys of org data, values of the diagnostic report elements
- * @param fhirBundle - The FHIR bundle containing lab and RR data.
+ * @param fhirIndex - FHIR resources indexed by type & by ID
  * @returns An array of the Diagnostic reports Elements and Organization Display Data
  */
 export const combineOrgAndReportData = (
   organizationItems: ResultObject,
-  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
 ): LabReportElementData[] => {
   return Object.keys(organizationItems).map((key: string) => {
     const organizationId = key.replace("Organization/", "");
     const orgData = evaluateLabOrganizationData(
       organizationId,
-      fhirBundle,
+      fhirIndex,
       organizationItems[key].length,
     );
     return {
@@ -583,16 +594,19 @@ export const combineOrgAndReportData = (
 /**
  * Finds the Organization that matches the id and creates a DisplayDataProps array
  * @param id - id of the organization
- * @param fhirBundle - The FHIR bundle containing lab and RR data.
+ * @param fhirIndex - FHIR resources indexed by type & by ID
  * @param labReportCount - A number representing the amount of lab reports for a specific organization
  * @returns The organization display data as an array
  */
 export const evaluateLabOrganizationData = (
   id: string,
-  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
   labReportCount: number,
 ) => {
-  const orgMappings = evaluateAll(fhirBundle, fhirPathMappings.organizations);
+  const orgMappings = getResourcesByType<Organization>(
+    fhirIndex,
+    "Organization",
+  );
   let matchingOrg: Organization = orgMappings.filter(
     (organization) => organization.id === id,
   )[0];
@@ -674,20 +688,20 @@ const groupItemByOrgId = (
  * Retrieves the content for a lab report.
  * @param report - The DiagnosticReport resource.
  * @param obs - The observations associated with the report
- * @param fhirBundle - The FHIR Bundle.
+ * @param fhirIndex - FHIR resources indexed by type & by ID
  * @param labReportJson - The JSON representation of the lab results from HTML.
  * @returns An array of JSX elements representing the lab report content.
  */
 const getLabsContent = (
   report: DiagnosticReport,
   obs: Observation[],
-  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
   labReportJson?: HtmlTableJson,
 ) => {
-  const labTableDiagnostic = evaluateDiagnosticReportData(obs, fhirBundle);
+  const labTableDiagnostic = evaluateDiagnosticReportData(obs, fhirIndex);
   const labTableOrganisms = evaluateOrganismsReportData(obs);
-  const labSpecimen = evaluateReference<Specimen>(
-    fhirBundle,
+  const labSpecimen = evaluateReference2<Specimen>(
+    fhirIndex,
     report.specimen?.[0]?.reference,
   );
 

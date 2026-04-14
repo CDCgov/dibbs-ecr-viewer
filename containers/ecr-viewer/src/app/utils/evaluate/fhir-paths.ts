@@ -116,7 +116,7 @@ export type PathTypes = {
   adminMedicationTherapeuticResponseObs: CodeableConcept;
   careTeamParticipants: CareTeamParticipant;
   careTeamParticipantMemberName: string;
-  careTeamParticipantRole: string;
+  careTeamParticipantRole: CodeableConcept;
   careTeamParticipantStatus: string;
   careTeamParticipantPeriod: string;
   immunizations: Immunization;
@@ -148,9 +148,7 @@ export type PathTypes = {
   procedureSpecimen: CodeableConcept;
   procedureMethod: CodeableConcept;
   procedurePriority: CodeableConcept;
-  diagnosticReports: DiagnosticReport;
   diagnosticReportStatus: string;
-  observations: Observation;
   labResultDiv: string;
   specimenCollectionTime: TimeX;
   specimenReceivedTime: TimeX;
@@ -164,7 +162,6 @@ export type PathTypes = {
   observationResultStatus: string;
   labReportInterpretation: ValueX;
   observationInterpretation: Coding;
-  organizations: Organization;
   organizationType: ValueX;
   patientTravelHistory: Observation;
   travelHistoryLocation: string;
@@ -515,7 +512,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "entry.resource.CareTeam.participant",
   },
   careTeamParticipantMemberName: { type: "string", path: "member.name" },
-  careTeamParticipantRole: { type: "string", path: "role.text" },
+  careTeamParticipantRole: {
+    type: "CodeableConcept",
+    path: "role",
+  },
   careTeamParticipantStatus: {
     type: "string",
     path: "modifierExtension.where(url = 'participant.status').valueString",
@@ -628,21 +628,13 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // === Lab Info ===
-  diagnosticReports: {
-    type: "DiagnosticReport",
-    path: "entry.resource.DiagnosticReport",
-  },
   diagnosticReportStatus: {
     type: "string",
     path: "iif(extension('http://terminology.hl7.org/CodeSystem/v2-0123').valueCodeableConcept.coding.display.exists(), extension('http://terminology.hl7.org/CodeSystem/v2-0123').valueCodeableConcept.coding.display, status)",
   },
-  observations: {
-    type: "Observation",
-    path: "entry.resource.Observation",
-  },
   labResultDiv: {
     type: "string",
-    path: "entry.resource.section.where(code.coding.exists(system = 'http://loinc.org' and code = '30954-2')).text.`div`",
+    path: "section.where(code.coding.exists(system = 'http://loinc.org' and code = '30954-2')).text.`div`",
   },
   specimenCollectionTime: {
     type: "TimeX",
@@ -695,10 +687,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // Organization
-  organizations: {
-    type: "Organization",
-    path: "entry.resource.Organization",
-  },
   organizationType: {
     type: "ValueX",
     path: "type.coding.display",

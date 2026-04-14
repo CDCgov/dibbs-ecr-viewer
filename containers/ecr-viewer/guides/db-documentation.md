@@ -85,6 +85,8 @@ The following columns are added to the `ecr_data` table in the extended schema:
 | `processing_status`        | `varchar(255)` | NULL        |               | Processing status of the eCR                                                             |
 | `authoring_date`           | `datetime`     | NULL        |               | Date of authoring                                                                        |
 | `authoring_provider`       | `varchar(255)` | NULL        |               | Authoring provider                                                                       |
+| `ehr_manufacturer_model`   | `varchar(255)` | NULL        |               | EHR manufacturer model                                                                   |
+| `ehr_software`             | `varchar(255)` | NULL        |               | EHR software                                                                             |
 | `provider_id`              | `varchar(255)` | NULL        |               | Provider ID                                                                              |
 | `facility_id`              | `varchar(255)` | NULL        |               | Facility ID                                                                              |
 | `facility_name`            | `varchar(255)` | NULL        |               | Facility name                                                                            |

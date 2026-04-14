@@ -17,6 +17,7 @@ import {
   evaluateClinicalData,
   returnCareTeamTable,
 } from "@/app/view-data/components/EcrDocument/clinical-data";
+import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
 const BundleWithPatient = _BundleWithPatient as Bundle;
 
@@ -27,8 +28,12 @@ describe("Snapshot test for eCR Document", () => {
       type: "batch",
       entry: [],
     };
+    const fhirIndexBundleEmpty = getFhirIndex(bundleEmpty);
 
-    const items = getEcrDocumentAccordionItems(bundleEmpty);
+    const items = getEcrDocumentAccordionItems(
+      bundleEmpty,
+      fhirIndexBundleEmpty,
+    );
 
     const { container } = render(<EcrDocument initialAccordionItems={items} />);
 
