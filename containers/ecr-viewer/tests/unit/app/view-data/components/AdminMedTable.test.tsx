@@ -21,6 +21,7 @@ describe("AdminMedTable", () => {
             dose: "325 mg",
             route: "Intravenous",
             therapeuticResponse: "Improved condition",
+            text: "Take with food",
           },
           {
             name: "aleve tablet",
@@ -36,10 +37,11 @@ describe("AdminMedTable", () => {
     expect(screen.getByText("09/29/2022")).toBeVisible();
     expect(screen.getByText("Intravenous")).toBeVisible();
     expect(screen.getByText("Improved condition")).toBeVisible();
+    expect(screen.getByText("Take with food")).toBeVisible();
 
     expect(screen.getByText("aleve tablet")).toBeVisible();
     expect(screen.getByText("250 mg")).toBeVisible();
     expect(screen.getByText("09/29/2022 4:53 AM")).toBeVisible();
-    expect(screen.getAllByText("No data")).toBeArrayOfSize(2);
+    expect(screen.getAllByText("No data")).toBeArrayOfSize(3);
   });
 });

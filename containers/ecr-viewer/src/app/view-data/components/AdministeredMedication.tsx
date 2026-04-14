@@ -14,6 +14,7 @@ export type AdministeredMedicationTableData = {
   dose?: string;
   route?: string;
   therapeuticResponse?: string;
+  text?: string;
 };
 
 /**
@@ -47,6 +48,10 @@ export const AdministeredMedication = ({
       columnName: "Therapeutic Response Observation",
       className: "bg-gray-5 minw-15",
     },
+    {
+      columnName: "Text",
+      className: "bg-gray-5 minw-15",
+    },
   ];
 
   return (
@@ -58,6 +63,7 @@ export const AdministeredMedication = ({
           <td>{entry?.dose ?? noData}</td>
           <td>{entry?.route ?? noData}</td>
           <td>{entry?.therapeuticResponse ?? noData}</td>
+          <td>{entry?.text ?? noData}</td>
         </tr>
       ))}
     </BaseTable>
