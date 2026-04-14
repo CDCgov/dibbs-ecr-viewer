@@ -78,6 +78,36 @@ describe("evaluateFhirDataService tests", () => {
     const patientMultiple = getPatient(fhirIndexBundleWithPatientMultiple);
     const patientDeceased = getPatient(fhirIndexBundleWithDeceasedPatient);
 
+    describe("getPatient", () => {
+      it("should return the correct Patient resource", () => {
+        const resource1 = {
+          fullUrl: "urn:uuid:1",
+          resource: {
+            resourceType: "Patient",
+            id: "1",
+          },
+        };
+        const fhirIndexPatient = {
+          fhirIndexByType: {
+            Patient: [resource1.resource],
+          },
+          fhirIndexByTypeAndId: {
+            Patient: {
+              "1": resource1.resource,
+            },
+          },
+        };
+        const actual = getPatient(fhirIndexPatient);
+        expect(actual).toEqual(resource1.resource);
+      });
+
+      it("should return undefined of no Patient resource exists", () => {
+        const fhirIndexEmpty = {fhirIndexByType: {}, fhirIndexByTypeAndId: {}}
+        const actual = getPatient(fhirIndexEmpty);
+        expect(actual).toEqual(undefined);
+      });
+    });
+
     describe("Evaluate Patient Name", () => {
 
       it("should return the 1 name", () => {

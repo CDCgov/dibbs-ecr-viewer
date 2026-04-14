@@ -260,7 +260,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "PatientContact",
     path: "Patient.contact",
   },
-  // TODO ANGELA: many finds many
   patientGuardian: {
     type: "RelatedPerson",
     path: "entry.resource.RelatedPerson.where(relationship.coding.exists(system = 'http://terminology.hl7.org/CodeSystem/v3-RoleCode' and code = 'GUARD'))",

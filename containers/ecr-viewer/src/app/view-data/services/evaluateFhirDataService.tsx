@@ -82,8 +82,11 @@ import { FhirIndex, getOneResourceByType, getResourcesByType } from "./fhirResou
 // Patient Info: Demographics
 // =============================================================================
 
-// TODO ANGELA 2: Add test
-// TODO ANGELA 2: Add JSDoc
+/**
+ * Finds patient resource from FHIR bundle
+ * @param fhirIndex - FHIR resources indexed by tpe & by ID
+ * @returns Patient resource if it exists, or undefined if not
+ */
 export const getPatient = (
   fhirIndex: FhirIndex
 ): Patient | undefined => {

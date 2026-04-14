@@ -39,8 +39,6 @@ export const getFhirIndex = (fhirBundle: Bundle): FhirIndex => {
     const resourceType = resource?.resourceType;
     const resourceId = resource?.id;
 
-    // TODO ANGELA 2: Is this assumption correct? Some of the tests don't have resourceId, 
-    // so I have to add to those test fixtures to get them to work
     if (resourceType && resourceId) {
       // by Type (array)
       fhirIndexByType[resourceType] ??= [];
@@ -65,7 +63,6 @@ export const getFhirIndex = (fhirBundle: Bundle): FhirIndex => {
  * @returns Array of FHIR resources of type `T`, or empty array if
  * no resources of specified type exist.
  */
-// TODO ANGELA 2: Rename to getAllResourcesByType
 export function getResourcesByType<T extends Resource>(
   fhirIndex: FhirIndex,
   type: T["resourceType"],
@@ -89,7 +86,6 @@ export function getResourcesByType<T extends Resource>(
  * no resources of specified type exist.
  * @error When multiple resources are found for the resource type
  */
-// TODO ANGELA 2: Add test
 export function getOneResourceByType<T extends Resource>(
   fhirIndex: FhirIndex,
   type: T["resourceType"],

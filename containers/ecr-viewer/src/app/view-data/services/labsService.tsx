@@ -56,6 +56,7 @@ import { FieldValue } from "@/app/view-data/components/FieldValue";
 import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 import {
   FhirIndex,
+  getOneResourceByType,
   getResourcesByType,
 } from "@/app/view-data/services/fhirResourcesIndexService";
 
@@ -239,11 +240,10 @@ export const getJsonLab = (
  */
 export const getAllLabJsonObjects = (fhirIndex: FhirIndex): HtmlTableJson[] => {
   // Get lab reports HTML String (for all lab reports) & convert to JSON
-  // TODO ANGELA 2: Change call to get composition to use getOneResourceByType
-  const compositionLabs = getResourcesByType<Composition>(
+  const compositionLabs = getOneResourceByType<Composition>(
     fhirIndex,
-    "Composition",
-  )[0];
+    "Composition"
+  );
   const labsString = evaluateValue(
     compositionLabs,
     fhirPathMappings.labResultDiv,
