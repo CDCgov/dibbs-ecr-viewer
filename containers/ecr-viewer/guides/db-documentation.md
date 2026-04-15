@@ -99,7 +99,7 @@ The following columns are added to the `ecr_data` table in the extended schema:
 
 This table stores laboratory results associated with eCRs. Note that the primary key for this table is a compound primary key consisting of `uuid` and `eicr_id`.
 
-| Column Name                              | Data Type      | Nullability | Default Value | Description                                                                                   |
+| Column Name                              | Data Type      | Nullability | Default Value | Description                                `                                                   |
 | :--------------------------------------- | :------------- | :---------- | :------------ | :-------------------------------------------------------------------------------------------- |
 | `uuid`                                   | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], unique identifier for the lab record       |
 | `eicr_id`                                | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], Foreign key, references `ecr_data.eicr_id` |
@@ -127,12 +127,12 @@ This table stores laboratory results associated with eCRs. Note that the primary
 
 This table stores immunization records associated with eCRs.
 
-| Column Name           | Data Type      | Nullability | Default Value | Description                                                |
-| :-------------------- | :------------- | :---------- | :------------ | :--------------------------------------------------------- |
-| `uuid`                | `varchar(200)` | NOT NULL    |               | Primary key, unique identifier for the immunization record |
-| `eicr_id`             | `varchar(200)` | NOT NULL    |               | Foreign key, references `ecr_data.eicr_id`                 |
-| `name`                | `varchar(255)` | NULL        |               | Name of the vaccine administered                           |
-| `administration_date` | `date`         | NULL        |               | Date the vaccine was administered                          |
+| Column Name           | Data Type      | Nullability | Default Value | Description                                                                                      |
+| :-------------------- | :------------- | :---------- | :------------ |:-------------------------------------------------------------------------------------------------|
+| `uuid`                | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], unique identifier for the immunization record |
+| `eicr_id`             | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], Foreign key, references `ecr_data.eicr_id`    |
+| `name`                | `varchar(255)` | NULL        |               | Name of the vaccine administered                                                                 |
+| `administration_date` | `date`         | NULL        |               | Date the vaccine was administered                                                                |
 
 ### `patient_address` Table
 

@@ -4,5 +4,5 @@ export default {
   "20250612143900_compound_pks.ts": require("./20250612143900_compound_pks"),
   "20251114100000_lab_qual_varchar_max": require("./20251114100000_lab_qual_varchar_max"),
   "20260320162000_add_ehr_extended": require("./20260320162000_add_ehr_extended"),
-  "20260403143048_add_immunization_variables.ts": require("./20260403143048_add_immunization_variables"),
+  "20260403143048_add_immunization_variables": require("./20260403143048_add_immunization_variables"),
 };

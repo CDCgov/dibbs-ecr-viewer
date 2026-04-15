@@ -9,7 +9,7 @@ import { dbSchema } from "@/app/data/metadataDb/utils/db-config";
  */
 export const dropExisting = async () => {
   if (dbSchema()) {
-    await migrateDown("all");
+    migrateDown("all");
   }
 };
 
