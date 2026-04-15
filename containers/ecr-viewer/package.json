@@ -45,7 +45,7 @@
     "@parcel/watcher": "^2.5.0",
     "@trussworks/react-uswds": "^10.0.2",
     "@uswds/uswds": "^3.13.0",
-    "@xmldom/xmldom": "^0.8.11",
+    "@xmldom/xmldom": "^0.8.12",
     "classnames": "^2.5.1",
     "fhirpath": "^4.6.0",
     "focus-trap-react": "^11.0.4",
