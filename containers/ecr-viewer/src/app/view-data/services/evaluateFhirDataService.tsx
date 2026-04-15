@@ -759,9 +759,8 @@ export const evaluateSocialDeterminantsOfHealth = (fhirBundle: Bundle) => {
 
         const domainTitle = evaluateValue(domain, fhirPathMappings.code);
 
-        const riskValue = domain?.component
-          ?.at(0)
-          ?.interpretation?.map((i) => {
+        const riskValue = domain?.interpretation
+          ?.map((i) => {
             if (i.text) {
               return i.text;
             }

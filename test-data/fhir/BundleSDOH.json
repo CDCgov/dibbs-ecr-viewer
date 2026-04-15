@@ -65,30 +65,16 @@
         },
         "status": "final",
         "effectiveDateTime": "2025-02-05",
-        "component": [
+        "interpretation": [
           {
-            "code": {
-              "coding": [
-                {
-                  "code": "X-SDOH-SDC-95000",
-                  "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-                  "display": "B1300 Health Literacy"
-                }
-              ],
-              "text": "B1300 Health Literacy"
-            },
-            "interpretation": [
+            "coding": [
               {
-                "coding": [
-                  {
-                    "code": "X-SDOH-RISK-3",
-                    "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-                    "display": "Low Risk"
-                  }
-                ],
-                "text": "Adequate Health Literacy"
+                "code": "X-SDOH-RISK-3",
+                "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                "display": "Low Risk"
               }
-            ]
+            ],
+            "text": "Adequate Health Literacy"
           }
         ],
         "derivedFrom": [
@@ -195,30 +181,16 @@
         },
         "status": "final",
         "effectiveDateTime": "2025-02-05",
-        "component": [
+        "interpretation": [
           {
-            "code": {
-              "coding": [
-                {
-                  "code": "88028-6",
-                  "system": "http://loinc.org",
-                  "display": "Tobacco use panel"
-                }
-              ],
-              "text": "Tobacco use panel"
-            },
-            "interpretation": [
+            "coding": [
               {
-                "coding": [
-                  {
-                    "code": "X-SDOH-RISK-0",
-                    "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-                    "display": "Unknown"
-                  }
-                ],
-                "text": "Unknown"
+                "code": "X-SDOH-RISK-0",
+                "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                "display": "Unknown"
               }
-            ]
+            ],
+            "text": "Unknown"
           }
         ],
         "derivedFrom": [
@@ -385,30 +357,16 @@
         },
         "status": "final",
         "effectiveDateTime": "2025-02-05",
-        "component": [
+        "interpretation": [
           {
-            "code": {
-              "coding": [
-                {
-                  "code": "X-SDOH-SDC-97004",
-                  "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-                  "display": "Overall Financial Resource Strain (CARDIA)"
-                }
-              ],
-              "text": "Overall Financial Resource Strain (CARDIA)"
-            },
-            "interpretation": [
+            "coding": [
               {
-                "coding": [
-                  {
-                    "code": "X-SDOH-RISK-1",
-                    "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-                    "display": "At Risk"
-                  }
-                ],
-                "text": "At Risk"
+                "code": "X-SDOH-RISK-1",
+                "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                "display": "At Risk"
               }
-            ]
+            ],
+            "text": "At Risk"
           }
         ],
         "derivedFrom": [
@@ -515,30 +473,16 @@
         },
         "status": "final",
         "effectiveDateTime": "2025-02-05",
-        "component": [
+        "interpretation": [
           {
-            "code": {
-              "coding": [
-                {
-                  "code": "88121-9",
-                  "system": "http://loinc.org",
-                  "display": "Hunger Vital Sign [HVS]"
-                }
-              ],
-              "text": "Hunger Vital Sign"
-            },
-            "interpretation": [
+            "coding": [
               {
-                "coding": [
-                  {
-                    "code": "X-SDOH-RISK-3",
-                    "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-                    "display": "High Risk"
-                  }
-                ],
-                "text": "Food Insecurity Present"
+                "code": "X-SDOH-RISK-3",
+                "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                "display": "High Risk"
               }
-            ]
+            ],
+            "text": "Food Insecurity Present"
           }
         ],
         "derivedFrom": [
@@ -679,30 +623,16 @@
         },
         "status": "final",
         "effectiveDateTime": "2025-02-05",
-        "component": [
+        "interpretation": [
           {
-            "code": {
-              "coding": [
-                {
-                  "code": "X-SDOH-SDC-97009",
-                  "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-                  "display": "PRAPARE - Transportation"
-                }
-              ],
-              "text": "PRAPARE - Transportation"
-            },
-            "interpretation": [
+            "coding": [
               {
-                "coding": [
-                  {
-                    "code": "X-SDOH-RISK-1",
-                    "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-                    "display": "High Risk"
-                  }
-                ],
-                "text": "Has Transportation Needs"
+                "code": "X-SDOH-RISK-1",
+                "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                "display": "High Risk"
               }
-            ]
+            ],
+            "text": "Has Transportation Needs"
           }
         ],
         "derivedFrom": [
@@ -843,30 +773,16 @@
         },
         "status": "final",
         "effectiveDateTime": "2025-02-05",
-        "component": [
+        "interpretation": [
           {
-            "code": {
-              "coding": [
-                {
-                  "code": "98975-6",
-                  "system": "http://loinc.org",
-                  "display": "Children's HealthWatch Housing Stability Vital Sign [Housing Stability Vital Sign]"
-                }
-              ],
-              "text": "Housing Stability Vital Sign"
-            },
-            "interpretation": [
+            "coding": [
               {
-                "coding": [
-                  {
-                    "code": "X-SDOH-RISK-1",
-                    "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-                    "display": "High Risk"
-                  }
-                ],
-                "text": "High Risk"
+                "code": "X-SDOH-RISK-1",
+                "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                "display": "High Risk"
               }
-            ]
+            ],
+            "text": "High Risk"
           }
         ],
         "derivedFrom": [
@@ -1030,23 +946,16 @@
         },
         "status": "final",
         "effectiveDateTime": "2025-02-05",
-        "component": [
+        "interpretation": [
           {
-            "code": {
-              "text": "Caregiver Education and Work"
-            },
-            "interpretation": [
+            "coding": [
               {
-                "coding": [
-                  {
-                    "code": "X-SDOH-RISK-2",
-                    "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-                    "display": "Low Risk"
-                  }
-                ],
-                "text": "Low Risk"
+                "code": "X-SDOH-RISK-2",
+                "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                "display": "Low Risk"
               }
-            ]
+            ],
+            "text": "Low Risk"
           }
         ],
         "derivedFrom": [
@@ -1172,23 +1081,16 @@
         },
         "status": "final",
         "effectiveDateTime": "2025-02-05",
-        "component": [
+        "interpretation": [
           {
-            "code": {
-              "text": "Safety and Environment"
-            },
-            "interpretation": [
+            "coding": [
               {
-                "coding": [
-                  {
-                    "code": "X-SDOH-RISK-1",
-                    "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-                    "display": "Low Risk"
-                  }
-                ],
-                "text": "Low Risk"
+                "code": "X-SDOH-RISK-1",
+                "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                "display": "Low Risk"
               }
-            ]
+            ],
+            "text": "Low Risk"
           }
         ],
         "derivedFrom": [
@@ -1374,23 +1276,16 @@
         },
         "status": "final",
         "effectiveDateTime": "2025-02-05",
-        "component": [
+        "interpretation": [
           {
-            "code": {
-              "text": "Caregiver Health"
-            },
-            "interpretation": [
+            "coding": [
               {
-                "coding": [
-                  {
-                    "code": "X-SDOH-RISK-1",
-                    "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
-                    "display": "Low Risk"
-                  }
-                ],
-                "text": "Low Risk"
+                "code": "X-SDOH-RISK-1",
+                "system": "urn:oid:1.2.840.114350.1.72.1.8.1",
+                "display": "Low Risk"
               }
-            ]
+            ],
+            "text": "Low Risk"
           }
         ],
         "derivedFrom": [
