@@ -15,7 +15,10 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn("eicr_id", "varchar(200)")
     .addColumn("name", "varchar(255)")
     .addColumn("administration_date", getSql("datetimeType"))
-    .addPrimaryKeyConstraint("ecr_immunizations_pk_uuid_eicr_id", ["uuid", "eicr_id"])
+    .addPrimaryKeyConstraint("ecr_immunizations_pk_uuid_eicr_id", [
+      "uuid",
+      "eicr_id",
+    ])
     .addForeignKeyConstraint(
       "ecr_immunizations_fk_eicr_id",
       ["eicr_id"],
