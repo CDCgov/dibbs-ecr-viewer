@@ -95,8 +95,8 @@ export type NewPatientAddress = Insertable<patient_address>;
 export type ECRLabs = Selectable<ecr_labs>;
 export type NewECRLabs = Insertable<ecr_labs>;
 
-export type ImmunizationLabs = Selectable<ecr_immunizations>;
-export type NewImmunizationLabs = Insertable<ecr_immunizations>;
+export type ECRImmunizations = Selectable<ecr_immunizations>;
+export type NewECRImmunizations = Insertable<ecr_immunizations>;
 
 export interface Extended extends Core {
   ecr_data: extended_ecr_data;
