@@ -193,7 +193,7 @@
     "nullable": true,
     "secondary_schema": {
       "name": {
-        "fhir_path": "Immunization.vaccineCode.coding.display",
+        "fhir_path": "Immunization.vaccineCode.coding.display | Immunization.vaccineCode.text",
         "data_type": "string",
         "nullable": true
       },
