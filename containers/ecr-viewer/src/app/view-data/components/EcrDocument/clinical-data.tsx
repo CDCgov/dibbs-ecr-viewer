@@ -77,7 +77,10 @@ import { FhirIndex } from "../../services/fhirResourcesIndexService";
  * @property {DisplayDataProps[]} vitalData - Vital signs data.
  * @property {DisplayDataProps[]} immunizationsDetails - Immunization details.
  */
-export const evaluateClinicalData = (fhirBundle: Bundle, fhirIndex: FhirIndex) => {
+export const evaluateClinicalData = (
+  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
+) => {
   const clinicalNotesTooltip =
     "Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.";
   const clinicalNotes: DisplayDataProps[] = [

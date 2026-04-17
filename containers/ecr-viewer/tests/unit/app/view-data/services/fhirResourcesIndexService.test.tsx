@@ -128,20 +128,21 @@ describe("fhirResourcesIndexService Tests", () => {
     it("Returns a single resource of a specified type", () => {
       const actual = getOneResourceByType<Composition>(
         fhirIndexBundleSample,
-        "Composition"
+        "Composition",
       );
       expect(actual).toEqual(resource1.resource);
     });
     it("Returns undefined when no resources exist of specified type", () => {
       const actual = getOneResourceByType<Patient>(
         fhirIndexBundleSample,
-        "Patient"
+        "Patient",
       );
       expect(actual).toEqual(undefined);
     });
     it("Errors when there is more than one resource of a specific type", () => {
       expect(() =>
-        getOneResourceByType<Observation>(fhirIndexBundleSample, "Observation")).toThrow(Error)
+        getOneResourceByType<Observation>(fhirIndexBundleSample, "Observation"),
+      ).toThrow(Error);
     });
   });
   describe("getResourceById Tests", () => {

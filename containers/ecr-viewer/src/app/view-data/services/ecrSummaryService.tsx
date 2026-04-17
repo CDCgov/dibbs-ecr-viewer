@@ -58,11 +58,14 @@ import { FhirIndex, getResourcesByType } from "./fhirResourcesIndexService";
  * @param fhirBundle - The FHIR bundle containing patient data.
  * @returns An array of patient details objects containing title and value pairs.
  */
-export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle, fhirIndex: FhirIndex) => {
+export const evaluateEcrSummaryPatientDetails = (
+  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
+) => {
   const patient = getPatient(fhirIndex);
 
   const patientSex = toTitleCase(
-    evaluateOne(patient, fhirPathMappings.patientGender)
+    evaluateOne(patient, fhirPathMappings.patientGender),
   );
   const age = calculatePatientAge(patient);
   const parentGuardian =

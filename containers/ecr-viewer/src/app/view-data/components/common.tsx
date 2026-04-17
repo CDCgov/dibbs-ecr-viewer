@@ -14,7 +14,10 @@ import { safeParse } from "@/app/utils/data-utils";
 import { evaluateReference } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { makePlural } from "@/app/utils/format-utils";
-import { calculatePatientAge, getPatient } from "@/app/view-data/services/evaluateFhirDataService";
+import {
+  calculatePatientAge,
+  getPatient,
+} from "@/app/view-data/services/evaluateFhirDataService";
 import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 
 import EvaluateTable, { ColumnInfoInput } from "./EvaluateTable";
@@ -161,7 +164,7 @@ type ConditionWithFormattedOnsetAge = Omit<Condition, "onsetAge"> & {
 const createFormattedCondition = (
   condition: Condition,
   fhirBundle: Bundle,
-  fhirIndex: FhirIndex
+  fhirIndex: FhirIndex,
 ): ConditionWithFormattedOnsetAge => {
   const formattedOnsetDateTime = formatDateTime(condition.onsetDateTime);
 
@@ -172,7 +175,7 @@ const createFormattedCondition = (
       condition.onsetAge,
       formattedOnsetDateTime,
       fhirBundle,
-      fhirIndex
+      fhirIndex,
     ),
   };
 
@@ -183,7 +186,7 @@ const getFormattedOnsetAge = (
   onsetAge: Condition["onsetAge"],
   onsetDateTime: Condition["onsetDateTime"],
   fhirBundle: Bundle,
-  fhirIndex: FhirIndex
+  fhirIndex: FhirIndex,
 ) => {
   const patient = getPatient(fhirIndex);
 
