@@ -26,7 +26,6 @@ const BundleWithPendingResultsOnly = _BundleWithPendingResultsOnly as Bundle;
 const BundleWithPlannedMedsOnly = _BundleWithPlannedMedsOnly as Bundle;
 const BundleWithScheduledApptsOnly = _BundleWithScheduledApptsOnly as Bundle;
 
-
 describe("Snapshot test for eCR Document", () => {
   it("Given no data, info message for empty sections should appear", async () => {
     const bundleEmpty: Bundle = {
@@ -82,7 +81,7 @@ describe("Snapshot test for eCR Document", () => {
     it("Should return notes", () => {
       const actual = evaluateClinicalData(
         BundleWithMiscNotes,
-        fhirIndexBundleWithMiscNotes
+        fhirIndexBundleWithMiscNotes,
       );
       render(actual.clinicalNotes.availableData[0].value as React.JSX.Element);
       expect(actual.clinicalNotes.availableData[0].title).toEqual(
@@ -94,17 +93,17 @@ describe("Snapshot test for eCR Document", () => {
     it("Should not include Treatment details if medications is not available", () => {
       const actual = evaluateClinicalData(
         BundleWithMiscNotes,
-        fhirIndexBundleWithMiscNotes
+        fhirIndexBundleWithMiscNotes,
       );
       expect(actual.treatmentData.availableData).toBeEmpty();
     });
     it("Should return Plan of Treatment when only pending results", () => {
       const fhirIndexBundleWithPendingResultsOnly = getFhirIndex(
-        BundleWithPendingResultsOnly
+        BundleWithPendingResultsOnly,
       );
       const actual = evaluateClinicalData(
         BundleWithPendingResultsOnly,
-        fhirIndexBundleWithPendingResultsOnly
+        fhirIndexBundleWithPendingResultsOnly,
       );
       expect(actual.treatmentData.availableData[0].title).toEqual(
         "Plan of Treatment",
@@ -116,11 +115,11 @@ describe("Snapshot test for eCR Document", () => {
     });
     it("Should return Plan of Treatment when only scheduled appointments", () => {
       const fhirIndexBundleWithScheduledApptsOnly = getFhirIndex(
-        BundleWithScheduledApptsOnly
+        BundleWithScheduledApptsOnly,
       );
       const actual = evaluateClinicalData(
         BundleWithScheduledApptsOnly,
-        fhirIndexBundleWithScheduledApptsOnly
+        fhirIndexBundleWithScheduledApptsOnly,
       );
       expect(actual.treatmentData.availableData[0].title).toEqual(
         "Plan of Treatment",
@@ -132,11 +131,11 @@ describe("Snapshot test for eCR Document", () => {
     });
     it("Should return Plan of Treatment when only ordered meds", () => {
       const fhirIndexBundleWithPlannedMedsOnly = getFhirIndex(
-        BundleWithPlannedMedsOnly
+        BundleWithPlannedMedsOnly,
       );
       const actual = evaluateClinicalData(
         BundleWithPlannedMedsOnly,
-        fhirIndexBundleWithPlannedMedsOnly
+        fhirIndexBundleWithPlannedMedsOnly,
       );
       expect(actual.treatmentData.availableData[0].title).toEqual(
         "Plan of Treatment",
