@@ -109,7 +109,7 @@ jobs:
 
       - name: Bail out if Dependabot and Azure AD
         if: ${{ matrix.azure_ad && github.actor == 'dependabot[bot]'}}
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             core.setFailed(
