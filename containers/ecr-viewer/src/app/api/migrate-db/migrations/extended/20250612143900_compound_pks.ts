@@ -28,7 +28,7 @@ const sqlServerAlterColumnNull = (
  * would only fail sometimes, and the migration would need to be re-run
  * repeatedly until SQL Server happened to generate unique names.
  *
- * This migration is updated in place (instead of creating a new one) since 
+ * This migration is updated in place (instead of creating a new one) since
  * Kysely records which migration files have already been applied by filename
  * and environments that already ran it have the correct state and will not re-run
  * it. The change only affects new environments or test runs initialized from
