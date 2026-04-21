@@ -4,7 +4,7 @@ import { render, screen } from "@testing-library/react";
 import { Bundle } from "fhir/r4";
 import { axe } from "jest-axe";
 
-import BundleAdmissionMedications from "@/../../../test-data/fhir/BundleAdmissionMedications.json";
+import * as _BundleAdmissionMedications from "@/../../../test-data/fhir/BundleAdmissionMedications.json";
 import BundleCareTeam from "@/../../../test-data/fhir/BundleCareTeam.json";
 import * as _BundleWithMiscNotes from "@/../../../test-data/fhir/BundleMiscNotes.json";
 import * as _BundleWithPatient from "@/../../../test-data/fhir/BundlePatient.json";
@@ -20,6 +20,8 @@ import {
 } from "@/app/view-data/components/EcrDocument/clinical-data";
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
+const BundleAdmissionMedications = _BundleAdmissionMedications as Bundle;
+const fhirIndexBundleAdmissionMedications = getFhirIndex(BundleAdmissionMedications);
 const BundleWithPatient = _BundleWithPatient as Bundle;
 const BundleWithMiscNotes = _BundleWithMiscNotes as Bundle;
 const fhirIndexBundleWithMiscNotes = getFhirIndex(BundleWithMiscNotes);
@@ -151,7 +153,8 @@ describe("Snapshot test for eCR Document", () => {
   describe("Evaluate Administered Medications", () => {
     it("should include dosage text when present", () => {
       const actual = evaluateClinicalData(
-        BundleAdmissionMedications as unknown as Bundle,
+        BundleAdmissionMedications,
+        fhirIndexBundleAdmissionMedications
       );
       const adminMedsItem = actual.treatmentData.availableData.find(
         (d) => d.title === "Administered Medications",
