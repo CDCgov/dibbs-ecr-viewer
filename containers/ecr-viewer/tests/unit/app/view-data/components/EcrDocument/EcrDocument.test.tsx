@@ -21,7 +21,9 @@ import {
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
 const BundleAdmissionMedications = _BundleAdmissionMedications as Bundle;
-const fhirIndexBundleAdmissionMedications = getFhirIndex(BundleAdmissionMedications);
+const fhirIndexBundleAdmissionMedications = getFhirIndex(
+  BundleAdmissionMedications,
+);
 const BundleWithPatient = _BundleWithPatient as Bundle;
 const BundleWithMiscNotes = _BundleWithMiscNotes as Bundle;
 const fhirIndexBundleWithMiscNotes = getFhirIndex(BundleWithMiscNotes);
@@ -154,7 +156,7 @@ describe("Snapshot test for eCR Document", () => {
     it("should include dosage text when present", () => {
       const actual = evaluateClinicalData(
         BundleAdmissionMedications,
-        fhirIndexBundleAdmissionMedications
+        fhirIndexBundleAdmissionMedications,
       );
       const adminMedsItem = actual.treatmentData.availableData.find(
         (d) => d.title === "Administered Medications",
