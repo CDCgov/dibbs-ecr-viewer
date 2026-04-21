@@ -4,6 +4,7 @@ import { render, screen } from "@testing-library/react";
 import { Bundle } from "fhir/r4";
 import { axe } from "jest-axe";
 
+import BundleAdmissionMedications from "@/../../../test-data/fhir/BundleAdmissionMedications.json";
 import BundleCareTeam from "@/../../../test-data/fhir/BundleCareTeam.json";
 import * as _BundleWithMiscNotes from "@/../../../test-data/fhir/BundleMiscNotes.json";
 import * as _BundleWithPatient from "@/../../../test-data/fhir/BundlePatient.json";
@@ -144,6 +145,21 @@ describe("Snapshot test for eCR Document", () => {
         <DataDisplay item={actual.treatmentData.availableData[0]} />,
       );
       expect(container).toMatchSnapshot();
+    });
+  });
+
+  describe("Evaluate Administered Medications", () => {
+    it("should include dosage text when present", () => {
+      const actual = evaluateClinicalData(
+        BundleAdmissionMedications as unknown as Bundle,
+      );
+      const adminMedsItem = actual.treatmentData.availableData.find(
+        (d) => d.title === "Administered Medications",
+      );
+      render(adminMedsItem!.value as React.JSX.Element);
+      expect(
+        screen.getByText("Take with water once daily"),
+      ).toBeInTheDocument();
     });
   });
 

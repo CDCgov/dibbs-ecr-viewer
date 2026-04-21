@@ -2,7 +2,6 @@ import {
   Bundle,
   CareTeamParticipant,
   Device,
-  Dosage,
   Element,
   Location,
   Medication,
@@ -13,7 +12,6 @@ import {
   Organization,
   Period,
   Practitioner,
-  Quantity,
   Reference,
   ServiceRequest,
 } from "fhir/r4";
@@ -224,6 +222,7 @@ const evaluateAdministeredMedication = (
       dose: doseValue,
       route: formatCodeableConcept(medicationAdministration?.dosage?.route),
       therapeuticResponse: therapeuticResponseText,
+      text: medicationAdministration?.dosage?.text,
     };
   });
 };
