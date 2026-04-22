@@ -37,6 +37,18 @@ const AccordionItem = ({
   handleToggle,
   ...checkboxProps
 }: AccordionControlledItemProps): React.ReactElement => {
+  // Only render content if expanded OR if it's been expanded before
+  const [hasBeenExpanded, setHasBeenExpanded] = React.useState(expanded);
+
+  // TODO ANGELA: Remove logging
+  React.useEffect(() => {
+    if (expanded && !hasBeenExpanded) {
+      console.log(`📂 First expand of "${title}" (${id})`);
+      setHasBeenExpanded(true);
+    }
+  }, [expanded, hasBeenExpanded, title, id]);
+
+
   const headingClasses = classnames("usa-accordion__heading", className);
   const contentClasses = classnames(
     "usa-accordion__content",
@@ -60,14 +72,17 @@ const AccordionItem = ({
           {title}
         </button>
       </Heading>
-      <div
-        id={id}
-        data-testid={`accordionItem_${id}`}
-        className={contentClasses}
-        hidden={!expanded}
-      >
-        {content}
-      </div>
+      {hasBeenExpanded && ( // Only render if expanded or was expanded
+        <div
+          id={id}
+          data-testid={`accordionItem_${id}`}
+          className={contentClasses}
+          hidden={!expanded}
+          aria-hidden={!expanded}
+        >
+          {content}
+        </div>
+      )}
     </AccordionCheckBox>
   );
 };
