@@ -307,6 +307,7 @@ export const getEcrDocumentAccordionItems = (
       id: `${kebabCaseTitle}_${index + 1}`, // this is the id of the accordion item's inner div
       title: <span id={kebabCaseTitle}>{item.title}</span>, // the side nav links to this ID
       expanded: false,
+      shouldRenderBeforeExpand: false,
       headingLevel: "h3",
     };
   });
