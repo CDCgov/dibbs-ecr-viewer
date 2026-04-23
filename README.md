@@ -12,8 +12,6 @@ The project uses a container-based structure. The main containers used are as fo
   - Enables coordinated execution of DIBBs, allowing for fully automated workflows for Viewer
 - [FHIR Converter](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/fhir-converter)
   - Converts incoming messages into the FHIR-based format, which allows the eCR Viewer to have one standard format it follows, rather than the many different implementations of C-CDA that eCRs arrive in
-- [FHIR Converter Proxy](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/fhir-converter-proxy)
-  - Proxy that sits between the Orchestration service and the FHIR Converter that load balances requests by using an HAProxy that routes requests with a "Least Connections" algorithm to intelligently distribute payloads.
 - [Ingestion](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/ingestion)
   - Standardizes data fields (including record name, date of birth, phone number, and geolocation) based on preset defaults to ensure consistency
   - Optionally enriches data by providing precise geographic locations based on patient street addresses from input data
@@ -24,6 +22,8 @@ The project uses a container-based structure. The main containers used are as fo
   - Extracts specific fields from eCR FHIR bundles to be stored in a relational database
 - [eCR Viewer](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/ecr-viewer)
   - Renders the eCR Viewer from FHIR bundles and also handles data storage
+- (Optional) [FHIR Converter Proxy](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/fhir-converter-proxy)
+  - Optional proxy that sits between the Orchestration service and the FHIR Converter that load balances requests by using an HAProxy that routes requests with a "Least Connections" algorithm to intelligently distribute payloads.
 
 ### Problem Scope
 

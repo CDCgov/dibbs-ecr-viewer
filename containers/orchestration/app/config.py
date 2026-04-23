@@ -14,7 +14,6 @@ class Settings(BaseSettings):
     message_parser_url: str
     ingestion_url: str
     trigger_code_reference_url: str
-    fhir_converter_proxy_url: str
 
 
 @lru_cache

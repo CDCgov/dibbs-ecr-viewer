@@ -2,7 +2,7 @@
 
 ## Summary
 
-This container runs an HAProxy Layer 7 gateway that sits between the Orchestration Service and the FHIR Converter instances. It replaces default Round Robin routing with a "Least Connections" (`leastconn`) algorithm to intelligently distribute Electronic Case Reporting (eCR) payloads. This reduces CPU/Memory hotspots and container crashes.
+This container runs an HAProxy Layer 7 gateway that **optionally** sits between the Orchestration Service and the FHIR Converter instances. It replaces default Round Robin routing with a "Least Connections" (`leastconn`) algorithm to intelligently distribute Electronic Case Reporting (eCR) payloads. This reduces CPU/Memory hotspots and container crashes.
 
 ## Overview
 

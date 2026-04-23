@@ -2,7 +2,7 @@
   "workflow": [
     {
       "service": "fhir_converter",
-      "url": "${FHIR_CONVERTER_PROXY_URL}",
+      "url": "${FHIR_CONVERTER_URL}",
       "endpoint": "/convert-to-fhir"
     },
     {

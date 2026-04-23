@@ -76,6 +76,7 @@ services:
     environment:
       FHIR_CONVERTER_PROXY_PORT: ${FHIR_CONVERTER_PROXY_PORT_NUMBER:-8080}
       FHIR_CONVERTER_PORT: ${FHIR_CONVERTER_PORT_NUMBER:-8080}
+      ENVIRONMENT: local
   ingestion-service:
     platform: linux/amd64
     build:

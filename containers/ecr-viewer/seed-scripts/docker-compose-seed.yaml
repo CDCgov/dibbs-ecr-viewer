@@ -30,6 +30,7 @@ services:
     environment:
       FHIR_CONVERTER_PROXY_PORT: ${FHIR_CONVERTER_PROXY_PORT:-8080}
       FHIR_CONVERTER_PORT: ${FHIR_CONVERTER_PORT:-8080}
+      ENVIRONMENT: local
 
   ingestion-service:
     platform: linux/amd64
@@ -86,6 +87,7 @@ services:
     environment:
       - WEB_CONCURRENCY=${WEB_CONCURRENCY:-3}
       - ECR_VIEWER_URL=http://host.docker.internal:3000/ecr-viewer
+      - FHIR_CONVERTER_URL=http://fhir-converter-proxy-service:8080 # Remove this to point to the FHIR Converter directly
     healthcheck:
       test: ["CMD", "curl", "-f", "http://orchestration-service:8080/"]
       interval: 10s
