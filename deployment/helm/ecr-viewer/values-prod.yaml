@@ -1,0 +1,95 @@
+# Production environment overrides for ecr-viewer Helm chart
+# Use with: helm template prod deployment/helm/ecr-viewer/ -f values-prod.yaml
+
+# Production image settings
+image:
+  tag: "prod"
+  pullPolicy: Always
+
+# Production resources (full capacity)
+ecr-viewer:
+  replicas: 2
+  resources:
+    limits:
+      cpu: 512m
+      memory: 1024Mi
+    requests:
+      cpu: 256m
+      memory: 512Mi
+
+orchestration:
+  replicas: 2
+  resources:
+    limits:
+      cpu: 1024m
+      memory: 2048Mi
+    requests:
+      cpu: 512m
+      memory: 1024Mi
+
+fhir-converter:
+  replicas: 2
+  resources:
+    limits:
+      cpu: 1024m
+      memory: 2048Mi
+    requests:
+      cpu: 512m
+      memory: 1024Mi
+
+ingestion:
+  replicas: 2
+  resources:
+    limits:
+      cpu: 512m
+      memory: 1024Mi
+    requests:
+      cpu: 256m
+      memory: 512Mi
+
+message-parser:
+  replicas: 2
+  resources:
+    limits:
+      cpu: 512m
+      memory: 1024Mi
+    requests:
+      cpu: 256m
+      memory: 512Mi
+
+trigger-code-reference:
+  replicas: 2
+  resources:
+    limits:
+      cpu: 512m
+      memory: 1024Mi
+    requests:
+      cpu: 256m
+      memory: 512Mi
+
+# Enable ingress for production (configure for your ingress controller)
+ingress:
+  enabled: true
+  className: ""
+  annotations:
+    # Example for nginx ingress controller
+    # nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+  hosts:
+    - host: ecr-viewer.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  # TLS configuration (update with your certificate)
+  tls:
+    - secretName: ecr-viewer-tls
+      hosts:
+        - ecr-viewer.example.com
+
+# Pod disruption budget for high availability
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+# Production database URL (must be provided - example format)
+# DATABASE_URL: postgresql://user:password@prod-db.example.com:5432/ecr_prod

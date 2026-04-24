@@ -1,0 +1,52 @@
+Thank you for installing {{ .Chart.Name }}!
+
+Your eCR Viewer application is now deployed to your Kubernetes cluster.
+
+## Next Steps:
+
+1. **Access the application:**
+   {{- if .Values.ingress.enabled }}
+   The application is exposed via Ingress. You can access it at:
+   {{- range .Values.ingress.hosts }}
+   {{- range .paths }}
+   http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .host }}{{ .path }}
+   {{- end }}
+   {{- end }}
+   {{- else }}
+   The application is deployed but not exposed externally. To access it:
+   - Use `kubectl port-forward svc/{{ include "ecr-viewer.fullname" . }}-ecr-viewer 3000:3000`
+   - Then visit: http://localhost:3000
+   {{- end }}
+
+2. **Check deployment status:**
+   kubectl get deployments -l app.kubernetes.io/name={{ .Chart.Name }}
+   kubectl get services -l app.kubernetes.io/name={{ .Chart.Name }}
+
+3. **View logs:**
+   kubectl logs -l app.kubernetes.io/component=ecr-viewer -f
+
+4. **Verify database connection:**
+   Ensure you have set the DATABASE_URL environment variable in your values file or via secret.
+
+## Configuration:
+
+Review the following files for customization:
+- {{ .Chart.Name }}/values.yaml - Default configuration
+- {{ .Chart.Name }}/values-dev.yaml - Development environment settings
+- {{ .Chart.Name }}/values-prod.yaml - Production environment settings
+
+## Database Setup:
+
+This chart requires an external database. Set the DATABASE_URL in your values file:
+
+values-dev.yaml:
+  database:
+    url: "postgresql://user:password@localhost:5432/ecr_dev"
+
+values-prod.yaml:
+  database:
+    url: "postgresql://user:password@prod-db:5432/ecr_prod"
+
+## Support:
+
+For issues and documentation, visit: https://github.com/CDCgov/dibbs-ecr-viewer

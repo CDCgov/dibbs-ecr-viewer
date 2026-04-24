@@ -1,0 +1,137 @@
+# Docker Compose configuration for eCR Viewer stack
+# This file defines all 6 services for local Docker deployment
+
+services:
+  # eCR Viewer - Next.js frontend application
+  # Exposed on port 3000, internal port 3000
+  ecr-viewer:
+    build:
+      context: ../containers/ecr-viewer/
+    ports:
+      - "3000:3000"
+    environment:
+      - APP_VERSION=${APP_VERSION:-1.0.0}
+    networks:
+      - ecr-viewer-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Orchestration - FastAPI backend service
+  # Exposed on port 8080, internal port 8080
+  # Depends on all backend services for startup
+  orchestration:
+    build:
+      context: ../containers/orchestration/
+    ports:
+      - "8080:8080"
+    environment:
+      - FHIR_CONVERTER_URL=http://fhir-converter:8080
+      - MESSAGE_PARSER_URL=http://message-parser:8080
+      - INGESTION_URL=http://ingestion:8080
+      - TRIGGER_CODE_REFERENCE_URL=http://trigger-code-reference:8080
+      - ECR_VIEWER_URL=http://ecr-viewer:3000
+      - DATABASE_URL=${DATABASE_URL}
+      - AUTH_PROVIDER=${AUTH_PROVIDER:-}
+      - AUTH_CLIENT_ID=${AUTH_CLIENT_ID:-}
+      - AUTH_CLIENT_SECRET=${AUTH_CLIENT_SECRET:-}
+      - AUTH_ISSUER=${AUTH_ISSUER:-}
+    networks:
+      - ecr-viewer-network
+    depends_on:
+      fhir-converter:
+        condition: service_healthy
+      ingestion:
+        condition: service_healthy
+      trigger-code-reference:
+        condition: service_healthy
+      message-parser:
+        condition: service_healthy
+      ecr-viewer:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # FHIR Converter - .NET service for FHIR conversion
+  # Exposed on port 8082, internal port 8080
+  fhir-converter:
+    build:
+      context: ../containers/fhir-converter/
+    ports:
+      - "8082:8080"
+    networks:
+      - ecr-viewer-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Ingestion - Python service for data ingestion
+  # Exposed on port 8083, internal port 8080
+  ingestion:
+    build:
+      context: ../containers/ingestion/
+    ports:
+      - "8083:8080"
+    environment:
+      - SMARTY_AUTH_ID=${SMARTY_AUTH_ID:-}
+      - SMARTY_AUTH_TOKEN=${SMARTY_AUTH_TOKEN:-}
+    networks:
+      - ecr-viewer-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Message Parser - Python service for message parsing
+  # Exposed on port 8085, internal port 8080
+  # Depends on fhir-converter for initial setup
+  message-parser:
+    build:
+      context: ../containers/message-parser/
+    ports:
+      - "8085:8080"
+    environment:
+      - FHIR_CONVERTER_URL=http://fhir-converter:8080
+    networks:
+      - ecr-viewer-network
+    depends_on:
+      fhir-converter:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Trigger Code Reference - Python service for trigger codes
+  # Exposed on port 8086, internal port 8080
+  trigger-code-reference:
+    build:
+      context: ../containers/trigger-code-reference/
+    ports:
+      - "8086:8080"
+    networks:
+      - ecr-viewer-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  ecr-viewer-network:
+    driver: bridge

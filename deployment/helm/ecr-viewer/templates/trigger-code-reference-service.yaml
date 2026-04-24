@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ecr-viewer.fullname" . }}-trigger-code-reference
+  labels:
+    {{- include "ecr-viewer.serviceLabels" . | nindent 4 }}
+    app.kubernetes.io/component: trigger-code-reference
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.trigger-code-reference.servicePort }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "ecr-viewer.name" . }}
+    app.kubernetes.io/component: trigger-code-reference

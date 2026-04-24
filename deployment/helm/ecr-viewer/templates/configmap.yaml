@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ecr-viewer.fullname" . }}-shared-config
+  labels:
+    {{- include "ecr-viewer.commonLabels" . | nindent 4 }}
+data:
+  # Shared configuration across services
+  APP_ENV: {{ .Values.appEnvironment | default "development" | quote }}
+  LOG_LEVEL: {{ .Values.logLevel | default "INFO" | quote }}
+  # Shared timeout settings
+  DEFAULT_TIMEOUT_MS: {{ .Values.defaultTimeoutMs | default "30000" | quote }}
+  # Shared retry settings
+  MAX_RETRIES: {{ .Values.maxRetries | default "3" | quote }}
+  RETRY_DELAY_MS: {{ .Values.retryDelayMs | default "1000" | quote }}

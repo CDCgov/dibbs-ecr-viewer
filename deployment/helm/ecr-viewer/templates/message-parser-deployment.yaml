@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ecr-viewer.fullname" . }}-message-parser
+  labels:
+    {{- include "ecr-viewer.deploymentLabels" . | nindent 4 }}
+    app.kubernetes.io/component: message-parser
+spec:
+  replicas: {{ .Values.message-parser.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "ecr-viewer.name" . }}
+      app.kubernetes.io/component: message-parser
+  template:
+    metadata:
+      labels:
+        {{- include "ecr-viewer.podLabels" . | nindent 8 }}
+        app.kubernetes.io/component: message-parser
+    spec:
+      containers:
+        - name: message-parser
+          image: {{ include "ecr-viewer.imagePath" (dict "service" "message-parser" "Values" .Values) | nindent 12 }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.message-parser.containerPort }}
+              protocol: TCP
+          env:
+            - name: PORT
+              value: {{ .Values.message-parser.containerPort | quote }}
+            {{- range .Values.message-parser.environment }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "ecr-viewer.fullname" . }}-shared-config
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.message-parser.healthCheckPath }}
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.message-parser.healthCheckPath }}
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            {{- toYaml .Values.message-parser.resources | nindent 12 }}

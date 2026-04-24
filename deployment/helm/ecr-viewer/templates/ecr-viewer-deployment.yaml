@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ecr-viewer.fullname" . }}-ecr-viewer
+  labels:
+    {{- include "ecr-viewer.deploymentLabels" . | nindent 4 }}
+    app.kubernetes.io/component: ecr-viewer
+spec:
+  replicas: {{ .Values.ecr-viewer.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "ecr-viewer.name" . }}
+      app.kubernetes.io/component: ecr-viewer
+  template:
+    metadata:
+      labels:
+        {{- include "ecr-viewer.podLabels" . | nindent 8 }}
+        app.kubernetes.io/component: ecr-viewer
+    spec:
+      containers:
+        - name: ecr-viewer
+          image: {{ include "ecr-viewer.imagePath" (dict "service" "ecr-viewer" "Values" .Values) | nindent 12 }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.ecr-viewer.containerPort }}
+              protocol: TCP
+          env:
+            - name: APP_VERSION
+              value: {{ .Chart.AppVersion | quote }}
+            - name: PORT
+              value: {{ .Values.ecr-viewer.containerPort | quote }}
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "ecr-viewer.fullname" . }}-secrets
+                  key: DATABASE_URL
+                  optional: true
+            - name: AUTH_PROVIDER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "ecr-viewer.fullname" . }}-secrets
+                  key: AUTH_PROVIDER
+                  optional: true
+            - name: AUTH_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "ecr-viewer.fullname" . }}-secrets
+                  key: AUTH_CLIENT_ID
+                  optional: true
+            - name: AUTH_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "ecr-viewer.fullname" . }}-secrets
+                  key: AUTH_CLIENT_SECRET
+                  optional: true
+            - name: AUTH_ISSUER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "ecr-viewer.fullname" . }}-secrets
+                  key: AUTH_ISSUER
+                  optional: true
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "ecr-viewer.fullname" . }}-secrets
+                  key: AWS_ACCESS_KEY_ID
+                  optional: true
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "ecr-viewer.fullname" . }}-secrets
+                  key: AWS_SECRET_ACCESS_KEY
+                  optional: true
+          envFrom:
+            - configMapRef:
+                name: {{ include "ecr-viewer.fullname" . }}-shared-config
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.ecr-viewer.healthCheckPath }}
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.ecr-viewer.healthCheckPath }}
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            {{- toYaml .Values.ecr-viewer.resources | nindent 12 }}

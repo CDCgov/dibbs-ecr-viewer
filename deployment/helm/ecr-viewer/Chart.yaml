@@ -1,0 +1,12 @@
+apiVersion: v2
+name: ecr-viewer
+description: A Helm chart for deploying the eCR Viewer application to Kubernetes
+
+type: application
+
+version: 1.0.0
+appVersion: "1.0.0"
+
+maintainers:
+  - name: dibbs-team
+    url: https://github.com/CDCgov/dibbs-ecr-viewer

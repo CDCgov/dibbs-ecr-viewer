@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ecr-viewer.fullname" . }}-trigger-code-reference
+  labels:
+    {{- include "ecr-viewer.deploymentLabels" . | nindent 4 }}
+    app.kubernetes.io/component: trigger-code-reference
+spec:
+  replicas: {{ .Values.trigger-code-reference.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "ecr-viewer.name" . }}
+      app.kubernetes.io/component: trigger-code-reference
+  template:
+    metadata:
+      labels:
+        {{- include "ecr-viewer.podLabels" . | nindent 8 }}
+        app.kubernetes.io/component: trigger-code-reference
+    spec:
+      containers:
+        - name: trigger-code-reference
+          image: {{ include "ecr-viewer.imagePath" (dict "service" "trigger-code-reference" "Values" .Values) | nindent 12 }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.trigger-code-reference.containerPort }}
+              protocol: TCP
+          env:
+            - name: PORT
+              value: {{ .Values.trigger-code-reference.containerPort | quote }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "ecr-viewer.fullname" . }}-shared-config
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.trigger-code-reference.healthCheckPath }}
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.trigger-code-reference.healthCheckPath }}
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            {{- toYaml .Values.trigger-code-reference.resources | nindent 12 }}

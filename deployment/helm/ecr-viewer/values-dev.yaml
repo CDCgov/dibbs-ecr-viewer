@@ -1,0 +1,81 @@
+# Development environment overrides for ecr-viewer Helm chart
+# Use with: helm template dev deployment/helm/ecr-viewer/ -f values-dev.yaml
+
+# Development image settings
+image:
+  tag: "dev"
+  pullPolicy: Always
+
+# Development resources (reduced for local development)
+ecr-viewer:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 128m
+      memory: 256Mi
+    requests:
+      cpu: 64m
+      memory: 128Mi
+
+orchestration:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 256m
+      memory: 512Mi
+    requests:
+      cpu: 128m
+      memory: 256Mi
+
+fhir-converter:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 256m
+      memory: 512Mi
+    requests:
+      cpu: 128m
+      memory: 256Mi
+
+ingestion:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 128m
+      memory: 256Mi
+    requests:
+      cpu: 64m
+      memory: 128Mi
+
+message-parser:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 128m
+      memory: 256Mi
+    requests:
+      cpu: 64m
+      memory: 128Mi
+
+trigger-code-reference:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 128m
+      memory: 256Mi
+    requests:
+      cpu: 64m
+      memory: 128Mi
+
+# Enable ingress for local development
+ingress:
+  enabled: true
+  className: ""
+  hosts:
+    - host: ecr-viewer.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+# Database URL for development (override with your actual development database)
+# DATABASE_URL: postgresql://user:password@localhost:5432/ecr_dev

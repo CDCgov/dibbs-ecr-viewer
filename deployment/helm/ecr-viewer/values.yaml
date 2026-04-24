@@ -1,0 +1,163 @@
+# Default values for ecr-viewer Helm chart
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Global settings
+image:
+  registry: ghcr.io
+  repository: cdcgov
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+# Service configurations
+# Each service has: replicas, resources (cpu/memory), ports, and environment variables
+
+ecr-viewer:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 256m
+      memory: 512Mi
+    requests:
+      cpu: 128m
+      memory: 256Mi
+  containerPort: 3000
+  servicePort: 3000
+  # Health check at the root endpoint
+  healthCheckPath: /
+  environment: []
+
+orchestration:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 512m
+      memory: 1024Mi
+    requests:
+      cpu: 256m
+      memory: 512Mi
+  containerPort: 8080
+  servicePort: 8080
+  healthCheckPath: /
+  environment:
+    - name: FHIR_CONVERTER_URL
+      value: http://fhir-converter:8080
+    - name: MESSAGE_PARSER_URL
+      value: http://message-parser:8080
+    - name: INGESTION_URL
+      value: http://ingestion:8080
+    - name: TRIGGER_CODE_REFERENCE_URL
+      value: http://trigger-code-reference:8080
+    - name: ECR_VIEWER_URL
+      value: http://ecr-viewer:3000
+    # DATABASE_URL must be provided externally
+    - name: DATABASE_URL
+      value: ""
+    - name: AUTH_PROVIDER
+      value: ""
+    - name: AUTH_CLIENT_ID
+      value: ""
+    - name: AUTH_CLIENT_SECRET
+      value: ""
+    - name: AUTH_ISSUER
+      value: ""
+
+fhir-converter:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 512m
+      memory: 1024Mi
+    requests:
+      cpu: 256m
+      memory: 512Mi
+  containerPort: 8080
+  servicePort: 8082  # Exposed on 8082 but container listens on 8080
+  healthCheckPath: /
+  environment: []
+
+ingestion:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 256m
+      memory: 512Mi
+    requests:
+      cpu: 128m
+      memory: 256Mi
+  containerPort: 8080
+  servicePort: 8083  # Exposed on 8083 but container listens on 8080
+  healthCheckPath: /
+  environment:
+    - name: SMARTY_AUTH_ID
+      value: ""
+    - name: SMARTY_AUTH_TOKEN
+      value: ""
+
+message-parser:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 256m
+      memory: 512Mi
+    requests:
+      cpu: 128m
+      memory: 256Mi
+  containerPort: 8080
+  servicePort: 8085  # Exposed on 8085 but container listens on 8080
+  healthCheckPath: /
+  environment:
+    - name: FHIR_CONVERTER_URL
+      value: http://fhir-converter:8080
+  dependsOn:
+    - fhir-converter
+
+trigger-code-reference:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 256m
+      memory: 512Mi
+    requests:
+      cpu: 128m
+      memory: 256Mi
+  containerPort: 8080
+  servicePort: 8086  # Exposed on 8086 but container listens on 8080
+  healthCheckPath: /
+  environment: []
+
+# Ingress configuration (generic, works with any controller)
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: ecr-viewer.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+# Database configuration
+# DATABASE_URL must be provided externally (e.g., via Helm value override)
+# Example: DATABASE_URL=postgresql://user:password@host:5432/database
+database:
+  # Set to true if you want the chart to wait for database connectivity
+  # Note: The actual DATABASE_URL must be provided via values-dev.yaml or values-prod.yaml
+  required: true
+
+# Pod disruption budget settings
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+
+# Affinity rules for pod placement
+affinity: {}
+
+# Node selector for pod placement
+nodeSelector: {}
+
+# Tolerations for pod placement
+tolerations: []
