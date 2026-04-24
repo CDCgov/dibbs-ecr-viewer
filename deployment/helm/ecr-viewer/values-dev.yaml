@@ -76,6 +76,5 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
-
 # Database URL for development (override with your actual development database)
 # DATABASE_URL: postgresql://user:password@localhost:5432/ecr_dev

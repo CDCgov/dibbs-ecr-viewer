@@ -90,6 +90,5 @@ ingress:
 podDisruptionBudget:
   enabled: true
   minAvailable: 1
-
 # Production database URL (must be provided - example format)
 # DATABASE_URL: postgresql://user:password@prod-db.example.com:5432/ecr_prod

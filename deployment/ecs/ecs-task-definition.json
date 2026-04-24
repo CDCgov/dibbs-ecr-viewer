@@ -45,23 +45,26 @@
         }
       ],
       "environment": [
-        {"name": "FHIR_CONVERTER_URL", "value": "http://fhir-converter:8080"},
-        {"name": "MESSAGE_PARSER_URL", "value": "http://message-parser:8080"},
-        {"name": "INGESTION_URL", "value": "http://ingestion:8080"},
-        {"name": "TRIGGER_CODE_REFERENCE_URL", "value": "http://trigger-code-reference:8080"},
-        {"name": "ECR_VIEWER_URL", "value": "http://ecr-viewer:3000"},
-        {"name": "DATABASE_URL", "value": ""},
-        {"name": "AUTH_PROVIDER", "value": ""},
-        {"name": "AUTH_CLIENT_ID", "value": ""},
-        {"name": "AUTH_CLIENT_SECRET", "value": ""},
-        {"name": "AUTH_ISSUER", "value": ""}
+        { "name": "FHIR_CONVERTER_URL", "value": "http://fhir-converter:8080" },
+        { "name": "MESSAGE_PARSER_URL", "value": "http://message-parser:8080" },
+        { "name": "INGESTION_URL", "value": "http://ingestion:8080" },
+        {
+          "name": "TRIGGER_CODE_REFERENCE_URL",
+          "value": "http://trigger-code-reference:8080"
+        },
+        { "name": "ECR_VIEWER_URL", "value": "http://ecr-viewer:3000" },
+        { "name": "DATABASE_URL", "value": "" },
+        { "name": "AUTH_PROVIDER", "value": "" },
+        { "name": "AUTH_CLIENT_ID", "value": "" },
+        { "name": "AUTH_CLIENT_SECRET", "value": "" },
+        { "name": "AUTH_ISSUER", "value": "" }
       ],
       "dependsOn": [
-        {"containerName": "fhir-converter", "condition": "HEALTHY"},
-        {"containerName": "ingestion", "condition": "HEALTHY"},
-        {"containerName": "trigger-code-reference", "condition": "HEALTHY"},
-        {"containerName": "message-parser", "condition": "HEALTHY"},
-        {"containerName": "ecr-viewer", "condition": "HEALTHY"}
+        { "containerName": "fhir-converter", "condition": "HEALTHY" },
+        { "containerName": "ingestion", "condition": "HEALTHY" },
+        { "containerName": "trigger-code-reference", "condition": "HEALTHY" },
+        { "containerName": "message-parser", "condition": "HEALTHY" },
+        { "containerName": "ecr-viewer", "condition": "HEALTHY" }
       ],
       "healthCheck": {
         "command": ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"],
@@ -102,8 +105,8 @@
         }
       ],
       "environment": [
-        {"name": "SMARTY_AUTH_ID", "value": ""},
-        {"name": "SMARTY_AUTH_TOKEN", "value": ""}
+        { "name": "SMARTY_AUTH_ID", "value": "" },
+        { "name": "SMARTY_AUTH_TOKEN", "value": "" }
       ],
       "healthCheck": {
         "command": ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"],
@@ -125,10 +128,10 @@
         }
       ],
       "environment": [
-        {"name": "FHIR_CONVERTER_URL", "value": "http://fhir-converter:8080"}
+        { "name": "FHIR_CONVERTER_URL", "value": "http://fhir-converter:8080" }
       ],
       "dependsOn": [
-        {"containerName": "fhir-converter", "condition": "HEALTHY"}
+        { "containerName": "fhir-converter", "condition": "HEALTHY" }
       ],
       "healthCheck": {
         "command": ["CMD-SHELL", "curl -f http://localhost:8080/ || exit 1"],

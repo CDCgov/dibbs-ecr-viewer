@@ -36,13 +36,13 @@ deployment/helm/ecr-viewer/
 
 This chart deploys the following services:
 
-| Service | Port | Description |
-|---------|------|-------------|
-| ecr-viewer | 3000 | Next.js application frontend |
-| orchestration | 8080 | FastAPI backend orchestration |
-| fhir-converter | 8082 (internal: 8080) | FHIR data conversion |
-| ingestion | 8083 (internal: 8080) | Data ingestion service |
-| message-parser | 8085 (internal: 8080) | Message parsing service |
+| Service                | Port                  | Description                    |
+| ---------------------- | --------------------- | ------------------------------ |
+| ecr-viewer             | 3000                  | Next.js application frontend   |
+| orchestration          | 8080                  | FastAPI backend orchestration  |
+| fhir-converter         | 8082 (internal: 8080) | FHIR data conversion           |
+| ingestion              | 8083 (internal: 8080) | Data ingestion service         |
+| message-parser         | 8085 (internal: 8080) | Message parsing service        |
 | trigger-code-reference | 8086 (internal: 8080) | Trigger code reference service |
 
 ## Installation
@@ -76,12 +76,12 @@ helm install my-ecr-viewer ./deployment/helm/ecr-viewer/ \
 
 ### Global Settings
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `image.registry` | Container image registry | `ghcr.io` |
-| `image.repository` | Container image repository | `cdcgov` |
-| `image.tag` | Container image tag | `latest` |
-| `image.pullPolicy` | Image pull policy | `IfNotPresent` |
+| Parameter          | Description                | Default        |
+| ------------------ | -------------------------- | -------------- |
+| `image.registry`   | Container image registry   | `ghcr.io`      |
+| `image.repository` | Container image repository | `cdcgov`       |
+| `image.tag`        | Container image tag        | `latest`       |
+| `image.pullPolicy` | Image pull policy          | `IfNotPresent` |
 
 ### Service Configuration
 
@@ -89,40 +89,40 @@ Each service supports the following configuration options:
 
 ```yaml
 ecr-viewer:
-  replicas: 1                    # Number of pod replicas
-  resources:                     # CPU and memory limits/requests
+  replicas: 1 # Number of pod replicas
+  resources: # CPU and memory limits/requests
     limits:
       cpu: 256m
       memory: 512Mi
     requests:
       cpu: 128m
       memory: 256Mi
-  containerPort: 3000            # Port inside the container
-  servicePort: 3000              # Port exposed by the service
-  healthCheckPath: /             # Health check endpoint
-  environment: []                # Additional environment variables
+  containerPort: 3000 # Port inside the container
+  servicePort: 3000 # Port exposed by the service
+  healthCheckPath: / # Health check endpoint
+  environment: [] # Additional environment variables
 ```
 
 ### Ingress Configuration
 
 ```yaml
 ingress:
-  enabled: true                  # Enable ingress
-  className: ""                  # Ingress class name
-  annotations: {}                # Ingress annotations
-  hosts:                         # Host configuration
+  enabled: true # Enable ingress
+  className: "" # Ingress class name
+  annotations: {} # Ingress annotations
+  hosts: # Host configuration
     - host: ecr-viewer.local
       paths:
         - path: /
           pathType: Prefix
-  tls: []                        # TLS configuration
+  tls: [] # TLS configuration
 ```
 
 ### Database Configuration
 
 ```yaml
 database:
-  url: "postgresql://user:password@host:5432/database"  # Required
+  url: "postgresql://user:password@host:5432/database" # Required
 ```
 
 ## Environment-Specific Settings

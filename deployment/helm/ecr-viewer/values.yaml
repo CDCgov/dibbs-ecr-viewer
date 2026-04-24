@@ -72,7 +72,7 @@ fhir-converter:
       cpu: 256m
       memory: 512Mi
   containerPort: 8080
-  servicePort: 8082  # Exposed on 8082 but container listens on 8080
+  servicePort: 8082 # Exposed on 8082 but container listens on 8080
   healthCheckPath: /
   environment: []
 
@@ -86,7 +86,7 @@ ingestion:
       cpu: 128m
       memory: 256Mi
   containerPort: 8080
-  servicePort: 8083  # Exposed on 8083 but container listens on 8080
+  servicePort: 8083 # Exposed on 8083 but container listens on 8080
   healthCheckPath: /
   environment:
     - name: SMARTY_AUTH_ID
@@ -104,7 +104,7 @@ message-parser:
       cpu: 128m
       memory: 256Mi
   containerPort: 8080
-  servicePort: 8085  # Exposed on 8085 but container listens on 8080
+  servicePort: 8085 # Exposed on 8085 but container listens on 8080
   healthCheckPath: /
   environment:
     - name: FHIR_CONVERTER_URL
@@ -122,7 +122,7 @@ trigger-code-reference:
       cpu: 128m
       memory: 256Mi
   containerPort: 8080
-  servicePort: 8086  # Exposed on 8086 but container listens on 8080
+  servicePort: 8086 # Exposed on 8086 but container listens on 8080
   healthCheckPath: /
   environment: []
 
