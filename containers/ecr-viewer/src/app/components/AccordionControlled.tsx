@@ -81,7 +81,6 @@ const AccordionItem = ({
           data-testid={`accordionItem_${id}`}
           className={contentClasses}
           hidden={!expanded}
-          aria-hidden={!expanded}
         >
           {content}
         </div>
