@@ -160,7 +160,7 @@ jobs:
           cp -r ./all-docs/latest/containers/ecr-viewer/* ./docs/
 
       - name: Commit New Documentation
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v10
         with:
           add: |
             - docs
