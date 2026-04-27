@@ -24,6 +24,7 @@ test.describe("viewer page", () => {
       `/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703&${nbsAuthParam}`,
     );
     await page.getByText("Patient Name").first().waitFor();
+    await page.getByRole("button", { name: /expand all sections/i }).click();
 
     const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
 
@@ -36,6 +37,7 @@ test.describe("viewer page", () => {
     await page.goto(
       `/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703&${nbsAuthParam}`,
     );
+    await page.getByRole("button", { name: /expand all sections/i }).click();
     await page.getByRole("button", { name: "Expand all labs" }).click();
 
     const viewCommentButtons = await page
@@ -56,11 +58,13 @@ test.describe("viewer page", () => {
         `/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703&${nbsAuthParam}`,
       );
       await page.getByText("Patient Name").first().waitFor();
+      await page.getByRole("button", { name: /expand all sections/i }).click();
     });
 
     test("clicking each link scrolls and highlights", async ({ page }) => {
       const nav = page.getByRole("navigation");
       await expect(nav).toBeVisible();
+      await page.getByRole("button", { name: /expand all sections/i }).click();
 
       // use a test id here to avoid a lot of special casing around the back to
       // library link, which may or may not exist based on the config
