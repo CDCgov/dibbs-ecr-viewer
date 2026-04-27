@@ -55,7 +55,7 @@ describe("SectionConfig", () => {
     ];
     const { asFragment } = render(
       <main>
-        <SideNav sideNavConfig={sideNavConfig}/>
+        <SideNav sideNavConfig={sideNavConfig} />
       </main>,
     );
     expect(asFragment()).toMatchSnapshot();

@@ -143,19 +143,19 @@ const SideNav: React.FC<{
       new SectionConfig(
         "eCR Document",
         sideNavConfig.map(
-          (item) => new SectionConfig(item.title, item.subNavItems)
-        )
+          (item) => new SectionConfig(item.title, item.subNavItems),
+        ),
       ),
     ],
-    [sideNavConfig]
+    [sideNavConfig],
   );
   const [activeSection, setActiveSection] = useState<string>("");
-  
+
   useEffect(() => {
     if (sectionConfigs.length === 0) return;
 
     const oneRem = parseFloat(
-      getComputedStyle(document.documentElement).fontSize
+      getComputedStyle(document.documentElement).fontSize,
     );
     const topOffset = 5 * oneRem;
 
@@ -165,7 +165,7 @@ const SideNav: React.FC<{
           id,
           ...flatten(subNavItems || []),
         ]);
-      })(sectionConfigs)
+      })(sectionConfigs),
     );
 
     // Intersection Observer: sets section in view as active section
@@ -187,7 +187,7 @@ const SideNav: React.FC<{
           window.innerHeight - topOffset - 1
         }px 0px`,
         threshold: 0,
-      }
+      },
     );
     const observedIds = new Set<string>();
 
@@ -195,8 +195,7 @@ const SideNav: React.FC<{
     // Runs on initial load & when the DOM changes
     const tagAndObserve = () => {
       const headingElements = Array.from(
-        document.querySelector("main")?.querySelectorAll(headingSelector) ||
-          []
+        document.querySelector("main")?.querySelectorAll(headingSelector) || [],
       ) as HTMLElement[];
       console.log(sectionConfigs);
 
@@ -215,8 +214,8 @@ const SideNav: React.FC<{
       });
 
       return headingElements.filter((el) => el.getAttribute("data-sectionid"));
-    }
-    
+    };
+
     // Set initial active section
     const tagged = tagAndObserve();
     const initialActive = [...tagged]
@@ -225,23 +224,22 @@ const SideNav: React.FC<{
     setActiveSection(
       initialActive?.getAttribute("data-sectionid") ??
         tagged[0]?.getAttribute("data-sectionid") ??
-        ""
+        "",
     );
 
     // Mutation Observer: Watch for DOM changes (sections render after expand)
     const mutationObserver = new MutationObserver(() => {
       tagAndObserve();
     });
-    mutationObserver.observe(
-      document.querySelector("main") || document.body,
-      { childList: true, subtree: true }
-    );
+    mutationObserver.observe(document.querySelector("main") || document.body, {
+      childList: true,
+      subtree: true,
+    });
 
     return () => {
       intersectionObserver.disconnect();
       mutationObserver.disconnect();
     };
-
   }, [sectionConfigs]);
 
   /**
@@ -272,7 +270,7 @@ const SideNav: React.FC<{
       if (section.subNavItems) {
         const subSideNavItems = buildSideNav(section.subNavItems);
         sideNavItems.push(
-          <UswdsSideNav isSubnav={true} items={subSideNavItems} />
+          <UswdsSideNav isSubnav={true} items={subSideNavItems} />,
         );
       }
     }

@@ -72,10 +72,10 @@ const ECRViewerPage = async ({
   console.time("getAccordionItems");
   const { sideNavConfig, accordionItems } = getEcrDocumentAccordionItems(
     fhirBundle,
-    fhirIndex
+    fhirIndex,
   );
   console.timeEnd("getAccordionItems");
-  
+
   return (
     <ECRViewerLayout patientName={patientName} patientDOB={patientDOB}>
       <SideNav sideNavConfig={sideNavConfig} />
