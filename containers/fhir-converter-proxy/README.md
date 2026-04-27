@@ -12,6 +12,10 @@ By default, AWS ServiceConnect and standard Docker Compose networks use a **Roun
 
 This container solves that by using **HAProxy** to track exactly how busy each converter is, routing new eCRs only to the instances with the most available capacity.
 
+## Setup
+
+Update the haproxy.cfg if necessary for your deployed infrastructure or use the provided sample. Spin up the HA proxy image with the cfg file and use the `FHIR_CONVERTER_URL` env var in the Orchestration service to route traffic through the proxy instead of pointing directly to the FHIR Converter service.
+
 ## Architecture
 
 ```mermaid
