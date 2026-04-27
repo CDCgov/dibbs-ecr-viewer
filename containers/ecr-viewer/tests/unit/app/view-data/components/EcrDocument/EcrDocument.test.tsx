@@ -124,8 +124,8 @@ describe("Tests for eCR Document", () => {
 
     const { ecrDocumentNavConfig, accordionItems } =
       getEcrDocumentAccordionItems(BundleSample, fhirIndexBundleSample);
-    
-      expect(ecrDocumentNavConfig).toEqual(expectedEcrDocumentNavConfig);
+
+    expect(ecrDocumentNavConfig).toEqual(expectedEcrDocumentNavConfig);
   });
 
   describe("Evaluate Clinical Info", () => {
