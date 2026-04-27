@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
 import { SideNav as UswdsSideNav } from "@trussworks/react-uswds";
 
@@ -137,29 +137,39 @@ const headingSelector =
 const SideNav: React.FC<{
   sideNavConfig: SideNavConfig[];
 }> = ({ sideNavConfig }) => {
-  const sectionConfigs: SectionConfig[] = [
-    new SectionConfig("eCR Summary"),
-    new SectionConfig(
-      "eCR Document",
-      sideNavConfig.map(
-        (item) => new SectionConfig(item.title, item.subNavItems)
-      )
-    ),
-  ];
-
+  const sectionConfigs: SectionConfig[] = useMemo(
+    () => [
+      new SectionConfig("eCR Summary"),
+      new SectionConfig(
+        "eCR Document",
+        sideNavConfig.map(
+          (item) => new SectionConfig(item.title, item.subNavItems)
+        )
+      ),
+    ],
+    [sideNavConfig]
+  );
   const [activeSection, setActiveSection] = useState<string>("");
+  
   useEffect(() => {
     if (sectionConfigs.length === 0) return;
-
-    const headingElements =
-      document.querySelector("main")?.querySelectorAll(headingSelector) || [];
 
     const oneRem = parseFloat(
       getComputedStyle(document.documentElement).fontSize
     );
     const topOffset = 5 * oneRem;
 
-    const observer = new IntersectionObserver(
+    const validIds = new Set(
+      (function flatten(items: SectionConfig[]): string[] {
+        return items.flatMap(({ id, subNavItems }) => [
+          id,
+          ...flatten(subNavItems || []),
+        ]);
+      })(sectionConfigs)
+    );
+
+    // Intersection Observer: sets section in view as active section
+    const intersectionObserver = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
@@ -179,11 +189,59 @@ const SideNav: React.FC<{
         threshold: 0,
       }
     );
+    const observedIds = new Set<string>();
 
-    headingElements.forEach((el) => observer.observe(el));
-    setActiveSection(headingElements[0]?.getAttribute("data-sectionid") || "");
+    // Adds intersection observer to each heading section
+    // Runs on initial load & when the DOM changes
+    const tagAndObserve = () => {
+      const headingElements = Array.from(
+        document.querySelector("main")?.querySelectorAll(headingSelector) ||
+          []
+      ) as HTMLElement[];
+      console.log(sectionConfigs);
 
-    return () => observer.disconnect();
+      headingElements.forEach((heading) => {
+        const text = heading.textContent;
+        const sectionId = text ? toKebabCase(text) : null;
+
+        if (sectionId && validIds.has(sectionId)) {
+          heading.setAttribute("data-sectionid", sectionId);
+
+          if (!observedIds.has(sectionId)) {
+            observedIds.add(sectionId);
+            intersectionObserver.observe(heading);
+          }
+        }
+      });
+
+      return headingElements.filter((el) => el.getAttribute("data-sectionid"));
+    }
+    
+    // Set initial active section
+    const tagged = tagAndObserve();
+    const initialActive = [...tagged]
+      .reverse()
+      .find((el) => el.getBoundingClientRect().top <= topOffset);
+    setActiveSection(
+      initialActive?.getAttribute("data-sectionid") ??
+        tagged[0]?.getAttribute("data-sectionid") ??
+        ""
+    );
+
+    // Mutation Observer: Watch for DOM changes (sections render after expand)
+    const mutationObserver = new MutationObserver(() => {
+      tagAndObserve();
+    });
+    mutationObserver.observe(
+      document.querySelector("main") || document.body,
+      { childList: true, subtree: true }
+    );
+
+    return () => {
+      intersectionObserver.disconnect();
+      mutationObserver.disconnect();
+    };
+
   }, [sectionConfigs]);
 
   /**

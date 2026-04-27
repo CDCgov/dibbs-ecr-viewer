@@ -56,11 +56,6 @@ describe("SectionConfig", () => {
     const { asFragment } = render(
       <main>
         <SideNav sideNavConfig={sideNavConfig}/>
-        <h2 id="section-1">Section 1</h2>
-        <h2 id="section-2">Section 2</h2>
-        <h3 id="section-3">Section 3</h3>
-        <h4 id="section-4">Section 4</h4>
-        <h2 id="section-2-2">Section 2 - 2</h2>
       </main>,
     );
     expect(asFragment()).toMatchSnapshot();
