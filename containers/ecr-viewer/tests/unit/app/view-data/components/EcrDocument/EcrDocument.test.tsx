@@ -33,49 +33,49 @@ describe("Snapshot test for eCR Document", () => {
 
     const { ecrDocumentNavConfig, accordionItems } = getEcrDocumentAccordionItems(
       bundleEmpty,
-      fhirIndexBundleEmpty
+      fhirIndexBundleEmpty,
     );
 
     const { container } = render(
-      <EcrDocument initialAccordionItems={accordionItems} />
+      <EcrDocument initialAccordionItems={accordionItems} />,
     );
 
     // ignore duplicate IDs due to mocking of `useId` to be consistent
     expect(
       await axe(container, {
         rules: { "duplicate-id-aria": { enabled: false } },
-      })
+      }),
     ).toHaveNoViolations();
 
     // This is an arbitrarily chosen test ID we expect one of the rendered accordion items to have.
     // There is nothing significant about "encounter-info_2" in particular.
     expect(
-      screen.getByTestId("accordionButton_encounter-info_2")
+      screen.getByTestId("accordionButton_encounter-info_2"),
     ).toBeInTheDocument();
     // expand all sections first (collapsed by default)
     await userEvent.click(
-      screen.getByRole("button", { name: /expand all sections/i })
+      screen.getByRole("button", { name: /expand all sections/i }),
     );
     expect(
-      screen.getByTestId("accordionItem_encounter-info_2")
+      screen.getByTestId("accordionItem_encounter-info_2"),
     ).toBeInTheDocument();
 
     expect(container).toMatchSnapshot();
 
     expect(
-      screen.getByText("No patient information was found in this eCR.")
+      screen.getByText("No patient information was found in this eCR."),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("No encounter information was found in this eCR.")
+      screen.getByText("No encounter information was found in this eCR."),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("No clinical information was found in this eCR.")
+      screen.getByText("No clinical information was found in this eCR."),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("No lab information was found in this eCR.")
+      screen.getByText("No lab information was found in this eCR."),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("No eCR metadata was found in this eCR.")
+      screen.getByText("No eCR metadata was found in this eCR."),
     ).toBeInTheDocument();
   });
 

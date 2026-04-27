@@ -50,7 +50,6 @@ const AccordionItem = ({
     }
   }, [expanded, hasBeenExpanded, title, id]);
 
-
   const headingClasses = classnames("usa-accordion__heading", className);
   const contentClasses = classnames(
     "usa-accordion__content",

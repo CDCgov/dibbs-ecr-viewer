@@ -58,7 +58,7 @@ const SideNav: React.FC<{
     if (sectionConfigs.length === 0) return;
 
     const oneRem = parseFloat(
-      getComputedStyle(document.documentElement).fontSize
+      getComputedStyle(document.documentElement).fontSize,
     );
     const topOffset = 5 * oneRem;
 
@@ -68,7 +68,7 @@ const SideNav: React.FC<{
           id,
           ...flatten(subNavItems || []),
         ]);
-      })(sectionConfigs)
+      })(sectionConfigs),
     );
 
     // Intersection Observer: sets section in view as active section
@@ -90,7 +90,7 @@ const SideNav: React.FC<{
           window.innerHeight - topOffset - 1
         }px 0px`,
         threshold: 0,
-      }
+      },
     );
     const observedIds = new Set<string>();
 
@@ -126,7 +126,7 @@ const SideNav: React.FC<{
     setActiveSection(
       initialActive?.getAttribute("data-sectionid") ??
         tagged[0]?.getAttribute("data-sectionid") ??
-        ""
+        "",
     );
 
     // Mutation Observer: Watch for DOM changes (sections render after expand)
@@ -172,7 +172,7 @@ const SideNav: React.FC<{
       if (section.subNavItems) {
         const subSideNavItems = buildSideNav(section.subNavItems);
         sideNavItems.push(
-          <UswdsSideNav isSubnav={true} items={subSideNavItems} />
+          <UswdsSideNav isSubnav={true} items={subSideNavItems} />,
         );
       }
     }

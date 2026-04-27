@@ -18,11 +18,10 @@ export const EcrDocument = ({
 }: {
   initialAccordionItems: AccordionItem[];
 }) => {
-
   // TODO ANGELA: Remove logging
   const [accordionItems, setAccordionItems] = useState(() => {
     console.time("EcrDocument_render");
-    return initialAccordionItems
+    return initialAccordionItems;
   });
   React.useEffect(() => {
     console.timeEnd("EcrDocument_render");
