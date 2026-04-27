@@ -7,7 +7,7 @@ import { BackButton } from "@/app/components/BackButton";
 import { toKebabCase } from "@/app/utils/format-utils";
 
 import { SideNavLoadingSkeleton } from "./LoadingComponent";
-import { SideNavConfig } from "./EcrDocument/accordion-items";
+import { EcrDocumentNavConfig } from "./EcrDocument/accordion-items";
 
 export class SectionConfig {
   title: string;
@@ -38,22 +38,22 @@ const headingSelector =
  * @returns The JSX element representing the side navigation.
  */
 const SideNav: React.FC<{
-  sideNavConfig: SideNavConfig[];
-}> = ({ sideNavConfig }) => {
+  ecrDocumentNavConfig: EcrDocumentNavConfig[];
+}> = ({ ecrDocumentNavConfig }) => {
   const sectionConfigs: SectionConfig[] = useMemo(
     () => [
       new SectionConfig("eCR Summary"),
       new SectionConfig(
         "eCR Document",
-        sideNavConfig.map(
+        ecrDocumentNavConfig.map(
           (item) => new SectionConfig(item.title, item.subNavItems)
         )
       ),
     ],
-    [sideNavConfig]
+    [ecrDocumentNavConfig]
   );
   const [activeSection, setActiveSection] = useState<string>("");
-  
+
   useEffect(() => {
     if (sectionConfigs.length === 0) return;
 
@@ -98,8 +98,7 @@ const SideNav: React.FC<{
     // Runs on initial load & when the DOM changes
     const tagAndObserve = () => {
       const headingElements = Array.from(
-        document.querySelector("main")?.querySelectorAll(headingSelector) ||
-          []
+        document.querySelector("main")?.querySelectorAll(headingSelector) || []
       ) as HTMLElement[];
 
       headingElements.forEach((heading) => {
@@ -117,8 +116,8 @@ const SideNav: React.FC<{
       });
 
       return headingElements.filter((el) => el.getAttribute("data-sectionid"));
-    }
-    
+    };
+
     // Set initial active section
     const tagged = tagAndObserve();
     const initialActive = [...tagged]
@@ -134,16 +133,15 @@ const SideNav: React.FC<{
     const mutationObserver = new MutationObserver(() => {
       tagAndObserve();
     });
-    mutationObserver.observe(
-      document.querySelector("main") || document.body,
-      { childList: true, subtree: true }
-    );
+    mutationObserver.observe(document.querySelector("main") || document.body, {
+      childList: true,
+      subtree: true,
+    });
 
     return () => {
       intersectionObserver.disconnect();
       mutationObserver.disconnect();
     };
-
   }, [sectionConfigs]);
 
   /**

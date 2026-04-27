@@ -70,7 +70,7 @@ const ECRViewerPage = async ({
 
   // TODO ANGELA: Remove logging
   console.time("getAccordionItems");
-  const { sideNavConfig, accordionItems } = getEcrDocumentAccordionItems(
+  const { ecrDocumentNavConfig, accordionItems } = getEcrDocumentAccordionItems(
     fhirBundle,
     fhirIndex
   );
@@ -78,7 +78,7 @@ const ECRViewerPage = async ({
   
   return (
     <ECRViewerLayout patientName={patientName} patientDOB={patientDOB}>
-      <SideNav sideNavConfig={sideNavConfig} />
+      <SideNav ecrDocumentNavConfig={ecrDocumentNavConfig} />
       <div className="ecr-viewer-container">
         <div className="margin-bottom-3">
           <h2 className="margin-bottom-05 margin-top-3" id="ecr-summary">

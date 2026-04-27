@@ -6,7 +6,7 @@ import SideNav, {
   // sortHeadings,
   // countObjects,
 } from "@/app/view-data/components/SideNav";
-import { SideNavConfig } from "@/app/view-data/components/EcrDocument/accordion-items";
+import { EcrDocumentNavConfig } from "@/app/view-data/components/EcrDocument/accordion-items";
 
 jest.mock("@/app/components/AuthSessionProvider", () => ({
   useIsLoggedInUser: () => true,
@@ -48,21 +48,21 @@ describe("SectionConfig", () => {
   });
 
   it("should match the snapshot", () => {
-    const sideNavConfig: SideNavConfig[] = [
+    const ecrDocumentNavConfig: EcrDocumentNavConfig[] = [
       { title: "Section 1", subNavItems: [] },
       { title: "Section 2", subNavItems: ["Section 3"] },
       { title: "Section 2 - 2", subNavItems: [] },
     ];
     const { asFragment } = render(
       <main>
-        <SideNav sideNavConfig={sideNavConfig}/>
+        <SideNav ecrDocumentNavConfig={ecrDocumentNavConfig}/>
       </main>,
     );
     expect(asFragment()).toMatchSnapshot();
   });
 
   it("should have no accessibility violations", async () => {
-    const { container } = render(<SideNav sideNavConfig={[]} />);
+    const { container } = render(<SideNav ecrDocumentNavConfig={[]} />);
     let results;
     await act(async () => {
       results = await axe(container);
