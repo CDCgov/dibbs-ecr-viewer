@@ -1,6 +1,5 @@
 import json
 import os
-import logging
 
 import httpx
 from fastapi import HTTPException, Response, WebSocket
@@ -35,8 +34,6 @@ from app.handlers.response_builders.trigger_code_reference import (
 from app.handlers.ServiceHandlerResponse import ServiceHandlerResponse
 from app.models import OrchestrationRequest
 from app.utils import format_service_url
-
-logging.basicConfig(level=logging.INFO)
 
 # Locations of the various services the service will delegate
 SERVICE_URLS = {
@@ -165,7 +162,6 @@ async def call_apis(
             "previous_response_to_param_mapping", None
         )
         service_url = format_service_url(SERVICE_URLS[service], endpoint)
-        logging.info("Service URL: " + service_url)
         request_body_func = ENDPOINT_TO_REQUEST_BODY[endpoint_name]
         response_func = ENDPOINT_TO_RESPONSE[endpoint_name]
         if previous_response_to_param_mapping:
