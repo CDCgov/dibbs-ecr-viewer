@@ -46,11 +46,11 @@ const SideNav: React.FC<{
       new SectionConfig(
         "eCR Document",
         ecrDocumentNavConfig.map(
-          (item) => new SectionConfig(item.title, item.subNavItems)
-        )
+          (item) => new SectionConfig(item.title, item.subNavItems),
+        ),
       ),
     ],
-    [ecrDocumentNavConfig]
+    [ecrDocumentNavConfig],
   );
   const [activeSection, setActiveSection] = useState<string>("");
 
@@ -98,7 +98,7 @@ const SideNav: React.FC<{
     // Runs on initial load & when the DOM changes
     const tagAndObserve = () => {
       const headingElements = Array.from(
-        document.querySelector("main")?.querySelectorAll(headingSelector) || []
+        document.querySelector("main")?.querySelectorAll(headingSelector) || [],
       ) as HTMLElement[];
 
       headingElements.forEach((heading) => {

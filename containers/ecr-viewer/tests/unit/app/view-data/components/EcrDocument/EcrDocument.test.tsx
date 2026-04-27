@@ -31,10 +31,8 @@ describe("Snapshot test for eCR Document", () => {
     };
     const fhirIndexBundleEmpty = getFhirIndex(bundleEmpty);
 
-    const { ecrDocumentNavConfig, accordionItems } = getEcrDocumentAccordionItems(
-      bundleEmpty,
-      fhirIndexBundleEmpty,
-    );
+    const { ecrDocumentNavConfig, accordionItems } =
+      getEcrDocumentAccordionItems(bundleEmpty, fhirIndexBundleEmpty);
 
     const { container } = render(
       <EcrDocument initialAccordionItems={accordionItems} />,

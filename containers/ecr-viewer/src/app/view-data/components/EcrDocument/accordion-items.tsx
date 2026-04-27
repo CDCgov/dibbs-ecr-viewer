@@ -45,7 +45,7 @@ export type EcrDocumentNavConfig = {
  */
 export const getEcrDocumentAccordionItems = (
   fhirBundle: Bundle,
-  fhirIndex: FhirIndex
+  fhirIndex: FhirIndex,
 ): {
   ecrDocumentNavConfig: EcrDocumentNavConfig[];
   accordionItems: AccordionItem[];
@@ -100,14 +100,14 @@ export const getEcrDocumentAccordionItems = (
   const subNavPatient = defined(
     hasDemographicsData && "Demographics",
     hasSocialData && "Social History",
-    hasPregnancyData && "Pregnancy Info"
+    hasPregnancyData && "Pregnancy Info",
   );
   const subNavEncounter = defined(
     encounterData.availableData.length > 0 && "Encounter Details",
     hospitalEncounterData.availableData.length > 0 &&
       "Hospital Encounter Details",
     facilityData.availableData.length > 0 && "Facility Details",
-    providerData.availableData.length > 0 && "Provider Details"
+    providerData.availableData.length > 0 && "Provider Details",
   );
   const subNavClinical = defined(
     clinicalData.clinicalNotes.availableData.length > 0 && "Clinical Notes",
@@ -119,7 +119,7 @@ export const getEcrDocumentAccordionItems = (
     clinicalData.immunizationsDetails.availableData.length > 0 &&
       "Immunizations",
     clinicalData.vitalData.availableData.length > 0 &&
-      "Diagnostics and Vital Signs"
+      "Diagnostics and Vital Signs",
   );
   const subNavMetadata = defined(
     "RR Details",
@@ -127,7 +127,7 @@ export const getEcrDocumentAccordionItems = (
     !!ecrMetadata.eicrAuthorDetails.find((d) => d.availableData.length > 0) &&
       "eICR Author Details for Practitioner",
     ecrMetadata.ecrCustodianDetails.availableData.length > 0 &&
-      "eICR Custodian Details"
+      "eICR Custodian Details",
   );
   const subNavLabs = labInfoData.map((labResult) => {
     const labName = `Lab Results from ${
@@ -308,7 +308,7 @@ export const getEcrDocumentAccordionItems = (
     ({ title, subNavItems }) => ({
       title,
       subNavItems: subNavItems ?? [],
-    })
+    }),
   );
   const accordionItems: AccordionItem[] = sections.map((item, index) => {
     const kebabCaseTitle = toKebabCase(item.title);
