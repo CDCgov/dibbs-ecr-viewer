@@ -66,6 +66,11 @@ export const logIn = async (
     }
   }
 
+  if (url.includes("view-data") && expectedHeading) {
+    // Expand all sections first if checking for expected heading
+    await page.getByRole("button", { name: /expand all sections/i }).click();
+  }
+
   await expect(
     page.getByRole("heading", { name: expectedHeading }).first(),
   ).toBeVisible();
