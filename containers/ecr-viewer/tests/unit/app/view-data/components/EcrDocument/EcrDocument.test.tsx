@@ -11,6 +11,7 @@ import * as _BundleWithPatient from "@/../../../test-data/fhir/BundlePatient.jso
 import BundleWithPendingResultsOnly from "@/../../../test-data/fhir/BundlePendingResultsOnly.json";
 import BundleWithPlannedMedsOnly from "@/../../../test-data/fhir/BundlePlannedMedsOnly.json";
 import BundleWithScheduledApptsOnly from "@/../../../test-data/fhir/BundleScheduledApptsOnly.json";
+import * as _BundleSample from "@/../../../test-data/fhir/sample_ecr.json";
 import { DataDisplay } from "@/app/view-data/components/DataDisplay";
 import { EcrDocument } from "@/app/view-data/components/EcrDocument";
 import { getEcrDocumentAccordionItems } from "@/app/view-data/components/EcrDocument/accordion-items";
@@ -21,8 +22,9 @@ import {
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
 const BundleWithPatient = _BundleWithPatient as Bundle;
+const BundleSample = _BundleSample as Bundle;
 
-describe("Snapshot test for eCR Document", () => {
+describe("Tests for eCR Document", () => {
   it("Given no data, info message for empty sections should appear", async () => {
     const bundleEmpty: Bundle = {
       resourceType: "Bundle",
@@ -30,9 +32,18 @@ describe("Snapshot test for eCR Document", () => {
       entry: [],
     };
     const fhirIndexBundleEmpty = getFhirIndex(bundleEmpty);
+    const emptyEcrDocumentNavConfig = [
+      { subNavItems: [], title: "Patient Info" },
+      { subNavItems: [], title: "Encounter Info" },
+      { subNavItems: [], title: "Clinical Info" },
+      { subNavItems: [], title: "Lab Info" },
+      { subNavItems: ["RR Details"], title: "eCR Metadata" },
+      { subNavItems: [], title: "Unavailable Info" },
+    ];
 
     const { ecrDocumentNavConfig, accordionItems } =
       getEcrDocumentAccordionItems(bundleEmpty, fhirIndexBundleEmpty);
+    expect(ecrDocumentNavConfig).toEqual(emptyEcrDocumentNavConfig);
 
     const { container } = render(
       <EcrDocument initialAccordionItems={accordionItems} />,
@@ -75,6 +86,46 @@ describe("Snapshot test for eCR Document", () => {
     expect(
       screen.getByText("No eCR metadata was found in this eCR."),
     ).toBeInTheDocument();
+  });
+
+  it("Given a bundle, will build correct Ecr Document nav config", () => {
+    const expectedEcrDocumentNavConfig = [
+      {
+        title: "Patient Info",
+        subNavItems: ["Demographics", "Social History", "Pregnancy Info"],
+      },
+      {
+        title: "Encounter Info",
+        subNavItems: [
+          "Encounter Details",
+          "Facility Details",
+          "Provider Details",
+        ],
+      },
+      {
+        title: "Clinical Info",
+        subNavItems: [
+          "Clinical Notes",
+          "Symptoms and Problems",
+          "Immunizations",
+        ],
+      },
+      {
+        title: "Lab Info",
+        subNavItems: ["Lab Results from Unknown Organization"],
+      },
+      {
+        title: "eCR Metadata",
+        subNavItems: ["RR Details", "eICR Details", "eICR Custodian Details"],
+      },
+      { title: "Unavailable Info", subNavItems: [] },
+    ];
+    const fhirIndexBundleSample = getFhirIndex(BundleSample);
+
+    const { ecrDocumentNavConfig, accordionItems } =
+      getEcrDocumentAccordionItems(BundleSample, fhirIndexBundleSample);
+    
+      expect(ecrDocumentNavConfig).toEqual(expectedEcrDocumentNavConfig);
   });
 
   describe("Evaluate Clinical Info", () => {
