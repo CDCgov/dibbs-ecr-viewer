@@ -58,7 +58,7 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm test
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -71,7 +71,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Build ${{ env.CONTAINER }} Container
         uses: docker/build-push-action@v7
@@ -109,7 +109,7 @@ jobs:
 
       - name: Bail out if Dependabot and Azure AD
         if: ${{ matrix.azure_ad && github.actor == 'dependabot[bot]'}}
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             core.setFailed(
@@ -304,7 +304,7 @@ jobs:
         run: npm run test:integration:${{ matrix.db_type }}
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
