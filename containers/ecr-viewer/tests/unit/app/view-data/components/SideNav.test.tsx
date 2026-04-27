@@ -69,12 +69,12 @@ describe("SectionConfig", () => {
   it("should render side nav items on page", async () => {
     const ecrDocumentNavConfig: EcrDocumentNavConfig[] = [
       { title: "Section 1", subNavItems: [] },
-      { title: "Section 2", subNavItems: ["Section 3"] }
+      { title: "Section 2", subNavItems: ["Section 3"] },
     ];
     const { container } = render(
       <main>
         <SideNav ecrDocumentNavConfig={ecrDocumentNavConfig} />
-      </main>
+      </main>,
     );
     expect(container.innerHTML).toContain(
       '<a href="#section-1" class="" data-testid="sidenav-link">',
@@ -83,7 +83,7 @@ describe("SectionConfig", () => {
       '<a href="#section-2" class="" data-testid="sidenav-link">',
     );
     expect(container.innerHTML).toContain(
-      '<a href="#section-3" class="" data-testid="sidenav-link">'
+      '<a href="#section-3" class="" data-testid="sidenav-link">',
     );
   });
 
@@ -106,7 +106,7 @@ describe("SectionConfig", () => {
     const { container } = render(
       <main>
         <SideNav ecrDocumentNavConfig={ecrDocumentNavConfig} />
-      </main>
+      </main>,
     );
 
     // Put Section 1 in view
@@ -118,16 +118,16 @@ describe("SectionConfig", () => {
         [
           { isIntersecting: true, target: section1Heading },
         ] as unknown as IntersectionObserverEntry[],
-        {} as IntersectionObserver
+        {} as IntersectionObserver,
       );
     });
 
     await waitFor(() => {
       expect(container.querySelector('a[href="#section-1"]')).toHaveClass(
-        "usa-current"
+        "usa-current",
       );
       expect(container.querySelector('a[href="#section-2"]')).not.toHaveClass(
-        "usa-current"
+        "usa-current",
       );
     });
 
@@ -140,16 +140,16 @@ describe("SectionConfig", () => {
         [
           { isIntersecting: true, target: section2Heading },
         ] as unknown as IntersectionObserverEntry[],
-        {} as IntersectionObserver
+        {} as IntersectionObserver,
       );
     });
 
     await waitFor(() => {
       expect(container.querySelector('a[href="#section-1"]')).not.toHaveClass(
-        "usa-current"
+        "usa-current",
       );
       expect(container.querySelector('a[href="#section-2"]')).toHaveClass(
-        "usa-current"
+        "usa-current",
       );
     });
   });
