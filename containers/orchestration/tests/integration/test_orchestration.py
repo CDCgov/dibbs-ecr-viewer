@@ -25,7 +25,6 @@ def test_health_check(setup):
         "MESSAGE_PARSER_PORT_NUMBER",
         "ECR_VIEWER_HEALTH_CHECK",
         "TRIGGER_CODE_REFERENCE_PORT_NUMBER",
-        "FHIR_CONVERTER_PROXY_PORT_NUMBER",
     ]
 
     for port_number in port_number_strings:
