@@ -30,105 +30,8 @@ export class SectionConfig {
   }
 }
 
-// TODO ANGELA: DELETE
-interface HeadingObject {
-  text: string;
-  level: string;
-  priority: number;
-}
-const headingLevels = ["h1", "h2", "h3", "h4", "h5", "h6"];
-
 const headingSelector =
   "h2:not([id^='unavailable-']):not(.side-nav-ignore), h3:not([id^='unavailable-']):not(.side-nav-ignore), h4:not([id^='unavailable-']):not(.side-nav-ignore)";
-
-// TODO ANGELA: DELETE
-/**
- * Counts the total number of `SectionConfig` objects within a given array, including those nested
- * within `subNavItems` properties.
- * @param sectionConfigs - An array of `SectionConfig` objects, each potentially containing
- *   a `subNavItems` property with further `SectionConfig` objects.
- * @returns The total count of `SectionConfig` objects within the array, including all nested
- * objects within `subNavItems`.
- */
-// export function countObjects(sectionConfigs: SectionConfig[]): number {
-//   let count = 0;
-//   sectionConfigs.forEach((config) => (count += countRecursively(config, 0)));
-
-//   return count;
-// }
-
-// TODO ANGELA: DELETE
-/**
- * Recursively counts the number of `SectionConfig` objects, including any nested objects within
- * `subNavItems`.
- * @param config - The `SectionConfig` object to be counted. This object may contain
- *   `subNavItems`, which are also `SectionConfig` objects and will be recursively counted.
- * @param count - The initial count of `SectionConfig` objects. Typically starts at 0 and
- *   increments as the function processes each item and its `subNavItems`.
- * @returns The total count of `SectionConfig` objects, including all nested `subNavItems`.
- */
-// function countRecursively(config: SectionConfig, count: number): number {
-//   count += 1;
-//   if (config.subNavItems) {
-//     config.subNavItems.forEach(
-//       (subHead) => (count += countRecursively(subHead, 0)),
-//     );
-//   }
-//   return count;
-// }
-
-// TODO ANGELA: DELETE
-/**
- * Sorts an array of `HeadingObject` instances into a structured array of `SectionConfig` objects.
- * The sorting is based on the `priority` property of each heading, arranging them into a hierarchy
- * where headings of lower priority become nested within those of higher priority. This function
- * recursively processes headings to construct a nested structure, encapsulated as `SectionConfig`
- * instances, which may contain other `SectionConfig` objects as nested sections.
- *
- * The function evaluates each heading in sequence and determines its placement in the result based
- * on its priority relative to subsequent headings. Headings with the same priority are placed at the
- * same level, while a heading with a lower priority than its predecessor is nested within the previous
- * heading's section.
- * @param headings - An array of heading objects to be sorted. Each `HeadingObject`
- *   must have a `text` property for the section title and a
- *   `priority` property that determines the heading's hierarchical level.
- * @returns An array of `SectionConfig` objects representing the structured hierarchy
- *   of headings. Each `SectionConfig` may contain nested `SectionConfig` objects
- *   if the original headings array indicated a nested structure based on priorities.
- */
-// export const sortHeadings = (headings: HeadingObject[]): SectionConfig[] => {
-//   const result: SectionConfig[] = [];
-//   let headingIndex = 0;
-//   while (headingIndex < headings.length) {
-//     const currentHeading = headings[headingIndex];
-//     const nextHeadings = headings.slice(headingIndex + 1);
-//     if (
-//       nextHeadings.length > 0 &&
-//       nextHeadings[0].priority > currentHeading.priority
-//     ) {
-//       const nestedResult = sortHeadings(nextHeadings);
-//       result.push(new SectionConfig(currentHeading.text, nestedResult));
-//       const nestedLength = countObjects(nestedResult);
-//       headingIndex += nestedLength + 1;
-//     } else if (
-//       nextHeadings.length > 0 &&
-//       nextHeadings[0].priority === currentHeading.priority
-//     ) {
-//       result.push(new SectionConfig(currentHeading.text));
-//       headingIndex++;
-//     } else if (
-//       nextHeadings.length > 0 &&
-//       nextHeadings[0].priority < currentHeading.priority
-//     ) {
-//       result.push(new SectionConfig(currentHeading.text));
-//       headingIndex += headings.length + 1;
-//     } else {
-//       result.push(new SectionConfig(currentHeading.text));
-//       headingIndex++;
-//     }
-//   }
-//   return result;
-// };
 
 /**
  * Functional component for the side navigation.
@@ -198,7 +101,6 @@ const SideNav: React.FC<{
         document.querySelector("main")?.querySelectorAll(headingSelector) ||
           []
       ) as HTMLElement[];
-      console.log(sectionConfigs);
 
       headingElements.forEach((heading) => {
         const text = heading.textContent;
