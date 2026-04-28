@@ -888,6 +888,7 @@ export const evaluateSocialData = (fhirBundle: Bundle) => {
       title: "Social Determinants of Health",
       value: evaluateSocialDeterminantsOfHealth(fhirBundle),
       fullWidthContent: true,
+      fullWidthTitle: true,
     },
   ];
 
