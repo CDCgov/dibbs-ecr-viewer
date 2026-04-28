@@ -64,7 +64,6 @@ test.describe("viewer page", () => {
     test("clicking each link scrolls and highlights", async ({ page }) => {
       const nav = page.getByRole("navigation");
       await expect(nav).toBeVisible();
-      await page.getByRole("button", { name: /expand all sections/i }).click();
 
       // use a test id here to avoid a lot of special casing around the back to
       // library link, which may or may not exist based on the config
