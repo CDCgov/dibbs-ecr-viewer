@@ -26,7 +26,7 @@ describe("AccordionItem tests", () => {
     rerender(<AccordionItem {...defaultProps} expanded={true} />);
 
     expect(
-      screen.getByRole("heading", { name: "Demographics" })
+      screen.getByRole("heading", { name: "Demographics" }),
     ).toBeInTheDocument();
   });
 
