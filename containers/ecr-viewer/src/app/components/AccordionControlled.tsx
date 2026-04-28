@@ -28,7 +28,7 @@ interface AccordionProps {
   toggleItem: (id: string) => void;
 }
 
-const AccordionItem = ({
+export const AccordionItem = ({
   title,
   id,
   content,
