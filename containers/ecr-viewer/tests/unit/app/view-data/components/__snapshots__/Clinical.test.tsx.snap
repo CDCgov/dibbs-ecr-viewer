@@ -145,14 +145,16 @@ exports[`Snapshot tests Snapshot test for Clinical Notes should match snapshot f
                     <thead>
                       <tr>
                         <th
-                          class="table-header bg-gray-5 minw-10"
+                          class="table-header bg-gray-5"
                           scope="col"
+                          style="min-width: 10rem;"
                         >
                           Active Problems
                         </th>
                         <th
-                          class="table-header bg-gray-5 minw-10"
+                          class="table-header bg-gray-5"
                           scope="col"
+                          style="min-width: 10rem;"
                         >
                           Noted Date
                         </th>

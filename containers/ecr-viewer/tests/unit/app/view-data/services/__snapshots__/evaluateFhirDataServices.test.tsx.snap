@@ -613,13 +613,6 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
         >
           <span>
             B1300 Health Literacy
-             
-            <span
-              class="usa-tag margin-left-105"
-              data-testid="tag"
-            >
-              Adequate Health Literacy
-            </span>
           </span>
           <span
             class="font-size-xs text-base"
@@ -635,6 +628,39 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
       hidden=""
       id="6043782e-cc31-f47e-c11a-4f0fcd97983f-r:id-0"
     >
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              How often do you need to have someone help you when you read instructions, pamphlets, or other written material from your doctor or pharmacy [SILS]
+            </td>
+            <td>
+              Never
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <div>
         <div
           class="grid-row"
@@ -642,17 +668,31 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           <div
             class="flex-auto padding-right-1 text-bold"
           >
-            How often do you need to have someone help you when you read instructions, pamphlets, or other written material from your doctor or pharmacy [SILS]
+            Available Social Determinant of Health Information
           </div>
           <div
             class="grid-col-auto maxw7 text-pre-line p-list"
-          >
-            Never
-          </div>
+          />
         </div>
         <div
           class="section__line_gray"
         />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Finding
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            Adequate Health Literacy
+          </div>
+        </div>
       </div>
     </div>
     <h5
@@ -670,13 +710,6 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
         >
           <span>
             Tobacco use panel
-             
-            <span
-              class="usa-tag margin-left-105"
-              data-testid="tag"
-            >
-              Unknown
-            </span>
           </span>
           <span
             class="font-size-xs text-base"
@@ -692,6 +725,105 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
       hidden=""
       id="3333c99c-14b0-43f5-e33f-033776972414-r:id-1"
     >
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Tobacco smoking status
+            </td>
+            <td>
+              Never Assessed
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Smokeless tobacco status
+            </td>
+            <td>
+              Unknown
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Passive Exposure
+            </td>
+            <td>
+              Never
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <div>
         <div
           class="grid-row"
@@ -699,13 +831,11 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           <div
             class="flex-auto padding-right-1 text-bold"
           >
-            Tobacco smoking status
+            Available Social Determinant of Health Information
           </div>
           <div
             class="grid-col-auto maxw7 text-pre-line p-list"
-          >
-            Never Assessed
-          </div>
+          />
         </div>
         <div
           class="section__line_gray"
@@ -716,38 +846,16 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           class="grid-row"
         >
           <div
-            class="flex-auto padding-right-1 text-bold"
+            class="data-title padding-right-1"
           >
-            Smokeless tobacco status
+            Finding
           </div>
           <div
-            class="grid-col-auto maxw7 text-pre-line p-list"
+            class="grid-col maxw7 text-pre-line p-list"
           >
             Unknown
           </div>
         </div>
-        <div
-          class="section__line_gray"
-        />
-      </div>
-      <div>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="flex-auto padding-right-1 text-bold"
-          >
-            Passive Exposure
-          </div>
-          <div
-            class="grid-col-auto maxw7 text-pre-line p-list"
-          >
-            Never
-          </div>
-        </div>
-        <div
-          class="section__line_gray"
-        />
       </div>
     </div>
     <h5
@@ -765,13 +873,6 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
         >
           <span>
             Overall Financial Resource Strain (CARDIA)
-             
-            <span
-              class="usa-tag margin-left-105"
-              data-testid="tag"
-            >
-              At Risk
-            </span>
           </span>
           <span
             class="font-size-xs text-base"
@@ -787,6 +888,39 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
       hidden=""
       id="08e83857-21a3-e9df-c6cc-78b769a91ff1-r:id-2"
     >
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              How hard is it for you to pay for the very basics like food, housing, medical care, and heating
+            </td>
+            <td>
+              Somewhat hard
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <div>
         <div
           class="grid-row"
@@ -794,17 +928,31 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           <div
             class="flex-auto padding-right-1 text-bold"
           >
-            How hard is it for you to pay for the very basics like food, housing, medical care, and heating
+            Available Social Determinant of Health Information
           </div>
           <div
             class="grid-col-auto maxw7 text-pre-line p-list"
-          >
-            Somewhat hard
-          </div>
+          />
         </div>
         <div
           class="section__line_gray"
         />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Finding
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            At Risk
+          </div>
+        </div>
       </div>
     </div>
     <h5
@@ -822,13 +970,6 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
         >
           <span>
             Hunger Vital Sign
-             
-            <span
-              class="usa-tag margin-left-105"
-              data-testid="tag"
-            >
-              Food Insecurity Present
-            </span>
           </span>
           <span
             class="font-size-xs text-base"
@@ -844,6 +985,72 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
       hidden=""
       id="3e459b71-e0fc-f678-a439-ea4ebf040e88-r:id-3"
     >
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              (I/We) worried whether (my/our) food would run out before (I/we) got money to buy more. 
+            </td>
+            <td>
+              Often true
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              The food that (I/we) bought just didn't last, and (I/we) didn't have money to get more.
+            </td>
+            <td>
+              Often true
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <div>
         <div
           class="grid-row"
@@ -851,13 +1058,11 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           <div
             class="flex-auto padding-right-1 text-bold"
           >
-            (I/We) worried whether (my/our) food would run out before (I/we) got money to buy more. 
+            Available Social Determinant of Health Information
           </div>
           <div
             class="grid-col-auto maxw7 text-pre-line p-list"
-          >
-            Often true
-          </div>
+          />
         </div>
         <div
           class="section__line_gray"
@@ -868,19 +1073,16 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           class="grid-row"
         >
           <div
-            class="flex-auto padding-right-1 text-bold"
+            class="data-title padding-right-1"
           >
-            The food that (I/we) bought just didn't last, and (I/we) didn't have money to get more.
+            Finding
           </div>
           <div
-            class="grid-col-auto maxw7 text-pre-line p-list"
+            class="grid-col maxw7 text-pre-line p-list"
           >
-            Often true
+            Food Insecurity Present
           </div>
         </div>
-        <div
-          class="section__line_gray"
-        />
       </div>
     </div>
     <h5
@@ -898,13 +1100,6 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
         >
           <span>
             PRAPARE - Transportation
-             
-            <span
-              class="usa-tag margin-left-105"
-              data-testid="tag"
-            >
-              Has Transportation Needs
-            </span>
           </span>
           <span
             class="font-size-xs text-base"
@@ -920,6 +1115,72 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
       hidden=""
       id="1c0861e7-d64c-6177-110b-2550659bd8e5-r:id-4"
     >
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              In the past 12 months, has lack of transportation kept you from medical appointments or from getting medications?
+            </td>
+            <td>
+              Yes
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              In the past 12 months, has lack of transportation kept you from meetings, work, or from getting things needed for daily living?
+            </td>
+            <td>
+              Yes
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <div>
         <div
           class="grid-row"
@@ -927,13 +1188,11 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           <div
             class="flex-auto padding-right-1 text-bold"
           >
-            In the past 12 months, has lack of transportation kept you from medical appointments or from getting medications?
+            Available Social Determinant of Health Information
           </div>
           <div
             class="grid-col-auto maxw7 text-pre-line p-list"
-          >
-            Yes
-          </div>
+          />
         </div>
         <div
           class="section__line_gray"
@@ -944,19 +1203,16 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           class="grid-row"
         >
           <div
-            class="flex-auto padding-right-1 text-bold"
+            class="data-title padding-right-1"
           >
-            In the past 12 months, has lack of transportation kept you from meetings, work, or from getting things needed for daily living?
+            Finding
           </div>
           <div
-            class="grid-col-auto maxw7 text-pre-line p-list"
+            class="grid-col maxw7 text-pre-line p-list"
           >
-            Yes
+            Has Transportation Needs
           </div>
         </div>
-        <div
-          class="section__line_gray"
-        />
       </div>
     </div>
     <h5
@@ -974,13 +1230,6 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
         >
           <span>
             Housing Stability Vital Sign
-             
-            <span
-              class="usa-tag margin-left-105"
-              data-testid="tag"
-            >
-              High Risk
-            </span>
           </span>
           <span
             class="font-size-xs text-base"
@@ -996,6 +1245,105 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
       hidden=""
       id="507ca0e7-4ab0-25c7-ba20-065e745180b3-r:id-5"
     >
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              In the past 12 months, was there a time when you were not able to pay the mortgage or rent on time?
+            </td>
+            <td>
+              Yes
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              In the past 12 months, how many times have you moved where you were living?
+            </td>
+            <td>
+              0
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              At any time in the past 12 months, were you homeless or living in shelter [including now]?
+            </td>
+            <td>
+              No
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <div>
         <div
           class="grid-row"
@@ -1003,13 +1351,11 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           <div
             class="flex-auto padding-right-1 text-bold"
           >
-            In the past 12 months, was there a time when you were not able to pay the mortgage or rent on time?
+            Available Social Determinant of Health Information
           </div>
           <div
             class="grid-col-auto maxw7 text-pre-line p-list"
-          >
-            Yes
-          </div>
+          />
         </div>
         <div
           class="section__line_gray"
@@ -1020,38 +1366,16 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           class="grid-row"
         >
           <div
-            class="flex-auto padding-right-1 text-bold"
+            class="data-title padding-right-1"
           >
-            In the past 12 months, how many times have you moved where you were living?
+            Finding
           </div>
           <div
-            class="grid-col-auto maxw7 text-pre-line p-list"
+            class="grid-col maxw7 text-pre-line p-list"
           >
-            0
+            High Risk
           </div>
         </div>
-        <div
-          class="section__line_gray"
-        />
-      </div>
-      <div>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="flex-auto padding-right-1 text-bold"
-          >
-            At any time in the past 12 months, were you homeless or living in shelter [including now]?
-          </div>
-          <div
-            class="grid-col-auto maxw7 text-pre-line p-list"
-          >
-            No
-          </div>
-        </div>
-        <div
-          class="section__line_gray"
-        />
       </div>
     </div>
     <h5
@@ -1069,13 +1393,6 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
         >
           <span>
             Caregiver Education and Work
-             
-            <span
-              class="usa-tag margin-left-105"
-              data-testid="tag"
-            >
-              Low Risk
-            </span>
           </span>
           <span
             class="font-size-xs text-base"
@@ -1091,6 +1408,72 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
       hidden=""
       id="38da63a4-0813-4467-1d2e-a271402e4e3e-r:id-6"
     >
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Do you have a high school degree?
+            </td>
+            <td>
+              Yes
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Do you ever need help reading hospital materials?
+            </td>
+            <td>
+              No
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <div>
         <div
           class="grid-row"
@@ -1098,13 +1481,11 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           <div
             class="flex-auto padding-right-1 text-bold"
           >
-            Do you have a high school degree?
+            Available Social Determinant of Health Information
           </div>
           <div
             class="grid-col-auto maxw7 text-pre-line p-list"
-          >
-            Yes
-          </div>
+          />
         </div>
         <div
           class="section__line_gray"
@@ -1115,19 +1496,16 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           class="grid-row"
         >
           <div
-            class="flex-auto padding-right-1 text-bold"
+            class="data-title padding-right-1"
           >
-            Do you ever need help reading hospital materials?
+            Finding
           </div>
           <div
-            class="grid-col-auto maxw7 text-pre-line p-list"
+            class="grid-col maxw7 text-pre-line p-list"
           >
-            No
+            Low Risk
           </div>
         </div>
-        <div
-          class="section__line_gray"
-        />
       </div>
     </div>
     <h5
@@ -1145,13 +1523,6 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
         >
           <span>
             Safety and Environment
-             
-            <span
-              class="usa-tag margin-left-105"
-              data-testid="tag"
-            >
-              Low Risk
-            </span>
           </span>
           <span
             class="font-size-xs text-base"
@@ -1167,6 +1538,138 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
       hidden=""
       id="bc920363-0b1b-f8cb-9977-e19de455b82c-r:id-7"
     >
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Do you worry that your child may have been physically abused?
+            </td>
+            <td>
+              No
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Do you worry that your child may have been sexually abused?
+            </td>
+            <td>
+              No
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Are there any guns kept in or around your home or where your child spends time?
+            </td>
+            <td>
+              No
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Guns Unloaded or Locked Away
+            </td>
+            <td>
+              Not on file
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <div>
         <div
           class="grid-row"
@@ -1174,13 +1677,11 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           <div
             class="flex-auto padding-right-1 text-bold"
           >
-            Do you worry that your child may have been physically abused?
+            Available Social Determinant of Health Information
           </div>
           <div
             class="grid-col-auto maxw7 text-pre-line p-list"
-          >
-            No
-          </div>
+          />
         </div>
         <div
           class="section__line_gray"
@@ -1191,57 +1692,16 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           class="grid-row"
         >
           <div
-            class="flex-auto padding-right-1 text-bold"
+            class="data-title padding-right-1"
           >
-            Do you worry that your child may have been sexually abused?
+            Finding
           </div>
           <div
-            class="grid-col-auto maxw7 text-pre-line p-list"
+            class="grid-col maxw7 text-pre-line p-list"
           >
-            No
+            Low Risk
           </div>
         </div>
-        <div
-          class="section__line_gray"
-        />
-      </div>
-      <div>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="flex-auto padding-right-1 text-bold"
-          >
-            Are there any guns kept in or around your home or where your child spends time?
-          </div>
-          <div
-            class="grid-col-auto maxw7 text-pre-line p-list"
-          >
-            No
-          </div>
-        </div>
-        <div
-          class="section__line_gray"
-        />
-      </div>
-      <div>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="flex-auto padding-right-1 text-bold"
-          >
-            Guns Unloaded or Locked Away
-          </div>
-          <div
-            class="grid-col-auto maxw7 text-pre-line p-list"
-          >
-            Not on file
-          </div>
-        </div>
-        <div
-          class="section__line_gray"
-        />
       </div>
     </div>
     <h5
@@ -1259,13 +1719,6 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
         >
           <span>
             Caregiver Health
-             
-            <span
-              class="usa-tag margin-left-105"
-              data-testid="tag"
-            >
-              Low Risk
-            </span>
           </span>
           <span
             class="font-size-xs text-base"
@@ -1281,6 +1734,105 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
       hidden=""
       id="56badf14-c5b2-f6c4-5b8c-15d77989efc4-r:id-8"
     >
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Over the past two weeks, how often have you felt little interest or pleasure in doing things?
+            </td>
+            <td>
+              Not at all
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Over the past two weeks have you been bothered by feeling down, depressed, or hopeless?
+            </td>
+            <td>
+              Not at all
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table
+        class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 caption-data-title margin-y-0"
+        data-testid="table"
+      >
+        <thead>
+          <tr>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 200px; min-width: 100px;"
+            >
+              Question
+            </th>
+            <th
+              class="table-header bg-gray-5"
+              scope="col"
+              style="width: 80px; min-width: 80px;"
+            >
+              Answer
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Does anyone in your home have a problem with alcohol, marijuana, other substances?
+            </td>
+            <td>
+              No
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <div>
         <div
           class="grid-row"
@@ -1288,13 +1840,11 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           <div
             class="flex-auto padding-right-1 text-bold"
           >
-            Over the past two weeks, how often have you felt little interest or pleasure in doing things?
+            Available Social Determinant of Health Information
           </div>
           <div
             class="grid-col-auto maxw7 text-pre-line p-list"
-          >
-            Not at all
-          </div>
+          />
         </div>
         <div
           class="section__line_gray"
@@ -1305,38 +1855,16 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
           class="grid-row"
         >
           <div
-            class="flex-auto padding-right-1 text-bold"
+            class="data-title padding-right-1"
           >
-            Over the past two weeks have you been bothered by feeling down, depressed, or hopeless?
+            Finding
           </div>
           <div
-            class="grid-col-auto maxw7 text-pre-line p-list"
+            class="grid-col maxw7 text-pre-line p-list"
           >
-            Not at all
+            Low Risk
           </div>
         </div>
-        <div
-          class="section__line_gray"
-        />
-      </div>
-      <div>
-        <div
-          class="grid-row"
-        >
-          <div
-            class="flex-auto padding-right-1 text-bold"
-          >
-            Does anyone in your home have a problem with alcohol, marijuana, other substances?
-          </div>
-          <div
-            class="grid-col-auto maxw7 text-pre-line p-list"
-          >
-            No
-          </div>
-        </div>
-        <div
-          class="section__line_gray"
-        />
       </div>
     </div>
   </div>

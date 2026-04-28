@@ -742,41 +742,63 @@ export const evaluateSocialDeterminantsOfHealth = (fhirBundle: Bundle) => {
               )
               .join("\n");
 
-            return (
-              <DataDisplay
-                key={`${domain?.id}-${i}-${j}`}
-                item={{
-                  title: question,
-                  value: answer,
-                  fullWidthTitle: true,
-                }}
-              />
-            );
+            return {
+              Question: {
+                value: question,
+              },
+              Answer: {
+                value: answer,
+              },
+            } as HtmlTableJsonRow;
           });
 
-          return questionsAndAnswers;
+          return (
+            <JsonTable
+              key={`${domain?.id}-${i}`}
+              jsonTableData={{ tables: [questionsAndAnswers] }}
+              className="caption-data-title margin-y-0"
+              outerBorder={false}
+              columnStyles={{
+                0: { width: "200px", minWidth: "100px" }, // First column (Question)
+                1: { width: "80px", minWidth: "80px" }, // Second column (Answer)
+              }}
+            />
+          );
+        });
+
+        content.push(
+          <DataDisplay
+            key={`${domain?.id}-finding-title`}
+            item={{
+              title: "Available Social Determinant of Health Information",
+              fullWidthTitle: true,
+            }}
+          />,
+        );
+
+        domain?.interpretation?.map((item, i) => {
+          const riskValue = item.text
+            ? item.text
+            : evaluateValue(item, fhirPathMappings.codingDisplay);
+
+          content.push(
+            <DataDisplay
+              key={`${domain?.id}-finding-${i}`}
+              item={{
+                title: "Finding",
+                value: riskValue,
+                dividerLine: false,
+              }}
+            />,
+          );
         });
 
         const domainTitle = evaluateValue(domain, fhirPathMappings.code);
 
-        const riskValue = domain?.interpretation
-          ?.map((i) => {
-            if (i.text) {
-              return i.text;
-            }
-            return evaluateValue(i, fhirPathMappings.codingDisplay);
-          })
-          .join(" - ");
-
         return {
           title: (
             <div className="display-flex flex-row flex-no-wrap flex-justify">
-              <span>
-                {domainTitle}{" "}
-                {riskValue && (
-                  <Tag className="margin-left-105">{riskValue}</Tag>
-                )}
-              </span>
+              <span>{domainTitle}</span>
 
               <span className="font-size-xs text-base">
                 {evaluateValue(domain, fhirPathMappings.effectiveX)}
