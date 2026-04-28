@@ -105,7 +105,7 @@ test.describe("auth", () => {
 
     // via regular auth, should be able to navigate to library
     await expect(
-      page.getByRole("link", { name: "Back to eCR Library" })
+      page.getByRole("link", { name: "Back to eCR Library" }),
     ).toBeVisible();
     await expect(page).toHaveURL(
       "http://localhost:3000/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
