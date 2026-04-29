@@ -770,7 +770,7 @@ export const evaluateSocialDeterminantsOfHealth = (fhirBundle: Bundle) => {
           <DataDisplay
             key={`${domain?.id}-finding-title`}
             item={{
-              title: "Available Social Determinant of Health Information",
+              title: "Available Social Determinants of Health Information",
               fullWidthTitle: true,
             }}
           />,
