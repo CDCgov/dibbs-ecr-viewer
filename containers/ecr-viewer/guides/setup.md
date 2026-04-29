@@ -210,3 +210,11 @@ Once initialized, your IDP handles authentication. The user with the email provi
 **Standard users**: Have limited access to eCRs based on their assigned program areas.
 
 - Can view eCRs whose reportable conditions are included in their list of assigned program areas
+
+## [Optional] FHIR Converter Proxy Setup
+
+Update the haproxy.cfg if necessary for your deployed infrastructure or use the provided sample.
+
+If using a cfg file different from the provided one you will need to create a new HA Proxy image and deploy it to your environment. Otherwise, use the provided FHIR Converter Proxy image in the same way as you use the other service images in the project.
+
+The Orchestration service uses the `FHIR_CONVERTER_URL` env var to route traffic, so set this to the FHIR Converter Proxy URL to route traffic through the proxy instead of pointing directly to the FHIR Converter service.

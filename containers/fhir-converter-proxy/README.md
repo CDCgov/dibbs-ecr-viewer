@@ -14,7 +14,11 @@ This container solves that by using **HAProxy** to track exactly how busy each c
 
 ## Setup
 
-Update the haproxy.cfg if necessary for your deployed infrastructure or use the provided sample. Spin up the HA proxy image with the cfg file and use the `FHIR_CONVERTER_URL` env var in the Orchestration service to route traffic through the proxy instead of pointing directly to the FHIR Converter service.
+Update the haproxy.cfg if necessary for your deployed infrastructure or use the provided sample.
+
+If using a cfg file different from the provided one you will need to create a new HA Proxy image and deploy it to your environment. Otherwise, use the provided FHIR Converter Proxy image in the same way as you use the other service images in this project.
+
+The Orchestration service uses the `FHIR_CONVERTER_URL` env var to route traffic, so set this to the FHIR Converter Proxy URL to route traffic through the proxy instead of pointing directly to the FHIR Converter service.
 
 ## Architecture
 
