@@ -29,7 +29,7 @@ if [ -n "$3" ]; then
         exit 1
     fi
 else
-    CONVERT_SEED_DATA=false
+    CONVERT_SEED_DATA=true
 fi
 
 # Function to check if a command exists
@@ -108,7 +108,8 @@ fi
 npm run local-docker:silent
 
 # Wait for eCR Viewer to be available
-while ! curl -s -o /dev/null -w "%{http_code}" "$URL" | grep -q "200"; do
+# 200 for OK, or 307 for redirect to sign-in page
+while ! curl -s -o /dev/null -w "%{http_code}" "$URL" | grep -qE "200|307"; do
     echo "Waiting for $URL to be available..."
     sleep 5
 done

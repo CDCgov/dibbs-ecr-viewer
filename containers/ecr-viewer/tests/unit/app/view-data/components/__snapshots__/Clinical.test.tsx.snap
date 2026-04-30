@@ -1034,6 +1034,12 @@ Result: 2 m
                           >
                             Therapeutic Response Observation
                           </th>
+                          <th
+                            class="table-header bg-gray-5 minw-15"
+                            scope="col"
+                          >
+                            Text
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1053,6 +1059,13 @@ Result: 2 m
                           </td>
                           <td>
                             Oral
+                          </td>
+                          <td>
+                            <span
+                              class="text-italic text-base"
+                            >
+                              No data
+                            </span>
                           </td>
                           <td>
                             <span
