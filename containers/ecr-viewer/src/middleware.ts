@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { withEpitraxAuth } from "./middlewares/withEpitraxAuth";
 import { withApiTokenAuth } from "./middlewares/withApiTokenAuth";
 import { withNbsAuth } from "./middlewares/withNbsAuth";
 import { withNextAuth } from "./middlewares/withNextAuth";
@@ -63,7 +64,7 @@ export const chainMiddleware = (
 // Sub-chain for auth, which early exits back to the main chain
 const authMiddleware: MiddlewareFactory = (next: ChainableMiddleware, _endFn) =>
   chainMiddleware(
-    [withNbsAuth, withApiTokenAuth, withNextAuth, withUnauthorized],
+    [withEpitraxAuth, withNbsAuth, withApiTokenAuth, withNextAuth, withUnauthorized],
     next,
   );
 
