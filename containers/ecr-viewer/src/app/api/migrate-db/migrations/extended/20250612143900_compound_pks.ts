@@ -19,21 +19,7 @@ const sqlServerAlterColumnNull = (
 };
 
 /**
- * Change the pks to be compound instead of just uuid.
- *
- * Why the schema filter was added to the SQL Server key constraint lookup:
- * `sys.key_constraints` is a server-wide view, so querying by table name alone
- * can return matching constraints from multiple schemas. SQL Server generates constraint
- * names randomly, so collisions across schemas are intermittent, the e2e tests
- * would only fail sometimes, and the migration would need to be re-run
- * repeatedly until SQL Server happened to generate unique names.
- *
- * This migration is updated in place (instead of creating a new one) since 
- * Kysely records which migration files have already been applied by filename
- * and environments that already ran it have the correct state and will not re-run
- * it. The change only affects new environments or test runs initialized from
- * scratch.
- *
+ * Change the pks to be compound instead of just uuid
  * @param db - the database connection
  */
 export async function up(db: Kysely<AnyDb>): Promise<void> {
@@ -54,7 +40,6 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
         .select("name")
         .where("type", "=", "PK")
         .where(sql`OBJECT_NAME(parent_object_id)`, "=", table)
-        .where(sql`OBJECT_SCHEMA_NAME(parent_object_id)`, "=", dbNamespace())
         .executeTakeFirstOrThrow();
       pkey_name = name;
 
