@@ -3,10 +3,10 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { Bundle } from "fhir/r4";
 
-import BundleWithClinicalInfo from "../../../../../../../test-data/fhir/BundleClinicalInfo.json";
+import _BundleWithClinicalInfo from "../../../../../../../test-data/fhir/BundleClinicalInfo.json";
 import _BundleEcrSummary from "../../../../../../../test-data/fhir/BundleEcrSummary.json";
 import _BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
-import BundlePatient from "../../../../../../../test-data/fhir/BundlePatient.json";
+import _BundlePatient from "../../../../../../../test-data/fhir/BundlePatient.json";
 import _BundleRRConditionValueString from "../../../../../../../test-data/fhir/BundleRRConditionValueString.json";
 import {
   evaluateEcrSummaryConditionSummary,
@@ -31,11 +31,18 @@ const fhirIndexBundleRRConditionValueString = getFhirIndex(
   BundleRRConditionValueString,
 );
 
+const BundlePatient = _BundlePatient as unknown as Bundle;
+const fhirIndexBundlePatient = getFhirIndex(BundlePatient);
+
+const BundleWithClinicalInfo = _BundleWithClinicalInfo as unknown as Bundle;
+const fhirIndexBundleWithClinicalInfo = getFhirIndex(BundleWithClinicalInfo);
+
 describe("ecrSummaryService Tests", () => {
   describe("Evaluate eCR Summary Relevant Clinical Details", () => {
     it("should return an empty list when no SNOMED code is provided", () => {
       const actual = evaluateEcrSummaryRelevantClinicalDetails(
-        BundleWithClinicalInfo as unknown as Bundle,
+        BundleWithClinicalInfo,
+        fhirIndexBundleWithClinicalInfo,
         "",
       );
 
@@ -44,7 +51,8 @@ describe("ecrSummaryService Tests", () => {
 
     it("should return an empty list when the provided SNOMED code has no matches", () => {
       const actual = evaluateEcrSummaryRelevantClinicalDetails(
-        BundleWithClinicalInfo as unknown as Bundle,
+        BundleWithClinicalInfo,
+        fhirIndexBundleWithClinicalInfo,
         "invalid-snomed-code",
       );
 
@@ -53,7 +61,8 @@ describe("ecrSummaryService Tests", () => {
 
     it("should return the correct active problem when the provided SNOMED code matches", () => {
       const result = evaluateEcrSummaryRelevantClinicalDetails(
-        BundleWithClinicalInfo as unknown as Bundle,
+        BundleWithClinicalInfo,
+        fhirIndexBundleWithClinicalInfo,
         "263133002",
       );
       expect(result).toHaveLength(1);
@@ -294,7 +303,8 @@ describe("ecrSummaryService Tests", () => {
   describe("Evaluate eCR Summary Patient Details", () => {
     it("should get all relevant patient details", () => {
       const actual = evaluateEcrSummaryPatientDetails(
-        BundlePatient as unknown as Bundle,
+        BundlePatient,
+        fhirIndexBundlePatient,
       );
 
       expect(actual.unavailableData).toBeEmpty();
@@ -302,7 +312,8 @@ describe("ecrSummaryService Tests", () => {
 
     it("should not show parent/guardian info if adult", () => {
       const actual = evaluateEcrSummaryPatientDetails(
-        BundlePatient as unknown as Bundle,
+        BundlePatient,
+        fhirIndexBundlePatient,
       );
 
       const guardian = actual.availableData.find(
@@ -320,16 +331,15 @@ describe("ecrSummaryService Tests", () => {
           {
             fullUrl: "urn:uuid:99999999-4p89-4b96-b6ab-c46406839cea",
             resource: {
-              ...BundlePatient.entry.at(0)?.resource,
+              ...BundlePatient.entry!.at(0)?.resource,
               birthDate: "2025-01-01",
             },
           },
-          ...BundlePatient.entry.slice(1),
+          ...BundlePatient.entry!.slice(1),
         ],
-      };
-      const actual = evaluateEcrSummaryPatientDetails(
-        bundle as unknown as Bundle,
-      );
+      } as unknown as Bundle;
+      const fhirIndexBundle = getFhirIndex(bundle);
+      const actual = evaluateEcrSummaryPatientDetails(bundle, fhirIndexBundle);
 
       const guardian = actual.availableData.find(
         (d) => d.title === "Parent/Guardian",
