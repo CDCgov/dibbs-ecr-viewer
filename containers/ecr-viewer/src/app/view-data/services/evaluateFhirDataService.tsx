@@ -719,79 +719,87 @@ export const evaluateSocialDeterminantsOfHealth = (fhirBundle: Bundle) => {
           fhirPathMappings.observationDerivedFrom,
         );
 
-        const content = questionnaireResponsesRefs.map((ref, i) => {
-          const questionnaireResponse =
-            evaluateReference<QuestionnaireResponse>(fhirBundle, ref);
+        const domainQuestionsAndAnswers = questionnaireResponsesRefs.map(
+          (ref) => {
+            const questionnaireResponse =
+              evaluateReference<QuestionnaireResponse>(fhirBundle, ref);
 
-          const items = evaluateAll(
-            questionnaireResponse,
-            fhirPathMappings.questionnaireItem,
-          );
+            const items = evaluateAll(
+              questionnaireResponse,
+              fhirPathMappings.questionnaireItem,
+            );
 
-          const questionsAndAnswers = items.map((item, j) => {
-            const question = item.text;
+            const questionsAndAnswers = items.map((item, j) => {
+              const question = item.text;
 
-            const answers = item.answer || [];
-            const answer = answers
-              .map((a) =>
-                evaluateValue(
-                  a,
-                  fhirPathMappings.valueX,
-                  "QuestionnaireResponse.item.answer",
-                ),
-              )
-              .join("\n");
+              const answers = item.answer || [];
+              const answer = answers
+                .map((a) =>
+                  evaluateValue(
+                    a,
+                    fhirPathMappings.valueX,
+                    "QuestionnaireResponse.item.answer",
+                  ),
+                )
+                .join("\n");
 
-            return {
-              Question: {
-                value: question,
-              },
-              Answer: {
-                value: answer,
-              },
-            } as HtmlTableJsonRow;
-          });
+              return {
+                Question: {
+                  value: question,
+                },
+                Answer: {
+                  value: answer,
+                },
+              } as HtmlTableJsonRow;
+            });
 
-          return (
-            <JsonTable
-              key={`${domain?.id}-${i}`}
-              jsonTableData={{ tables: [questionsAndAnswers] }}
-              className="caption-data-title margin-y-0"
-              outerBorder={false}
-              columnStyles={{
-                0: { width: "200px", minWidth: "100px" }, // First column (Question)
-                1: { width: "80px", minWidth: "80px" }, // Second column (Answer)
-              }}
-            />
-          );
-        });
-
-        content.push(
-          <DataDisplay
-            key={`${domain?.id}-finding-title`}
-            item={{
-              title: "Available Social Determinants of Health Information",
-              fullWidthTitle: true,
-            }}
-          />,
+            return questionsAndAnswers;
+          },
         );
 
-        domain?.interpretation?.map((item, i) => {
+        const content = [
+          <JsonTable
+            key={`${domain?.id}-questions-and-answers`}
+            jsonTableData={{ tables: domainQuestionsAndAnswers }}
+            className="caption-data-title margin-y-0"
+            outerBorder={false}
+            columnStyles={{
+              0: { width: "200px", minWidth: "100px" }, // First column (Question)
+              1: { width: "80px", minWidth: "80px" }, // Second column (Answer)
+            }}
+          />,
+        ];
+
+        const h6ClassName =
+          "bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205";
+        content.push(
+          <h6
+            key={`${domain?.id}-finding-title`}
+            // inline styling to overwrite usa-prose nested style
+            style={{ marginTop: "-1rem", fontWeight: "bold" }}
+            className={h6ClassName}
+          >
+            Available Social Determinants of Health Information
+          </h6>,
+        );
+
+        const findings = domain?.interpretation?.map((item, i) => {
           const riskValue = item.text
             ? item.text
             : evaluateValue(item, fhirPathMappings.codingDisplay);
 
-          content.push(
-            <DataDisplay
-              key={`${domain?.id}-finding-${i}`}
-              item={{
-                title: "Finding",
-                value: riskValue,
-                dividerLine: false,
-              }}
-            />,
-          );
+          return {
+            title: "Finding",
+            value: riskValue,
+          } as DisplayDataProps;
         });
+
+        content.push(
+          <DataDisplayList
+            key={`${domain?.id}-findings`}
+            items={findings ?? []}
+          />,
+        );
 
         const domainTitle = evaluateValue(domain, fhirPathMappings.code);
 
