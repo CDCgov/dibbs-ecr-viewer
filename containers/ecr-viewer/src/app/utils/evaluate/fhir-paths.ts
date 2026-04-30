@@ -195,58 +195,58 @@ export interface FhirPath<K> {
 // Make sure the "type" here matches the type-land type described in `PathTypes`
 // "name" field is added programmatically below
 const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
+  // Demographics
   patientNameList: {
     type: "HumanName",
-    path: "entry.resource.Patient.name",
+    path: "Patient.name",
   },
   patientAddressList: {
     type: "Address",
-    path: "entry.resource.Patient.address",
+    path: "Patient.address",
   },
   patientTelecom: {
     type: "ContactPoint",
-    path: "entry.resource.Patient.telecom",
+    path: "Patient.telecom",
   },
-
   patientIds: {
     type: "string",
-    path: "entry.resource.Patient.identifier.where(system != 'urn:ietf:rfc:3986').value.join('\n')",
+    path: "Patient.identifier.where(system != 'urn:ietf:rfc:3986').value.join('\n')",
   },
   patientDOB: {
     type: "string",
-    path: "entry.resource.Patient.birthDate",
+    path: "Patient.birthDate",
   },
   patientVitalStatus: {
     type: "boolean",
-    path: "entry.resource.Patient.deceasedBoolean",
+    path: "Patient.deceasedBoolean",
   },
   patientDOD: {
     type: "string",
-    path: "entry.resource.Patient.deceasedDate",
+    path: "Patient.deceasedDate",
   },
   patientGender: {
     type: "string",
-    path: "entry.resource.Patient.gender",
+    path: "Patient.gender",
   },
   patientRace: {
     type: "ValueX",
-    path: "entry.resource.Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension('ombCategory').value",
+    path: "Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension('ombCategory').value",
   },
   patientRaceDetailed: {
     type: "ValueX",
-    path: "entry.resource.Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension('detailed').value",
+    path: "Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension('detailed').value",
   },
   patientEthnicity: {
     type: "ValueX",
-    path: "entry.resource.Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension('ombCategory').value",
+    path: "Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension('ombCategory').value",
   },
   patientEthnicityDetailed: {
     type: "ValueX",
-    path: "entry.resource.Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension('detailed').value",
+    path: "Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension('detailed').value",
   },
   patientCommunication: {
     type: "PatientCommunication",
-    path: "entry.resource.Patient.communication",
+    path: "Patient.communication",
   },
   patientProficiencyExtension: {
     type: "Extension",
@@ -254,11 +254,11 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientTribalAffiliation: {
     type: "ValueX",
-    path: "entry.resource.Patient.extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-tribal-affiliation-extension').extension('TribeName').value",
+    path: "Patient.extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-tribal-affiliation-extension').extension('TribeName').value",
   },
   patientEmergencyContact: {
     type: "PatientContact",
-    path: "entry.resource.Patient.contact",
+    path: "Patient.contact",
   },
   patientGuardian: {
     type: "RelatedPerson",
@@ -309,15 +309,15 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientGenderIdentity: {
     type: "ValueX",
-    path: "entry.resource.Patient.extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-genderidentity-extension').value",
+    path: "Patient.extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-genderidentity-extension').value",
   },
   patientReligion: {
     type: "ValueX",
-    path: "entry.resource.Patient.extension('http://hl7.org/fhir/StructureDefinition/patient-religion').value",
+    path: "Patient.extension('http://hl7.org/fhir/StructureDefinition/patient-religion').value",
   },
   patientMaritalStatus: {
     type: "ValueX",
-    path: "entry.resource.Patient.maritalStatus",
+    path: "Patient.maritalStatus",
   },
   patientNationality: {
     type: "ValueX",

@@ -11,9 +11,16 @@ import {
   evaluateNotes,
   returnProceduresTable,
 } from "@/app/view-data/components/EcrDocument/clinical-data";
+import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
-const fhirBundleClinicalInfo = require("../../../../../../../test-data/fhir/BundleClinicalInfo.json");
-const testClinicalData = evaluateClinicalData(fhirBundleClinicalInfo);
+const BundleClinicalInfo =
+  require("../../../../../../../test-data/fhir/BundleClinicalInfo.json") as unknown as Bundle;
+const fhirIndexBundleClinicalInfo = getFhirIndex(BundleClinicalInfo);
+
+const testClinicalData = evaluateClinicalData(
+  BundleClinicalInfo,
+  fhirIndexBundleClinicalInfo,
+);
 
 const testImmunizationsData =
   testClinicalData.immunizationsDetails.availableData;
