@@ -663,7 +663,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
       </table>
       <h6
         class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
-        style="margin-top: -1rem; font-weight: bold;"
+        style="margin-top: -1rem; font-weight: bold; border-bottom: 1px solid black;"
       >
         Available Social Determinants of Health Information
       </h6>
@@ -765,7 +765,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
       </table>
       <h6
         class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
-        style="margin-top: -1rem; font-weight: bold;"
+        style="margin-top: -1rem; font-weight: bold; border-bottom: 1px solid black;"
       >
         Available Social Determinants of Health Information
       </h6>
@@ -851,7 +851,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
       </table>
       <h6
         class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
-        style="margin-top: -1rem; font-weight: bold;"
+        style="margin-top: -1rem; font-weight: bold; border-bottom: 1px solid black;"
       >
         Available Social Determinants of Health Information
       </h6>
@@ -945,7 +945,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
       </table>
       <h6
         class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
-        style="margin-top: -1rem; font-weight: bold;"
+        style="margin-top: -1rem; font-weight: bold; border-bottom: 1px solid black;"
       >
         Available Social Determinants of Health Information
       </h6>
@@ -1039,7 +1039,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
       </table>
       <h6
         class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
-        style="margin-top: -1rem; font-weight: bold;"
+        style="margin-top: -1rem; font-weight: bold; border-bottom: 1px solid black;"
       >
         Available Social Determinants of Health Information
       </h6>
@@ -1141,7 +1141,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
       </table>
       <h6
         class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
-        style="margin-top: -1rem; font-weight: bold;"
+        style="margin-top: -1rem; font-weight: bold; border-bottom: 1px solid black;"
       >
         Available Social Determinants of Health Information
       </h6>
@@ -1235,7 +1235,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
       </table>
       <h6
         class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
-        style="margin-top: -1rem; font-weight: bold;"
+        style="margin-top: -1rem; font-weight: bold; border-bottom: 1px solid black;"
       >
         Available Social Determinants of Health Information
       </h6>
@@ -1345,7 +1345,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
       </table>
       <h6
         class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
-        style="margin-top: -1rem; font-weight: bold;"
+        style="margin-top: -1rem; font-weight: bold; border-bottom: 1px solid black;"
       >
         Available Social Determinants of Health Information
       </h6>
@@ -1447,7 +1447,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Provider Details
       </table>
       <h6
         class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
-        style="margin-top: -1rem; font-weight: bold;"
+        style="margin-top: -1rem; font-weight: bold; border-bottom: 1px solid black;"
       >
         Available Social Determinants of Health Information
       </h6>

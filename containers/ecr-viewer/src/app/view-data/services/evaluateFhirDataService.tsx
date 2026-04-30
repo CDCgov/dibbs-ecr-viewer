@@ -786,7 +786,11 @@ export const evaluateSocialDeterminantsOfHealth = (fhirBundle: Bundle) => {
           <h6
             key={`${domain?.id}-finding-title`}
             // inline styling to overwrite usa-prose nested style
-            style={{ marginTop: "-1rem", fontWeight: "bold" }}
+            style={{
+              marginTop: "-1rem",
+              fontWeight: "bold",
+              borderBottom: "1px solid black",
+            }}
             className={h6ClassName}
           >
             Available Social Determinants of Health Information
