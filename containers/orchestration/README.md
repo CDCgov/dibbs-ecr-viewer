@@ -111,7 +111,7 @@ For more information on the endpoint go to the documentation [here](https://cdcg
 graph TD
     subgraph Main Services
         A[Orchestration Service]
-        A --> B[FHIR Converter Proxy Service]
+        A --> B["(Optional) FHIR Converter Proxy Service"]
         B --> H[FHIR Converter Service]
         A --> C[Ingestion Service]
         A --> D[Trigger Code Reference Service]
