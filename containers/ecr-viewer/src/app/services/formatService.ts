@@ -367,7 +367,12 @@ const UNIT_MAP = new Map([
 export const formatQuantity = (
   data: Quantity | undefined,
 ): string | undefined => {
-  if (!data || !data.value) return;
+  if (!data) return;
+
+  if (!data.value && data.value !== 0) {
+    return;
+  }
+
   let unit = data.unit || "";
   unit = UNIT_MAP.get(unit) || unit;
   const firstLetterRegex = /^[a-zA-Z0-9]/i;

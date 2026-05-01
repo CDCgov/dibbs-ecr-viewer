@@ -75,6 +75,7 @@ import {
   evaluateExposureDetails,
   evaluateTravelHistoryTable,
   returnDisabilityStatusTable,
+  evaluateSocialDeterminantsOfHealth,
 } from "./socialHistoryService";
 import {
   FhirIndex,
@@ -774,7 +775,14 @@ export const evaluateSocialData = (
       value: returnDisabilityStatusTable(fhirBundle),
       fullWidthContent: true,
     },
+    {
+      title: "Social Determinants of Health",
+      value: evaluateSocialDeterminantsOfHealth(fhirBundle),
+      fullWidthContent: true,
+      fullWidthTitle: true,
+    },
   ];
+
   return evaluateData(socialData);
 };
 

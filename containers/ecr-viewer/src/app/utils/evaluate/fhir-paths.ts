@@ -21,6 +21,7 @@ import {
   Period,
   Procedure,
   Quantity,
+  QuestionnaireResponseItem,
   Reference,
   RelatedPerson,
 } from "fhir/r4";
@@ -80,6 +81,8 @@ export type PathTypes = {
   patientNationality: ValueX;
   patientCountryResidence: ValueX;
   patientDisabilityStatus: Observation;
+  historyOfSocialFunction: Observation;
+  questionnaireItem: QuestionnaireResponseItem;
   eicrIdentifier: string;
   eicrReleaseVersion: ValueX;
   eicrCustodianRef: string;
@@ -160,13 +163,14 @@ export type PathTypes = {
   observationDeviceReference: Reference;
   observationOrganismMethod: ValueX;
   observationResultStatus: string;
+  observationDerivedFrom: Reference;
   labReportInterpretation: ValueX;
   observationInterpretation: Coding;
   organizationType: ValueX;
   patientTravelHistory: Observation;
   travelHistoryLocation: string;
   travelHistoryPurpose: ValueX;
-  travelHistoryMember: Reference;
+  hasMember: Reference;
   exposureObservations: Observation;
   exposureAgent: ValueX;
   exposureAddress: ValueX;
@@ -180,6 +184,7 @@ export type PathTypes = {
   name: string;
   noteText: string;
   dosage: Dosage;
+  codingDisplay: string;
   valueX: ValueX;
   occurrenceX: TimeX;
 };
@@ -330,6 +335,14 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   patientDisabilityStatus: {
     type: "Observation",
     path: "entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-disability-status')",
+  },
+  historyOfSocialFunction: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8689-2'))",
+  },
+  questionnaireItem: {
+    type: "QuestionnaireResponseItem",
+    path: "item",
   },
 
   // Pregnancy Data
@@ -705,10 +718,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "ValueX",
     path: "component.where(code.coding.code = '280147009').value",
   },
-  travelHistoryMember: {
-    type: "Reference",
-    path: "hasMember",
-  },
 
   // Exposure Details
   exposureObservations: {
@@ -765,6 +774,18 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   dosage: {
     type: "Dosage",
     path: "dosage",
+  },
+  hasMember: {
+    type: "Reference",
+    path: "hasMember",
+  },
+  observationDerivedFrom: {
+    type: "Reference",
+    path: "derivedFrom",
+  },
+  codingDisplay: {
+    type: "string",
+    path: "coding.display",
   },
 
   /**
