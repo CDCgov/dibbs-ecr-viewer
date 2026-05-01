@@ -224,14 +224,24 @@ test.describe("ecr library page", () => {
 
   test.describe("eCR grouping", () => {
     test("expanding group", async ({ page }) => {
-      await expect(
-        page.getByRole("button", { name: "View Related eCRs" }),
-      ).toBeVisible();
-      await page.getByRole("button", { name: "View Related eCRs" }).click();
+      // Find the button for Mon Mothma
+      const patientCell = page
+        .locator(".patient-name-cell")
+        .filter({ hasText: "Mon Mothma" });
+
+      // Find the button within that patient cell
+      const expandButton = patientCell.getByRole("button", {
+        name: "View Related eCRs",
+      });
+
+      await expect(expandButton).toBeVisible();
+      await expandButton.click();
       await expect(page.getByRole("row", { level: 2 })).toHaveCount(2);
 
       // collapse it back down
-      await page.getByRole("button", { name: "Hide Related eCRs" }).click();
+      await patientCell
+        .getByRole("button", { name: "Hide Related eCRs" })
+        .click();
       await expect(page.getByRole("row", { level: 2 })).toHaveCount(0);
     });
   });

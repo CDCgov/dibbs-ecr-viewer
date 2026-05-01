@@ -684,6 +684,10 @@ describe("FormatService tests", () => {
       expect(formatQuantity({})).toBeUndefined();
     });
 
+    it("should handle zero data with a unit", () => {
+      expect(formatQuantity({ value: 0, unit: "mmol/L" })).toBe("0 mmol/L");
+    });
+
     it("should handle missing unit", () => {
       expect(formatQuantity({ value: 1.234 })).toBe("1.234");
     });
