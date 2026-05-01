@@ -19,7 +19,6 @@ import * as _BundlePatientWithCovid from "@/../../../test-data/fhir/BundlePatien
 import BundlePractitionerRole from "@/../../../test-data/fhir/BundlePractitionerRole.json";
 import * as _BundleWithSexualOrientation from "@/../../../test-data/fhir/BundleSexualOrientation.json";
 import * as _BundleWithTravelHistory from "@/../../../test-data/fhir/BundleTravelHistory.json";
-import BundleWithSDOH from "@/../../../test-data/fhir/BundleSDOH.json";
 import { formatAge } from "@/app/services/formatService";
 import { evaluateValue } from "@/app/utils/evaluate";
 import mappings from "@/app/utils/evaluate/fhir-paths";
@@ -48,7 +47,6 @@ import {
   evaluateEncounterDiagnosis,
   evaluateFacilityData,
   getPatient,
-  evaluateSocialDeterminantsOfHealth,
 } from "@/app/view-data/services/evaluateFhirDataService";
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
@@ -2213,23 +2211,6 @@ Home: 123-456-6909`,
         expect(actual.organization).toBeUndefined();
 
         expect(actual.practitioner).toBeUndefined();
-      });
-    });
-
-    describe("Social Determinants of Health", () => {
-      it("should display sdoh data ", () => {
-        const { container } = render(
-          evaluateSocialDeterminantsOfHealth(
-            BundleWithSDOH as unknown as Bundle,
-          ),
-        );
-        expect(container).toMatchSnapshot();
-      });
-
-      it("should display nothing when no SDOH is available", () => {
-        expect(
-          evaluateSocialDeterminantsOfHealth({} as Bundle),
-        ).toBeUndefined();
       });
     });
   });
