@@ -17,6 +17,8 @@ interface JsonTableProps {
   captionIsTitle?: boolean;
   outerBorder?: boolean;
   className?: string;
+  fixed?: boolean;
+  columnStyles?: Record<number, React.CSSProperties>;
 }
 /**
  * Returns a table built from a JSON representation of the XHTML in the FHIR data.
@@ -34,10 +36,12 @@ export const JsonTable = ({
   captionIsTitle = false,
   outerBorder = true,
   className = "",
+  fixed = false,
+  columnStyles,
 }: JsonTableProps): JSX.Element | null => {
   const { resultName, tables } = jsonTableData;
   const flattenedTable = tables?.flat() ?? [];
-  const columns = useConstructColumns(flattenedTable);
+  const columns = useConstructColumns(flattenedTable, columnStyles);
 
   if (!columns) {
     return null;
@@ -58,7 +62,7 @@ export const JsonTable = ({
       columns={columns}
       caption={caption}
       className={classNames("caption-normal-weight margin-bottom-2", className)}
-      fixed={false}
+      fixed={fixed}
       outerBorder={outerBorder}
     >
       {flattenedTable.map((row, i) => (
@@ -74,11 +78,14 @@ export const JsonTable = ({
 
 function useConstructColumns(
   flattenedTable: HtmlTableJsonRow[],
+  columnStyles?: Record<number, React.CSSProperties>,
 ): ColumnInfoInput[] | null {
   if (flattenedTable.length > 0) {
-    return Object.keys(flattenedTable[0]).map((columnName) => ({
+    return Object.keys(flattenedTable[0]).map((columnName, index) => ({
       columnName,
-      className: "bg-gray-5 minw-10",
+      className: "bg-gray-5",
+      // Assign style if it exists for this index
+      style: columnStyles?.[index] ?? { minWidth: "10rem" },
     }));
   }
 

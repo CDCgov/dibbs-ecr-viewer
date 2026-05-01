@@ -2,6 +2,7 @@ import { Bundle, Composition, Observation, Patient } from "fhir/r4";
 import {
   FhirIndex,
   getFhirIndex,
+  getOneResourceByType,
   getResourceById,
   getResourcesByType,
 } from "@/app/view-data/services/fhirResourcesIndexService";
@@ -121,6 +122,27 @@ describe("fhirResourcesIndexService Tests", () => {
       };
       const actual = getResourcesByType<Patient>(fhirIndexEmpty, "Patient");
       expect(actual).toEqual([]);
+    });
+  });
+  describe("getOneResourceByType Tests", () => {
+    it("Returns a single resource of a specified type", () => {
+      const actual = getOneResourceByType<Composition>(
+        fhirIndexBundleSample,
+        "Composition",
+      );
+      expect(actual).toEqual(resource1.resource);
+    });
+    it("Returns undefined when no resources exist of specified type", () => {
+      const actual = getOneResourceByType<Patient>(
+        fhirIndexBundleSample,
+        "Patient",
+      );
+      expect(actual).toEqual(undefined);
+    });
+    it("Errors when there is more than one resource of a specific type", () => {
+      expect(() =>
+        getOneResourceByType<Observation>(fhirIndexBundleSample, "Observation"),
+      ).toThrow(Error);
     });
   });
   describe("getResourceById Tests", () => {

@@ -40,13 +40,13 @@ export const getEcrDocumentAccordionItems = (
   fhirBundle: Bundle,
   fhirIndex: FhirIndex,
 ): AccordionItem[] => {
-  const demographicsData = evaluateDemographicsData(fhirBundle);
-  const socialData = evaluateSocialData(fhirBundle);
+  const demographicsData = evaluateDemographicsData(fhirBundle, fhirIndex);
+  const socialData = evaluateSocialData(fhirBundle, fhirIndex);
   const pregnancyData = evaluatePregnancyData(fhirBundle);
   const hospitalEncounterData = evaluateHospitalEncounterData(fhirBundle);
   const encounterData = evaluateEncounterData(fhirBundle);
   const providerData = evaluateProviderData(fhirBundle);
-  const clinicalData = evaluateClinicalData(fhirBundle);
+  const clinicalData = evaluateClinicalData(fhirBundle, fhirIndex);
   const ecrMetadata = evaluateEcrMetadata(fhirBundle);
   const facilityData = evaluateFacilityData(fhirBundle);
   const diagnosticReports = getResourcesByType<DiagnosticReport>(

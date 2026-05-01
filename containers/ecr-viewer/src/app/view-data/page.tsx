@@ -14,6 +14,7 @@ import SideNav from "./components/SideNav";
 import {
   evaluatePatientDOB,
   evaluatePatientName,
+  getPatient,
 } from "./services/evaluateFhirDataService";
 import { getFhirData, isSuccessResponse } from "./services/fhirDataService";
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
@@ -63,8 +64,10 @@ const ECRViewerPage = async ({
 
   const fhirBundle = resp.payload.fhirBundle;
   const fhirIndex = getFhirIndex(fhirBundle);
-  const patientName = evaluatePatientName(fhirBundle, true);
-  const patientDOB = evaluatePatientDOB(fhirBundle);
+
+  const patient = getPatient(fhirIndex);
+  const patientName = evaluatePatientName(patient, true);
+  const patientDOB = evaluatePatientDOB(patient);
 
   const accordionItems = getEcrDocumentAccordionItems(fhirBundle, fhirIndex);
   return (
@@ -81,7 +84,8 @@ const ECRViewerPage = async ({
         </div>
         <EcrSummary
           patientDetails={
-            evaluateEcrSummaryPatientDetails(fhirBundle).availableData
+            evaluateEcrSummaryPatientDetails(fhirBundle, fhirIndex)
+              .availableData
           }
           encounterDetails={
             evaluateEcrSummaryEncounterDetails(fhirBundle).availableData
