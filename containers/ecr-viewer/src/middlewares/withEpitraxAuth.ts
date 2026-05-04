@@ -30,11 +30,11 @@ export const withEpitraxAuth: MiddlewareFactory = (
   end: ChainableMiddleware,
 ) => {
   return async function (request: NextRequest) {
+    if (!process.env.EPITRAX_PUB_KEY) return next(request);
+
     // Move ?auth= to a cookie and redirect so it never sits in the URL bar
     const cookieResp = setAuthCookie(request);
     if (cookieResp) return cookieResp;
-
-    if (!process.env.EPITRAX_PUB_KEY) return next(request);
 
     // Epitrax auth only applies to the view-data page
     if (!request.nextUrl.pathname.endsWith("/view-data")) return next(request);

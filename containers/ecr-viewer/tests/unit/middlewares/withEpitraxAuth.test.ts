@@ -82,6 +82,18 @@ describe("EpiTrax Auth Middleware", () => {
       expect(resp.status).toBe(307);
     });
 
+    it("should not consume ?auth= when EPITRAX_PUB_KEY is not set, leaving it for other middleware", async () => {
+      delete process.env.EPITRAX_PUB_KEY;
+      const req = new NextRequest(
+        "https://www.example.com/ecr-viewer/view-data?id=1234&auth=nbs-token",
+      );
+
+      const resp = await middleware(req);
+      expect(resp.cookies.get("epitrax-auth-token")).toBeUndefined();
+      // Should not redirect (no location header set by EpiTrax middleware)
+      expect(resp.headers.get("location")).not.toContain("epitrax");
+    });
+
     it("should pass through when not on the view-data page", async () => {
       const req = new NextRequest("https://www.example.com/ecr-viewer/");
       req.cookies.set("epitrax-auth-token", "mytoken");
