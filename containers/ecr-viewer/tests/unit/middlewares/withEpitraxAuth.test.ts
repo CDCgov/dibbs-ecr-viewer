@@ -83,9 +83,7 @@ describe("EpiTrax Auth Middleware", () => {
     });
 
     it("should pass through when not on the view-data page", async () => {
-      const req = new NextRequest(
-        "https://www.example.com/ecr-viewer/",
-      );
+      const req = new NextRequest("https://www.example.com/ecr-viewer/");
       req.cookies.set("epitrax-auth-token", "mytoken");
 
       const resp = await middleware(req);

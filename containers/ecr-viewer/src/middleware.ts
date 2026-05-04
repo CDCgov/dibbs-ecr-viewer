@@ -64,7 +64,13 @@ export const chainMiddleware = (
 // Sub-chain for auth, which early exits back to the main chain
 const authMiddleware: MiddlewareFactory = (next: ChainableMiddleware, _endFn) =>
   chainMiddleware(
-    [withEpitraxAuth, withNbsAuth, withApiTokenAuth, withNextAuth, withUnauthorized],
+    [
+      withEpitraxAuth,
+      withNbsAuth,
+      withApiTokenAuth,
+      withNextAuth,
+      withUnauthorized,
+    ],
     next,
   );
 
