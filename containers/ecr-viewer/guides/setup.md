@@ -213,8 +213,4 @@ Once initialized, your IDP handles authentication. The user with the email provi
 
 ## [Optional] FHIR Converter Proxy Setup
 
-Update the haproxy.cfg if necessary for your deployed infrastructure or use the provided sample.
-
-If using a cfg file different from the provided one you will need to create a new HA Proxy image and deploy it to your environment. Otherwise, use the provided FHIR Converter Proxy image in the same way as you use the other service images in the project.
-
-The Orchestration service uses the `FHIR_CONVERTER_URL` env var to route traffic, so set this to the FHIR Converter Proxy URL to route traffic through the proxy instead of pointing directly to the FHIR Converter service.
+To setup or customize the FHIR Converter Proxy please follow the [setup instructions here](https://github.com/CDCgov/dibbs-ecr-viewer/blob/main/containers/fhir-converter-proxy/README.md).
