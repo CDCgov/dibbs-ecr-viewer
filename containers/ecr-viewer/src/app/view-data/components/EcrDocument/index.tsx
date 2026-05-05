@@ -18,15 +18,7 @@ export const EcrDocument = ({
 }: {
   initialAccordionItems: AccordionItem[];
 }) => {
-  // TODO ANGELA: Remove logging
-  const [accordionItems, setAccordionItems] = useState(() => {
-    console.time("EcrDocument_render");
-    return initialAccordionItems;
-  });
-  React.useEffect(() => {
-    console.timeEnd("EcrDocument_render");
-  }, []);
-
+  const [accordionItems, setAccordionItems] = useState(initialAccordionItems);
   const handleToggle = (id: string) => {
     const nextItems = accordionItems.map((item) => {
       if (item.id === id) {

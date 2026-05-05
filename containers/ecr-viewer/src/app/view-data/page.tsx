@@ -71,13 +71,10 @@ const ECRViewerPage = async ({
   const patientName = evaluatePatientName(patient, true);
   const patientDOB = evaluatePatientDOB(patient);
 
-  // TODO ANGELA: Remove logging
-  console.time("getAccordionItems");
   const { ecrDocumentNavConfig, accordionItems } = getEcrDocumentAccordionItems(
     fhirBundle,
     fhirIndex,
   );
-  console.timeEnd("getAccordionItems");
 
   return (
     <ECRViewerLayout patientName={patientName} patientDOB={patientDOB}>

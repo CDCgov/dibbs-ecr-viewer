@@ -42,13 +42,11 @@ export const AccordionItem = ({
   // Only render content if expanded OR if it's been expanded before
   const [hasBeenExpanded, setHasBeenExpanded] = React.useState(expanded);
 
-  // TODO ANGELA: Remove logging
   React.useEffect(() => {
     if (expanded && !hasBeenExpanded) {
-      console.log(`📂 First expand of "${title}" (${id})`);
       setHasBeenExpanded(true);
     }
-  }, [expanded, hasBeenExpanded, title, id]);
+  }, [expanded, hasBeenExpanded]);
 
   const headingClasses = classnames("usa-accordion__heading", className);
   const contentClasses = classnames(
