@@ -1,5 +1,5 @@
 pydantic>=2.12.5
-pydantic-settings>=2.13.0
+pydantic-settings>=2.14.0
 fastapi>=0.136.1
 python-multipart>=0.0.18 # required by fastapi
 uvicorn[standard]>=0.46.0
