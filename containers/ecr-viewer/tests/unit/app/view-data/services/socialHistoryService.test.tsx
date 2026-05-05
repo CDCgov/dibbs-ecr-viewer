@@ -3,9 +3,11 @@ import { Bundle } from "fhir/r4";
 
 import BundlePatient from "@/../../../test-data/fhir/BundlePatient.json";
 import BundleWithTravelHistory from "@/../../../test-data/fhir/BundleTravelHistory.json";
+import BundleWithSDOH from "@/../../../test-data/fhir/BundleSDOH.json";
 import {
   evaluateTravelHistoryTable,
   returnDisabilityStatusTable,
+  evaluateSocialDeterminantsOfHealth,
 } from "@/app/view-data/services/socialHistoryService";
 
 describe("Travel History", () => {
@@ -37,5 +39,18 @@ describe("Disability Status", () => {
   });
   it("should display nothing when no travel history is available", () => {
     expect(returnDisabilityStatusTable({} as Bundle)).toBeUndefined();
+  });
+});
+
+describe("Social Determinants of Health", () => {
+  it("should display sdoh data ", () => {
+    const { container } = render(
+      evaluateSocialDeterminantsOfHealth(BundleWithSDOH as unknown as Bundle),
+    );
+    expect(container).toMatchSnapshot();
+  });
+
+  it("should display nothing when no SDOH is available", () => {
+    expect(evaluateSocialDeterminantsOfHealth({} as Bundle)).toBeUndefined();
   });
 });

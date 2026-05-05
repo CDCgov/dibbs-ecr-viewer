@@ -2,7 +2,6 @@ import {
   Bundle,
   CareTeamParticipant,
   Device,
-  Dosage,
   Element,
   Location,
   Medication,
@@ -13,7 +12,6 @@ import {
   Organization,
   Period,
   Practitioner,
-  Quantity,
   Reference,
   ServiceRequest,
 } from "fhir/r4";
@@ -64,6 +62,7 @@ import {
 } from "@/app/view-data/components/common";
 import { sortResourcesByDate } from "../../utils/fhir-data-utils";
 import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
+import { FhirIndex } from "../../services/fhirResourcesIndexService";
 
 /**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.
@@ -76,7 +75,10 @@ import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordio
  * @property {DisplayDataProps[]} vitalData - Vital signs data.
  * @property {DisplayDataProps[]} immunizationsDetails - Immunization details.
  */
-export const evaluateClinicalData = (fhirBundle: Bundle) => {
+export const evaluateClinicalData = (
+  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
+) => {
   const clinicalNotesTooltip =
     "Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.";
   const clinicalNotes: DisplayDataProps[] = [
@@ -100,6 +102,7 @@ export const evaluateClinicalData = (fhirBundle: Bundle) => {
       title: "Problems List",
       value: returnProblemsTable(
         fhirBundle,
+        fhirIndex,
         evaluateAll(fhirBundle, fhirPathMappings.activeProblems),
       ),
     },
@@ -219,6 +222,7 @@ const evaluateAdministeredMedication = (
       dose: doseValue,
       route: formatCodeableConcept(medicationAdministration?.dosage?.route),
       therapeuticResponse: therapeuticResponseText,
+      text: medicationAdministration?.dosage?.text,
     };
   });
 };
