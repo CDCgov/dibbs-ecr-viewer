@@ -47,9 +47,7 @@ const ECRViewerPage = async ({
     if (!authed) notFound();
   }
 
-  console.time("getFhirData");
   const resp = await getFhirData({ eicr_id: fhirId });
-  console.timeEnd("getFhirData");
   if (!isSuccessResponse(resp)) {
     if (resp.status === 404) {
       return <RetrievalFailed />;
