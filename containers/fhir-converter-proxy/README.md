@@ -33,11 +33,11 @@ If you are using AWS ECS you should be able to use the provided FHIR Converter P
 
 The Orchestration service uses the `FHIR_CONVERTER_URL` env var to determine where to send requests. Set this to the FHIR Converter Proxy URL to route traffic through the proxy instead of pointing directly to the FHIR Converter service.
 
-Expected envrionment variables:
+Expected environment variables:
 
 - **FHIR_CONVERTER_PROXY_PORT** - The port used by the proxy to bind to listen to requests. Usually set to: `8080`.
 - **ENVIRONMENT** - Used to determine if the proxy is running in a local environment or not. Set to `local` for local environments, otherwise it can be left unset.
-- **FHIR_CONVERTER_ECS_NAMESPACE** - Used to assemble the host URL for AWS ECS instances using the DNS resolver. This should be the AWS CloudMap namespace name used by ECS. This envrionment variable is set in the TF module along with the definition of the `fhir-converter-dns` resource used for the resolver host.
+- **FHIR_CONVERTER_ECS_NAMESPACE** - Used to assemble the host URL for AWS ECS instances using the DNS resolver, can be left unset for local environments. This should be the AWS CloudMap namespace name used by ECS. This environment variable is set in the TF module along with the definition of the `fhir-converter-dns` resource used for the resolver host.
 - **FHIR_CONVERTER_PORT** - The FHIR Converter service port to route requests to. Usually set to: `8080`. Only the port is needed because the host is derived from the environment (for local) or the `FHIR_CONVERTER_ECS_NAMESPACE` for AWS.
 
 ### Customizing and Publishing the HAProxy Image
@@ -73,9 +73,9 @@ Once the image is successfully built and tagged locally, push it up to the remot
 
 #### 4. Confirm the proxy started properly and is routing requests
 
-Check the proxy logs for any errors, it should be able to start-up with no errors. Once traffic starts being routed it will log requests it routes successfully too.
+Check the proxy logs for any errors, it should be able to start-up with no errors. Once traffic starts being routed it will log requests it routes.
 
-An example of a successful start of the proxy and routing logs look like this:
+An example of a successful start of the proxy and routing logs looks like this:
 
 ```
 [NOTICE]   (1) : Initializing new worker (8)
