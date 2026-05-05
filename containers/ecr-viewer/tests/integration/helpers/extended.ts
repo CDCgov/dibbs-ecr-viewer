@@ -1,5 +1,9 @@
 import { getDb } from "@/app/data/metadataDb/database";
-import { NewExtendedECR, Extended } from "@/app/data/metadataDb/types/extended";
+import {
+  NewExtendedECR,
+  Extended,
+  NewECRImmunizations,
+} from "@/app/data/metadataDb/types/extended";
 
 /**
  * Creates an eICR object
@@ -8,4 +12,18 @@ import { NewExtendedECR, Extended } from "@/app/data/metadataDb/types/extended";
  */
 export async function createExtendedEcr(ecr: NewExtendedECR): Promise<void> {
   await getDb<Extended>().insertInto("ecr_data").values(ecr).execute();
+}
+
+/**
+ * Creates an ecr immunization object
+ * @param immunization - the NewImmunizationLabs to be persisted
+ * @returns promise
+ */
+export async function createEcrImmunization(
+  immunization: NewECRImmunizations,
+): Promise<void> {
+  await getDb<Extended>()
+    .insertInto("ecr_immunizations")
+    .values(immunization)
+    .execute();
 }
