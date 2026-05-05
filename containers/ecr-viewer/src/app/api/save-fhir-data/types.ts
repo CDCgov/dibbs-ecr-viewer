@@ -35,6 +35,12 @@ interface Lab {
   specimen_collection_date: string | undefined;
 }
 
+interface Immunization {
+  uuid: string | undefined;
+  name: string | undefined;
+  administration_date: string | undefined;
+}
+
 interface ruleSummary {
   rule_summary: string;
 }
@@ -81,6 +87,7 @@ export interface BundleExtendedMetadata extends BundleMetadata {
   reason_for_visit: string | undefined;
   active_problems: string | undefined;
   labs: Lab[] | undefined;
+  immunizations: Immunization[] | undefined;
   birth_sex: string | undefined;
   gender_identity: string | undefined;
   homelessness_status: string | undefined;
