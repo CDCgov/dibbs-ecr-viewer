@@ -30,23 +30,33 @@ import {
 
 import { evaluateClinicalData } from "./clinical-data";
 
+export type EcrDocumentNavConfig = {
+  title: string;
+  subNavItems: string[];
+};
+
 /**
  * Functional component for an accordion container displaying various sections of eCR information.
+ * Component also builds out navigation structure for Ecr Document section
  * @param fhirBundle - The FHIR bundle containing patient information.
  * @param fhirIndex - FHIR resources indexed by type & by ID
- * @returns The JSX element representing the accordion container.
+ * @returns EcrDocumentNavConfig - Side Nav structure for Ecr Document section
+ * @returns accordionItems - The JSX element representing the accordion container.
  */
 export const getEcrDocumentAccordionItems = (
   fhirBundle: Bundle,
   fhirIndex: FhirIndex,
-): AccordionItem[] => {
-  const demographicsData = evaluateDemographicsData(fhirBundle);
-  const socialData = evaluateSocialData(fhirBundle);
+): {
+  ecrDocumentNavConfig: EcrDocumentNavConfig[];
+  accordionItems: AccordionItem[];
+} => {
+  const demographicsData = evaluateDemographicsData(fhirBundle, fhirIndex);
+  const socialData = evaluateSocialData(fhirBundle, fhirIndex);
   const pregnancyData = evaluatePregnancyData(fhirBundle);
   const hospitalEncounterData = evaluateHospitalEncounterData(fhirBundle);
   const encounterData = evaluateEncounterData(fhirBundle);
   const providerData = evaluateProviderData(fhirBundle);
-  const clinicalData = evaluateClinicalData(fhirBundle);
+  const clinicalData = evaluateClinicalData(fhirBundle, fhirIndex);
   const ecrMetadata = evaluateEcrMetadata(fhirBundle);
   const facilityData = evaluateFacilityData(fhirBundle);
   const diagnosticReports = getResourcesByType<DiagnosticReport>(
@@ -79,20 +89,66 @@ export const getEcrDocumentAccordionItems = (
     );
   };
 
-  const accordionItems: AccordionItem[] = [
+  const hasDemographicsData = demographicsData.availableData.length > 0;
+  const hasSocialData = socialData.availableData.length > 0;
+  const hasPregnancyData = pregnancyData.availableData.length > 0;
+  const hasPatientData =
+    hasDemographicsData || hasSocialData || hasPregnancyData;
+
+  const defined = (...items: (string | false)[]): string[] =>
+    items.filter(Boolean) as string[];
+  const subNavPatient = defined(
+    hasDemographicsData && "Demographics",
+    hasSocialData && "Social History",
+    hasPregnancyData && "Pregnancy Info",
+  );
+  const subNavEncounter = defined(
+    encounterData.availableData.length > 0 && "Encounter Details",
+    hospitalEncounterData.availableData.length > 0 &&
+      "Hospital Encounter Details",
+    facilityData.availableData.length > 0 && "Facility Details",
+    providerData.availableData.length > 0 && "Provider Details",
+  );
+  const subNavClinical = defined(
+    clinicalData.clinicalNotes.availableData.length > 0 && "Clinical Notes",
+    (clinicalData.reasonForVisitDetails.availableData.length > 0 ||
+      clinicalData.activeProblemsDetails.availableData.length > 0 ||
+      clinicalData.emergencyOutbreakInfo.availableData.length > 0) &&
+      "Symptoms and Problems",
+    clinicalData.treatmentData.availableData.length > 0 && "Treatment Details",
+    clinicalData.immunizationsDetails.availableData.length > 0 &&
+      "Immunizations",
+    clinicalData.vitalData.availableData.length > 0 &&
+      "Diagnostics and Vital Signs",
+  );
+  const subNavMetadata = defined(
+    "RR Details",
+    ecrMetadata.eicrDetails.availableData.length > 0 && "eICR Details",
+    !!ecrMetadata.eicrAuthorDetails.find((d) => d.availableData.length > 0) &&
+      "eICR Author Details for Practitioner",
+    ecrMetadata.ecrCustodianDetails.availableData.length > 0 &&
+      "eICR Custodian Details",
+  );
+  const subNavLabs = labInfoData.map((labResult) => {
+    const labName = `Lab Results from ${
+      labResult?.organizationDisplayDataProps?.[0]?.value ||
+      "Unknown Organization"
+    }`;
+    return labName;
+  }) as string[];
+
+  const sections = [
     {
       title: "Patient Info",
       content: (
         <>
-          {demographicsData.availableData.length > 0 ||
-          socialData.availableData.length > 0 ||
-          pregnancyData.availableData.length ? (
+          {hasPatientData ? (
             <>
               <Demographics demographicsData={demographicsData.availableData} />
-              {socialData.availableData.length > 0 && (
+              {hasSocialData && (
                 <SocialHistory socialData={socialData.availableData} />
               )}
-              {pregnancyData.availableData.length > 0 && (
+              {hasPregnancyData && (
                 <PregnancyInfo pregnancyData={pregnancyData.availableData} />
               )}
             </>
@@ -103,6 +159,7 @@ export const getEcrDocumentAccordionItems = (
           )}
         </>
       ),
+      subNavItems: subNavPatient,
     },
     {
       title: "Encounter Info",
@@ -125,6 +182,7 @@ export const getEcrDocumentAccordionItems = (
           )}
         </>
       ),
+      subNavItems: subNavEncounter,
     },
     {
       title: "Clinical Info",
@@ -151,6 +209,7 @@ export const getEcrDocumentAccordionItems = (
           No clinical information was found in this eCR.
         </p>
       ),
+      subNavItems: subNavClinical,
     },
     {
       title: "Lab Info",
@@ -162,6 +221,7 @@ export const getEcrDocumentAccordionItems = (
             No lab information was found in this eCR.
           </p>
         ),
+      subNavItems: subNavLabs,
     },
     {
       title: "eCR Metadata",
@@ -192,6 +252,7 @@ export const getEcrDocumentAccordionItems = (
           )}
         </>
       ),
+      subNavItems: subNavMetadata,
     },
     {
       title: "Unavailable Info",
@@ -242,16 +303,24 @@ export const getEcrDocumentAccordionItems = (
         </div>
       ),
     },
-  ].map((item, index) => {
+  ];
+  const ecrDocumentNavConfig: EcrDocumentNavConfig[] = sections.map(
+    ({ title, subNavItems }) => ({
+      title,
+      subNavItems: subNavItems ?? [],
+    }),
+  );
+  const accordionItems: AccordionItem[] = sections.map((item, index) => {
     const kebabCaseTitle = toKebabCase(item.title);
     return {
       ...item,
       id: `${kebabCaseTitle}_${index + 1}`, // this is the id of the accordion item's inner div
       title: <span id={kebabCaseTitle}>{item.title}</span>, // the side nav links to this ID
-      expanded: true,
+      expanded: false,
+      shouldRenderBeforeExpand: false,
       headingLevel: "h3",
     };
   });
 
-  return accordionItems;
+  return { ecrDocumentNavConfig, accordionItems };
 };

@@ -2,8 +2,12 @@ import { render, screen } from "@testing-library/react";
 import { Bundle, Condition } from "fhir/r4";
 import { axe } from "jest-axe";
 
-import BundleWithPatient from "../../../../../../../test-data/fhir/BundlePatient.json";
+import _BundleWithPatient from "../../../../../../../test-data/fhir/BundlePatient.json";
 import { returnProblemsTable } from "@/app/view-data/components/common";
+import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
+
+const BundleWithPatient = _BundleWithPatient as unknown as Bundle;
+const fhirIndexBundleWithPatient = getFhirIndex(BundleWithPatient);
 
 describe("Active Problems Table", () => {
   let container: HTMLElement;
@@ -235,7 +239,8 @@ describe("Active Problems Table", () => {
     ];
     container = render(
       returnProblemsTable(
-        BundleWithPatient as unknown as Bundle,
+        BundleWithPatient,
+        fhirIndexBundleWithPatient,
         activeProblemsData,
       )!,
     ).container;

@@ -1,11 +1,8 @@
-import { act, render } from "@testing-library/react";
+import { act, render, waitFor } from "@testing-library/react";
 import { axe } from "jest-axe";
 
-import SideNav, {
-  SectionConfig,
-  sortHeadings,
-  countObjects,
-} from "@/app/view-data/components/SideNav";
+import SideNav, { SectionConfig } from "@/app/view-data/components/SideNav";
+import { EcrDocumentNavConfig } from "@/app/view-data/components/EcrDocument/accordion-items";
 
 jest.mock("@/app/components/AuthSessionProvider", () => ({
   useIsLoggedInUser: () => true,
@@ -47,21 +44,21 @@ describe("SectionConfig", () => {
   });
 
   it("should match the snapshot", () => {
+    const ecrDocumentNavConfig: EcrDocumentNavConfig[] = [
+      { title: "Section 1", subNavItems: [] },
+      { title: "Section 2", subNavItems: ["Section 3"] },
+      { title: "Section 2 - 2", subNavItems: [] },
+    ];
     const { asFragment } = render(
       <main>
-        <SideNav />
-        <h2 id="section-1">Section 1</h2>
-        <h2 id="section-2">Section 2</h2>
-        <h3 id="section-3">Section 3</h3>
-        <h4 id="section-4">Section 4</h4>
-        <h2 id="section-2-2">Section 2 - 2</h2>
+        <SideNav ecrDocumentNavConfig={ecrDocumentNavConfig} />
       </main>,
     );
     expect(asFragment()).toMatchSnapshot();
   });
 
   it("should have no accessibility violations", async () => {
-    const { container } = render(<SideNav />);
+    const { container } = render(<SideNav ecrDocumentNavConfig={[]} />);
     let results;
     await act(async () => {
       results = await axe(container);
@@ -69,66 +66,91 @@ describe("SectionConfig", () => {
     expect(results).toHaveNoViolations();
   });
 
-  it("should sort section headings", async () => {
-    const headings = [
-      {
-        text: "foo",
-        level: "h1",
-        priority: 1,
-      },
-      {
-        text: "bar",
-        level: "h2",
-        priority: 2,
-      },
-      {
-        text: "biz",
-        level: "h1",
-        priority: 1,
-      },
+  it("should render side nav items on page", async () => {
+    const ecrDocumentNavConfig: EcrDocumentNavConfig[] = [
+      { title: "Section 1", subNavItems: [] },
+      { title: "Section 2", subNavItems: ["Section 3"] },
     ];
-    const foo = new SectionConfig("foo", ["bar"]);
-    const bar = new SectionConfig("biz");
-
-    const result: SectionConfig[] = [foo, bar];
-    const resultSub = result[0]?.subNavItems;
-    const sortedResults = sortHeadings(headings);
-    const sortedResultsSub = sortedResults[0]?.subNavItems;
-    expect(sortedResults[0].id).toBe(result[0].id);
-    expect(sortedResults[1].id).toBe(result[1].id);
-    expect(sortedResultsSub ? sortedResultsSub[0].id : null).toBe(
-      resultSub ? resultSub[0].id : undefined,
-    );
-  });
-
-  it("should only render side nav items on page", async () => {
     const { container } = render(
       <main>
-        <SideNav />
-        <h2 id="section-1">Section 1</h2>
-        <h2 id="section-2">Section 2</h2>
-        <h3 id="section-3">Section 3</h3>
-        <h4 id="section-4">Section 4</h4>
-        <h2 id="section-2-2">Section 2 - 2</h2>
+        <SideNav ecrDocumentNavConfig={ecrDocumentNavConfig} />
       </main>,
     );
     expect(container.innerHTML).toContain(
-      '<a href="#section-1" class="usa-current" data-testid="sidenav-link">',
+      '<a href="#section-1" class="" data-testid="sidenav-link">',
     );
     expect(container.innerHTML).toContain(
       '<a href="#section-2" class="" data-testid="sidenav-link">',
     );
+    expect(container.innerHTML).toContain(
+      '<a href="#section-3" class="" data-testid="sidenav-link">',
+    );
   });
-});
 
-describe("countObjects", () => {
-  it("should count all section config objects within a given array, including those within subnav items", () => {
-    const section1 = new SectionConfig("Parent 1", ["Child 1", "Child 2"]);
-    const section2 = new SectionConfig("Parent 2", ["Child 1"]);
-    const expected = 5;
+  it("should set the active class on the section currently in view", async () => {
+    let intersectionCallback: IntersectionObserverCallback;
 
-    const result = countObjects([section1, section2]);
+    window.IntersectionObserver = jest.fn().mockImplementation((callback) => {
+      intersectionCallback = callback;
+      return {
+        observe: jest.fn(),
+        disconnect: jest.fn(),
+        unobserve: jest.fn(),
+      };
+    });
 
-    expect(result).toEqual(expected);
+    const ecrDocumentNavConfig: EcrDocumentNavConfig[] = [
+      { title: "Section 1", subNavItems: [] },
+      { title: "Section 2", subNavItems: [] },
+    ];
+    const { container } = render(
+      <main>
+        <SideNav ecrDocumentNavConfig={ecrDocumentNavConfig} />
+      </main>,
+    );
+
+    // Put Section 1 in view
+    const section1Heading = document.createElement("h3");
+    section1Heading.setAttribute("data-sectionid", "section-1");
+
+    act(() => {
+      intersectionCallback(
+        [
+          { isIntersecting: true, target: section1Heading },
+        ] as unknown as IntersectionObserverEntry[],
+        {} as IntersectionObserver,
+      );
+    });
+
+    await waitFor(() => {
+      expect(container.querySelector('a[href="#section-1"]')).toHaveClass(
+        "usa-current",
+      );
+      expect(container.querySelector('a[href="#section-2"]')).not.toHaveClass(
+        "usa-current",
+      );
+    });
+
+    // Scroll to Section 2
+    const section2Heading = document.createElement("h3");
+    section2Heading.setAttribute("data-sectionid", "section-2");
+
+    act(() => {
+      intersectionCallback(
+        [
+          { isIntersecting: true, target: section2Heading },
+        ] as unknown as IntersectionObserverEntry[],
+        {} as IntersectionObserver,
+      );
+    });
+
+    await waitFor(() => {
+      expect(container.querySelector('a[href="#section-1"]')).not.toHaveClass(
+        "usa-current",
+      );
+      expect(container.querySelector('a[href="#section-2"]')).toHaveClass(
+        "usa-current",
+      );
+    });
   });
 });

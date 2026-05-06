@@ -24,6 +24,7 @@ export interface ColumnInfoInput {
   applyToValue?: (value: string) => ReactNode;
   evaluateEntry?: (el: Element) => ReactNode;
   sortFn?: (a: string, b: string) => number;
+  style?: React.CSSProperties;
 }
 
 interface TableProps {
@@ -156,6 +157,7 @@ const BaseTableHeaders = ({
           key={`${column.columnName}${index}`}
           scope="col"
           className={classNames("table-header", column.className)}
+          style={column.style}
         >
           {column.tooltipText ? (
             <ToolTipElement toolTip={column.tooltipText}>
