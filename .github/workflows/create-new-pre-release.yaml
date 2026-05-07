@@ -29,6 +29,9 @@ jobs:
       - list-containers
       - test-for-release
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
     strategy:
       matrix:
         container-to-build: ${{fromJson(needs.list-containers.outputs.all-containers)}}
