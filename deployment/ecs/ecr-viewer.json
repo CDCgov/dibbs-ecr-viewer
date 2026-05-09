@@ -1,0 +1,56 @@
+{
+  "family": "ecr-viewer",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::123456789012:role/ecsExecutionRole",
+  "taskRoleArn": "arn:aws:iam::123456789012:role/ecsTaskRole",
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "containerDefinitions": [
+    {
+      "name": "ecr-viewer",
+      "image": "ghcr.io/cdcgov/dibbs-ecr-viewer/ecr-viewer:${IMAGE_TAG}",
+      "portMappings": [
+        {
+          "containerPort": 3000,
+          "hostPort": 3000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {"name": "PORT", "value": "3000"},
+        {"name": "HOSTNAME", "value": "0.0.0.0"},
+        {"name": "NEXT_TELEMETRY_DISABLED", "value": "1"},
+        {"name": "APP_VERSION", "value": "${IMAGE_TAG}"},
+        {"name": "DATABASE_URL", "value": "${DATABASE_URL}"}
+      ],
+      "secrets": [
+        {"name": "AUTH_CLIENT_SECRET", "valueFrom": "arn:aws:secretsmanager:us-east-2:123456789012:secret:dibbs-ecr-viewer-AUTH_CLIENT_SECRET"},
+        {"name": "NEXTAUTH_SECRET", "valueFrom": "arn:aws:secretsmanager:us-east-2:123456789012:secret:dibbs-ecr-viewer-NEXTAUTH_SECRET"},
+        {"name": "DATABASE_URL", "valueFrom": "arn:aws:secretsmanager:us-east-2:123456789012:secret:dibbs-ecr-viewer-DATABASE_URL"}
+      ],
+      "healthCheck": {
+        "command": ["CMD-SHELL", "wget --spider -q http://127.0.0.1:3000/api/health-check || exit 1"],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 10
+      },
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/ecr-viewer",
+          "awslogs-create-group": "true",
+          "awslogs-region": "us-east-2",
+          "awslogs-stream-prefix": "ecr-viewer"
+        }
+      },
+      "readonlyRootFilesystem": false,
+      "stopTimeout": 30
+    }
+  ]
+}

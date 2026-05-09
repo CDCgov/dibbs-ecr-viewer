@@ -1,0 +1,38 @@
+{
+  "family": "fhir-converter-proxy",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::123456789012:role/ecsExecutionRole",
+  "taskRoleArn": "arn:aws:iam::123456789012:role/ecsTaskRole",
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "containerDefinitions": [
+    {
+      "name": "fhir-converter-proxy",
+      "image": "ghcr.io/cdcgov/dibbs-ecr-viewer/fhir-converter-proxy:${IMAGE_TAG}",
+      "portMappings": [
+        {
+          "containerPort": 8126,
+          "hostPort": 8126,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/fhir-converter-proxy",
+          "awslogs-create-group": "true",
+          "awslogs-region": "us-east-2",
+          "awslogs-stream-prefix": "fhir-converter-proxy"
+        }
+      },
+      "readonlyRootFilesystem": true,
+      "stopTimeout": 30
+    }
+  ]
+}

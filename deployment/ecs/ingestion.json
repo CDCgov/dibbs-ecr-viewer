@@ -1,0 +1,45 @@
+{
+  "family": "ingestion",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::123456789012:role/ecsExecutionRole",
+  "taskRoleArn": "arn:aws:iam::123456789012:role/ecsTaskRole",
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "containerDefinitions": [
+    {
+      "name": "ingestion",
+      "image": "ghcr.io/cdcgov/dibbs-ecr-viewer/ingestion:${IMAGE_TAG}",
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [],
+      "healthCheck": {
+        "command": ["CMD-SHELL", "wget --spider -q http://127.0.0.1:8080/ || exit 1"],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 10
+      },
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/ingestion",
+          "awslogs-create-group": "true",
+          "awslogs-region": "us-east-2",
+          "awslogs-stream-prefix": "ingestion"
+        }
+      },
+      "readonlyRootFilesystem": true,
+      "stopTimeout": 30
+    }
+  ]
+}
