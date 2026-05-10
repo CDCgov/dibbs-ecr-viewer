@@ -22,16 +22,31 @@
         }
       ],
       "environment": [
-        {"name": "ECR_VIEWER_URL", "value": "http://dibbs-ecr-viewer:3000/ecr-viewer"},
-        {"name": "FHIR_CONVERTER_URL", "value": "http://dibbs-fhir-converter:8080"},
-        {"name": "INGESTION_URL", "value": "http://dibbs-ingestion:8080"},
-        {"name": "MESSAGE_PARSER_URL", "value": "http://dibbs-message-parser:8080"},
-        {"name": "OTEL_METRICS", "value": "none"},
-        {"name": "OTEL_METRICS_EXPORTER", "value": "none"},
-        {"name": "TRIGGER_CODE_REFERENCE_URL", "value": "http://dibbs-trigger-code-reference:8080"}
+        {
+          "name": "ECR_VIEWER_URL",
+          "value": "http://dibbs-ecr-viewer:3000/ecr-viewer"
+        },
+        {
+          "name": "FHIR_CONVERTER_URL",
+          "value": "http://dibbs-fhir-converter:8080"
+        },
+        { "name": "INGESTION_URL", "value": "http://dibbs-ingestion:8080" },
+        {
+          "name": "MESSAGE_PARSER_URL",
+          "value": "http://dibbs-message-parser:8080"
+        },
+        { "name": "OTEL_METRICS", "value": "none" },
+        { "name": "OTEL_METRICS_EXPORTER", "value": "none" },
+        {
+          "name": "TRIGGER_CODE_REFERENCE_URL",
+          "value": "http://dibbs-trigger-code-reference:8080"
+        }
       ],
       "healthCheck": {
-        "command": ["CMD-SHELL", "wget --spider -q http://127.0.0.1:8080/ || exit 1"],
+        "command": [
+          "CMD-SHELL",
+          "wget --spider -q http://127.0.0.1:8080/ || exit 1"
+        ],
         "interval": 30,
         "timeout": 5,
         "retries": 3,

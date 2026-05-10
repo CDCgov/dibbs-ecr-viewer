@@ -6,17 +6,17 @@ These JSON files define standalone ECS task definitions for each microservice. T
 
 ## Available Task Definitions
 
-| File | Service | Port | Description |
-|------|---------|------|-------------|
-| `ecr-viewer.json` | `ecr-viewer` | 3000 | Web frontend (Next.js application) |
-| `ingestion.json` | `ingestion` | 8080 | Document ingestion service |
-| `fhir-converter.json` | `fhir-converter` | 8080 | FHIR document converter |
-| `message-parser.json` | `message-parser` | 8080 | Message parsing service |
-| `trigger-code-reference.json` | `trigger-code-reference` | 8080 | Trigger code reference data service |
-| `orchestration.json` | `orchestration` | 8080 | Service orchestration (coordinates inter-service communication) |
-| `fhir-converter-proxy.json` | `fhir-converter-proxy` | 8126 | HAProxy proxy for FHIR converter |
+| File                          | Service                  | Port | Description                                                     |
+| ----------------------------- | ------------------------ | ---- | --------------------------------------------------------------- |
+| `ecr-viewer.json`             | `ecr-viewer`             | 3000 | Web frontend (Next.js application)                              |
+| `ingestion.json`              | `ingestion`              | 8080 | Document ingestion service                                      |
+| `fhir-converter.json`         | `fhir-converter`         | 8080 | FHIR document converter                                         |
+| `message-parser.json`         | `message-parser`         | 8080 | Message parsing service                                         |
+| `trigger-code-reference.json` | `trigger-code-reference` | 8080 | Trigger code reference data service                             |
+| `orchestration.json`          | `orchestration`          | 8080 | Service orchestration (coordinates inter-service communication) |
+| `fhir-converter-proxy.json`   | `fhir-converter-proxy`   | 8126 | HAProxy proxy for FHIR converter                                |
 
-All services use `awsvpc` network mode, `FARGATE` compatibility, X86\_64 architecture, 512 CPU, and 1024 MB memory.
+All services use `awsvpc` network mode, `FARGATE` compatibility, X86_64 architecture, 512 CPU, and 1024 MB memory.
 
 ## Prerequisites
 
@@ -46,15 +46,15 @@ aws ecs register-task-definition \
 
 All files contain the following placeholders that must be replaced before use in a live environment:
 
-| Placeholder | Description | Example |
-|-------------|-------------|---------|
-| `${IMAGE_TAG}` | Container image tag | `v1.2.3`, git commit SHA |
-| `${AWS_ACCOUNT}` | AWS account ID (embedded in ARNs) | `123456789012` |
-| `${AWS_REGION}` | AWS region | `us-east-2` |
-| `${EXECUTION_ROLE_ARN}` | ECS task execution role ARN | `arn:aws:iam::123456789012:role/ecsExecutionRole` |
-| `${TASK_ROLE_ARN}` | ECS task role ARN | `arn:aws:iam::123456789012:role/ecsTaskRole` |
-| `${SECRET_ARN}` | AWS Secrets Manager secret ARN (for sensitive env vars) | `arn:aws:secretsmanager:us-east-2:123456789012:secret:dibbs-ecr-viewer-<VAR>` |
-| `${APP_VERSION}` | Application version string | `v1.2.3` |
+| Placeholder             | Description                                             | Example                                                                       |
+| ----------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `${IMAGE_TAG}`          | Container image tag                                     | `v1.2.3`, git commit SHA                                                      |
+| `${AWS_ACCOUNT}`        | AWS account ID (embedded in ARNs)                       | `123456789012`                                                                |
+| `${AWS_REGION}`         | AWS region                                              | `us-east-2`                                                                   |
+| `${EXECUTION_ROLE_ARN}` | ECS task execution role ARN                             | `arn:aws:iam::123456789012:role/ecsExecutionRole`                             |
+| `${TASK_ROLE_ARN}`      | ECS task role ARN                                       | `arn:aws:iam::123456789012:role/ecsTaskRole`                                  |
+| `${SECRET_ARN}`         | AWS Secrets Manager secret ARN (for sensitive env vars) | `arn:aws:secretsmanager:us-east-2:123456789012:secret:dibbs-ecr-viewer-<VAR>` |
+| `${APP_VERSION}`        | Application version string                              | `v1.2.3`                                                                      |
 
 Use `sed` or a scripting language to bulk-replace placeholders before registration:
 
@@ -92,7 +92,7 @@ The `ecr-viewer.json` task definition demonstrates the secrets pattern. It uses 
 In the container's `environment` array, the same variable name also has a placeholder value:
 
 ```json
-{"name": "DATABASE_URL", "value": "${DATABASE_URL}"}
+{ "name": "DATABASE_URL", "value": "${DATABASE_URL}" }
 ```
 
 When both `environment` and `secrets` define the same variable name, the `secrets` value takes precedence. This dual-field pattern lets you document the variable name in both places while keeping the actual secret out of the task definition JSON.
@@ -101,13 +101,13 @@ When both `environment` and `secrets` define the same variable name, the `secret
 
 The following variables should be stored in AWS Secrets Manager and referenced via the `secrets` field:
 
-| Variable | Service(s) | Purpose |
-|----------|------------|---------|
-| `DATABASE_URL` | ecr-viewer | PostgreSQL connection string |
-| `AUTH_CLIENT_SECRET` | ecr-viewer | OAuth client secret for authentication |
-| `NEXTAUTH_SECRET` | ecr-viewer | NextAuth session signing key |
-| `SMARTY_AUTH_ID` | trigger-code-reference | SmartyStreets API identifier |
-| `SMARTY_AUTH_TOKEN` | trigger-code-reference | SmartyStreets API token |
+| Variable             | Service(s)             | Purpose                                |
+| -------------------- | ---------------------- | -------------------------------------- |
+| `DATABASE_URL`       | ecr-viewer             | PostgreSQL connection string           |
+| `AUTH_CLIENT_SECRET` | ecr-viewer             | OAuth client secret for authentication |
+| `NEXTAUTH_SECRET`    | ecr-viewer             | NextAuth session signing key           |
+| `SMARTY_AUTH_ID`     | trigger-code-reference | SmartyStreets API identifier           |
+| `SMARTY_AUTH_TOKEN`  | trigger-code-reference | SmartyStreets API token                |
 
 ### Task Execution Role Permissions
 
@@ -162,14 +162,14 @@ aws secretsmanager put-secret-value \
 
 Coordinates inter-service communication by setting URLs for all other services:
 
-| Variable | Value |
-|----------|-------|
-| `ECR_VIEWER_URL` | `http://ecr-viewer:3000/ecr-viewer` |
-| `FHIR_CONVERTER_URL` | `http://fhir-converter:8080` |
-| `INGESTION_URL` | `http://ingestion:8080` |
-| `MESSAGE_PARSER_URL` | `http://message-parser:8080` |
-| `OTEL_METRICS` | `none` |
-| `OTEL_METRICS_EXPORTER` | `none` |
+| Variable                     | Value                                |
+| ---------------------------- | ------------------------------------ |
+| `ECR_VIEWER_URL`             | `http://ecr-viewer:3000/ecr-viewer`  |
+| `FHIR_CONVERTER_URL`         | `http://fhir-converter:8080`         |
+| `INGESTION_URL`              | `http://ingestion:8080`              |
+| `MESSAGE_PARSER_URL`         | `http://message-parser:8080`         |
+| `OTEL_METRICS`               | `none`                               |
+| `OTEL_METRICS_EXPORTER`      | `none`                               |
 | `TRIGGER_CODE_REFERENCE_URL` | `http://trigger-code-reference:8080` |
 
 These values are derived from the reference configuration in `deployment/vm/dibbs-orchestration.env`.
