@@ -26,7 +26,28 @@
         { "name": "HOSTNAME", "value": "0.0.0.0" },
         { "name": "NEXT_TELEMETRY_DISABLED", "value": "1" },
         { "name": "APP_VERSION", "value": "${IMAGE_TAG}" },
-        { "name": "DATABASE_URL", "value": "${DATABASE_URL}" }
+        { "name": "DATABASE_URL", "value": "${DATABASE_URL}" },
+        { "name": "ORCHESTRATION_URL", "value": "http://dibbs-orchestration:8080" },
+        { "name": "DIBBS_VERSION", "value": "${DIBBS_VERSION}" },
+        { "name": "CONFIG_NAME", "value": "${CONFIG_NAME}" },
+        { "name": "METADATA_DATABASE_SCHEMA", "value": "${METADATA_DATABASE_SCHEMA}" },
+        { "name": "SQL_SERVER_USER", "value": "${SQL_SERVER_USER}" },
+        { "name": "SQL_SERVER_HOST", "value": "${SQL_SERVER_HOST}" },
+        { "name": "DB_CIPHER", "value": "${DB_CIPHER}" },
+        { "name": "AUTH_PROVIDER", "value": "${AUTH_PROVIDER}" },
+        { "name": "AUTH_CLIENT_ID", "value": "${AUTH_CLIENT_ID}" },
+        { "name": "AUTH_ISSUER", "value": "${AUTH_ISSUER}" },
+        { "name": "AUTH_SESSION_DURATION_MIN", "value": "${AUTH_SESSION_DURATION_MIN}" },
+        { "name": "NEXTAUTH_URL", "value": "${NEXTAUTH_URL}" },
+        { "name": "SAVE_XML", "value": "${SAVE_XML}" },
+        { "name": "DISPLAY_FEEDBACK_LINKS", "value": "${DISPLAY_FEEDBACK_LINKS}" },
+        { "name": "ECR_PROCESSING_TIMEOUT", "value": "${ECR_PROCESSING_TIMEOUT}" },
+        { "name": "AWS_REGION", "value": "${AWS_REGION}" },
+        { "name": "ECR_BUCKET_NAME", "value": "${ECR_BUCKET_NAME}" },
+        { "name": "AZURE_CONTAINER_NAME", "value": "${AZURE_CONTAINER_NAME}" },
+        { "name": "GCP_PROJECT_ID", "value": "${GCP_PROJECT_ID}" },
+        { "name": "NBS_API_PUB_KEY", "value": "${NBS_API_PUB_KEY}" },
+        { "name": "NBS_PUB_KEY", "value": "${NBS_PUB_KEY}" }
       ],
       "secrets": [
         {
@@ -40,7 +61,20 @@
         {
           "name": "DATABASE_URL",
           "valueFrom": "arn:aws:secretsmanager:us-east-2:123456789012:secret:dibbs-ecr-viewer-DATABASE_URL"
+        },
+        {
+          "name": "METADATA_DATABASE_MIGRATION_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:123456789012:secret:dibbs-ecr-viewer-METADATA_DATABASE_MIGRATION_SECRET"
+        },
+        {
+          "name": "SQL_SERVER_PASSWORD",
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:123456789012:secret:dibbs-ecr-viewer-SQL_SERVER_PASSWORD"
+        },
+        {
+          "name": "AZURE_STORAGE_CONNECTION_STRING",
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:123456789012:secret:dibbs-ecr-viewer-AZURE_STORAGE_CONNECTION_STRING"
         }
+      ],
       ],
       "healthCheck": {
         "command": [

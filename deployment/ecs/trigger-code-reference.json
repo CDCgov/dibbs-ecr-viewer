@@ -31,6 +31,16 @@
         { "name": "SMARTY_AUTH_ID", "value": "${SMARTY_AUTH_ID}" },
         { "name": "SMARTY_AUTH_TOKEN", "value": "${SMARTY_AUTH_TOKEN}" }
       ],
+      "secrets": [
+        {
+          "name": "SMARTY_AUTH_ID",
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:123456789012:secret:dibbs-ecr-viewer-SMARTY_AUTH_ID"
+        },
+        {
+          "name": "SMARTY_AUTH_TOKEN",
+          "valueFrom": "arn:aws:secretsmanager:us-east-2:123456789012:secret:dibbs-ecr-viewer-SMARTY_AUTH_TOKEN"
+        }
+      ],
       "healthCheck": {
         "command": [
           "CMD-SHELL",

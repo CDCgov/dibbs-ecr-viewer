@@ -70,7 +70,7 @@ Services with sensitive configuration values use AWS Secrets Manager via the ECS
 
 ### Pattern (ecr-viewer.json)
 
-The `ecr-viewer.json` task definition demonstrates the secrets pattern. It uses three environment variables backed by Secrets Manager:
+The `ecr-viewer.json` task definition demonstrates the secrets pattern. It uses six environment variables backed by Secrets Manager:
 
 ```json
 "secrets": [
@@ -85,6 +85,18 @@ The `ecr-viewer.json` task definition demonstrates the secrets pattern. It uses 
   {
     "name": "DATABASE_URL",
     "valueFrom": "arn:aws:secretsmanager:us-east-2:123456789012:secret:dibbs-ecr-viewer-DATABASE_URL"
+  },
+  {
+    "name": "METADATA_DATABASE_MIGRATION_SECRET",
+    "valueFrom": "arn:aws:secretsmanager:us-east-2:123456789012:secret:dibbs-ecr-viewer-METADATA_DATABASE_MIGRATION_SECRET"
+  },
+  {
+    "name": "SQL_SERVER_PASSWORD",
+    "valueFrom": "arn:aws:secretsmanager:us-east-2:123456789012:secret:dibbs-ecr-viewer-SQL_SERVER_PASSWORD"
+  },
+  {
+    "name": "AZURE_STORAGE_CONNECTION_STRING",
+    "valueFrom": "arn:aws:secretsmanager:us-east-2:123456789012:secret:dibbs-ecr-viewer-AZURE_STORAGE_CONNECTION_STRING"
   }
 ]
 ```
@@ -101,13 +113,16 @@ When both `environment` and `secrets` define the same variable name, the `secret
 
 The following variables should be stored in AWS Secrets Manager and referenced via the `secrets` field:
 
-| Variable             | Service(s)             | Purpose                                |
-| -------------------- | ---------------------- | -------------------------------------- |
-| `DATABASE_URL`       | ecr-viewer             | PostgreSQL connection string           |
-| `AUTH_CLIENT_SECRET` | ecr-viewer             | OAuth client secret for authentication |
-| `NEXTAUTH_SECRET`    | ecr-viewer             | NextAuth session signing key           |
-| `SMARTY_AUTH_ID`     | trigger-code-reference | SmartyStreets API identifier           |
-| `SMARTY_AUTH_TOKEN`  | trigger-code-reference | SmartyStreets API token                |
+| Variable | Service(s) | Purpose |
+|----------|------------|---------|
+| `DATABASE_URL` | ecr-viewer | PostgreSQL connection string |
+| `AUTH_CLIENT_SECRET` | ecr-viewer | OAuth client secret for authentication |
+| `NEXTAUTH_SECRET` | ecr-viewer | NextAuth session signing key |
+| `METADATA_DATABASE_MIGRATION_SECRET` | ecr-viewer | Migration secret for database schema migrations |
+| `SQL_SERVER_PASSWORD` | ecr-viewer | SQL Server database password |
+| `AZURE_STORAGE_CONNECTION_STRING` | ecr-viewer | Azure Blob Storage connection string |
+| `SMARTY_AUTH_ID` | trigger-code-reference | SmartyStreets API identifier |
+| `SMARTY_AUTH_TOKEN` | trigger-code-reference | SmartyStreets API token |
 
 ### Task Execution Role Permissions
 
@@ -136,6 +151,78 @@ aws secretsmanager put-secret-value \
   --secret-string "postgresql://user:pass@host:5432/dbname"
 ```
 
+## Variable Groups
+
+The following variables are organized into logical groups. Not all variables need to be set for every deployment -- some are required while others are optional or service-specific.
+
+### Database
+
+| Variable | Block | Required | Description |
+|----------|-------|----------|-------------|
+| `DATABASE_URL` | secrets | Yes | PostgreSQL connection string |
+| `METADATA_DATABASE_SCHEMA` | environment | Yes | Metadata database schema name |
+| `METADATA_DATABASE_MIGRATION_SECRET` | secrets | Yes | Migration secret for database schema migrations |
+| `SQL_SERVER_USER` | environment | Yes | SQL Server username |
+| `SQL_SERVER_PASSWORD` | secrets | Yes | SQL Server password |
+| `SQL_SERVER_HOST` | environment | Yes | SQL Server hostname |
+| `DB_CIPHER` | environment | Yes | Database cipher/encryption setting |
+
+Required for all configurations.
+
+### Auth
+
+| Variable | Block | Required | Description |
+|----------|-------|----------|-------------|
+| `AUTH_PROVIDER` | environment | Yes | Authentication provider (e.g., `dbssh`) |
+| `AUTH_CLIENT_ID` | environment | Yes | OAuth client ID |
+| `AUTH_CLIENT_SECRET` | secrets | Yes | OAuth client secret |
+| `AUTH_ISSUER` | environment | Yes | OAuth issuer URL |
+| `AUTH_SESSION_DURATION_MIN` | environment | Yes | Session duration in minutes |
+| `NEXTAUTH_URL` | environment | Yes | NextAuth base URL |
+| `NEXTAUTH_SECRET` | secrets | Yes | NextAuth session signing key |
+
+Required for authentication. See the ecr-viewer service notes for more details.
+
+### Storage
+
+| Variable | Block | Required | Description |
+|----------|-------|----------|-------------|
+| `AWS_REGION` | environment | Yes | AWS region for S3/ECR storage |
+| `ECR_BUCKET_NAME` | environment | Yes | ECR container registry bucket name |
+| `AZURE_STORAGE_CONNECTION_STRING` | secrets | Yes | Azure Blob Storage connection string |
+| `AZURE_CONTAINER_NAME` | environment | Yes | Azure container name |
+| `GCP_PROJECT_ID` | environment | Yes | GCP project ID for Cloud Storage |
+
+At least one cloud storage provider must be configured. Required for storage configuration.
+
+### NBS
+
+| Variable | Block | Required | Description |
+|----------|-------|----------|-------------|
+| `NBS_API_PUB_KEY` | environment | Yes | NBS API public key |
+| `NBS_PUB_KEY` | environment | Yes | NBS public key |
+
+Required for NBS dual mode configurations.
+
+### Optional
+
+| Variable | Block | Required | Description |
+|----------|-------|----------|-------------|
+| `SAVE_XML` | environment | No | Enable XML saving (defaults to `true`) |
+| `DISPLAY_FEEDBACK_LINKS` | environment | No | Show feedback links in the UI |
+| `ECR_PROCESSING_TIMEOUT` | environment | No | ECR processing timeout in milliseconds |
+
+Optional variables with sensible defaults if not set.
+
+### SMARTY
+
+| Variable | Block | Required | Description |
+|----------|-------|----------|-------------|
+| `SMARTY_AUTH_ID` | secrets | Yes | SmartyStreets API identifier |
+| `SMARTY_AUTH_TOKEN` | secrets | Yes | SmartyStreets API token |
+
+Required for the trigger-code-reference service. See the Secrets Management section for configuration.
+
 ## Service-Specific Notes
 
 ### ecr-viewer (web frontend)
@@ -143,9 +230,12 @@ aws secretsmanager put-secret-value \
 - Runs on port 3000
 - Sets `HOSTNAME` to `0.0.0.0` and disables Next.js telemetry
 - Uses `APP_VERSION` env var set to the image tag for version reporting
+- Uses `CONFIG_NAME` to select the deployment configuration profile
 - `DATABASE_URL` is injected via AWS Secrets Manager (see Secrets Management section)
 - Health check probes `/api/health-check`
 - `readonlyRootFilesystem` is disabled (`false`) to allow Next.js cache writes
+- **Environment variables**: ORCHESTRATION_URL, DIBBS_VERSION, CONFIG_NAME, METADATA_DATABASE_SCHEMA, SQL_SERVER_USER, SQL_SERVER_HOST, DB_CIPHER, AUTH_PROVIDER, AUTH_CLIENT_ID, AUTH_ISSUER, AUTH_SESSION_DURATION_MIN, NEXTAUTH_URL, SAVE_XML, DISPLAY_FEEDBACK_LINKS, ECR_PROCESSING_TIMEOUT, AWS_REGION, ECR_BUCKET_NAME, AZURE_CONTAINER_NAME, GCP_PROJECT_ID, NBS_API_PUB_KEY, NBS_PUB_KEY
+- **Secrets**: AUTH_CLIENT_SECRET, NEXTAUTH_SECRET, DATABASE_URL, METADATA_DATABASE_MIGRATION_SECRET, SQL_SERVER_PASSWORD, AZURE_STORAGE_CONNECTION_STRING
 
 ### ingestion, message-parser, fhir-converter, fhir-converter-proxy
 
@@ -155,24 +245,78 @@ aws secretsmanager put-secret-value \
 ### trigger-code-reference
 
 - Configures three service URLs pointing to orchestration, message-parser, and itself
-- Uses `${SMARTY_AUTH_ID}` and `${SMARTY_AUTH_TOKEN}` as placeholder env vars (should be sourced from Secrets Manager)
+- `SMARTY_AUTH_ID` and `SMARTY_AUTH_TOKEN` are sourced from AWS Secrets Manager (see Secrets Management section), not from environment variables
 - `readonlyRootFilesystem` is disabled (`false`)
 
 ### orchestration
 
 Coordinates inter-service communication by setting URLs for all other services:
 
-| Variable                     | Value                                |
-| ---------------------------- | ------------------------------------ |
-| `ECR_VIEWER_URL`             | `http://ecr-viewer:3000/ecr-viewer`  |
-| `FHIR_CONVERTER_URL`         | `http://fhir-converter:8080`         |
-| `INGESTION_URL`              | `http://ingestion:8080`              |
-| `MESSAGE_PARSER_URL`         | `http://message-parser:8080`         |
-| `OTEL_METRICS`               | `none`                               |
-| `OTEL_METRICS_EXPORTER`      | `none`                               |
-| `TRIGGER_CODE_REFERENCE_URL` | `http://trigger-code-reference:8080` |
+| Variable | Value |
+|----------|-------|
+| `ECR_VIEWER_URL` | `http://dibbs-ecr-viewer:3000/ecr-viewer` |
+| `FHIR_CONVERTER_URL` | `http://dibbs-fhir-converter:8080` |
+| `INGESTION_URL` | `http://dibbs-ingestion:8080` |
+| `MESSAGE_PARSER_URL` | `http://dibbs-message-parser:8080` |
+| `OTEL_METRICS` | `none` |
+| `OTEL_METRICS_EXPORTER` | `none` |
+| `TRIGGER_CODE_REFERENCE_URL` | `http://dibbs-trigger-code-reference:8080` |
+| `DIBBS_VERSION` | `${DIBBS_VERSION}` |
+| `ORCHESTRATION_URL` | `http://dibbs-orchestration:8080` |
 
 These values are derived from the reference configuration in `deployment/vm/dibbs-orchestration.env`.
+
+## Complete Variable Reference
+
+The following table maps all wizard-managed environment variables to their target task definition file and block.
+
+| Variable | File | Block | Required |
+|----------|------|-------|----------|
+| `PORT` | ecr-viewer.json | environment | Yes |
+| `HOSTNAME` | ecr-viewer.json | environment | Yes |
+| `NEXT_TELEMETRY_DISABLED` | ecr-viewer.json | environment | Yes |
+| `APP_VERSION` | ecr-viewer.json | environment | Yes |
+| `ORCHESTRATION_URL` | ecr-viewer.json | environment | Yes |
+| `DATABASE_URL` | ecr-viewer.json | secrets | Yes |
+| `DIBBS_VERSION` | ecr-viewer.json | environment | Yes |
+| `CONFIG_NAME` | ecr-viewer.json | environment | Yes |
+| `METADATA_DATABASE_SCHEMA` | ecr-viewer.json | environment | Yes |
+| `METADATA_DATABASE_MIGRATION_SECRET` | ecr-viewer.json | secrets | Yes |
+| `SQL_SERVER_USER` | ecr-viewer.json | environment | Yes |
+| `SQL_SERVER_PASSWORD` | ecr-viewer.json | secrets | Yes |
+| `SQL_SERVER_HOST` | ecr-viewer.json | environment | Yes |
+| `DB_CIPHER` | ecr-viewer.json | environment | Yes |
+| `AUTH_PROVIDER` | ecr-viewer.json | environment | Yes |
+| `AUTH_CLIENT_ID` | ecr-viewer.json | environment | Yes |
+| `AUTH_CLIENT_SECRET` | ecr-viewer.json | secrets | Yes |
+| `AUTH_ISSUER` | ecr-viewer.json | environment | Yes |
+| `AUTH_SESSION_DURATION_MIN` | ecr-viewer.json | environment | Yes |
+| `NEXTAUTH_URL` | ecr-viewer.json | environment | Yes |
+| `NEXTAUTH_SECRET` | ecr-viewer.json | secrets | Yes |
+| `SAVE_XML` | ecr-viewer.json | environment | Optional |
+| `DISPLAY_FEEDBACK_LINKS` | ecr-viewer.json | environment | Optional |
+| `ECR_PROCESSING_TIMEOUT` | ecr-viewer.json | environment | Optional |
+| `AWS_REGION` | ecr-viewer.json | environment | Yes |
+| `ECR_BUCKET_NAME` | ecr-viewer.json | environment | Yes |
+| `AZURE_STORAGE_CONNECTION_STRING` | ecr-viewer.json | secrets | Yes |
+| `AZURE_CONTAINER_NAME` | ecr-viewer.json | environment | Yes |
+| `GCP_PROJECT_ID` | ecr-viewer.json | environment | Yes |
+| `NBS_API_PUB_KEY` | ecr-viewer.json | environment | Yes |
+| `NBS_PUB_KEY` | ecr-viewer.json | environment | Yes |
+| `ECR_VIEWER_URL` | orchestration.json | environment | Yes |
+| `FHIR_CONVERTER_URL` | orchestration.json | environment | Yes |
+| `INGESTION_URL` | orchestration.json | environment | Yes |
+| `MESSAGE_PARSER_URL` | orchestration.json | environment | Yes |
+| `OTEL_METRICS` | orchestration.json | environment | Yes |
+| `OTEL_METRICS_EXPORTER` | orchestration.json | environment | Yes |
+| `TRIGGER_CODE_REFERENCE_URL` | orchestration.json | environment | Yes |
+| `DIBBS_VERSION` | orchestration.json | environment | Yes |
+| `ORCHESTRATION_URL` | orchestration.json | environment | Yes |
+| `INGESTION_URL` | trigger-code-reference.json | environment | Yes |
+| `MESSAGE-PARSER_URL` | trigger-code-reference.json | environment | Yes |
+| `TRIGGER_CODE_REFERENCE_URL` | trigger-code-reference.json | environment | Yes |
+| `SMARTY_AUTH_ID` | trigger-code-reference.json | secrets | Yes |
+| `SMARTY_AUTH_TOKEN` | trigger-code-reference.json | secrets | Yes |
 
 ## Logging
 

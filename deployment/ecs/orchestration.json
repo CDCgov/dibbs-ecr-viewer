@@ -40,7 +40,9 @@
         {
           "name": "TRIGGER_CODE_REFERENCE_URL",
           "value": "http://dibbs-trigger-code-reference:8080"
-        }
+        },
+        { "name": "DIBBS_VERSION", "value": "${DIBBS_VERSION}" },
+        { "name": "ORCHESTRATION_URL", "value": "http://dibbs-orchestration:8080" }
       ],
       "healthCheck": {
         "command": [
