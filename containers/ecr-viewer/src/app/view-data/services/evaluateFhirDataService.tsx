@@ -13,6 +13,7 @@ import {
   Patient,
   Practitioner,
   PractitionerRole,
+  Procedure,
   RelatedPerson,
 } from "fhir/r4";
 import { DateTime } from "luxon";
@@ -959,20 +960,42 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
     const fullId = `${ob.resourceType}/${ob.id}`;
     const outcomes = pregnancyOutcomeObservations
       .filter((ob) => ob.focus?.some(({ reference }) => reference === fullId))
-      .map((o) => [
-        {
-          title: "Birth Order",
-          value: evaluateValue(o, fhirPathMappings.pregnancyBirthOrder),
-        },
-        {
-          title: "Outcome",
-          value: evaluateValue(o, fhirPathMappings.valueX),
-        },
-        {
-          title: "Date/Time",
-          value: evaluateValue(o, fhirPathMappings.effectiveX),
-        },
-      ]);
+      .map((o) => {
+        const outcomeItems = [
+          {
+            title: "Birth Order",
+            value: evaluateValue(o, fhirPathMappings.pregnancyBirthOrder),
+          },
+          {
+            title: "Outcome",
+            value: evaluateValue(o, fhirPathMappings.valueX),
+          },
+          {
+            title: "Date/Time",
+            value: evaluateValue(o, fhirPathMappings.effectiveX),
+          },
+        ];
+
+        const procedures = o.partOf
+          ?.map((ref) => {
+            return evaluateReference<Procedure>(fhirBundle, ref.reference);
+          })
+          .filter((proc): proc is Procedure => proc != undefined);
+
+        procedures?.forEach((procedure) => {
+          const procedureName = evaluateValue(procedure, fhirPathMappings.code);
+          const procedureDate = evaluateValue(
+            procedure,
+            fhirPathMappings.procedureDate,
+          );
+          outcomeItems.push({
+            title: "Procedure",
+            value: procedureName + "\nPerformed on: " + procedureDate,
+          });
+        });
+
+        return outcomeItems;
+      });
 
     if (outcomes.length > 0) {
       data.push({
