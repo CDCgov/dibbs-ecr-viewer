@@ -113,16 +113,16 @@ When both `environment` and `secrets` define the same variable name, the `secret
 
 The following variables should be stored in AWS Secrets Manager and referenced via the `secrets` field:
 
-| Variable | Service(s) | Purpose |
-|----------|------------|---------|
-| `DATABASE_URL` | ecr-viewer | PostgreSQL connection string |
-| `AUTH_CLIENT_SECRET` | ecr-viewer | OAuth client secret for authentication |
-| `NEXTAUTH_SECRET` | ecr-viewer | NextAuth session signing key |
-| `METADATA_DATABASE_MIGRATION_SECRET` | ecr-viewer | Migration secret for database schema migrations |
-| `SQL_SERVER_PASSWORD` | ecr-viewer | SQL Server database password |
-| `AZURE_STORAGE_CONNECTION_STRING` | ecr-viewer | Azure Blob Storage connection string |
-| `SMARTY_AUTH_ID` | trigger-code-reference | SmartyStreets API identifier |
-| `SMARTY_AUTH_TOKEN` | trigger-code-reference | SmartyStreets API token |
+| Variable                             | Service(s)             | Purpose                                         |
+| ------------------------------------ | ---------------------- | ----------------------------------------------- |
+| `DATABASE_URL`                       | ecr-viewer             | PostgreSQL connection string                    |
+| `AUTH_CLIENT_SECRET`                 | ecr-viewer             | OAuth client secret for authentication          |
+| `NEXTAUTH_SECRET`                    | ecr-viewer             | NextAuth session signing key                    |
+| `METADATA_DATABASE_MIGRATION_SECRET` | ecr-viewer             | Migration secret for database schema migrations |
+| `SQL_SERVER_PASSWORD`                | ecr-viewer             | SQL Server database password                    |
+| `AZURE_STORAGE_CONNECTION_STRING`    | ecr-viewer             | Azure Blob Storage connection string            |
+| `SMARTY_AUTH_ID`                     | trigger-code-reference | SmartyStreets API identifier                    |
+| `SMARTY_AUTH_TOKEN`                  | trigger-code-reference | SmartyStreets API token                         |
 
 ### Task Execution Role Permissions
 
@@ -166,7 +166,6 @@ The following variables are organized into logical groups. Not all variables nee
 | `SQL_SERVER_PASSWORD`                | secrets     | SQL Server password                             |
 | `SQL_SERVER_HOST`                    | environment | SQL Server hostname                             |
 | `DB_CIPHER`                          | environment | Database cipher/encryption setting              |
-
 
 ### Auth
 
@@ -215,6 +214,7 @@ Optional variables with sensible defaults if not set.
 | `SMARTY_AUTH_TOKEN` | secrets | SmartyStreets API token      |
 
 Required for the trigger-code-reference service. See the Secrets Management section for configuration.
+
 ## Service-Specific Notes
 
 ### ecr-viewer (web frontend)
