@@ -4,6 +4,72 @@ Example AWS ECS task definitions for deploying eCR Viewer services on AWS Fargat
 
 These JSON files define standalone ECS task definitions for each microservice. They are templates intended for registration and inspection -- they use placeholder values throughout and do not include production-ready IAM roles, VPC, or networking infrastructure.
 
+## Prerequisites
+
+Before deploying, ensure you have:
+
+- [ ] AWS CLI installed and configured (`aws configure`)
+- [ ] An ECS cluster created (or provision via Terraform)
+- [ ] A VPC with at least 2 subnets in different AZs
+- [ ] Security groups for ECS tasks and ALB
+- [ ] An Application Load Balancer (for ecr-viewer frontend)
+- [ ] ECS task execution role with required policies
+- [ ] ECS task role(s) with least-privilege permissions
+- [ ] Secrets in AWS Secrets Manager (see [Secrets Management](#secrets-management))
+
+See [Architecture](#architecture) for an overview of the 7 services. For common issues, see [Troubleshooting](#troubleshooting).
+
+## Quick Start
+
+Go from "infrastructure ready" to "task definitions registered" in four steps:
+
+```bash
+# 1. Store secrets in AWS Secrets Manager
+aws secretsmanager put-secret-value \
+  --secret-id dibbs-ecr-viewer-DATABASE_URL \
+  --secret-string "postgresql://user:pass@host:5432/dbname"
+
+# 2. Replace placeholders in the task definition JSON
+ACCOUNT_ID=123456789012
+IMAGE_TAG=v1.0.0
+REGION=us-east-2
+for f in deployment/ecs/*.json; do
+  sed -i "s/\${AWS_ACCOUNT}/$ACCOUNT_ID/g" "$f"
+  sed -i "s/\${IMAGE_TAG}/$IMAGE_TAG/g" "$f"
+  sed -i "s/\${AWS_REGION}/$REGION/g" "$f"
+done
+
+# 3. Register task definitions
+aws ecs register-task-definition \
+  --cli-input-file file://deployment/ecs/ecr-viewer.json \
+  --region $REGION
+
+# 4. Create ECS services (internal services)
+aws ecs create-service \
+  --cluster your-cluster \
+  --service-name dibbs-ingestion \
+  --task-definition ingestion \
+  --network-configuration "awsvpcConfiguration=subnets=[subnet-abc123,subnet-def456],securityGroups=[sg-abc123],assignPublicIp=DISABLED" \
+  --launch-type FARGATE \
+  --region $REGION
+```
+
+For a detailed walkthrough of each step, see [Deployment Steps](#deployment-steps). For common issues, see [Troubleshooting](#troubleshooting).
+
+## Architecture
+
+eCR Viewer consists of 7 microservices running on AWS Fargate:
+
+- `ecr-viewer` (port 3000) -- Next.js frontend, accessible via ALB
+- `orchestration` (port 8080) -- coordinates inter-service communication
+- `ingestion` (port 8080) -- document ingestion
+- `fhir-converter` (port 8080) -- FHIR document conversion
+- `fhir-converter-proxy` (port 8126) -- HAProxy proxy
+- `message-parser` (port 8080) -- message parsing
+- `trigger-code-reference` (port 8080) -- address reference data
+
+All services share a VPC and communicate via DNS-based discovery (e.g., `http://dibbs-ecr-viewer:3000/ecr-viewer`). Images are pulled from `ghcr.io/cdcgov/*`. Only `ecr-viewer` is exposed publicly via an Application Load Balancer; all other services are internal-only.
+
 ## Available Task Definitions
 
 | File                          | Service                  | Port | Description                                                     |
@@ -18,18 +84,48 @@ These JSON files define standalone ECS task definitions for each microservice. T
 
 All services use `awsvpc` network mode, `FARGATE` compatibility, X86_64 architecture, 512 CPU, and 1024 MB memory.
 
-## Prerequisites
+## Deployment Steps
 
-- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) installed and configured
-- AWS credentials with `ecs:RegisterTaskDefinition` permission
-- Target AWS region set: `aws configure` or `AWS_REGION` environment variable
+A complete walkthrough for going from an empty AWS account to running services. Follow these steps in order.
 
-## Registration
+### Step 1: Create Secrets in AWS Secrets Manager
 
-Register a task definition with AWS using the CLI:
+Store sensitive values (database passwords, OAuth secrets, API tokens) in AWS Secrets Manager before registering task definitions. The secret name follows the pattern `dibbs-<service>-<VAR_NAME>`.
+
+Example:
 
 ```bash
-aws ecs register-task-definition --cli-input-file file://deployment/ecs/ecr-viewer.json
+aws secretsmanager put-secret-value \
+  --secret-id dibbs-ecr-viewer-DATABASE_URL \
+  --secret-string "postgresql://user:pass@host:5432/dbname"
+```
+
+See [Secrets Management](#secrets-management) for the full list of sensitive variables and their purpose.
+
+### Step 2: Replace Placeholders
+
+Each JSON file contains placeholder values that must be replaced with real values for your environment. Use `sed` or a scripting language to bulk-replace all placeholders:
+
+```bash
+ACCOUNT_ID=123456789012
+IMAGE_TAG=v1.0.0
+REGION=us-east-2
+for f in deployment/ecs/*.json; do
+  sed -i "s/\${AWS_ACCOUNT}/$ACCOUNT_ID/g" "$f"
+  sed -i "s/\${IMAGE_TAG}/$IMAGE_TAG/g" "$f"
+  sed -i "s/\${AWS_REGION}/$REGION/g" "$f"
+done
+```
+
+See [Placeholders](#placeholders) for the complete list of placeholders and examples.
+
+### Step 3: Register Task Definitions
+
+Register each task definition with AWS ECS. This creates a versioned task definition that ECS services can run.
+
+```bash
+aws ecs register-task-definition \
+  --cli-input-file file://deployment/ecs/ecr-viewer.json
 ```
 
 Replace `ecr-viewer` with the desired service file name. The command returns the registered task definition ARN, family name, revision number, and container definition details.
@@ -41,6 +137,78 @@ aws ecs register-task-definition \
   --cli-input-file file://deployment/ecs/ecr-viewer.json \
   --region us-east-2
 ```
+
+### Step 4: Create ECS Services
+
+Create ECS services to run the task definitions. With `awsvpc` network mode, every `create-service` call requires a `--network-configuration` specifying subnet IDs, security group IDs, and whether to assign a public IP.
+
+For internal services (everything except ecr-viewer):
+
+```bash
+aws ecs create-service \
+  --cluster your-cluster \
+  --service-name dibbs-ingestion \
+  --task-definition ingestion \
+  --network-configuration "awsvpcConfiguration=subnets=[subnet-abc123,subnet-def456],securityGroups=[sg-abc123],assignPublicIp=DISABLED" \
+  --launch-type FARGATE \
+  --region us-east-2
+```
+
+For `ecr-viewer`, assign a public IP so the ALB can route traffic to it:
+
+```bash
+aws ecs create-service \
+  --cluster your-cluster \
+  --service-name dibbs-ecr-viewer \
+  --task-definition ecr-viewer \
+  --network-configuration "awsvpcConfiguration=subnets=[subnet-abc123,subnet-def456],securityGroups=[sg-abc123],assignPublicIp=ENABLED" \
+  --launch-type FARGATE \
+  --region us-east-2
+```
+
+See [Troubleshooting](#troubleshooting) for common issues with service creation.
+
+## Service-Specific Configuration
+
+### ecr-viewer (web frontend)
+
+- Runs on port 3000
+- Sets `HOSTNAME` to `0.0.0.0` and disables Next.js telemetry
+- Uses `APP_VERSION` env var set to the image tag for version reporting
+- Uses `CONFIG_NAME` to select the deployment configuration profile
+- `DATABASE_URL` is injected via AWS Secrets Manager (see Secrets Management section)
+- Health check probes `/api/health-check`
+- `readonlyRootFilesystem` is disabled (`false`) to allow Next.js cache writes
+- **Environment variables**: ORCHESTRATION_URL, DIBBS_VERSION, CONFIG_NAME, METADATA_DATABASE_SCHEMA, SQL_SERVER_USER, SQL_SERVER_HOST, DB_CIPHER, AUTH_PROVIDER, AUTH_CLIENT_ID, AUTH_ISSUER, AUTH_SESSION_DURATION_MIN, NEXTAUTH_URL, SAVE_XML, DISPLAY_FEEDBACK_LINKS, ECR_PROCESSING_TIMEOUT, AWS_REGION, ECR_BUCKET_NAME, AZURE_CONTAINER_NAME, GCP_PROJECT_ID, NBS_API_PUB_KEY, NBS_PUB_KEY
+- **Secrets**: AUTH_CLIENT_SECRET, NEXTAUTH_SECRET, DATABASE_URL, METADATA_DATABASE_MIGRATION_SECRET, SQL_SERVER_PASSWORD, AZURE_STORAGE_CONNECTION_STRING
+
+### ingestion, message-parser, fhir-converter, fhir-converter-proxy
+
+- No custom environment variables required
+- Health check probes the root path `/`
+
+### trigger-code-reference
+
+- Configures three service URLs pointing to orchestration, message-parser, and itself
+- `readonlyRootFilesystem` is disabled (`false`)
+
+### orchestration
+
+Coordinates inter-service communication by setting URLs for all other services:
+
+| Variable                     | Value                                      |
+| ---------------------------- | ------------------------------------------ |
+| `ECR_VIEWER_URL`             | `http://dibbs-ecr-viewer:3000/ecr-viewer`  |
+| `FHIR_CONVERTER_URL`         | `http://dibbs-fhir-converter:8080`         |
+| `INGESTION_URL`              | `http://dibbs-ingestion:8080`              |
+| `MESSAGE_PARSER_URL`         | `http://dibbs-message-parser:8080`         |
+| `OTEL_METRICS`               | `none`                                     |
+| `OTEL_METRICS_EXPORTER`      | `none`                                     |
+| `TRIGGER_CODE_REFERENCE_URL` | `http://dibbs-trigger-code-reference:8080` |
+| `DIBBS_VERSION`              | `${DIBBS_VERSION}`                         |
+| `ORCHESTRATION_URL`          | `http://dibbs-orchestration:8080`          |
+
+These values are derived from the reference configuration in `deployment/vm/dibbs-orchestration.env`.
 
 ## Placeholders
 
@@ -215,47 +383,6 @@ Optional variables with sensible defaults if not set.
 | `SMARTY_AUTH_TOKEN` | secrets | SmartyStreets API token      |
 
 Required for the trigger-code-reference service. See the Secrets Management section for configuration.
-## Service-Specific Notes
-
-### ecr-viewer (web frontend)
-
-- Runs on port 3000
-- Sets `HOSTNAME` to `0.0.0.0` and disables Next.js telemetry
-- Uses `APP_VERSION` env var set to the image tag for version reporting
-- Uses `CONFIG_NAME` to select the deployment configuration profile
-- `DATABASE_URL` is injected via AWS Secrets Manager (see Secrets Management section)
-- Health check probes `/api/health-check`
-- `readonlyRootFilesystem` is disabled (`false`) to allow Next.js cache writes
-- **Environment variables**: ORCHESTRATION_URL, DIBBS_VERSION, CONFIG_NAME, METADATA_DATABASE_SCHEMA, SQL_SERVER_USER, SQL_SERVER_HOST, DB_CIPHER, AUTH_PROVIDER, AUTH_CLIENT_ID, AUTH_ISSUER, AUTH_SESSION_DURATION_MIN, NEXTAUTH_URL, SAVE_XML, DISPLAY_FEEDBACK_LINKS, ECR_PROCESSING_TIMEOUT, AWS_REGION, ECR_BUCKET_NAME, AZURE_CONTAINER_NAME, GCP_PROJECT_ID, NBS_API_PUB_KEY, NBS_PUB_KEY
-- **Secrets**: AUTH_CLIENT_SECRET, NEXTAUTH_SECRET, DATABASE_URL, METADATA_DATABASE_MIGRATION_SECRET, SQL_SERVER_PASSWORD, AZURE_STORAGE_CONNECTION_STRING
-
-### ingestion, message-parser, fhir-converter, fhir-converter-proxy
-
-- No custom environment variables required
-- Health check probes the root path `/`
-
-### trigger-code-reference
-
-- Configures three service URLs pointing to orchestration, message-parser, and itself
-- `readonlyRootFilesystem` is disabled (`false`)
-
-### orchestration
-
-Coordinates inter-service communication by setting URLs for all other services:
-
-| Variable                     | Value                                      |
-| ---------------------------- | ------------------------------------------ |
-| `ECR_VIEWER_URL`             | `http://dibbs-ecr-viewer:3000/ecr-viewer`  |
-| `FHIR_CONVERTER_URL`         | `http://dibbs-fhir-converter:8080`         |
-| `INGESTION_URL`              | `http://dibbs-ingestion:8080`              |
-| `MESSAGE_PARSER_URL`         | `http://dibbs-message-parser:8080`         |
-| `OTEL_METRICS`               | `none`                                     |
-| `OTEL_METRICS_EXPORTER`      | `none`                                     |
-| `TRIGGER_CODE_REFERENCE_URL` | `http://dibbs-trigger-code-reference:8080` |
-| `DIBBS_VERSION`              | `${DIBBS_VERSION}`                         |
-| `ORCHESTRATION_URL`          | `http://dibbs-orchestration:8080`          |
-
-These values are derived from the reference configuration in `deployment/vm/dibbs-orchestration.env`.
 
 ## Complete Variable Reference
 
@@ -318,6 +445,31 @@ All services emit logs to CloudWatch using the `awslogs` log driver:
 - Stream prefixes are set to the service name
 
 Adjust the `awslogs-region` value in the log configuration options to match your target region.
+
+## File Layout
+
+```
+deployment/ecs/
+|-- ecr-viewer.json              # Web frontend (Next.js application)
+|-- ingestion.json               # Document ingestion service
+|-- fhir-converter.json          # FHIR document converter
+|-- fhir-converter-proxy.json    # HAProxy proxy for FHIR converter
+|-- message-parser.json          # Message parsing service
+|-- orchestration.json           # Service orchestration
+|-- trigger-code-reference.json  # Trigger code reference data service
+```
+
+## Troubleshooting
+
+- **Task fails to start with `PROVISIONING` timeout** -- Check VPC subnets exist, are in the correct region, and have available IP addresses. Verify security groups allow necessary traffic. Ensure you have at least 2 subnets across different AZs.
+- **`ClientException: Task definition has secrets but no executionRoleArn`** -- When using the `secrets` field, the task definition must specify both `executionRoleArn` (for the ECS agent to retrieve secrets) and `taskRoleArn` (for the container's IAM permissions). See [Secrets Management](#secrets-management) for required policies.
+- **Services can't find each other via DNS** -- All services must run in the same VPC. The hostnames used in orchestration.env (e.g., `dibbs-ecr-viewer:3000`) assume a shared network namespace. Verify VPC configuration and that all services are deployed to the same VPC.
+- **Health checks pass but service is unreachable** -- Task definition health checks (`healthCheck`) are separate from ALB target group health checks. Verify both point to the correct endpoint. The ecr-viewer health check is `/api/health-check`.
+- **`NetworkConfiguration` required but not provided** -- With `awsvpc` network mode, every `create-service` call must specify `--network-configuration` with subnet IDs and security group IDs. See [Deployment Steps Step 4](#step-4-create-ecs-services).
+- **Secrets Manager ARN has a rotation suffix** -- When AWS rotates a secret, the ARN changes from `...secret:dibbs-ecr-viewer-DATABASE_URL` to `...secret:dibbs-ecr-viewer-DATABASE_URL-abc123`. Use the full ARN (including the suffix) in the task definition `valueFrom` field, not just the secret ID.
+- **Task execution role missing ECR permissions** -- If the task fails to pull its image, ensure the execution role has `ecr:GetAuthorizationToken`, `ecr:BatchCheckLayerAvailability`, `ecr:GetDownloadUrlForLayer`, and `ecr:BatchGetImage` permissions.
+- **Security group blocks internal traffic** -- All services must be in security groups that allow inbound traffic from each other. For internal services on port 8080, ensure security groups permit ingress from the same security group on the appropriate port.
+- **Public IP assigned to internal services** -- Internal services should have `assignPublicIp` set to `DISABLED`. Only the `ecr-viewer` service needs a public IP for ALB routing.
 
 ## Production Infrastructure
 
