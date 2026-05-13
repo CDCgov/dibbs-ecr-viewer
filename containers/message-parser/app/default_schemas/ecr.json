@@ -187,6 +187,23 @@
       }
     }
   },
+  "immunizations": {
+    "fhir_path": "Bundle.entry.resource.where(resourceType='Immunization')",
+    "data_type": "array",
+    "nullable": true,
+    "secondary_schema": {
+      "name": {
+        "fhir_path": "Immunization.vaccineCode.coding.display | Immunization.vaccineCode.text",
+        "data_type": "string",
+        "nullable": true
+      },
+      "administration_date": {
+        "fhir_path": "Immunization.occurrenceDateTime",
+        "data_type": "datetime",
+        "nullable": true
+      }
+    }
+  },
   "labs": {
     "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(category.coding.code='laboratory')",
     "data_type": "array",

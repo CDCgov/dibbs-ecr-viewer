@@ -33,7 +33,8 @@
     "test:load:local": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./seed-scripts/docker-compose-load-local.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --build'",
     "clear-local": "docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile \"*\" down -v",
     "convert-seed-data": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./seed-scripts/docker-compose-seed.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up --abort-on-container-exit ${CONVERT_FLAGS}'",
-    "convert-seed-data:build": "CONVERT_FLAGS=--build npm run convert-seed-data"
+    "convert-seed-data:build": "CONVERT_FLAGS=--build npm run convert-seed-data",
+    "migration:create": "node scripts/create-migration.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.982.0",

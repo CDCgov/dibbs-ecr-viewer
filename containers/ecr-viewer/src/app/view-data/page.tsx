@@ -69,10 +69,14 @@ const ECRViewerPage = async ({
   const patientName = evaluatePatientName(patient, true);
   const patientDOB = evaluatePatientDOB(patient);
 
-  const accordionItems = getEcrDocumentAccordionItems(fhirBundle, fhirIndex);
+  const { ecrDocumentNavConfig, accordionItems } = getEcrDocumentAccordionItems(
+    fhirBundle,
+    fhirIndex,
+  );
+
   return (
     <ECRViewerLayout patientName={patientName} patientDOB={patientDOB}>
-      <SideNav />
+      <SideNav ecrDocumentNavConfig={ecrDocumentNavConfig} />
       <div className="ecr-viewer-container">
         <div className="margin-bottom-3">
           <h2 className="margin-bottom-05 margin-top-3" id="ecr-summary">

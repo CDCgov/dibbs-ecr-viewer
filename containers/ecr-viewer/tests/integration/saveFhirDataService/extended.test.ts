@@ -78,6 +78,7 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
       specimen_collection_date: "2024-01-01",
     },
   ],
+  immunizations: [],
   birth_sex: "Chill Guy",
   gender_identity: "Chiller Guy",
   homelessness_status: "Not Homeless",
@@ -289,6 +290,38 @@ describe("saveFhirData - extended", () => {
     expect(resp.status).toEqual(500);
     expect(rolledBack).toBeTrue();
     expect(res).toHaveLength(0);
+  });
+
+  it("should save immunizations", async () => {
+    const metadata: BundleExtendedMetadata = {
+      ...baseExtendedMetadata,
+      immunizations: [
+        {
+          uuid: undefined,
+          name: "COVID-19 Vaccine",
+          administration_date: "2023-06-15",
+        },
+      ],
+    };
+
+    const resp = await saveFhirMetadata(
+      "1-2-3-4",
+      "extended",
+      metadata,
+      makePromiseResolveWithStatus(200),
+      () => makePromiseResolveWithStatus(200),
+    );
+
+    expect(resp.status).toEqual(200);
+
+    const immunizations = await getDb<Extended>()
+      .selectFrom("ecr_immunizations")
+      .selectAll()
+      .execute();
+
+    expect(immunizations).toHaveLength(1);
+    expect(immunizations[0].name).toEqual("COVID-19 Vaccine");
+    expect(immunizations[0].eicr_id).toEqual("1-2-3-4");
   });
 
   it("should return an error and roll back db when fhir bundle save fails", async () => {

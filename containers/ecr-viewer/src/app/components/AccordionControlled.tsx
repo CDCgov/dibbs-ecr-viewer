@@ -19,7 +19,8 @@ interface AccordionCheckboxProps {
   onChecked?: (checked: boolean) => void;
 }
 
-type AccordionControlledItemProps = AccordionItemProps & AccordionCheckboxProps;
+type AccordionControlledItemProps = AccordionItemProps &
+  AccordionCheckboxProps & { shouldRenderBeforeExpand?: boolean };
 
 interface AccordionProps {
   items: AccordionControlledItemProps[];
@@ -27,7 +28,7 @@ interface AccordionProps {
   toggleItem: (id: string) => void;
 }
 
-const AccordionItem = ({
+export const AccordionItem = ({
   title,
   id,
   content,
@@ -35,8 +36,18 @@ const AccordionItem = ({
   className,
   headingLevel,
   handleToggle,
+  shouldRenderBeforeExpand = true,
   ...checkboxProps
 }: AccordionControlledItemProps): React.ReactElement => {
+  // Only render content if expanded OR if it's been expanded before
+  const [hasBeenExpanded, setHasBeenExpanded] = React.useState(expanded);
+
+  React.useEffect(() => {
+    if (expanded && !hasBeenExpanded) {
+      setHasBeenExpanded(true);
+    }
+  }, [expanded, hasBeenExpanded]);
+
   const headingClasses = classnames("usa-accordion__heading", className);
   const contentClasses = classnames(
     "usa-accordion__content",
@@ -45,6 +56,7 @@ const AccordionItem = ({
   );
 
   const Heading = headingLevel;
+  const shouldRender = shouldRenderBeforeExpand || hasBeenExpanded;
 
   return (
     <AccordionCheckBox id={id} {...checkboxProps}>
@@ -60,14 +72,16 @@ const AccordionItem = ({
           {title}
         </button>
       </Heading>
-      <div
-        id={id}
-        data-testid={`accordionItem_${id}`}
-        className={contentClasses}
-        hidden={!expanded}
-      >
-        {content}
-      </div>
+      {shouldRender && (
+        <div
+          id={id}
+          data-testid={`accordionItem_${id}`}
+          className={contentClasses}
+          hidden={!expanded}
+        >
+          {content}
+        </div>
+      )}
     </AccordionCheckBox>
   );
 };

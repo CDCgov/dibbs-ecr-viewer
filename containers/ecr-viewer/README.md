@@ -30,7 +30,7 @@ Congratulations, the eCR Viewer should now be running on `localhost:8080`!
 
 ### Running from Node.js Source Code
 
-We recommend running the eCR Viewer from a container, but if that isn't feasible for a given use-case, please see the [Development section](##Development) for instruction to run the eCR Viewer locally
+We recommend running the eCR Viewer from a container, but if that isn't feasible for a given use-case, please see the [Development section](#Development) for instruction to run the eCR Viewer locally
 
 ## Building the Docker Image
 
@@ -93,6 +93,26 @@ By default, the seed data in the `star-wars` subfolder converts. To convert othe
 ### Developer Commands
 
 Additional commands can be found in [`package.json`](package.json).
+
+#### Creating a Migration
+
+To create a new Kysely migration file, run:
+
+```sh
+npm run migration:create -- <type> <name>
+```
+
+- `<type>` — either `core` or `extended` (required)
+- `<name>` — a short snake_case description of the migration (required)
+
+For example:
+
+```sh
+npm run migration:create -- core add_user_roles
+npm run migration:create -- extended add_immunization_columns
+```
+
+This generates a timestamped file (e.g. `20260403162000_add_user_roles.ts`) in `src/app/api/migrate-db/migrations/<type>/` with empty `up` and `down` exports ready to fill in.
 
 ### Testing
 
