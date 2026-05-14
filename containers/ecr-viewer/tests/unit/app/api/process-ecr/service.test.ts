@@ -19,9 +19,12 @@ import {
   saveWithMetadata,
 } from "@/app/api/save-fhir-data/service";
 import { S3_SOURCE } from "@/app/data/blobStorage/utils";
+import { getDb } from "@/app/data/metadataDb/database";
 
 jest.mock("@/app/api/save-fhir-data/service");
-jest.mock("@/app/data/metadataDb/database");
+jest.mock("@/app/data/metadataDb/database", () => ({
+  getDb: jest.fn(),
+}));
 
 const mockAgent = new MockAgent();
 mockAgent.disableNetConnect();
@@ -240,6 +243,94 @@ describe("orchestrationRequest", () => {
     expect(response).toEqual({
       message: "Failed to process orchestration response",
       status: 500,
+    });
+  });
+
+  describe("early duplicate check", () => {
+    const xmlBody = {
+      ecr: `<ClinicalDocument xmlns="urn:hl7-org:v3"><id root="test-root" extension="test-ext" /></ClinicalDocument>`,
+    };
+
+    //mock database query chain, configure how many records query should return
+    const makeDbMock = (count: number) => {
+      const chain = {
+        selectFrom: jest.fn().mockReturnThis(),
+        select: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        executeTakeFirst: jest.fn().mockResolvedValue({ num_ecr: count }),
+      };
+      (getDb as jest.Mock).mockReturnValue(chain);
+      return chain;
+    };
+
+    afterEach(() => {
+      delete process.env.METADATA_DATABASE_TYPE;
+    });
+
+    it("returns 409 without calling orchestration when ECR already exists in DB", async () => {
+      process.env.METADATA_DATABASE_TYPE = "postgres";
+      makeDbMock(1);
+
+      const response = await orchestrationRequest(xmlBody);
+
+      expect(response).toEqual({
+        message: "eCR already loaded: test-root^test-ext",
+        status: 409,
+      });
+      expect(saveWithMetadata).not.toHaveBeenCalled();
+      expect(saveToStorage).not.toHaveBeenCalled();
+    });
+
+    it("proceeds with orchestration when ECR does not exist in DB", async () => {
+      process.env.METADATA_DATABASE_TYPE = "postgres";
+      makeDbMock(0);
+
+      mockPool
+        .intercept({ path: "/process-message", method: "POST" })
+        .reply(200, {
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        });
+
+      (saveToStorage as jest.Mock).mockResolvedValue({
+        status: 200,
+        message: "Success",
+      });
+
+      const response = await orchestrationRequest(
+        xmlBody,
+        false,
+        mockAgent as unknown as Agent,
+      );
+
+      expect(response).toEqual({ status: 200, message: "Success" });
+    });
+
+    it("skips the check and proceeds when no DB is configured", async () => {
+      delete process.env.METADATA_DATABASE_TYPE;
+
+      mockPool
+        .intercept({ path: "/process-message", method: "POST" })
+        .reply(200, {
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        });
+
+      (saveToStorage as jest.Mock).mockResolvedValue({
+        status: 200,
+        message: "Success",
+      });
+
+      const response = await orchestrationRequest(
+        xmlBody,
+        false,
+        mockAgent as unknown as Agent,
+      );
+
+      expect(response).toEqual({ status: 200, message: "Success" });
+      expect(getDb).not.toHaveBeenCalled();
     });
   });
 

@@ -12,6 +12,8 @@ import {
   BundleExtendedMetadata,
   BundleMetadata,
 } from "@/app/api/save-fhir-data/types";
+import { getDb } from "@/app/data/metadataDb/database";
+import { Core } from "@/app/data/metadataDb/types/core";
 import { dbDialect, dbSchema } from "@/app/data/metadataDb/utils/db-config";
 import { getEcrIdFromIdentifier, resolveEcrId } from "@/app/utils/ecrid-utils";
 
@@ -182,6 +184,22 @@ export const orchestrationRequest = async (
   returnBundle: boolean = false,
   fetchAgent = createOrchestrationAgent(),
 ) => {
+  if (dbDialect()) {
+    try {
+      const ecrId = await getEcrIdFromXml(body);
+      const existing = await getDb<Core>()
+        .selectFrom("ecr_data")
+        .select((eb) => eb.fn.countAll().as("num_ecr"))
+        .where("ecr_data.eicr_id", "=", ecrId)
+        .executeTakeFirst();
+      if (existing && Number(existing.num_ecr) > 0) {
+        return { message: `eCR already loaded: ${ecrId}`, status: 409 };
+      }
+    } catch {
+      // If ID can't be extracted from input, proceed and let the later check handle it
+    }
+  }
+
   let orchestrationResp: BundleInfo;
   try {
     orchestrationResp = await getOrchestrationResponse(body, fetchAgent);
