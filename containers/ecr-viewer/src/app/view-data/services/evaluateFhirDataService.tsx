@@ -806,6 +806,10 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
       toolTip:
         "Last Menstrual Period represents the first day of the last menstrual period of the patient. This section lists multiple periods in collected in chronological order.",
     },
+    {
+      title: "Pregnancy Intention in the Next Year",
+      value: evaluatePregnancyIntention(fhirBundle),
+    },
   ];
 
   return evaluateData(data);
@@ -1037,6 +1041,17 @@ const evaluateLastMenstrualPeriod = (fhirBundle: Bundle) => {
   ];
 
   return <EvaluateTable resources={observations} columns={columns} />;
+};
+
+const evaluatePregnancyIntention = (fhirBundle: Bundle) => {
+  const observation = evaluateOne(fhirBundle, fhirPathMappings.pregnancyIntent);
+
+  if (!observation) return;
+
+  const value = evaluateValue(observation, fhirPathMappings.valueX);
+  const effective = evaluateValue(observation, fhirPathMappings.effectiveX);
+
+  return value + "\n" + effective;
 };
 
 // =============================================================================

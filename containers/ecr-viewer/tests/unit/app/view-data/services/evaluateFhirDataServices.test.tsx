@@ -1607,12 +1607,15 @@ Home: 123-456-6909`,
       expect(screen.getAllByText("Pregnancy Status").length).toEqual(1);
     });
 
-    it("should display all pregnancy status data ", () => {
+    it("should display all pregnancy data ", () => {
       const actual = evaluatePregnancyData(
         BundleWithPregnancyStatus as unknown as Bundle,
       );
-      const { container } = render(actual.availableData[0].value);
-      expect(container).toMatchSnapshot();
+
+      actual.availableData.forEach((data) => {
+        const { container } = render(data.value);
+        expect(container).toMatchSnapshot();
+      });
     });
 
     it("should display nothing when no pregnancy data is available", () => {
