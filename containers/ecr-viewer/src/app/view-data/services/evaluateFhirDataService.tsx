@@ -810,6 +810,10 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
       title: "Pregnancy Intention in the Next Year",
       value: evaluatePregnancyIntention(fhirBundle),
     },
+    {
+      title: "Date of Last Live Birth",
+      value: evaluateDateOfLastLiveBirth(fhirBundle),
+    },
   ];
 
   return evaluateData(data);
@@ -1052,6 +1056,18 @@ const evaluatePregnancyIntention = (fhirBundle: Bundle) => {
   const effective = evaluateValue(observation, fhirPathMappings.effectiveX);
 
   return value + "\n" + effective;
+};
+
+const evaluateDateOfLastLiveBirth = (fhirBundle: Bundle) => {
+  const observation = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.pregnancyLastLiveBirth,
+  );
+
+  if (!observation) return;
+
+  const value = evaluateValue(observation, fhirPathMappings.valueX);
+  return value;
 };
 
 // =============================================================================
