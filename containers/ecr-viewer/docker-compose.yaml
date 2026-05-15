@@ -75,13 +75,13 @@ services:
         required: false
 
   postgres:
-    image: "postgres:17-alpine"
+    image: "postgres:alpine"
     ports:
       - "5432:5432"
     volumes:
       - ./sql/postgres/init.sql:/docker-entrypoint-initdb.d/01-init.sql
       - ./seed-scripts/sql/postgres/.pgpass/:/usr/local/lib/.pgpass # Keep if needed
-      - db:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/
     environment:
       - POSTGRES_USER=postgres
       - PGUSER=postgres
