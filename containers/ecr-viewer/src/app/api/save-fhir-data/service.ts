@@ -282,6 +282,20 @@ const saveExtendedMetadata = async (
         .execute();
     }
   }
+
+  if (metadata.immunizations) {
+    for (const immunization of metadata.immunizations) {
+      await trx
+        .insertInto("ecr_immunizations")
+        .values({
+          uuid: randomUUID(),
+          eicr_id: ecrId,
+          administration_date: asDate(immunization.administration_date),
+          name: immunization.name,
+        })
+        .execute();
+    }
+  }
 };
 
 /**

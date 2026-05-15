@@ -944,10 +944,12 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
 
     ob.component?.forEach((component) =>
       data.push({
-        title: evaluateValue(
-          component,
-          fhirPathMappings.code,
-          "Observation.component",
+        title: toTitleCase(
+          evaluateValue(
+            component,
+            fhirPathMappings.code,
+            "Observation.component",
+          ),
         ),
         value: evaluateValue(
           component,
@@ -1020,7 +1022,9 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
       const supplementalObservation: Observation | undefined =
         evaluateReference(fhirBundle, ref.reference);
       data.push({
-        title: evaluateValue(supplementalObservation, fhirPathMappings.code),
+        title: toTitleCase(
+          evaluateValue(supplementalObservation, fhirPathMappings.code),
+        ),
         value: evaluateValue(supplementalObservation, fhirPathMappings.valueX),
       });
     });

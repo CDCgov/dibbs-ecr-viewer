@@ -19,7 +19,6 @@ export const EcrDocument = ({
   initialAccordionItems: AccordionItem[];
 }) => {
   const [accordionItems, setAccordionItems] = useState(initialAccordionItems);
-
   const handleToggle = (id: string) => {
     const nextItems = accordionItems.map((item) => {
       if (item.id === id) {

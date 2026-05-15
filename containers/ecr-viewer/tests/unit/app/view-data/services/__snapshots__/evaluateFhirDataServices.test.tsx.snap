@@ -685,6 +685,362 @@ exports[`evaluateFhirDataService tests Evaluate Patient Info: Pregnancy Info sho
           <div
             class="grid-col maxw7 text-pre-line p-list"
           >
+            10/01/2017
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Pregnancy Determination Method
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            Ultrasonography
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Delivery Date Estimated From Ovulation Date
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            05/22/2017
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Gestational Age Estimated From Selected Delivery Date
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            143 d
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row flex-column"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Outcomes
+          </div>
+          <div
+            class="grid-col width-full text-pre-line p-list"
+          >
+            <ul
+              class="add-list-reset"
+            >
+              <li
+                class="padding-y-2 "
+              >
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="text-normal data-title padding-right-1"
+                    >
+                      Birth Order
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list"
+                    >
+                      1
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="text-normal data-title padding-right-1"
+                    >
+                      Outcome
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list"
+                    >
+                      Stillbirth
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="text-normal data-title padding-right-1"
+                    >
+                      Date/Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list"
+                    >
+                      01/05/2020 8:50 AM
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Birth Plurality Of Pregnancy
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            2
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Date First Prenatal Visit
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            09/01/2016
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Prenatal Visits For This Pregnancy #
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            3
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Clinical Finding
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            Breech presentation
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Clinical Finding
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            Abnormal fetal heart rate
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`evaluateFhirDataService tests Evaluate Patient Info: Pregnancy Info should display all pregnancy status data  1`] = `
+<div>
+  <div
+    class="display-flex"
+  >
+    <div
+      class="margin-left-auto padding-top-1"
+    >
+      <button
+        class="usa-button usa-button--unstyled"
+        data-testid="button"
+        type="button"
+      >
+        Expand all 
+        pregnancy info
+      </button>
+      <span
+        class="vertical-line"
+      />
+      <button
+        class="usa-button usa-button--unstyled"
+        data-testid="button"
+        type="button"
+      >
+        Collapse all 
+        pregnancy info
+      </button>
+    </div>
+  </div>
+  <div
+    class="usa-accordion accordion-rr"
+    data-allow-multiple="true"
+    data-testid="accordion"
+  >
+    <h5
+      class="usa-accordion__heading side-nav-ignore"
+    >
+      <button
+        aria-controls="89e17c5f-8f1c-b3b1-94fa-c3622faa9280-r:id-0"
+        aria-expanded="true"
+        class="usa-accordion__button"
+        data-testid="accordionButton_89e17c5f-8f1c-b3b1-94fa-c3622faa9280-r:id-0"
+        type="button"
+      >
+        <div
+          class="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span>
+            Pregnancy Status
+             
+            <span
+              class="usa-tag margin-left-105"
+              data-testid="tag"
+            >
+              Pregnancy
+            </span>
+          </span>
+          <span
+            class="text-base"
+            style="font-size: 1rem;"
+          >
+            Start: 08/26/2017
+          </span>
+        </div>
+      </button>
+    </h5>
+    <div
+      class="usa-accordion__content usa-prose side-nav-ignore"
+      data-testid="accordionItem_89e17c5f-8f1c-b3b1-94fa-c3622faa9280-r:id-0"
+      id="89e17c5f-8f1c-b3b1-94fa-c3622faa9280-r:id-0"
+    >
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Status
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            Pregnancy
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Effective Date/Time
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            Start: 08/26/2017
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Pregnancy Determination Date/Time
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
             2017-10-01
           </div>
         </div>

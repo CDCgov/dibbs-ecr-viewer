@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "lint": "cd containers/ecr-viewer && eslint --ext=.ts,.tsx --fix . && cd ../..",
-    "typecheck": "cd containers/ecr-viewer && tsc --noEmit && cd ../.."
+    "typecheck": "cd containers/ecr-viewer && tsc --noEmit && cd ../..",
+    "migration:create": "cd containers/ecr-viewer && node scripts/create-migration.mjs"
   },
   "devDependencies": {
     "@dword-design/eslint-plugin-import-alias": "^5.1.1",
