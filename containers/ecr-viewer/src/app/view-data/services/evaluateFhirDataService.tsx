@@ -937,9 +937,7 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
       },
       {
         title: "Pregnancy Determination Date/Time",
-        value: formatDateTime(
-          evaluateValue(ob, fhirPathMappings.pregnancyDeterminationDate),
-        ),
+        value: evaluateValue(ob, fhirPathMappings.pregnancyDeterminationDate),
       },
       {
         title: "Pregnancy Determination Method",
