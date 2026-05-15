@@ -992,7 +992,7 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
           );
           outcomeItems.push({
             title: "Procedure",
-            value: procedureName + "\nPerformed on: " + procedureDate,
+            value: procedureName + "\nPerformed Date/Time: " + procedureDate,
           });
         });
 
