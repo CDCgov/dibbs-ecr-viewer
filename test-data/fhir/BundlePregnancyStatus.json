@@ -1,0 +1,402 @@
+{
+  "resourceType": "Bundle",
+  "type": "document",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:89e17c5f-8f1c-b3b1-94fa-c3622faa9280",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "89e17c5f-8f1c-b3b1-94fa-c3622faa9280",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-pregnancy-status-observation"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:bab77407-f76d-4a51-a2ed-980c8a59fe28"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "exam"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "82810-3",
+              "display": "Pregnancy status"
+            }
+          ]
+        },
+        "effectivePeriod": {
+          "start": "2017-08-26"
+        },
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "code": "77386006",
+              "system": "http://snomed.info/sct",
+              "display": "Pregnancy"
+            }
+          ]
+        },
+        "method": {
+          "coding": [
+            {
+              "code": "16310003",
+              "system": "http://snomed.info/sct",
+              "display": "Ultrasonography"
+            }
+          ]
+        },
+        "component": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-date-determined-extension",
+                "valueDateTime": "2017-10-01T10:15:00"
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "code": "11780-4",
+                  "system": "http://loinc.org",
+                  "display": "Delivery date Estimated from ovulation date"
+                }
+              ]
+            },
+            "valueDateTime": "2017-05-22"
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-date-determined-extension",
+                "valueDateTime": "2017-10-01T10:15:00"
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "code": "11887-7",
+                  "system": "http://loinc.org",
+                  "display": "Gestational age Estimated from selected delivery date"
+                }
+              ]
+            },
+            "valueQuantity": {
+              "value": 143,
+              "unit": "d"
+            }
+          }
+        ],
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-date-recorded-extension",
+            "valueDateTime": "2017-10-01T10:35:00"
+          },
+          {
+            "url": "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-date-determined-extension",
+            "valueDateTime": "2017-10-01"
+          }
+        ],
+        "subject": {
+          "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
+        },
+        "hasMember": [
+          {
+            "reference": "Observation/791983c9-56c0-2d4a-8b3a-d4f0a56715d7"
+          },
+          {
+            "reference": "Observation/6925cb87-7ca6-10de-845e-8622ca5458e5"
+          },
+          {
+            "reference": "Observation/2a964452-02e4-a4ff-bf8c-2f9e93a731fc"
+          },
+          {
+            "reference": "Observation/b0b0397c-19a8-bffd-73d6-ef0e1cfa0b22"
+          },
+          {
+            "reference": "Observation/46a62031-f49b-8854-691b-43ecce3c9ec8"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:f85a5394-2752-45c5-5a83-116810fb69ee",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "f85a5394-2752-45c5-5a83-116810fb69ee",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-pregnancy-outcome-observation"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:6df3e951-e6f8-441d-a298-d9d6d3f405db"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "exam"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "63893-2",
+              "display": "Outcome of pregnancy"
+            }
+          ]
+        },
+        "effectiveDateTime": "2020-01-05T08:50:00",
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "code": "237364002",
+              "system": "http://snomed.info/sct",
+              "display": "Stillbirth"
+            }
+          ]
+        },
+        "component": [
+          {
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "73771-8",
+                  "display": "Birth order"
+                }
+              ]
+            },
+            "valueInteger": 1
+          }
+        ],
+        "subject": {
+          "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
+        },
+        "focus": [
+          {
+            "reference": "Observation/89e17c5f-8f1c-b3b1-94fa-c3622faa9280"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:791983c9-56c0-2d4a-8b3a-d4f0a56715d7",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "791983c9-56c0-2d4a-8b3a-d4f0a56715d7",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/bfdr/StructureDefinition/Observation-birth-plurality-of-pregnancy"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:be98df14-e791-4cd7-a6b3-9c2de4a54bb5"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "57722-1",
+              "system": "http://loinc.org",
+              "display": "Birth plurality of Pregnancy"
+            }
+          ]
+        },
+        "effectiveDateTime": "2017-10-01T10:15:00",
+        "valueInteger": 2,
+        "subject": {
+          "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:6925cb87-7ca6-10de-845e-8622ca5458e5",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "6925cb87-7ca6-10de-845e-8622ca5458e5",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/bfdr/StructureDefinition/Observation-date-of-first-prenatal-care-visit"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:0d72d0a1-e0fb-4296-873d-fec064f181b1"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "69044-6",
+              "system": "http://loinc.org",
+              "display": "Date first prenatal visit"
+            }
+          ]
+        },
+        "effectiveDateTime": "2017-01-07T10:15:00",
+        "valueDateTime": "2016-09-01",
+        "subject": {
+          "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:2a964452-02e4-a4ff-bf8c-2f9e93a731fc",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "2a964452-02e4-a4ff-bf8c-2f9e93a731fc",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/bfdr/StructureDefinition-Observation-number-prenatal-visits.html"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:20c90fe7-c919-4135-8e7c-8aeb2f465054"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "68493-6",
+              "system": "http://loinc.org",
+              "display": "Prenatal visits for this pregnancy #"
+            }
+          ]
+        },
+        "effectiveDateTime": "2017-01-07T10:15:00",
+        "valueInteger": 3,
+        "subject": {
+          "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b0b0397c-19a8-bffd-73d6-ef0e1cfa0b22",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "b0b0397c-19a8-bffd-73d6-ef0e1cfa0b22",
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:9f96453f-8a20-4673-a255-2140db3a679a"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "404684003",
+              "system": "http://snomed.info/sct",
+              "display": "Clinical finding"
+            },
+            {
+              "code": "75321-0",
+              "system": "http://loinc.org",
+              "display": "Clinical finding"
+            }
+          ]
+        },
+        "effectivePeriod": {
+          "start": "2018-01-01"
+        },
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "code": "6096002",
+              "system": "http://snomed.info/sct",
+              "display": "Breech presentation"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
+        },
+        "meta": {
+          "source": "ecr"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:46a62031-f49b-8854-691b-43ecce3c9ec8",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "46a62031-f49b-8854-691b-43ecce3c9ec8",
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:9f96453f-8a20-4673-a255-2140db3a679a"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "404684003",
+              "system": "http://snomed.info/sct",
+              "display": "Clinical finding"
+            },
+            {
+              "code": "75321-0",
+              "system": "http://loinc.org",
+              "display": "Clinical finding"
+            }
+          ]
+        },
+        "effectivePeriod": {
+          "start": "2018-01-01"
+        },
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "code": "312668007",
+              "system": "http://snomed.info/sct",
+              "display": "Abnormal fetal heart rate"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
+        },
+        "meta": {
+          "source": "ecr"
+        }
+      }
+    }
+  ]
+}

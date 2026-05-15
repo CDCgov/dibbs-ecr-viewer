@@ -250,7 +250,10 @@ export const evaluateValue = (
   const originalValue =
     evaluateOneAndCheck<ValueX>(entry, fhirPath, type, undefined, base) ?? "";
 
-  if (type === "TimeX" && typeof originalValue === "string") {
+  if (
+    typeof originalValue === "string" &&
+    (type === "TimeX" || isFhirDateTime(originalValue))
+  ) {
     return formatDateTime(originalValue) || "";
   }
 
@@ -303,6 +306,27 @@ const isObservationReferenceRange = (
 const isReference = (v: object, p: string): v is Reference => p === "Reference";
 const isPeriod = (v: object, p: string): v is Period => p === "Period";
 const isAddress = (v: object, p: string): v is Address => p === "Address";
+
+const isFhirDateTime = (str: string): boolean => {
+  const trimmed = str.trim();
+
+  // Official HL7 FHIR specification pattern matching regex (timezone offset segment made optional)
+  // See "dateTime" section here: https://fhir.hl7.org/fhir/datatypes.html
+  const fhirRegex =
+    /^([0-9]{4})(-([0-9]{2})(-([0-9]{2})(T([0-9]{2}):([0-9]{2}):([0-9]{2})(\.[0-9]+)?(Z|(\+|-)(([0-9]{2}):([0-9]{2})))?)?)?)?$/;
+
+  if (!fhirRegex.test(trimmed)) {
+    return false;
+  }
+
+  // Reject short numbers (e.g. "0") that slip past regex segments
+  if (trimmed.length < 4) {
+    return false;
+  }
+
+  // Fallback logic calendar check to avoid impossible dates (e.g. Feb 31st)
+  return !isNaN(Date.parse(trimmed));
+};
 
 /**
  * Evaluates a reference in a FHIR bundle. The resulting type of the expected resource

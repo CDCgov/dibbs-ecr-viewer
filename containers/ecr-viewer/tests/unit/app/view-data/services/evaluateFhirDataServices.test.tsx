@@ -19,6 +19,7 @@ import * as _BundlePatientWithCovid from "@/../../../test-data/fhir/BundlePatien
 import BundlePractitionerRole from "@/../../../test-data/fhir/BundlePractitionerRole.json";
 import * as _BundleWithSexualOrientation from "@/../../../test-data/fhir/BundleSexualOrientation.json";
 import * as _BundleWithTravelHistory from "@/../../../test-data/fhir/BundleTravelHistory.json";
+import BundleWithPregnancyStatus from "@/../../../test-data/fhir/BundlePregnancyStatus.json";
 import { formatAge } from "@/app/services/formatService";
 import { evaluateValue } from "@/app/utils/evaluate";
 import mappings from "@/app/utils/evaluate/fhir-paths";
@@ -1604,6 +1605,19 @@ Home: 123-456-6909`,
       const actual = evaluatePregnancyData(pregnancyBundle);
       render(actual.availableData[0].value);
       expect(screen.getAllByText("Pregnancy Status").length).toEqual(1);
+    });
+
+    it("should display all pregnancy status data ", () => {
+      const actual = evaluatePregnancyData(
+        BundleWithPregnancyStatus as unknown as Bundle,
+      );
+      const { container } = render(actual.availableData[0].value);
+      expect(container).toMatchSnapshot();
+    });
+
+    it("should display nothing when no pregnancy data is available", () => {
+      const actual = evaluatePregnancyData({} as unknown as Bundle);
+      expect(actual.availableData).toBeEmpty();
     });
 
     it("should have postpartum status data when it exists", () => {
