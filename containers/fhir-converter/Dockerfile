@@ -24,6 +24,7 @@ RUN curl 'https://rxnav.nlm.nih.gov/REST/allstatus.json?status=active' \
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /App
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 COPY --from=build /App/output .
 COPY --from=build /App/data/Templates ./templates
 EXPOSE 8080

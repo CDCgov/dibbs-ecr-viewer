@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Snapshot test for eCR Document Evaluate Clinical Info Should return Plan of Treatment when only ordered meds 1`] = `
+exports[`Tests for eCR Document Evaluate Clinical Info Should return Plan of Treatment when only ordered meds 1`] = `
 <div>
   <div>
     <div
@@ -72,7 +72,7 @@ exports[`Snapshot test for eCR Document Evaluate Clinical Info Should return Pla
 </div>
 `;
 
-exports[`Snapshot test for eCR Document Evaluate Clinical Info Should return Plan of Treatment when only pending results 1`] = `
+exports[`Tests for eCR Document Evaluate Clinical Info Should return Plan of Treatment when only pending results 1`] = `
 <div>
   <div>
     <div
@@ -148,7 +148,7 @@ exports[`Snapshot test for eCR Document Evaluate Clinical Info Should return Pla
 </div>
 `;
 
-exports[`Snapshot test for eCR Document Evaluate Clinical Info Should return Plan of Treatment when only scheduled appointments 1`] = `
+exports[`Tests for eCR Document Evaluate Clinical Info Should return Plan of Treatment when only scheduled appointments 1`] = `
 <div>
   <div>
     <div
@@ -220,7 +220,7 @@ exports[`Snapshot test for eCR Document Evaluate Clinical Info Should return Pla
 </div>
 `;
 
-exports[`Snapshot test for eCR Document Given no data, info message for empty sections should appear 1`] = `
+exports[`Tests for eCR Document Given no data, info message for empty sections should appear 1`] = `
 <div>
   <div
     class="margin-top-10"

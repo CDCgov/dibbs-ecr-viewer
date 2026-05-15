@@ -22,6 +22,8 @@ The project uses a container-based structure. The main containers used are as fo
   - Extracts specific fields from eCR FHIR bundles to be stored in a relational database
 - [eCR Viewer](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/ecr-viewer)
   - Renders the eCR Viewer from FHIR bundles and also handles data storage
+- (Optional) [FHIR Converter Proxy](https://github.com/CDCgov/dibbs-ecr-viewer/tree/main/containers/fhir-converter-proxy)
+  - A proxy that sits between the Orchestration service and the FHIR Converter, load balancing requests by using an HAProxy that routes requests with a "Least Connections" algorithm to intelligently distribute payloads. Use the `FHIR_CONVERTER_URL` env var in the Orchestration service to route traffic through the proxy if desired.
 
 ### Problem Scope
 
