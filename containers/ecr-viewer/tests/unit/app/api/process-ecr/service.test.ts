@@ -15,6 +15,7 @@ import {
   zipAndSaveXml,
 } from "@/app/api/process-ecr/service";
 import {
+  deleteFromStorage,
   saveToStorage,
   saveWithMetadata,
 } from "@/app/api/save-fhir-data/service";
@@ -30,9 +31,7 @@ const mockAgent = new MockAgent();
 mockAgent.disableNetConnect();
 
 describe("orchestrationRequest", () => {
-  const mockFile = new File(["content"], "test.zip", {
-    type: "application/zip",
-  });
+  let mockFile: File;
   const mockEcr = {
     id: "123",
     identifier: { system: "hello", value: "world" },
@@ -41,9 +40,19 @@ describe("orchestrationRequest", () => {
 
   let mockPool: Interceptable;
 
-  beforeAll(() => {
+  beforeAll(async () => {
     process.env.SOURCE = S3_SOURCE;
     process.env.ORCHESTRATION_URL = "http://orchestration-service";
+
+    const zip = new JSZip();
+    zip.file(
+      "ecr.xml",
+      `<ClinicalDocument xmlns="urn:hl7-org:v3"><id root="test-root" extension="test-ext" /></ClinicalDocument>`,
+    );
+    const buf = await zip.generateAsync({ type: "nodebuffer" });
+    mockFile = new File([buf as BlobPart], "test.zip", {
+      type: "application/zip",
+    });
   });
 
   beforeEach(() => {
@@ -334,6 +343,90 @@ describe("orchestrationRequest", () => {
     });
   });
 
+  describe("XML save coordination", () => {
+    const xmlBody = {
+      ecr: `<ClinicalDocument xmlns="urn:hl7-org:v3"><id root="xml-root" extension="xml-ext" /></ClinicalDocument>`,
+    };
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      delete process.env.METADATA_DATABASE_TYPE;
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
+    it("saves XML in parallel with orchestration when shouldSaveXml is true", async () => {
+      mockPool
+        .intercept({ path: "/process-message", method: "POST" })
+        .reply(200, {
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        });
+
+      (saveToStorage as jest.Mock).mockResolvedValue({
+        status: 200,
+        message: "ok",
+      });
+
+      await orchestrationRequest(
+        xmlBody,
+        false,
+        mockAgent as unknown as Agent,
+        true,
+      );
+
+      const calls = (saveToStorage as jest.Mock).mock.calls;
+      expect(calls.some(([, , , type]) => type === "xml")).toBe(true);
+    });
+
+    it("deletes XML when orchestration fails and XML save succeeded", async () => {
+      mockPool
+        .intercept({ path: "/process-message", method: "POST" })
+        .reply(500, { detail: "fail" });
+
+      (saveToStorage as jest.Mock).mockResolvedValue(undefined);
+      jest.spyOn(console, "error").mockImplementation(() => {});
+
+      const result = await orchestrationRequest(
+        xmlBody,
+        false,
+        mockAgent as unknown as Agent,
+        true,
+      );
+
+      expect(deleteFromStorage).toHaveBeenCalledWith(
+        "xml-root^xml-ext",
+        S3_SOURCE,
+        "xml",
+      );
+      expect(result.status).toBe(500);
+    });
+
+    it("does not delete XML when XML save also failed", async () => {
+      mockPool
+        .intercept({ path: "/process-message", method: "POST" })
+        .reply(500, { detail: "fail" });
+
+      (saveToStorage as jest.Mock).mockRejectedValue(
+        new Error("storage failure"),
+      );
+      jest.spyOn(console, "error").mockImplementation(() => {});
+
+      const result = await orchestrationRequest(
+        xmlBody,
+        false,
+        mockAgent as unknown as Agent,
+        true,
+      );
+
+      expect(deleteFromStorage).not.toHaveBeenCalled();
+      expect(result.status).toBe(500);
+    });
+  });
+
   describe("createOrchestrationAgent", () => {
     describe("Default timeout path", () => {
       it("If ECR_PROCESSING_TIMEOUT is not set, defaults to 900000ms timeout when creating the orchestration Agent", () => {
@@ -491,6 +584,23 @@ describe("orchestrationRequest", () => {
       appendMock = jest.spyOn(FormData.prototype, "append");
       process.env.METADATA_DATABASE_TYPE = undefined;
       process.env.METADATA_DATABASE_SCHEMA = undefined;
+
+      const dbChain = {
+        selectFrom: jest.fn().mockReturnThis(),
+        select: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        executeTakeFirst: jest.fn().mockResolvedValue({ num_ecr: 0 }),
+      };
+      (getDb as jest.Mock).mockReturnValue(dbChain);
+
+      (saveToStorage as jest.Mock).mockResolvedValue({
+        status: 200,
+        message: "ok",
+      });
+      (saveWithMetadata as jest.Mock).mockResolvedValue({
+        status: 200,
+        message: "ok",
+      });
     });
     it("should use bundle-only.json when no metadata db", async () => {
       delete process.env.METADATA_DATABASE_TYPE;

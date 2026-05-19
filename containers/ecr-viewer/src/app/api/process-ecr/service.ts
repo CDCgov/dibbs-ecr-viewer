@@ -5,6 +5,7 @@ import { fetch, Agent, FormData } from "undici";
 import xpath from "xpath";
 
 import {
+  deleteFromStorage,
   saveToStorage,
   saveWithMetadata,
 } from "@/app/api/save-fhir-data/service";
@@ -183,47 +184,72 @@ export const orchestrationRequest = async (
   body: RequestBody,
   returnBundle: boolean = false,
   fetchAgent = createOrchestrationAgent(),
+  shouldSaveXml: boolean = false,
 ) => {
+  const ecrId = await getEcrIdFromXml(body);
+
   if (dbDialect()) {
-    try {
-      const ecrId = await getEcrIdFromXml(body);
-      const existing = await getDb<Core>()
-        .selectFrom("ecr_data")
-        .select((eb) => eb.fn.countAll().as("num_ecr"))
-        .where("ecr_data.eicr_id", "=", ecrId)
-        .executeTakeFirst();
-      if (existing && Number(existing.num_ecr) > 0) {
-        return { message: `eCR already loaded: ${ecrId}`, status: 409 };
-      }
-    } catch {
-      // If ID can't be extracted from input, proceed and let the later check handle it
+    const existing = await getDb<Core>()
+      .selectFrom("ecr_data")
+      .select((eb) => eb.fn.countAll().as("num_ecr"))
+      .where("ecr_data.eicr_id", "=", ecrId)
+      .executeTakeFirst();
+    if (existing && Number(existing.num_ecr) > 0) {
+      return { message: `eCR already loaded: ${ecrId}`, status: 409 };
     }
   }
 
-  let orchestrationResp: BundleInfo;
-  try {
-    orchestrationResp = await getOrchestrationResponse(body, fetchAgent);
-  } catch (error: unknown) {
-    const message = "Failed to process orchestration response";
-    console.error({ message, error });
+  const promises: [
+    Promise<{ message: string; status: number; bundle?: Bundle }>,
+    Promise<void>?,
+  ] = [
+    (async () => {
+      let orchestrationResp: BundleInfo;
+      try {
+        orchestrationResp = await getOrchestrationResponse(body, fetchAgent);
+      } catch (error: unknown) {
+        const message = "Failed to process orchestration response";
+        console.error({ message, error });
+        return {
+          message:
+            error instanceof Error && error.message ? error.message : message,
+          status: 500,
+        };
+      }
 
-    return {
-      message:
-        error instanceof Error && error.message ? error.message : message,
-      status: 500,
-    };
+      const res = await saveToSource(
+        orchestrationResp.ecr,
+        orchestrationResp.metadata,
+      );
+      if (returnBundle) {
+        return { ...res, bundle: orchestrationResp.ecr };
+      }
+      return res;
+    })(),
+  ];
+
+  if (shouldSaveXml) {
+    promises.push(zipAndSaveXml(body, ecrId));
   }
 
-  const res = await saveToSource(
-    orchestrationResp.ecr,
-    orchestrationResp.metadata,
-  );
+  const [orchestrationResult, saveResult] = await Promise.allSettled(promises);
 
-  if (returnBundle) {
-    return { ...res, bundle: orchestrationResp.ecr };
-  } else {
-    return res;
+  if (
+    orchestrationResult.status === "rejected" ||
+    orchestrationResult.value.status >= 500
+  ) {
+    if (shouldSaveXml && saveResult?.status === "fulfilled") {
+      await deleteFromStorage(ecrId, process.env.SOURCE, "xml");
+    }
+
+    const errMsg =
+      orchestrationResult.status === "rejected"
+        ? String(orchestrationResult.reason)
+        : orchestrationResult.value.message;
+    return { message: errMsg, status: 500 };
   }
+
+  return orchestrationResult.value;
 };
 
 /**
