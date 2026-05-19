@@ -9,7 +9,7 @@
   "scripts": {
     "docs": "typedoc --customCss guides/assets/styles.css",
     "dev": "next dev",
-    "local-dev": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./docker-compose.yaml --profile ${CONFIG_NAME} up -d && npm run dev'",
+    "local-dev": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./docker-compose.yaml --profile ${CONFIG_NAME} up -d && allow-scripts && npm run dev'",
     "local-docker": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./docker-compose.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up ${FLAGS}'",
     "local-docker:build": "FLAGS=--build npm run local-docker",
     "local-docker:silent": "FLAGS=-d npm run local-docker",
@@ -82,6 +82,8 @@
     "@eslint/compat": "^2.0.2",
     "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^9.39.2",
+    "@lavamoat/allow-scripts": "^5.0.1",
+    "@lavamoat/preinstall-always-fail": "^3.0.0",
     "@next/eslint-plugin-next": "16.1.6",
     "@playwright/test": "^1.55.1",
     "@smithy/util-stream": "^4.3.2",
@@ -139,5 +141,14 @@
     },
     "fast-xml-parser": "5.3.6",
     "test-exclude": "7.0.1"
+  },
+  "lavamoat": {
+    "allowScripts": {
+      "@lavamoat/preinstall-always-fail#3.0.0": false,
+      "@parcel/watcher#2.5.6": true,
+      "eslint-config-next>eslint-import-resolver-typescript>unrs-resolver#1.11.1": true,
+      "fhirpath#4.8.5": false,
+      "sharp#0.34.5": true
+    }
   }
 }
