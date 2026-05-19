@@ -11,7 +11,7 @@ COPY ./requirements.txt /code/requirements.txt
 RUN pip install -r requirements.txt
 COPY 22-packages.csv check_packages.sh ./
 RUN chmod +x check_packages.sh
-RUN ./check_packages.sh 22-packages.csv .
+RUN ./check_packages.sh 22-packages.csv /
 
 COPY ./app /code/app
 COPY ./assets /code/assets

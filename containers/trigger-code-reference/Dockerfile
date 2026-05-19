@@ -12,7 +12,7 @@ RUN pip install -r requirements.txt
 
 COPY 22-packages.csv check_packages.sh ./
 RUN chmod +x check_packages.sh
-RUN ./check_packages.sh 22-packages.csv .
+RUN ./check_packages.sh 22-packages.csv /
 
 COPY ./data /code/data
 COPY ./app /code/app

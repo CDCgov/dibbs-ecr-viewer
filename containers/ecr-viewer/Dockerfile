@@ -12,7 +12,7 @@ WORKDIR /app
 COPY package.json package-lock.json* 22-packages.csv check_packages.sh ./
 RUN npm ci
 RUN chmod +x check_packages.sh
-RUN ./check_packages.sh 22-packages.csv .
+RUN ./check_packages.sh 22-packages.csv /
 
 
 # Rebuild the source code only when needed
