@@ -1,0 +1,6 @@
+fastapi>=0.109.1
+fhirpathpy
+pathlib
+pydantic>=2.12.5
+requests>=2.32.4
+uvicorn[standard]>=0.34.3
