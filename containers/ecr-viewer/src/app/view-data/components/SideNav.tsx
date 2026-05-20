@@ -356,6 +356,7 @@ const SideNav: React.FC<{
           data-testid="sidenav-link"
           onClick={(e) => {
             e.preventDefault();
+            setActiveSection(section.id); // Set on click; prevents some sections not being tagged as active due to short page height
             expandAndNavigate(section.id, topOffset, parentMap);
           }}
         >
