@@ -241,7 +241,6 @@ const SideNav: React.FC<{
     ],
     [ecrDocumentNavConfig]
   );
-  console.log(sectionConfigs);
 
   const topOffset = useMemo(() => {
     return 5 * parseFloat(getComputedStyle(document.documentElement).fontSize);
