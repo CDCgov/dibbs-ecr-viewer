@@ -57,7 +57,7 @@ function buildParentMap(
 function findExpandButton(el: Element): HTMLButtonElement | null {
   // Element has expand button
   const childBtn = el.querySelector(
-    "button[aria-expanded]"
+    "button[aria-expanded]",
   ) as HTMLButtonElement | null;
   if (childBtn) return childBtn;
 
@@ -70,7 +70,7 @@ function findExpandButton(el: Element): HTMLButtonElement | null {
         (child) =>
           child !== current &&
           child.tagName === "BUTTON" &&
-          child.hasAttribute("aria-expanded")
+          child.hasAttribute("aria-expanded"),
       ) as HTMLButtonElement | undefined;
       if (siblingBtn) return siblingBtn;
     }
@@ -149,7 +149,7 @@ function expandAndNavigate(
   parentMap: Map<string, string>,
 ) {
   const heading = document.querySelector(
-    `[data-sectionid="${sectionId}"]`
+    `[data-sectionid="${sectionId}"]`,
   ) as HTMLElement | null;
 
   // Case 1: Heading in DOM & visible - expand accordion if collapsed
@@ -172,7 +172,7 @@ function expandAndNavigate(
     const parentId = parentMap.get(sectionId);
     if (parentId) {
       const parentHeading = document.querySelector(
-        `[data-sectionid="${parentId}"]`
+        `[data-sectionid="${parentId}"]`,
       ) as HTMLElement | null;
       if (parentHeading) {
         const parentBtn = findExpandButton(parentHeading);
@@ -202,7 +202,7 @@ function expandAndNavigate(
 
   while (parentId) {
     const candidate = document.querySelector(
-      `[data-sectionid="${parentId}"]`
+      `[data-sectionid="${parentId}"]`,
     ) as HTMLElement | null;
     if (candidate && !isHidden(candidate)) {
       parentHeading = candidate;
@@ -235,11 +235,11 @@ const SideNav: React.FC<{
       new SectionConfig(
         "eCR Document",
         ecrDocumentNavConfig.map(
-          (item) => new SectionConfig(item.title, item.subNavItems)
-        )
+          (item) => new SectionConfig(item.title, item.subNavItems),
+        ),
       ),
     ],
-    [ecrDocumentNavConfig]
+    [ecrDocumentNavConfig],
   );
   console.log(sectionConfigs);
 
@@ -258,7 +258,7 @@ const SideNav: React.FC<{
           id,
           ...flatten(subNavItems || []),
         ]);
-      })(sectionConfigs)
+      })(sectionConfigs),
     );
 
     // Intersection Observer: sets section in view as active section
@@ -280,7 +280,7 @@ const SideNav: React.FC<{
           window.innerHeight - topOffset - 1
         }px 0px`,
         threshold: 0,
-      }
+      },
     );
     const observedIds = new Set<string>();
 
@@ -288,7 +288,7 @@ const SideNav: React.FC<{
     // Runs on initial load & when the DOM changes
     const tagAndObserve = () => {
       const headingElements = Array.from(
-        document.querySelector("main")?.querySelectorAll(headingSelector) || []
+        document.querySelector("main")?.querySelectorAll(headingSelector) || [],
       ) as HTMLElement[];
 
       headingElements.forEach((heading) => {
@@ -316,7 +316,7 @@ const SideNav: React.FC<{
     setActiveSection(
       initialActive?.getAttribute("data-sectionid") ??
         tagged[0]?.getAttribute("data-sectionid") ??
-        ""
+        "",
     );
 
     // Mutation Observer: Watch for DOM changes (sections render after expand)
@@ -368,7 +368,7 @@ const SideNav: React.FC<{
       if (section.subNavItems) {
         const subSideNavItems = buildSideNav(section.subNavItems, topOffset);
         sideNavItems.push(
-          <UswdsSideNav isSubnav={true} items={subSideNavItems} />
+          <UswdsSideNav isSubnav={true} items={subSideNavItems} />,
         );
       }
     }

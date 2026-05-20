@@ -98,7 +98,7 @@ test.describe("viewer page", () => {
     }) => {
       // some browsers struggle with the small scroll iteration here
       test.slow();
-      
+
       const nav = page.getByRole("navigation");
       await expect(nav).toBeVisible();
       await page.getByRole("button", { name: /expand all sections/i }).click();
