@@ -189,7 +189,9 @@ export const getEcrDocumentAccordionItems = (
         (section) => section.availableData.length > 0,
       ) ? (
         <ClinicalInfo
-          historyOfPresentIllness={clinicalData.historyOfPresentIllness.availableData}
+          historyOfPresentIllness={
+            clinicalData.historyOfPresentIllness.availableData
+          }
           reasonForVisitDetails={
             clinicalData.reasonForVisitDetails.availableData
           }

@@ -114,10 +114,7 @@ describe("Tests for eCR Document", () => {
       },
       {
         title: "Clinical Info",
-        subNavItems: [
-          "Symptoms and Problems",
-          "Immunizations",
-        ],
+        subNavItems: ["Symptoms and Problems", "Immunizations"],
       },
       {
         title: "Lab Info",
@@ -143,7 +140,10 @@ describe("Tests for eCR Document", () => {
         BundleWithMiscNotes,
         fhirIndexBundleWithMiscNotes,
       );
-      render(actual.historyOfPresentIllness.availableData[0].value as React.JSX.Element);
+      render(
+        actual.historyOfPresentIllness.availableData[0]
+          .value as React.JSX.Element,
+      );
       expect(actual.historyOfPresentIllness.availableData[0].title).toEqual(
         "History of Present Illness",
       );
