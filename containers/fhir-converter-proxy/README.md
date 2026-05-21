@@ -40,6 +40,15 @@ Expected environment variables:
 - **FHIR_CONVERTER_ECS_NAMESPACE** - Used to assemble the host URL for AWS ECS instances using the DNS resolver, can be left unset for local environments. This should be the AWS CloudMap namespace name used by ECS. This environment variable is set in the TF module along with the definition of the `fhir-converter-dns` resource used for the resolver host.
 - **FHIR_CONVERTER_PORT** - The FHIR Converter service port to route requests to. Usually set to: `8080`. Only the port is needed because the host is derived from the environment (for local) or the `FHIR_CONVERTER_ECS_NAMESPACE` for AWS.
 
+Optional environment variables:
+
+- **FHIR_CONVERTER_PROXY_MAX_CONNECTIONS** - The maximum number of requests a single instance is allowed to process at a time. This value should be tuned based on instance resources and how many ECRs an instance can handle concurrently. Default set to 3.
+- **FHIR_CONVERTER_PROXY_INSTANCE_SLOTS** - Numebr of total "slots" that will be filled with instances as they are discovered, unused slots will not cause issues. Default set to 10.
+- **FHIR_CONVERTER_PROXY_CONNECT_TIMEOUT** - Maximum time to wait for a connection attempt to a server to succeed. If the server is located on the same LAN as HAProxy, the connection should be immediate (less than a few milliseconds). It is a good practice to cover one or several TCP packet losses by specifying timeouts that are slightly above multiples of 3 seconds (e.g. 4 or 5 seconds). Default set to 10s.
+- **FHIR_CONVERTER_PROXY_QUEUE_TIMEOUT** - Maximum time for requests to wait in the queue for a connection slot to be free. Default set to 60s.
+- **FHIR_CONVERTER_PROXY_CLIENT_TIMEOUT** - Maximum inactivity time on the client side. The inactivity timeout applies when the client is expected to acknowledge or send data. Default set to 300s (for large ECR processing).
+- **FHIR_CONVERTER_PROXY_SERVER_TIMEOUT** - Maximum inactivity time on the server side. The inactivity timeout applies when the server is expected to acknowledge or send data. Default set to 300s (for large ECR processing).
+
 ### Customizing and Publishing the HAProxy Image
 
 If you need to make changes to the routing logic, add a new backend, or tune the connection limits, you will need to update the `haproxy.cfg` file and build a new Docker image.
