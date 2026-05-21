@@ -115,7 +115,6 @@ describe("Tests for eCR Document", () => {
       {
         title: "Clinical Info",
         subNavItems: [
-          "Clinical Notes",
           "Symptoms and Problems",
           "Immunizations",
         ],
@@ -144,12 +143,12 @@ describe("Tests for eCR Document", () => {
         BundleWithMiscNotes,
         fhirIndexBundleWithMiscNotes,
       );
-      render(actual.clinicalNotes.availableData[0].value as React.JSX.Element);
-      expect(actual.clinicalNotes.availableData[0].title).toEqual(
-        "Miscellaneous Notes",
+      render(actual.historyOfPresentIllness.availableData[0].value as React.JSX.Element);
+      expect(actual.historyOfPresentIllness.availableData[0].title).toEqual(
+        "History of Present Illness",
       );
       expect(screen.getByText("Active Problems")).toBeInTheDocument();
-      expect(actual.clinicalNotes.unavailableData).toBeEmpty();
+      expect(actual.historyOfPresentIllness.unavailableData).toBeEmpty();
     });
     it("Should not include Treatment details if medications is not available", () => {
       const actual = evaluateClinicalData(
