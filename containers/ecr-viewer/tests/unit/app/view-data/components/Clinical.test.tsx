@@ -38,7 +38,7 @@ describe("Snapshot tests", () => {
     it("should match snapshot for all Clinical Info components", async () => {
       const { container } = render(
         <ClinicalInfo
-          clinicalNotes={[]}
+          historyOfPresentIllness={[]}
           activeProblemsDetails={testActiveProblemsData}
           emergencyOutbreakInfo={testOutbreakInfo}
           vitalData={testVitalSignsData}
