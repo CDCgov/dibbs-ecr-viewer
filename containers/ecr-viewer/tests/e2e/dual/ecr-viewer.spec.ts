@@ -65,7 +65,9 @@ test.describe("viewer page", () => {
       await expect(nav).toBeVisible();
 
       // Full DOM should not be rendered yet
-      await expect(page.getByText("History of Present Illness")).not.toBeAttached();
+      await expect(
+        page.getByText("History of Present Illness"),
+      ).not.toBeAttached();
 
       // use a test id here to avoid a lot of special casing around the back to
       // library link, which may or may not exist based on the config
