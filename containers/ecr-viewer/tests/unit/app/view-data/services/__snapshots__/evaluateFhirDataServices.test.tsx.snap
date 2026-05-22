@@ -564,7 +564,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Hospital Encount
 }
 `;
 
-exports[`evaluateFhirDataService tests Evaluate Patient Info: Pregnancy Info should display all pregnancy status data  1`] = `
+exports[`evaluateFhirDataService tests Evaluate Patient Info: Pregnancy Info should display all pregnancy data  1`] = `
 <div>
   <div
     class="display-flex"
@@ -602,10 +602,10 @@ exports[`evaluateFhirDataService tests Evaluate Patient Info: Pregnancy Info sho
       class="usa-accordion__heading side-nav-ignore"
     >
       <button
-        aria-controls="89e17c5f-8f1c-b3b1-94fa-c3622faa9280-r:id-0"
+        aria-controls="445b6f64-03c9-e940-575d-a3bf6c5856d9-r:id-0"
         aria-expanded="true"
         class="usa-accordion__button"
-        data-testid="accordionButton_89e17c5f-8f1c-b3b1-94fa-c3622faa9280-r:id-0"
+        data-testid="accordionButton_445b6f64-03c9-e940-575d-a3bf6c5856d9-r:id-0"
         type="button"
       >
         <div
@@ -632,8 +632,8 @@ exports[`evaluateFhirDataService tests Evaluate Patient Info: Pregnancy Info sho
     </h5>
     <div
       class="usa-accordion__content usa-prose side-nav-ignore"
-      data-testid="accordionItem_89e17c5f-8f1c-b3b1-94fa-c3622faa9280-r:id-0"
-      id="89e17c5f-8f1c-b3b1-94fa-c3622faa9280-r:id-0"
+      data-testid="accordionItem_445b6f64-03c9-e940-575d-a3bf6c5856d9-r:id-0"
+      id="445b6f64-03c9-e940-575d-a3bf6c5856d9-r:id-0"
     >
       <div>
         <div
@@ -933,7 +933,122 @@ Performed Date/Time: 01/05/2018
         </div>
       </div>
     </div>
+    <h5
+      class="usa-accordion__heading side-nav-ignore"
+    >
+      <button
+        aria-controls="94fe2533-e208-a1b4-c510-c9ece8a2d490-r:id-1"
+        aria-expanded="true"
+        class="usa-accordion__button"
+        data-testid="accordionButton_94fe2533-e208-a1b4-c510-c9ece8a2d490-r:id-1"
+        type="button"
+      >
+        <div
+          class="display-flex flex-row flex-no-wrap flex-justify"
+        >
+          <span>
+            Postpartum Status
+             
+          </span>
+          <span
+            class="text-base"
+            style="font-size: 1rem;"
+          >
+            01/05/2020 10:15 AM
+          </span>
+        </div>
+      </button>
+    </h5>
+    <div
+      class="usa-accordion__content usa-prose side-nav-ignore"
+      data-testid="accordionItem_94fe2533-e208-a1b4-c510-c9ece8a2d490-r:id-1"
+      id="94fe2533-e208-a1b4-c510-c9ece8a2d490-r:id-1"
+    >
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Status
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            Mid postpartum state
+          </div>
+        </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Effective Date/Time
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            01/05/2020 10:15 AM
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
+`;
+
+exports[`evaluateFhirDataService tests Evaluate Patient Info: Pregnancy Info should display all pregnancy data  2`] = `
+<div>
+  <table
+    class="usa-table usa-table--borderless width-full _fixed_1khz6_1 table-caption-margin border-top border-left border-right"
+    data-testid="table"
+  >
+    <thead>
+      <tr>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          First Date of the Last Period
+        </th>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Collection Date/Time
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          08/01/2017
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          01/05/2020 10:15 AM
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`evaluateFhirDataService tests Evaluate Patient Info: Pregnancy Info should display all pregnancy data  3`] = `
+<div>
+  No desire to become pregnant
+Start: 01/07/2017
+End: 01/07/2018
 </div>
 `;
 
