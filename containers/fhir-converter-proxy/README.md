@@ -45,7 +45,7 @@ Optional environment variables:
 - **FHIR_CONVERTER_PROXY_MAX_CONNECTIONS** - The maximum number of requests a single instance is allowed to process at a time. This value should be tuned based on instance resources and how many ECRs an instance can handle concurrently. Default set to 3.
 - **FHIR_CONVERTER_PROXY_INSTANCE_SLOTS** - Numebr of total "slots" that will be filled with instances as they are discovered, unused slots will not cause issues. Default set to 10.
 - **FHIR_CONVERTER_PROXY_CONNECT_TIMEOUT** - Maximum time to wait for a connection attempt to a server to succeed. If the server is located on the same LAN as HAProxy, the connection should be immediate (less than a few milliseconds). It is a good practice to cover one or several TCP packet losses by specifying timeouts that are slightly above multiples of 3 seconds (e.g. 4 or 5 seconds). Default set to 10s.
-- **FHIR_CONVERTER_PROXY_QUEUE_TIMEOUT** - Maximum time for requests to wait in the queue for a connection slot to be free. Default set to 60s.
+- **FHIR_CONVERTER_PROXY_QUEUE_TIMEOUT** - Maximum time for requests to wait in the queue for a connection slot to be free. Default set to 300s (for large ECR processing).
 - **FHIR_CONVERTER_PROXY_CLIENT_TIMEOUT** - Maximum inactivity time on the client side. The inactivity timeout applies when the client is expected to acknowledge or send data. Default set to 300s (for large ECR processing).
 - **FHIR_CONVERTER_PROXY_SERVER_TIMEOUT** - Maximum inactivity time on the server side. The inactivity timeout applies when the server is expected to acknowledge or send data. Default set to 300s (for large ECR processing).
 
