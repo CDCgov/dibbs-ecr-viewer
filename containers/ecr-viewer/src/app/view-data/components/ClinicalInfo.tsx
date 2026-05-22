@@ -159,7 +159,6 @@ export const ClinicalInfo = ({
 }: ClinicalProps) => {
   return (
     <AccordionSection>
-
       <SymptomsAndProblems
         symptoms={reasonForVisitDetails}
         problems={activeProblemsDetails}
