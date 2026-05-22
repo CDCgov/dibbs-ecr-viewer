@@ -65,21 +65,23 @@ test.describe("viewer page", () => {
       await expect(nav).toBeVisible();
 
       // Full DOM should not be rendered yet
-      await expect(page.getByText("Miscellaneous Notes")).not.toBeAttached();
+      await expect(
+        page.getByText("History of Present Illness"),
+      ).not.toBeAttached();
 
       // use a test id here to avoid a lot of special casing around the back to
       // library link, which may or may not exist based on the config
       const navLinksLoc = nav.getByTestId("sidenav-link");
-      await expect(navLinksLoc).toHaveCount(21);
+      await expect(navLinksLoc).toHaveCount(20);
       const navLinks = await navLinksLoc.all();
-      expect(navLinks.length).toBe(21); // sanity check
+      expect(navLinks.length).toBe(20); // sanity check
 
       // Make sure after expanding and collapsing, nav links still work
-      await page.getByText("Expand all sections").click();
-      expect(page.getByText("Miscellaneous Notes")).toBeVisible();
-
       await page.getByText("Collapse all sections").click();
-      expect(page.getByText("Miscellaneous Notes")).not.toBeVisible();
+      expect(page.getByText("History of Present Illness")).not.toBeVisible();
+
+      await page.getByText("Expand all sections").click();
+      expect(page.getByText("History of Present Illness")).toBeVisible();
 
       // Clicking each link scrolls the heading and highlights the corresponding
       // side nav item
@@ -106,7 +108,7 @@ test.describe("viewer page", () => {
       // use a test id here to avoid a lot of special casing around the back to
       // library link, which may or may not exist based on the config
       const navLinksLoc = nav.getByTestId("sidenav-link");
-      await expect(navLinksLoc).toHaveCount(21);
+      await expect(navLinksLoc).toHaveCount(20);
       const numLinks = (await navLinksLoc.all()).length;
       let navIndex = 0;
       while (navIndex < numLinks) {

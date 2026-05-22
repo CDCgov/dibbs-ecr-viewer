@@ -68,7 +68,7 @@ import { FhirIndex } from "../../services/fhirResourcesIndexService";
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing clinical data.
  * @returns An object containing evaluated and formatted clinical data.
- * @property {DisplayDataProps[]} clinicalNotes - Clinical notes data.
+ * @property {DisplayDataProps[]} historyOfPresentIllness - History of present illness data.
  * @property {DisplayDataProps[]} reasonForVisitDetails - Reason for visit details.
  * @property {DisplayDataProps[]} activeProblemsDetails - Active problems details.
  * @property {DisplayDataProps[]} treatmentData - Treatment-related data.
@@ -81,12 +81,11 @@ export const evaluateClinicalData = (
 ) => {
   const clinicalNotesTooltip =
     "Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.";
-  const clinicalNotes: DisplayDataProps[] = [
+  const historyOfPresentIllness: DisplayDataProps[] = [
     evaluateNotes(
       fhirBundle,
       fhirPathMappings.historyOfPresentIllness,
-      "Miscellaneous Notes",
-      clinicalNotesTooltip,
+      "History of Present Illness",
     ),
   ];
   const reasonForVisitData: DisplayDataProps[] = [
@@ -166,7 +165,7 @@ export const evaluateClinicalData = (
   ];
 
   return {
-    clinicalNotes: evaluateData(clinicalNotes),
+    historyOfPresentIllness: evaluateData(historyOfPresentIllness),
     reasonForVisitDetails: evaluateData(reasonForVisitData),
     activeProblemsDetails: evaluateData(activeProblemsTableData),
     emergencyOutbreakInfo: evaluateData(emergencyOutbreakInfo),
