@@ -10,7 +10,7 @@ interface UserSession {
 /**
  * Server side helper for whether this user is logged in. For client side, see `useIsLoggedInUser`.
  * A user can have access to an ecr page without being a logged in user if
- * they are authenticated via an NBS jwt.
+ * they are authenticated via a JWT from an integrated case management system.
  * @returns whether the user is logged in
  */
 export const isLoggedInUser = async () => {
@@ -21,7 +21,7 @@ export const isLoggedInUser = async () => {
 /**
  * Server side helper to get currently logged in user.
  * A user can have access to an ecr page without being a logged in user if
- * they are authenticated via an NBS jwt.
+ * they are authenticated via a JWT from an integrated case management system.
  * @returns the user who is logged in or undefined
  */
 export const getLoggedInUserSession = async () => {
