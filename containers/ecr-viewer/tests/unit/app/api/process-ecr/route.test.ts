@@ -5,15 +5,9 @@ import { Bundle } from "fhir/r4";
 import { NextRequest } from "next/server";
 
 import { POST } from "@/app/api/process-ecr/route";
-import {
-  getEcrIdFromXml,
-  orchestrationRequest,
-  zipAndSaveXml,
-} from "@/app/api/process-ecr/service";
-import { deleteFromStorage } from "@/app/api/save-fhir-data/service";
+import { orchestrationRequest } from "@/app/api/process-ecr/service";
 
 jest.mock("@/app/api/process-ecr/service");
-jest.mock("@/app/api/save-fhir-data/service");
 
 const bundle: Bundle = {
   type: "document",
@@ -130,7 +124,7 @@ describe("POST Process ecr", () => {
 
       expect(response.status).toEqual(500);
       expect(await response.json()).toEqual({
-        message: "Error: oh no!",
+        message: "Internal Server Error",
       });
     });
   }
@@ -250,8 +244,6 @@ describe("POST Process ecr", () => {
   });
 
   describe("Saving XML features", () => {
-    const mockDeleteFromStorage = deleteFromStorage as jest.Mock;
-
     const makeRequest = (body: any, url = "http://localhost/api/process-ecr") =>
       new NextRequest(url, {
         method: "POST",
@@ -264,13 +256,7 @@ describe("POST Process ecr", () => {
       delete process.env.SAVE_XML;
     });
 
-    it("returns orchestration payload when SAVE_XML is not set", async () => {
-      (getEcrIdFromXml as jest.Mock).mockImplementation(() => {
-        throw new Error("getEcrIdFromXml should not be called");
-      });
-      (zipAndSaveXml as jest.Mock).mockImplementation(() => {
-        throw new Error("zipAndSaveXml should not be called");
-      });
+    it("calls orchestrationRequest with shouldSaveXml=false when SAVE_XML is not set", async () => {
       (orchestrationRequest as jest.Mock).mockResolvedValue({
         message: "ok",
         status: 200,
@@ -278,22 +264,19 @@ describe("POST Process ecr", () => {
 
       const req = makeRequest({ ecr: "<xml />" });
       const res = await POST(req);
-      const json = await res.json();
 
       expect(res.status).toBe(200);
-      expect(json).toEqual({ message: "ok" });
-      expect(orchestrationRequest).toHaveBeenCalledTimes(1);
+      expect(orchestrationRequest).toHaveBeenCalledWith(
+        expect.anything(),
+        false,
+        undefined,
+        false,
+      );
     });
 
-    it("returns orchestration payload when SAVE_XML is 'false'", async () => {
+    it("calls orchestrationRequest with shouldSaveXml=false when SAVE_XML is 'false'", async () => {
       (process.env as any).SAVE_XML = "false";
 
-      (getEcrIdFromXml as jest.Mock).mockImplementation(() => {
-        throw new Error("getEcrIdFromXml should not be called");
-      });
-      (zipAndSaveXml as jest.Mock).mockImplementation(() => {
-        throw new Error("zipAndSaveXml should not be called");
-      });
       (orchestrationRequest as jest.Mock).mockResolvedValue({
         status: 200,
         message: "done",
@@ -301,20 +284,19 @@ describe("POST Process ecr", () => {
 
       const req = makeRequest({ ecr: "<xml />" });
       const res = await POST(req);
-      const json = await res.json();
 
-      expect(getEcrIdFromXml).not.toHaveBeenCalled();
-      expect(zipAndSaveXml).not.toHaveBeenCalled();
-      expect(orchestrationRequest).toHaveBeenCalledTimes(1);
       expect(res.status).toBe(200);
-      expect(json.message).toBe("done");
+      expect(orchestrationRequest).toHaveBeenCalledWith(
+        expect.anything(),
+        false,
+        undefined,
+        false,
+      );
     });
 
-    it("runs zipAndSaveXml and orchestration request when SAVE_XML is 'true'", async () => {
+    it("calls orchestrationRequest with shouldSaveXml=true when SAVE_XML is 'true'", async () => {
       (process.env as any).SAVE_XML = "true";
 
-      (getEcrIdFromXml as jest.Mock).mockResolvedValue("abc-123");
-      (zipAndSaveXml as jest.Mock).mockResolvedValue(undefined);
       (orchestrationRequest as jest.Mock).mockResolvedValue({
         status: 200,
         message: "done",
@@ -322,33 +304,14 @@ describe("POST Process ecr", () => {
 
       const req = makeRequest({ ecr: "<xml />" });
       const res = await POST(req);
-      const json = await res.json();
 
-      expect(getEcrIdFromXml).toHaveBeenCalled();
-      expect(zipAndSaveXml).toHaveBeenCalledWith(expect.anything(), "abc-123");
-      expect(orchestrationRequest).toHaveBeenCalled();
       expect(res.status).toBe(200);
-      expect(json.message).toBe("done");
-    });
-
-    it("deletes XML if orchestration rejects", async () => {
-      (process.env as any).SAVE_XML = "true";
-      (process.env as any).SOURCE = "aws";
-
-      (getEcrIdFromXml as jest.Mock).mockResolvedValue("abc");
-      (zipAndSaveXml as jest.Mock).mockResolvedValue(undefined);
-      (orchestrationRequest as jest.Mock).mockRejectedValue(new Error("fail"));
-
-      const errorSpy = jest
-        .spyOn(console, "error")
-        .mockImplementation(() => {});
-
-      const req = makeRequest({ ecr: "<xml />" });
-      const res = await POST(req);
-
-      expect(mockDeleteFromStorage).toHaveBeenCalledWith("abc", "aws", "xml");
-
-      expect(res.status).toBe(500);
+      expect(orchestrationRequest).toHaveBeenCalledWith(
+        expect.anything(),
+        false,
+        undefined,
+        true,
+      );
     });
   });
 });

@@ -16,7 +16,7 @@ interface ClinicalProps {
   vitalData: DisplayDataProps[];
   immunizationsDetails: DisplayDataProps[];
   treatmentData: DisplayDataProps[];
-  clinicalNotes: DisplayDataProps[];
+  historyOfPresentIllness: DisplayDataProps[];
 }
 
 const TableDetails = ({
@@ -40,39 +40,22 @@ const TableDetails = ({
   );
 };
 
-const ClinicalNotes = ({ details }: { details: DisplayDataProps[] }) => {
-  if (details?.length > 0) {
-    return (
-      <AccordionSubSection
-        title="Clinical Notes"
-        className="clinical_info_container"
-      >
-        {details.map((item, index) => {
-          if (item.table) {
-            return <TableDetails key={index} details={[item]} />;
-          }
-          return <DataDisplay item={item} key={index} />;
-        })}
-      </AccordionSubSection>
-    );
-  }
-
-  return <></>;
-};
-
 const SymptomsAndProblems = ({
   symptoms,
   problems,
   emergencyOutbreakInfo,
+  historyOfPresentIllness,
 }: {
   symptoms: DisplayDataProps[];
   problems: DisplayDataProps[];
   emergencyOutbreakInfo: DisplayDataProps[];
+  historyOfPresentIllness: DisplayDataProps[];
 }) => {
   if (
     symptoms?.length > 0 ||
     problems?.length > 0 ||
-    emergencyOutbreakInfo?.length > 0
+    emergencyOutbreakInfo?.length > 0 ||
+    historyOfPresentIllness?.length > 0
   ) {
     return (
       <AccordionSubSection title="Symptoms and Problems">
@@ -86,6 +69,14 @@ const SymptomsAndProblems = ({
             details={problems}
             className="table-clinical-problems"
           />
+        </div>
+        <div data-testid="history-of-present-illness">
+          {historyOfPresentIllness?.map((item, index) => {
+            if (item.table) {
+              return <TableDetails key={index} details={[item]} />;
+            }
+            return <DataDisplay item={item} key={index} />;
+          })}
         </div>
         <div data-testid="emergency-outbreak-info">
           {emergencyOutbreakInfo.map((item, index) => (
@@ -154,7 +145,7 @@ const VitalDetails = ({ details }: { details: DisplayDataProps[] }) => {
  * @param props.immunizationsDetails - The details of immunizations.
  * @param props.vitalData - The vital signs data.
  * @param props.treatmentData - The details of treatments.
- * @param props.clinicalNotes - The clinical notes data.
+ * @param props.historyOfPresentIllness - The history of present illness data.
  * @returns The JSX element representing the clinical information.
  */
 export const ClinicalInfo = ({
@@ -164,15 +155,15 @@ export const ClinicalInfo = ({
   immunizationsDetails,
   vitalData,
   treatmentData,
-  clinicalNotes,
+  historyOfPresentIllness,
 }: ClinicalProps) => {
   return (
     <AccordionSection>
-      <ClinicalNotes details={clinicalNotes} />
       <SymptomsAndProblems
         symptoms={reasonForVisitDetails}
         problems={activeProblemsDetails}
         emergencyOutbreakInfo={emergencyOutbreakInfo}
+        historyOfPresentIllness={historyOfPresentIllness}
       />
       <TreatmentDetails details={treatmentData} />
       <ImmunizationsDetails details={immunizationsDetails} />

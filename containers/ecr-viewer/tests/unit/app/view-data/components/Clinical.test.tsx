@@ -38,7 +38,7 @@ describe("Snapshot tests", () => {
     it("should match snapshot for all Clinical Info components", async () => {
       const { container } = render(
         <ClinicalInfo
-          clinicalNotes={[]}
+          historyOfPresentIllness={[]}
           activeProblemsDetails={testActiveProblemsData}
           emergencyOutbreakInfo={testOutbreakInfo}
           vitalData={testVitalSignsData}
@@ -517,7 +517,7 @@ describe("Snapshot tests", () => {
 
       container = render(
         <ClinicalInfo
-          clinicalNotes={[]}
+          historyOfPresentIllness={[]}
           activeProblemsDetails={[]}
           emergencyOutbreakInfo={[]}
           vitalData={[]}
@@ -535,11 +535,11 @@ describe("Snapshot tests", () => {
     });
   });
 
-  describe("Snapshot test for Clinical Notes", () => {
+  describe("Snapshot test for History of Present Illness", () => {
     it("should match snapshot for non table notes", async () => {
-      const clinicalNotes = [
+      const historyOfPresentIllness = [
         {
-          title: "Miscellaneous Notes",
+          title: "History of Present Illness",
           value: (
             <p>
               This patient was only recently discharged for a recurrent GI bleed
@@ -550,7 +550,7 @@ describe("Snapshot tests", () => {
       ];
       const { container } = render(
         <ClinicalInfo
-          clinicalNotes={clinicalNotes}
+          historyOfPresentIllness={historyOfPresentIllness}
           activeProblemsDetails={[]}
           emergencyOutbreakInfo={[]}
           vitalData={[]}
@@ -616,7 +616,7 @@ describe("Snapshot tests", () => {
           },
         ],
       } as unknown as Bundle;
-      const clinicalNotes = [
+      const historyOfPresentIllness = [
         evaluateNotes(
           bundle,
           fhirPathMappings.historyOfPresentIllness,
@@ -626,7 +626,7 @@ describe("Snapshot tests", () => {
       ];
       const { container } = render(
         <ClinicalInfo
-          clinicalNotes={clinicalNotes}
+          historyOfPresentIllness={historyOfPresentIllness}
           activeProblemsDetails={[]}
           emergencyOutbreakInfo={[]}
           vitalData={[]}
@@ -651,7 +651,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         emergencyOutbreakInfo={[]}
         vitalData={[]}
         treatmentData={[]}
-        clinicalNotes={[]}
+        historyOfPresentIllness={[]}
       />,
     );
 
@@ -676,7 +676,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         emergencyOutbreakInfo={[]}
         vitalData={[]}
         treatmentData={[]}
-        clinicalNotes={[]}
+        historyOfPresentIllness={[]}
       />,
     );
 
@@ -705,7 +705,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         emergencyOutbreakInfo={[]}
         vitalData={testVitalSignsData}
         treatmentData={[]}
-        clinicalNotes={[]}
+        historyOfPresentIllness={[]}
       />,
     );
 
@@ -744,7 +744,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         emergencyOutbreakInfo={[]}
         vitalData={[]}
         treatmentData={[]}
-        clinicalNotes={[]}
+        historyOfPresentIllness={[]}
       />,
     );
 
@@ -765,7 +765,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         emergencyOutbreakInfo={[]}
         vitalData={[]}
         treatmentData={testTreatmentData}
-        clinicalNotes={[]}
+        historyOfPresentIllness={[]}
       />,
     );
 
@@ -787,7 +787,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         emergencyOutbreakInfo={testOutbreakInfo}
         vitalData={[]}
         treatmentData={[]}
-        clinicalNotes={[]}
+        historyOfPresentIllness={[]}
       />,
     );
     const expectedEmergencyOutbreakElement = clinicalInfo.getByTestId(
@@ -805,7 +805,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         emergencyOutbreakInfo={[]}
         vitalData={testVitalSignsData}
         treatmentData={testTreatmentData}
-        clinicalNotes={[]}
+        historyOfPresentIllness={[]}
       />,
     );
 

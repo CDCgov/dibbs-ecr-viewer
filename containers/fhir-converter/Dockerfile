@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 # Download FHIR-Converter
 
-RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch 8.1.1 --depth 1 /App
+RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch 8.4.1 --depth 1 /App
 
 WORKDIR /App
 
@@ -24,6 +24,7 @@ RUN curl 'https://rxnav.nlm.nih.gov/REST/allstatus.json?status=active' \
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /App
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 COPY --from=build /App/output .
 COPY --from=build /App/data/Templates ./templates
 EXPOSE 8080
