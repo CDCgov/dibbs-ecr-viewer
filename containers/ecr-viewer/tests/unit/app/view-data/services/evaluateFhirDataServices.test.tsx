@@ -647,8 +647,6 @@ Home: 123-456-6909`,
       expect(actual.availableData.filter((d) => d.title === "Contact")).toEqual(
         expectedContact,
       );
-
-      console.log(actual);
     });
   });
 

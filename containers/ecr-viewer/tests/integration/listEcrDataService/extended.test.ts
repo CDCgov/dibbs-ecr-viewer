@@ -8,7 +8,7 @@ import {
   getLastAuditLog,
 } from "../helpers/core";
 import { buildExtended, dropExisting, clearEcrExtended } from "../helpers/ddl";
-import { createExtendedEcr } from "../helpers/extended";
+import { createExtendedEcr, createEcrImmunization } from "../helpers/extended";
 import { seedUserProgramData } from "../helpers/seed";
 import { NewExtendedECR } from "@/app/data/metadataDb/types/extended";
 import {

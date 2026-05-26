@@ -201,7 +201,51 @@
           {
             "reference": "Observation/445b6f64-03c9-e940-575d-a3bf6c5856d9"
           }
+        ],
+        "partOf": [
+          {
+            "reference": "Procedure/06246a74-4357-e36c-242d-da0af291f0ea"
+          }
         ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:06246a74-4357-e36c-242d-da0af291f0ea",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "06246a74-4357-e36c-242d-da0af291f0ea",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/bfdr/StructureDefinition/Procedure-final-route-method-delivery"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:bb2d7888-c4c5-440e-903c-b2c0e9551e0f"
+          }
+        ],
+        "category": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "73762-7",
+              "display": "Final route and method of delivery [US Standard Certificate of Live Birth]"
+            }
+          ]
+        },
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "code": "237311001",
+              "system": "http://snomed.info/sct",
+              "display": "Complete breech delivery"
+            }
+          ]
+        },
+        "performedDateTime": "2018-01-05"
       }
     },
     {

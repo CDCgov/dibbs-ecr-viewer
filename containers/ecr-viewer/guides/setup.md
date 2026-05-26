@@ -210,3 +210,7 @@ Once initialized, your IDP handles authentication. The user with the email provi
 **Standard users**: Have limited access to eCRs based on their assigned program areas.
 
 - Can view eCRs whose reportable conditions are included in their list of assigned program areas
+
+## [Optional] FHIR Converter Proxy Setup
+
+To setup or customize the FHIR Converter Proxy please follow the [setup instructions here](https://github.com/CDCgov/dibbs-ecr-viewer/blob/main/containers/fhir-converter-proxy/README.md).
