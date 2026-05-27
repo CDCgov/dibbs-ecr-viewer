@@ -14,6 +14,8 @@ jobs:
     strategy:
       matrix:
         container: ${{fromJson(needs.list-containers.outputs.all-containers)}}
+        exclude:
+          - container: fhir-converter-proxy
     uses: ./.github/workflows/run-container-workflow.yaml
     with:
       container: ${{ matrix.container }}

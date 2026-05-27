@@ -45,6 +45,24 @@ To build the Docker image for the trigger code reference from source instead of 
 3. Navigate to `/dibbs-ecr-viewer/containers/trigger-code-reference/`.
 4. Run `docker buildx build --platform linux/amd64 -t trigger-code-reference .`.
 
+### Adding Packages
+
+To prevent the execution of malicious `setup.py` scripts during installation, our Docker builds enforce strict hash-checking and exclusively use pre-compiled binaries (Wheels). To add a new package please follow these instructions:
+
+1. Add your new package to the `requirements.in` file.
+2. Make sure you have `pip-tools` installed.
+3. Compile the strict lockfile by running:
+   ```bash
+   pip-compile --generate-hashes requirements.in
+   ```
+4. Try to build the Docker container.
+   - If it succeeds, the package has a pre-compiled wheel available. You are done!
+   - If it fails with `exit code: 1` and an error stating `ERROR: Could not find a version that satisfies the requirement` (specifically complaining about no matching distribution), it means PyPI only has a Source Distribution available for that package.
+5. To allow pip to build the package from source safely, you must add it to the `--no-binary` flag in the Dockerfile.
+   - Locate the pip install command in the Dockerfile.
+   - Add the base name of the package to the comma-separated `--no-binary list` (no spaces, no version numbers). **Example:** Change `--no-binary google-crc32c` to `--no-binary google-crc32c,your-new-package`
+6. You should be able to use your new package now!
+
 ### The API
 
 When viewing these docs from the `/redoc` endpoint on a running instance of the TCR or the DIBBs website, detailed documentation on the API will be available below.

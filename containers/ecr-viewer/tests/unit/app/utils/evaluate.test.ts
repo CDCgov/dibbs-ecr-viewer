@@ -242,6 +242,61 @@ describe("evaluate value", () => {
 
     expect(actual).toEqual("N");
   });
+  it("should provide the formatted date in the case of a valueDateTime", () => {
+    const actual = evaluateValue(
+      {
+        resourceType: "Observation",
+        valueDateTime: "2017-05-22",
+      } as any,
+      "value",
+    );
+
+    expect(actual).toEqual("05/22/2017");
+  });
+  it("should provide the formatted date and time in the case of a valueDateTime", () => {
+    const actual = evaluateValue(
+      {
+        resourceType: "Observation",
+        valueDateTime: "2017-10-01T10:15:00",
+      } as any,
+      "value",
+    );
+
+    expect(actual).toEqual("10/01/2017 10:15\u00A0AM");
+  });
+  it("should provide the formatted date in the case of a valueDateTime and invalid date", () => {
+    const actual = evaluateValue(
+      {
+        resourceType: "Observation",
+        valueDateTime: "2017-02-31",
+      } as any,
+      "value",
+    );
+
+    expect(actual).toEqual("03/03/2017");
+  });
+  it("should provide the original string in the case of a valueDateTime and not a date but a string", () => {
+    const actual = evaluateValue(
+      {
+        resourceType: "Observation",
+        valueDateTime: "this is not a date but there is a number 10.1",
+      } as any,
+      "value",
+    );
+
+    expect(actual).toEqual("this is not a date but there is a number 10.1");
+  });
+  it("should provide the original string in the case of a valueDateTime and not a date but a number", () => {
+    const actual = evaluateValue(
+      {
+        resourceType: "Observation",
+        valueDateTime: "0",
+      } as any,
+      "value",
+    );
+
+    expect(actual).toEqual("0");
+  });
   describe("Quantity", () => {
     it("should provide the value and string unit with a space in between", () => {
       const actual = evaluateValue(

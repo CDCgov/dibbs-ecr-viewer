@@ -14,10 +14,10 @@ interface LabInfoProps {
 }
 
 /**
- * Functional component for displaying clinical information.
- * @param props - Props containing clinical information.
+ * Functional component for displaying lab information.
+ * @param props - Props containing lab information.
  * @param props.labResults - some props
- * @returns The JSX element representing the clinical information.
+ * @returns The JSX element representing the lab information.
  */
 export const LabInfo = ({ labResults }: LabInfoProps) => {
   return (

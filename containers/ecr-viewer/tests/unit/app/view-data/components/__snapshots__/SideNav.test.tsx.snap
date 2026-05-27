@@ -34,11 +34,11 @@ exports[`SectionConfig should match the snapshot 1`] = `
           class="usa-sidenav__item"
         >
           <a
-            class="usa-current"
+            class=""
             data-testid="sidenav-link"
-            href="#section-1"
+            href="#ecr-summary"
           >
-            Section 1
+            eCR Summary
           </a>
         </li>
         <li
@@ -47,9 +47,9 @@ exports[`SectionConfig should match the snapshot 1`] = `
           <a
             class=""
             data-testid="sidenav-link"
-            href="#section-2"
+            href="#ecr-document"
           >
-            Section 2
+            eCR Document
           </a>
         </li>
         <li
@@ -65,9 +65,28 @@ exports[`SectionConfig should match the snapshot 1`] = `
               <a
                 class=""
                 data-testid="sidenav-link"
-                href="#section-3"
+                href="#section-1"
               >
-                Section 3
+                Section 1
+              </a>
+            </li>
+            <li
+              class="usa-sidenav__item"
+            >
+              <ul
+                class="usa-sidenav__sublist"
+                data-testid="sidenav"
+              />
+            </li>
+            <li
+              class="usa-sidenav__item"
+            >
+              <a
+                class=""
+                data-testid="sidenav-link"
+                href="#section-2"
+              >
+                Section 2
               </a>
             </li>
             <li
@@ -83,9 +102,9 @@ exports[`SectionConfig should match the snapshot 1`] = `
                   <a
                     class=""
                     data-testid="sidenav-link"
-                    href="#section-4"
+                    href="#section-3"
                   >
-                    Section 4
+                    Section 3
                   </a>
                 </li>
               </ul>
@@ -101,40 +120,18 @@ exports[`SectionConfig should match the snapshot 1`] = `
                 Section 2 - 2
               </a>
             </li>
+            <li
+              class="usa-sidenav__item"
+            >
+              <ul
+                class="usa-sidenav__sublist"
+                data-testid="sidenav"
+              />
+            </li>
           </ul>
         </li>
       </ul>
     </nav>
-    <h2
-      data-sectionid="section-1"
-      id="section-1"
-    >
-      Section 1
-    </h2>
-    <h2
-      data-sectionid="section-2"
-      id="section-2"
-    >
-      Section 2
-    </h2>
-    <h3
-      data-sectionid="section-3"
-      id="section-3"
-    >
-      Section 3
-    </h3>
-    <h4
-      data-sectionid="section-4"
-      id="section-4"
-    >
-      Section 4
-    </h4>
-    <h2
-      data-sectionid="section-2---2"
-      id="section-2-2"
-    >
-      Section 2 - 2
-    </h2>
   </main>
 </DocumentFragment>
 `;
