@@ -1052,6 +1052,12 @@ End: 01/07/2018
 </div>
 `;
 
+exports[`evaluateFhirDataService tests Evaluate Patient Info: Pregnancy Info should display all pregnancy data  4`] = `
+<div>
+  RhD positive
+</div>
+`;
+
 exports[`evaluateFhirDataService tests Evaluate Patient Info: Social History Evaluate Occupation History should match snapshot when all fields present 1`] = `
 <ExpandCollapseAccordion
   className="accordion-rr"

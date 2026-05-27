@@ -811,6 +811,10 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
       title: "Pregnancy Intention in the Next Year",
       value: evaluatePregnancyIntention(fhirBundle),
     },
+    {
+      title: "Rh Blood Type",
+      value: evaluatePregnancyRhType(fhirBundle),
+    },
   ];
 
   return evaluateData(data);
@@ -1073,6 +1077,14 @@ const evaluatePregnancyIntention = (fhirBundle: Bundle) => {
   const effective = evaluateValue(observation, fhirPathMappings.effectiveX);
 
   return value + "\n" + effective;
+};
+
+const evaluatePregnancyRhType = (fhirBundle: Bundle) => {
+  const observation = evaluateOne(fhirBundle, fhirPathMappings.pregnancyRhType);
+
+  if (!observation) return;
+
+  return evaluateValue(observation, fhirPathMappings.valueX);
 };
 
 // =============================================================================
