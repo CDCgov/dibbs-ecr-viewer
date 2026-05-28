@@ -169,6 +169,7 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
           docker run --rm --network host \
+            --user 1001:1001 \
             -v ${{ github.workspace }}/containers/${{ env.CONTAINER }}:/work \
             -w /work \
             mcr.microsoft.com/playwright:v1.58.2-jammy \
@@ -206,12 +207,19 @@ jobs:
 
       - name: Seed standard user and COVID program
         working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run test:e2e:seed-user-prog
+        run: |
+          docker run --rm --network host \
+            --user 1001:1001 \
+            -v ${{ github.workspace }}/containers/${{ env.CONTAINER }}:/work \
+            -w /work \
+            mcr.microsoft.com/playwright:v1.45.2-jammy \
+            npm run test:e2e:seed-user-prog
 
       - name: Run Playwright tests
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
           docker run --rm --network host \
+            --user 1001:1001 \
             -v ${{ github.workspace }}/containers/${{ env.CONTAINER }}:/work \
             -w /work \
             mcr.microsoft.com/playwright:v1.58.2-jammy \
