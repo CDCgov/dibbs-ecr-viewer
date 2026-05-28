@@ -182,12 +182,12 @@ When using the curl command to send zip files to ecr-viewer, the user has to use
 
 SQL scripts for removing eCR records from the metadata database are provided in `seed-scripts/sql/`. Each script targets one database type and handles foreign key constraints automatically.
 
-| Script | Database | Behavior |
-| --- | --- | --- |
-| `seed-scripts/sql/postgres/delete-ecrs-by-date.sql` | Postgres | Deletes eCRs (and all child records) created before a given date |
+| Script                                               | Database   | Behavior                                                         |
+| ---------------------------------------------------- | ---------- | ---------------------------------------------------------------- |
+| `seed-scripts/sql/postgres/delete-ecrs-by-date.sql`  | Postgres   | Deletes eCRs (and all child records) created before a given date |
 | `seed-scripts/sql/sqlserver/delete-ecrs-by-date.sql` | SQL Server | Deletes eCRs (and all child records) created before a given date |
-| `seed-scripts/sql/postgres/delete-all-data.sql` | Postgres | Deletes **all** data from every table in the `ecr_viewer` schema |
-| `seed-scripts/sql/sqlserver/delete-all-data.sql` | SQL Server | Deletes **all** data from every table in the `ecr_viewer` schema |
+| `seed-scripts/sql/postgres/delete-all-data.sql`      | Postgres   | Deletes **all** data from every table in the `ecr_viewer` schema |
+| `seed-scripts/sql/sqlserver/delete-all-data.sql`     | SQL Server | Deletes **all** data from every table in the `ecr_viewer` schema |
 
 ### Delete by date
 
