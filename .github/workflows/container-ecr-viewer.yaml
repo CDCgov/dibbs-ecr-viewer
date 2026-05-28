@@ -159,10 +159,6 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm ci
 
-      - name: Install Playwright Browsers
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run test:e2e:install
-
       - name: Run local docker and wait for it to be ready
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check ${{ !matrix.azure_ad  && 'localhost:8071/health/ready' || '' }}
@@ -171,7 +167,12 @@ jobs:
 
       - name: Run Playwright tests - Migrations
         working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run test:e2e:migrations
+        run: |
+          docker run --rm --network host \
+            -v ${{ github.workspace }}/containers/${{ env.CONTAINER }}:/work \
+            -w /work \
+            mcr.microsoft.com/playwright:v1.45.2-jammy \
+            npm run test:e2e:migrations
 
       - name: Get docker logs
         if: ${{ !cancelled() }}
@@ -209,7 +210,12 @@ jobs:
 
       - name: Run Playwright tests
         working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run test:e2e
+        run: |
+          docker run --rm --network host \
+            -v ${{ github.workspace }}/containers/${{ env.CONTAINER }}:/work \
+            -w /work \
+            mcr.microsoft.com/playwright:v1.45.2-jammy \
+            npm run test:e2e
 
       - name: Get docker logs
         if: ${{ !cancelled() }}
