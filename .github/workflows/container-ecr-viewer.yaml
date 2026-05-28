@@ -169,6 +169,9 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
           docker run --rm --network host \
+            --ipc=host \
+            --security-opt seccomp=unconfined \
+            -e HOME=/tmp \
             --user 1001:1001 \
             -v ${{ github.workspace }}/containers/${{ env.CONTAINER }}:/work \
             -w /work \
@@ -209,6 +212,9 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
           docker run --rm --network host \
+            --ipc=host \
+            --security-opt seccomp=unconfined \
+            -e HOME=/tmp \
             --user 1001:1001 \
             -v ${{ github.workspace }}/containers/${{ env.CONTAINER }}:/work \
             -w /work \
@@ -219,6 +225,9 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: |
           docker run --rm --network host \
+            --ipc=host \
+            --security-opt seccomp=unconfined \
+            -e HOME=/tmp \
             --user 1001:1001 \
             -v ${{ github.workspace }}/containers/${{ env.CONTAINER }}:/work \
             -w /work \
