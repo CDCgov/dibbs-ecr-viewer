@@ -171,7 +171,7 @@ jobs:
           docker run --rm --network host \
             -v ${{ github.workspace }}/containers/${{ env.CONTAINER }}:/work \
             -w /work \
-            mcr.microsoft.com/playwright:v1.45.2-jammy \
+            mcr.microsoft.com/playwright:v1.58.2-jammy \
             npm run test:e2e:migrations
 
       - name: Get docker logs
@@ -214,7 +214,7 @@ jobs:
           docker run --rm --network host \
             -v ${{ github.workspace }}/containers/${{ env.CONTAINER }}:/work \
             -w /work \
-            mcr.microsoft.com/playwright:v1.45.2-jammy \
+            mcr.microsoft.com/playwright:v1.58.2-jammy \
             npm run test:e2e
 
       - name: Get docker logs
