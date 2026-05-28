@@ -133,7 +133,7 @@ test.describe("ecr library page", () => {
       await expect(page.getByLabel("Page 2")).not.toBeVisible();
       await expect(page.getByText("Showing 1-3")).toBeVisible();
 
-      // Make sure the table has 3 rows before checking speficic entries
+      // Make sure the table has 3 rows before checking specific entries
       await expect(page.locator("tbody > tr")).toHaveCount(3);
       // Regex to make sure name is formatted correctly
       await expect(page.getByText(/O'Rendar木/)).toBeVisible();

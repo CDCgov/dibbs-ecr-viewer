@@ -12,7 +12,7 @@ const testDir =
  */
 export default defineConfig({
   testDir: "./tests/e2e", // base test dir
-  timeout: 60 * 1000, // Set the global timeout for all tests to 60 seconds (some tests are clos or over the default 30s timeout)
+  timeout: 60 * 1000, // Set the global timeout for all tests to 60 seconds (some tests are close or over the default 30s timeout)
   globalSetup: require.resolve("./tests/e2e/global-setup"),
   globalTeardown: require.resolve("./tests/e2e/global-teardown"),
   /* Run tests in files in parallel */
