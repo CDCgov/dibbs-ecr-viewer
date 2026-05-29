@@ -64,17 +64,28 @@ jobs:
           tf_branch="$TF_BRANCH"
           event_type="trigger-dibbs-ecr-viewer-$ENVIRONMENT-dev-$EVENT_TYPE"
           container_tag="$CONTAINER_TAG"
-          response="$(curl -L -w '%{http_code}\n' -o /dev/null \
+
+          # Create a temporary file to store the response body
+          response_body=$(mktemp)
+
+          # Capture the HTTP status code in a variable and write the body to the temp file.
+          # `-s` (silent) so the curl progress bar doesn't clutter the logs
+          http_code=$(curl -s -L -w '%{http_code}' -o "$response_body" \
             -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{ secrets.DIBBS_SKYLIGHT_PAT }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/$repo_owner/$repo_name/dispatches \
-            -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"service\": \"$service\", \"version\": \"$container_tag\", \"tf_branch\": \"$tf_branch\"}}")"
-          if [ $response -ne 204 ]; then
-            echo "Failed to trigger the workflow."
+            -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"service\": \"$service\", \"version\": \"$container_tag\", \"tf_branch\": \"$tf_branch\"}}")
+
+          if [ "$http_code" -ne 204 ]; then
+            # Using ::error:: highlights this block in red on the GitHub Actions summary page
+            echo "::error::Failed to trigger the workflow. HTTP Status Code: $http_code"
+            echo "::error::GitHub API Response Body:"
+            cat "$response_body"
             exit 1
           fi
+
           echo "View your workflow run at: https://github.com/skylight-hq/dibbs-tf-envs/actions"
           echo "Successfully triggered the workflow."
           echo "Service: $service"
