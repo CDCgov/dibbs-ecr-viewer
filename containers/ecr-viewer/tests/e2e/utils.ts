@@ -82,9 +82,22 @@ const logInToKeycloak = async (
   userName: string,
   password: string,
 ) => {
-  await page.getByRole("textbox", { name: "username" }).fill(userName!);
-  await page.getByRole("textbox", { name: "password" }).fill(password!);
-  await page.getByRole("button", { name: "Sign in" }).click();
+  // 1. Guarantee Keycloak is fully loaded and hydrated
+  await expect(
+    page.getByRole("heading", { name: "Sign in to your account" }),
+  ).toBeVisible();
+
+  // 2. Use precise accessible names
+  await page.getByRole("textbox", { name: "Username or email" }).fill(userName);
+  await page
+    .getByRole("textbox", { name: "Password", exact: true })
+    .fill(password);
+
+  // 3. Ensure the JS state has caught up before form submission
+  await sleep(200);
+
+  // 4. Submit
+  await page.getByRole("button", { name: "Sign In" }).click();
 };
 
 const sleep = async (ms: number) => {
