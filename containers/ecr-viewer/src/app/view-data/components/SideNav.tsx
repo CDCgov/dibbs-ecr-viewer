@@ -251,7 +251,7 @@ const SideNav: React.FC<{
     if (sectionConfigs.length === 0) return;
 
     const oneRem = parseFloat(
-      getComputedStyle(document.documentElement).fontSize
+      getComputedStyle(document.documentElement).fontSize,
     );
     setTopOffset(5 * oneRem);
 
