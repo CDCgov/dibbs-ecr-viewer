@@ -6,6 +6,7 @@ import {
   DiagnosticReport,
   DomainResource,
   Encounter,
+  Immunization,
   Observation,
   Organization,
 } from "fhir/r4";
@@ -228,6 +229,7 @@ export const evaluateEcrSummaryConditionSummary = (
       ],
       immunizationDetails: evaluateEcrSummaryRelevantImmunizations(
         fhirBundle,
+        fhirIndex,
         conditionsListKey,
       ),
       clinicalDetails: evaluateEcrSummaryRelevantClinicalDetails(
@@ -373,10 +375,12 @@ export const evaluateEcrSummaryRelevantLabResults = (
 
 const evaluateEcrSummaryRelevantImmunizations = (
   fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
   snomedCode: string,
 ): DisplayDataProps[] => {
-  const immunizations = evaluateAll(
-    fhirBundle,
+  const immunizations = getResourcesByType<Immunization>(fhirIndex, "Immunization");
+  const stampedImmunizations = evaluateAll(
+    immunizations,
     fhirPathMappings.stampedImmunizations,
     {
       snomedCode,
@@ -384,7 +388,7 @@ const evaluateEcrSummaryRelevantImmunizations = (
   );
   const immunizationTable = returnImmunizations(
     fhirBundle,
-    immunizations,
+    stampedImmunizations,
     "Immunizations Relevant to Reportable Condition",
     "caption-data-title caption-width-full",
   );

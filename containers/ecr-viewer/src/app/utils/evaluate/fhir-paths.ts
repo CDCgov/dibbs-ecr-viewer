@@ -735,7 +735,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // Stamped
   stampedImmunizations: {
     type: "Immunization",
-    path: "entry.resource.where(extension('https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code').valueCoding.code = %snomedCode and resourceType = 'Immunization')",
+    path: "Immunization.where(extension('https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code').valueCoding.code = %snomedCode)",
   },
 
   // Generic
