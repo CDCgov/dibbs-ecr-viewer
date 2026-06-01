@@ -3,6 +3,7 @@ import {
   CareTeamParticipant,
   Device,
   Element,
+  Immunization,
   Location,
   Medication,
   MedicationAdministration,
@@ -12,6 +13,7 @@ import {
   Organization,
   Period,
   Practitioner,
+  Procedure,
   Reference,
   ServiceRequest,
 } from "fhir/r4";
@@ -62,7 +64,7 @@ import {
 } from "@/app/view-data/components/common";
 import { sortResourcesByDate } from "../../utils/fhir-data-utils";
 import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
-import { FhirIndex } from "../../services/fhirResourcesIndexService";
+import { FhirIndex, getResourcesByType } from "../../services/fhirResourcesIndexService";
 
 /**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.
@@ -120,7 +122,7 @@ export const evaluateClinicalData = (
     {
       title: "Procedures",
       fullWidthContent: true,
-      value: returnProceduresTable(fhirBundle),
+      value: returnProceduresTable(fhirBundle, fhirIndex),
     },
     {
       title: "Plan of Treatment",
@@ -158,8 +160,11 @@ export const evaluateClinicalData = (
       title: "Immunization History",
       value: returnImmunizations(
         fhirBundle,
-        evaluateAll(fhirBundle, fhirPathMappings.immunizations),
-        "Immunization History",
+        getResourcesByType<Immunization>(
+          fhirIndex,
+          "Immunization",
+        ),
+        "Immunization History"
       ),
     },
   ];
@@ -575,9 +580,10 @@ const evaluatePlanOfTreatment = (
  */
 export const returnProceduresTable = (
   fhirBundle: Bundle,
+  fhirIndex: FhirIndex
 ): React.JSX.Element | undefined => {
   // Literal Procedure resources
-  const procedures = evaluateAll(fhirBundle, fhirPathMappings.procedures);
+  const procedures = getResourcesByType<Procedure>(fhirIndex, "Procedure");
 
   // References to Observations in the procedure history section
   const obs = evaluateAllReferences<Observation>(

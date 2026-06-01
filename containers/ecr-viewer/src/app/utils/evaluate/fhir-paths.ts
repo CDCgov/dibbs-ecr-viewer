@@ -123,7 +123,6 @@ export type PathTypes = {
   careTeamParticipantRole: CodeableConcept;
   careTeamParticipantStatus: string;
   careTeamParticipantPeriod: string;
-  immunizations: Immunization;
   immunizationsName: CodeableConcept;
   immunizationsAdminDate: string;
   immunizationsDoseNumber: ValueX;
@@ -138,7 +137,6 @@ export type PathTypes = {
   medicationStatementMedicationRef: Reference;
   medicationStatementMedicationRequestRef: Reference;
   medicationStatementDosageTimingPeriod: number;
-  procedures: Procedure;
   procedureHistoryRefs: Reference;
   procedureDate: TimeX;
   status: string;
@@ -541,10 +539,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   careTeamParticipantPeriod: { type: "string", path: "period.text" },
 
   // Immunization Info
-  immunizations: {
-    type: "Immunization",
-    path: "entry.resource.Immunization",
-  },
   immunizationsName: {
     type: "CodeableConcept",
     path: "vaccineCode",
@@ -602,10 +596,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // === Procedure ===
-  procedures: {
-    type: "Procedure",
-    path: "entry.resource.Procedure",
-  },
   procedureHistoryRefs: {
     type: "Reference",
     path: "entry.resource.section.where(code.coding.code = '47519-4').entry.where(reference.startsWith('Observation/'))",

@@ -507,11 +507,12 @@ describe("Snapshot tests", () => {
           },
         ],
       } as unknown as Bundle;
+      const proceduresFhirIndex = getFhirIndex(proceduresBundle);
 
       const treatmentData = [
         {
           title: "Procedures",
-          value: returnProceduresTable(proceduresBundle),
+          value: returnProceduresTable(proceduresBundle, proceduresFhirIndex),
         },
       ];
 
