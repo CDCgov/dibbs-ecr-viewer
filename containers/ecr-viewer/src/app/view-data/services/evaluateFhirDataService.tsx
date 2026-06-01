@@ -815,6 +815,10 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
       title: "Date of Last Live Birth",
       value: evaluateDateOfLastLiveBirth(fhirBundle),
     },
+    {
+      title: "Rh Blood Type",
+      value: evaluatePregnancyRhType(fhirBundle),
+    },
   ];
 
   return evaluateData(data);
@@ -1089,6 +1093,14 @@ const evaluateDateOfLastLiveBirth = (fhirBundle: Bundle) => {
 
   const value = evaluateValue(observation, fhirPathMappings.valueX);
   return value;
+};
+
+const evaluatePregnancyRhType = (fhirBundle: Bundle) => {
+  const observation = evaluateOne(fhirBundle, fhirPathMappings.pregnancyRhType);
+
+  if (!observation) return;
+
+  return evaluateValue(observation, fhirPathMappings.valueX);
 };
 
 // =============================================================================

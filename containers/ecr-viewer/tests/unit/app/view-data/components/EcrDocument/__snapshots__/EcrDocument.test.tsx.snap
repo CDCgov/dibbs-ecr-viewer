@@ -1233,7 +1233,7 @@ exports[`Tests for eCR Document Given no data, info message for empty sections s
                         <div
                           class="data-title padding-right-1"
                         >
-                          Date of Last Live Birth
+                          Rh Blood Type
                         </div>
                         <div
                           class="grid-col maxw7 text-pre-line p-list text-italic text-base"
