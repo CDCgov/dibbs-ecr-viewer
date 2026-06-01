@@ -242,15 +242,19 @@ const SideNav: React.FC<{
     [ecrDocumentNavConfig],
   );
 
-  const topOffset = useMemo(() => {
-    return 5 * parseFloat(getComputedStyle(document.documentElement).fontSize);
-  }, []);
   const parentMap = buildParentMap(sectionConfigs);
 
+  const [topOffset, setTopOffset] = useState(80);
   const [activeSection, setActiveSection] = useState<string>("");
 
   useEffect(() => {
     if (sectionConfigs.length === 0) return;
+
+    const oneRem = parseFloat(
+      getComputedStyle(document.documentElement).fontSize
+    );
+    setTopOffset(5 * oneRem);
+
     const validIds = new Set(
       (function flatten(items: SectionConfig[]): string[] {
         return items.flatMap(({ id, subNavItems }) => [
