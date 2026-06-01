@@ -3,7 +3,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Tooltip } from "@trussworks/react-uswds";
-import { Bundle } from "fhir/r4";
+import { Bundle, Condition } from "fhir/r4";
 
 import BundleNoActiveProblems from "@/../../../test-data/fhir/BundleNoActiveProblems.json";
 import { evaluateAll } from "@/app/utils/evaluate";
@@ -15,7 +15,7 @@ import {
   ToolTipElement,
 } from "@/app/view-data/components/ToolTipElement";
 import { returnProblemsTable } from "@/app/view-data/components/common";
-import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
+import { getFhirIndex, getResourcesByType } from "@/app/view-data/services/fhirResourcesIndexService";
 
 describe("Utils", () => {
   describe("Render Active Problem table", () => {
@@ -23,11 +23,13 @@ describe("Utils", () => {
       const fhirIndex = getFhirIndex(
         BundleNoActiveProblems as unknown as Bundle,
       );
+      const conditions = getResourcesByType<Condition>(fhirIndex, "Condition");
+      expect(conditions).toHaveLength(1);
       const actual = returnProblemsTable(
         BundleNoActiveProblems as unknown as Bundle,
         fhirIndex,
         evaluateAll(
-          BundleNoActiveProblems as unknown as Bundle,
+          conditions,
           fhirPathMappings.activeProblems,
         ),
       );

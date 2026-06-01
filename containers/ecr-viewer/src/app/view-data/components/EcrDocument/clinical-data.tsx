@@ -1,6 +1,7 @@
 import {
   Bundle,
   CareTeamParticipant,
+  Condition,
   Device,
   Element,
   Immunization,
@@ -42,6 +43,7 @@ import {
   evaluateAllReferences,
   evaluateOne,
   evaluateReference,
+  evaluateReference2,
   evaluateValue,
 } from "@/app/utils/evaluate";
 import fhirPathMappings, { FhirPath } from "@/app/utils/evaluate/fhir-paths";
@@ -98,13 +100,14 @@ export const evaluateClinicalData = (
     ),
   ];
 
+  const conditions = getResourcesByType<Condition>(fhirIndex, "Condition");
   const activeProblemsTableData: DisplayDataProps[] = [
     {
       title: "Problems List",
       value: returnProblemsTable(
         fhirBundle,
         fhirIndex,
-        evaluateAll(fhirBundle, fhirPathMappings.activeProblems),
+        evaluateAll(conditions, fhirPathMappings.activeProblems),
       ),
     },
   ];
@@ -127,7 +130,7 @@ export const evaluateClinicalData = (
     {
       title: "Plan of Treatment",
       fullWidthContent: true,
-      value: evaluatePlanOfTreatment(fhirBundle),
+      value: evaluatePlanOfTreatment(fhirBundle, fhirIndex),
     },
     {
       title: "Administered Medications",
@@ -499,6 +502,7 @@ export const evaluateNotes = (
 
 const evaluatePlanOfTreatment = (
   fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
 ): React.ReactNode | undefined => {
   const plans = evaluateAll(fhirBundle, fhirPathMappings.planOfTreatment);
   const activities = [];
@@ -509,17 +513,17 @@ const evaluatePlanOfTreatment = (
     if (plan.detail) {
       activities.push(plan);
     } else if (plan.reference?.reference?.startsWith("ServiceRequest/")) {
-      const req = evaluateReference<ServiceRequest>(
-        fhirBundle,
+      const req = evaluateReference2<ServiceRequest>(
+        fhirIndex,
         plan.reference.reference,
       );
       if (req) {
         procs.push(req);
       }
     } else if (plan.reference?.reference?.startsWith("MedicationRequest/")) {
-      const req = evaluateReference<MedicationRequest>(
-        fhirBundle,
-        plan.reference.reference,
+      const req = evaluateReference2<MedicationRequest>(
+        fhirIndex,
+        plan.reference.reference
       );
       if (req) {
         meds.push(req);

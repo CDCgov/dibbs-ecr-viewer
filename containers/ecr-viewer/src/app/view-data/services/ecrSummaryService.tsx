@@ -284,7 +284,8 @@ export const evaluateEcrSummaryRelevantClinicalDetails = (
     return [];
   }
 
-  const problemsList = evaluateAll(fhirBundle, fhirPathMappings.activeProblems);
+  const conditions = getResourcesByType<Condition>(fhirIndex, "Condition");
+  const problemsList = evaluateAll(conditions, fhirPathMappings.activeProblems);
   const problemsListFiltered = getRelevantResources(problemsList, snomedCode);
 
   if (problemsListFiltered.length === 0) {
