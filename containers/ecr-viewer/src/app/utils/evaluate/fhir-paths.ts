@@ -79,6 +79,7 @@ export type PathTypes = {
   pregnancyDeterminationDate: ValueX;
   pregnancyIntent: Observation;
   pregnancyRhType: Observation;
+  pregnancyDRhSensitized: Observation;
   postpartumStatus: Observation;
   patientNationality: ValueX;
   patientCountryResidence: ValueX;
@@ -379,6 +380,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   pregnancyRhType: {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '10331-7'))",
+  },
+  pregnancyDRhSensitized: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '55607006'))",
   },
 
   // eCR Metadata
