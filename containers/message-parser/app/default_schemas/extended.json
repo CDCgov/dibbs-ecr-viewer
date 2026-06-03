@@ -181,7 +181,7 @@
     "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
   },
   "reason_for_visit": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType= 'Composition' ).section.where(code.coding.code='29299-5').extension.where(url='http://hl7.org/fhir/cda/ccda/StructureDefinition/2.16.840.1.113883.10.20.22.2.12').valueString",
+    "fhir_path": "Bundle.entry.resource.where(resourceType= 'Composition' ).section.where(code.coding.code='29299-5').text.`div`",
     "data_type": "string",
     "nullable": true
   },
