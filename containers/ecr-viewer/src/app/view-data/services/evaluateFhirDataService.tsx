@@ -812,6 +812,10 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
       value: evaluatePregnancyIntention(fhirBundle),
     },
     {
+      title: "Date of Last Live Birth",
+      value: evaluateDateOfLastLiveBirth(fhirBundle),
+    },
+    {
       title: "Rh Blood Type",
       value: evaluatePregnancyRhType(fhirBundle),
     },
@@ -1077,6 +1081,18 @@ const evaluatePregnancyIntention = (fhirBundle: Bundle) => {
   const effective = evaluateValue(observation, fhirPathMappings.effectiveX);
 
   return value + "\n" + effective;
+};
+
+const evaluateDateOfLastLiveBirth = (fhirBundle: Bundle) => {
+  const observation = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.pregnancyLastLiveBirth,
+  );
+
+  if (!observation) return;
+
+  const value = evaluateValue(observation, fhirPathMappings.valueX);
+  return value;
 };
 
 const evaluatePregnancyRhType = (fhirBundle: Bundle) => {
