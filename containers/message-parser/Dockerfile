@@ -8,7 +8,7 @@ RUN pip install --upgrade pip --break-system-packages
 WORKDIR /code
 
 COPY ./requirements.txt /code/requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install --require-hashes --only-binary :all: --no-binary google-crc32c -r requirements.txt
 
 COPY ./app /code/app
 COPY ./assets /code/assets

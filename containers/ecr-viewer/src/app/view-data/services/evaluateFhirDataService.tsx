@@ -13,6 +13,7 @@ import {
   Patient,
   Practitioner,
   PractitionerRole,
+  Procedure,
   RelatedPerson,
 } from "fhir/r4";
 import { DateTime } from "luxon";
@@ -806,6 +807,14 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
       toolTip:
         "Last Menstrual Period represents the first day of the last menstrual period of the patient. This section lists multiple periods in collected in chronological order.",
     },
+    {
+      title: "Pregnancy Intention in the Next Year",
+      value: evaluatePregnancyIntention(fhirBundle),
+    },
+    {
+      title: "Rh Blood Type",
+      value: evaluatePregnancyRhType(fhirBundle),
+    },
   ];
 
   return evaluateData(data);
@@ -961,20 +970,42 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
     const fullId = `${ob.resourceType}/${ob.id}`;
     const outcomes = pregnancyOutcomeObservations
       .filter((ob) => ob.focus?.some(({ reference }) => reference === fullId))
-      .map((o) => [
-        {
-          title: "Birth Order",
-          value: evaluateValue(o, fhirPathMappings.pregnancyBirthOrder),
-        },
-        {
-          title: "Outcome",
-          value: evaluateValue(o, fhirPathMappings.valueX),
-        },
-        {
-          title: "Date/Time",
-          value: evaluateValue(o, fhirPathMappings.effectiveX),
-        },
-      ]);
+      .map((o) => {
+        const outcomeItems = [
+          {
+            title: "Birth Order",
+            value: evaluateValue(o, fhirPathMappings.pregnancyBirthOrder),
+          },
+          {
+            title: "Outcome",
+            value: evaluateValue(o, fhirPathMappings.valueX),
+          },
+          {
+            title: "Date/Time",
+            value: evaluateValue(o, fhirPathMappings.effectiveX),
+          },
+        ];
+
+        const procedures = o.partOf
+          ?.map((ref) => {
+            return evaluateReference<Procedure>(fhirBundle, ref.reference);
+          })
+          .filter((proc): proc is Procedure => proc != undefined);
+
+        procedures?.forEach((procedure) => {
+          const procedureName = evaluateValue(procedure, fhirPathMappings.code);
+          const procedureDate = evaluateValue(
+            procedure,
+            fhirPathMappings.procedureDate,
+          );
+          outcomeItems.push({
+            title: "Procedure",
+            value: procedureName + "\nPerformed Date/Time: " + procedureDate,
+          });
+        });
+
+        return outcomeItems;
+      });
 
     if (outcomes.length > 0) {
       data.push({
@@ -1035,6 +1066,25 @@ const evaluateLastMenstrualPeriod = (fhirBundle: Bundle) => {
   ];
 
   return <EvaluateTable resources={observations} columns={columns} />;
+};
+
+const evaluatePregnancyIntention = (fhirBundle: Bundle) => {
+  const observation = evaluateOne(fhirBundle, fhirPathMappings.pregnancyIntent);
+
+  if (!observation) return;
+
+  const value = evaluateValue(observation, fhirPathMappings.valueX);
+  const effective = evaluateValue(observation, fhirPathMappings.effectiveX);
+
+  return value + "\n" + effective;
+};
+
+const evaluatePregnancyRhType = (fhirBundle: Bundle) => {
+  const observation = evaluateOne(fhirBundle, fhirPathMappings.pregnancyRhType);
+
+  if (!observation) return;
+
+  return evaluateValue(observation, fhirPathMappings.valueX);
 };
 
 // =============================================================================

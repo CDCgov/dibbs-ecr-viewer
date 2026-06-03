@@ -58,28 +58,32 @@ test.describe("viewer page", () => {
         `/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703&${nbsAuthParam}`,
       );
       await page.getByText("Patient Name").first().waitFor();
-      await page.getByRole("button", { name: /expand all sections/i }).click();
     });
 
     test("clicking each link scrolls and highlights", async ({ page }) => {
       const nav = page.getByRole("navigation");
       await expect(nav).toBeVisible();
 
+      // Full DOM should not be rendered yet
+      await expect(
+        page.getByText("History of Present Illness"),
+      ).not.toBeAttached();
+
       // use a test id here to avoid a lot of special casing around the back to
       // library link, which may or may not exist based on the config
       const navLinksLoc = nav.getByTestId("sidenav-link");
-      await expect(navLinksLoc).toHaveCount(21);
+      await expect(navLinksLoc).toHaveCount(20);
       const navLinks = await navLinksLoc.all();
-      expect(navLinks.length).toBe(21); // sanity check
+      expect(navLinks.length).toBe(20); // sanity check
 
-      // Make sure after collapsing and reopening, nav links still work
+      // Make sure after expanding and collapsing, nav links still work
       await page.getByText("Collapse all sections").click();
-      expect(page.getByText("Miscellaneous Notes")).not.toBeVisible();
+      expect(page.getByText("History of Present Illness")).not.toBeVisible();
 
       await page.getByText("Expand all sections").click();
-      expect(page.getByText("Miscellaneous Notes")).toBeVisible();
+      expect(page.getByText("History of Present Illness")).toBeVisible();
 
-      // make sure clicking each link scrolls the heading and highlights the corresponding
+      // Clicking each link scrolls the heading and highlights the corresponding
       // side nav item
       for (const navLink of navLinks) {
         await navLink.scrollIntoViewIfNeeded();
@@ -99,11 +103,12 @@ test.describe("viewer page", () => {
 
       const nav = page.getByRole("navigation");
       await expect(nav).toBeVisible();
+      await page.getByRole("button", { name: /expand all sections/i }).click();
 
       // use a test id here to avoid a lot of special casing around the back to
       // library link, which may or may not exist based on the config
       const navLinksLoc = nav.getByTestId("sidenav-link");
-      await expect(navLinksLoc).toHaveCount(21);
+      await expect(navLinksLoc).toHaveCount(20);
       const numLinks = (await navLinksLoc.all()).length;
       let navIndex = 0;
       while (navIndex < numLinks) {

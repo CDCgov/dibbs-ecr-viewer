@@ -178,6 +178,46 @@ curl --location '<DIBBS_URL>/ecr-viewer/api/process-ecr' \
 
 When using the curl command to send zip files to ecr-viewer, the user has to use the flag type=application/zip. If not, they will receive this response message {"message":"Failed to process orchestration response"} and will see the error in the screenshot in their ecr-viewer logs.
 
+## Deleting data
+
+SQL scripts for removing eCR records from the metadata database are provided in `seed-scripts/sql/`. Each script targets one database type and handles foreign key constraints automatically.
+
+| Script                                               | Database   | Behavior                                                         |
+| ---------------------------------------------------- | ---------- | ---------------------------------------------------------------- |
+| `seed-scripts/sql/postgres/delete-ecrs-by-date.sql`  | Postgres   | Deletes eCRs (and all child records) created before a given date |
+| `seed-scripts/sql/sqlserver/delete-ecrs-by-date.sql` | SQL Server | Deletes eCRs (and all child records) created before a given date |
+| `seed-scripts/sql/postgres/delete-all-data.sql`      | Postgres   | Deletes **all** data from every table in the `ecr_viewer` schema |
+| `seed-scripts/sql/sqlserver/delete-all-data.sql`     | SQL Server | Deletes **all** data from every table in the `ecr_viewer` schema |
+
+### Delete by date
+
+Open the appropriate script for your database and set the `cutoff_date` variable near the top of the file to the earliest date you want to **keep** (records created before that date will be deleted). Then run:
+
+```bash
+# Postgres
+psql "$DATABASE_URL" -f seed-scripts/sql/postgres/delete-ecrs-by-date.sql
+
+# SQL Server
+sqlcmd -S <server> -U <user> -P <password> -i seed-scripts/sql/sqlserver/delete-ecrs-by-date.sql
+```
+
+Both scripts are safe to run against core and extended schema deployments — extended schema tables (`ecr_labs`, `ecr_immunizations`, `patient_address`) are deleted only when present.
+
+### Delete all data
+
+> [!WARNING]
+> The delete-all scripts remove every row from every table in the `ecr_viewer` schema, including user accounts and program areas. This cannot be undone. Take a database backup before running.
+
+```bash
+# Postgres
+psql "$DATABASE_URL" -f seed-scripts/sql/postgres/delete-all-data.sql
+
+# SQL Server
+sqlcmd -S <server> -U <user> -P <password> -i seed-scripts/sql/sqlserver/delete-all-data.sql
+```
+
+After running a delete-all script, re-initialize the database by calling the `/migrate-db` endpoint with `init_admin_email` before the app can be used again (see [Database Migrations](#database-migrations)).
+
 ## User and Program Area Setup
 
 ### Initialization
