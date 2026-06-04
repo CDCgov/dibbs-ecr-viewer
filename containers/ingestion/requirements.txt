@@ -861,9 +861,9 @@ smartystreets-python-sdk==6.2.0 \
     --hash=sha256:4ed071d84a9ca804325a5598d2459b488528337190fe631c92c5188e4948c75f \
     --hash=sha256:dee98868e5c992b5088bd4d2bb55a972fec070b1d4057398b6b4ab82cb656d99
     # via -r requirements.in
-starlette==1.0.0 \
-    --hash=sha256:6a4beaf1f81bb472fd19ea9b918b50dc3a77a6f2e190a12954b25e6ed5eea149 \
-    --hash=sha256:d3ec55e0bb321692d275455ddfd3df75fff145d009685eb40dc91fc66b03d38b
+starlette==1.0.1 \
+    --hash=sha256:512399c5f1de7fac99c88572212ded9ddeddef2fb32afa82d724000e88b38f4f \
+    --hash=sha256:7c0e69b2ee1c848bd54669d908500117a3ee13de603a21427e5c6fc1adf98dcd
     # via fastapi
 typing-extensions==4.15.0 \
     --hash=sha256:0cea48d173cc12fa28ecabc3b837ea3cf6f38c6d1136f85cbaaf598984861466 \
