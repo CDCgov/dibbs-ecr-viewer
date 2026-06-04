@@ -1064,6 +1064,13 @@ exports[`evaluateFhirDataService tests Evaluate Patient Info: Pregnancy Info sho
 </div>
 `;
 
+exports[`evaluateFhirDataService tests Evaluate Patient Info: Pregnancy Info should display all pregnancy data  6`] = `
+<div>
+  13 ML Rho(D) immune globulin, human 1154 UNT/ML Injection [WinRho]
+Start: 06/18/2017
+</div>
+`;
+
 exports[`evaluateFhirDataService tests Evaluate Patient Info: Social History Evaluate Occupation History should match snapshot when all fields present 1`] = `
 <ExpandCollapseAccordion
   className="accordion-rr"

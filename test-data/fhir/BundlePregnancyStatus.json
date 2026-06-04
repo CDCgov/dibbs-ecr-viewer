@@ -678,6 +678,49 @@
           "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
         }
       }
+    },
+    {
+      "fullUrl": "urn:uuid:ceacfcfd-ca17-208e-3425-119c3a64ce92",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "ceacfcfd-ca17-208e-3425-119c3a64ce92",
+        "meta": {
+          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:7abe5aa2-c1ba-4552-85fc-796b4c00c50d"
+          }
+        ],
+        "status": "final",
+        "effectivePeriod": {
+          "start": "2017-06-18"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "73813-8",
+              "display": "Characteristics of labor and delivery [US Standard Certificate of Live Birth]"
+            }
+          ],
+          "text": "Characteristics of labor and delivery"
+        },
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "code": "1790513",
+              "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+              "display": "13 ML Rho(D) immune globulin, human 1154 UNT/ML Injection [WinRho]"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
+        }
+      }
     }
   ]
 }
