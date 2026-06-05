@@ -646,6 +646,40 @@
       }
     },
     {
+      "fullUrl": "urn:uuid:a5707dfe-bb51-0e8c-4334-51d643b10869",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "a5707dfe-bb51-0e8c-4334-51d643b10869",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/bfdr/StructureDefinition/Observation-date-of-last-live-birth"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:2457808c-ec58-40f6-9e06-eef765794c28"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "68499-3",
+              "display": "Date last live birth"
+            }
+          ]
+        },
+        "valueDateTime": "2016-05-01",
+        "effectiveDateTime": "2018-01-05T10:15:00",
+        "subject": {
+          "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
+        }
+      }
+    },
+    {
       "fullUrl": "urn:uuid:71df50d4-290d-7051-df1e-3eaa8ea1436b",
       "resource": {
         "resourceType": "Observation",

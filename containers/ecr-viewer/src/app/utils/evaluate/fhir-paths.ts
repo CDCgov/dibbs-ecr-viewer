@@ -78,6 +78,7 @@ export type PathTypes = {
   pregnancyStatus: Observation;
   pregnancyDeterminationDate: ValueX;
   pregnancyIntent: Observation;
+  pregnancyLastLiveBirth: Observation;
   pregnancyRhType: Observation;
   pregnancyDRhSensitized: Observation;
   postpartumStatus: Observation;
@@ -376,6 +377,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   pregnancyIntent: {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '86645-9'))",
+  },
+  pregnancyLastLiveBirth: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '68499-3'))",
   },
   pregnancyRhType: {
     type: "Observation",

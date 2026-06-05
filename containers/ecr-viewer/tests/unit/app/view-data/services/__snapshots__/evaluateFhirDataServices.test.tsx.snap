@@ -1054,6 +1054,12 @@ End: 01/07/2018
 
 exports[`evaluateFhirDataService tests Evaluate Patient Info: Pregnancy Info should display all pregnancy data  4`] = `
 <div>
+  05/01/2016
+</div>
+`;
+
+exports[`evaluateFhirDataService tests Evaluate Patient Info: Pregnancy Info should display all pregnancy data  5`] = `
+<div>
   RhD positive
 </div>
 `;
