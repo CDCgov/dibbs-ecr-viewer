@@ -1064,7 +1064,7 @@ exports[`evaluateFhirDataService tests Evaluate Patient Info: Pregnancy Info sho
 </div>
 `;
 
-exports[`evaluateFhirDataService tests Evaluate Patient Info: Pregnancy Info should display all pregnancy data  5`] = `
+exports[`evaluateFhirDataService tests Evaluate Patient Info: Pregnancy Info should display all pregnancy data  6`] = `
 <div>
   Rhesus isoimmunization with antenatal problem
 </div>
