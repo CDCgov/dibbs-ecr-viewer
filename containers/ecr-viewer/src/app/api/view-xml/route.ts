@@ -8,12 +8,18 @@ import {
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   if (process.env.SAVE_XML !== "true") {
-    return NextResponse.json({ message: "XML storage is not enabled" }, { status: 404 });
+    return NextResponse.json(
+      { message: "XML storage is not enabled" },
+      { status: 404 },
+    );
   }
 
   const id = request.nextUrl.searchParams.get("id");
   if (!id) {
-    return NextResponse.json({ message: "Missing id parameter" }, { status: 400 });
+    return NextResponse.json(
+      { message: "Missing id parameter" },
+      { status: 400 },
+    );
   }
 
   if (process.env.SOURCE !== S3_SOURCE) {
@@ -31,6 +37,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ message: error.message }, { status: 404 });
     }
     console.error({ message: "Failed to retrieve XML", error, id });
-    return NextResponse.json({ message: "Failed to retrieve XML" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Failed to retrieve XML" },
+      { status: 500 },
+    );
   }
 }

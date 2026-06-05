@@ -90,7 +90,7 @@ describe("GET /api/view-xml", () => {
 
   it("returns null rrXml when only eICR XML exists", async () => {
     const body = await makeZipBody({
-      "abc-CDA_eICR.xml": '<ClinicalDocument/>',
+      "abc-CDA_eICR.xml": "<ClinicalDocument/>",
     });
     (s3Client.send as jest.Mock).mockResolvedValue({ Body: body });
 
