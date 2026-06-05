@@ -819,6 +819,10 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
       title: "Rh Blood Type",
       value: evaluatePregnancyRhType(fhirBundle),
     },
+    {
+      title: "D(Rh) Sensitized",
+      value: evaluatePregnancyDRhSensitized(fhirBundle),
+    },
   ];
 
   return evaluateData(data);
@@ -1100,6 +1104,16 @@ const evaluatePregnancyRhType = (fhirBundle: Bundle) => {
 
   if (!observation) return;
 
+  return evaluateValue(observation, fhirPathMappings.valueX);
+};
+
+const evaluatePregnancyDRhSensitized = (fhirBundle: Bundle) => {
+  const observation = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.pregnancyDRhSensitized,
+  );
+
+  if (!observation) return;
   return evaluateValue(observation, fhirPathMappings.valueX);
 };
 
