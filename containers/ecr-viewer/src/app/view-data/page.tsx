@@ -11,6 +11,7 @@ import EcrDocument from "./components/EcrDocument";
 import { getEcrDocumentAccordionItems } from "./components/EcrDocument/accordion-items";
 import EcrSummary from "./components/EcrSummary";
 import SideNav from "./components/SideNav";
+import XmlViewer from "./components/XmlViewer";
 import {
   evaluatePatientDOB,
   evaluatePatientName,
@@ -76,16 +77,10 @@ const ECRViewerPage = async ({
 
   return (
     <ECRViewerLayout patientName={patientName} patientDOB={patientDOB}>
-      <SideNav ecrDocumentNavConfig={ecrDocumentNavConfig} />
-      <div className="ecr-viewer-container">
-        <div className="margin-bottom-3">
-          <h2 className="margin-bottom-05 margin-top-3" id="ecr-summary">
-            eCR Summary
-          </h2>
-          <div className="text-base-darker line-height-sans-5">
-            Provides key info upfront to help you understand the eCR at a glance
-          </div>
-        </div>
+      <XmlViewer
+        sideNav={<SideNav ecrDocumentNavConfig={ecrDocumentNavConfig} />}
+        ecrId={process.env.SAVE_XML === "true" ? fhirId : undefined}
+      >
         <EcrSummary
           patientDetails={
             evaluateEcrSummaryPatientDetails(fhirBundle, fhirIndex)
@@ -102,7 +97,7 @@ const ECRViewerPage = async ({
           snomed={snomedCode}
         />
         <EcrDocument initialAccordionItems={accordionItems} />
-      </div>
+      </XmlViewer>
     </ECRViewerLayout>
   );
 };

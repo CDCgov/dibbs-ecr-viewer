@@ -333,7 +333,7 @@ export const zipAndSaveXml = async (body: RequestBody, ecrId: string) => {
     zip.file(`${ecrId}-CDA_eICR.xml`, body.ecr);
 
     // add RR if exists and is string
-    if (body.rr === "string") {
+    if (typeof body.rr === "string") {
       zip.file(`${ecrId}-CDA_RR.xml`, body.rr);
     }
 
