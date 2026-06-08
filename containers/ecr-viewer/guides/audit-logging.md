@@ -39,4 +39,4 @@ These messages will need to be exposed according to the regulations set forth in
 
 The audit log must be able to determine when information has been tampered with in accordance with subpoint v) of regulation 170.315 (d)(2). ONC recommends [using a hashing standard with strength equal or greater than SHA-2](https://www.federalregister.gov/documents/2012/09/04/2012-20982/health-information-technology-standards-implementation-specifications-and-certification-criteria-for#p-890) to determine when unauthorized changes to the database may have occurred.
 
-- The audit log [generates a SHA-256 checksum](https://github.com/CDCgov/dibbs-query-connector/blob/main/src/app/backend/auditLogs/lib.ts#L73) based on author, timestamp, and message contents to determine if there are any changes to the written audit log data
+- The audit log [generates a SHA-256 checksum](https://github.com/CDCgov/dibbs-ecr-viewer/blob/main/containers/ecr-viewer/src/app/services/auditLogService.ts#L114-L116) based on author, timestamp, and message contents to determine if there are any changes to the written audit log data
