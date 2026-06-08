@@ -8,6 +8,8 @@ import {
   Element,
   Encounter,
   Location,
+  Medication,
+  MedicationAdministration,
   Observation,
   Organization,
   Patient,
@@ -820,8 +822,8 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
       value: evaluatePregnancyRhType(fhirBundle),
     },
     {
-      title: "Characteristics of Labor and Delivery",
-      value: evaluateCharacteristicsOfLaborAndDelivery(fhirBundle),
+      title: "Medications Administered",
+      value: evaluatePregnancyMedicationsAdministered(fhirBundle),
     },
   ];
 
@@ -1107,16 +1109,32 @@ const evaluatePregnancyRhType = (fhirBundle: Bundle) => {
   return evaluateValue(observation, fhirPathMappings.valueX);
 };
 
-const evaluateCharacteristicsOfLaborAndDelivery = (fhirBundle: Bundle) => {
-  const entries = evaluateAll(
-    fhirBundle,
-    fhirPathMappings.characteristicsOfLaborAndDelivery,
-  ).map((ob) => {
-    const value = evaluateValue(ob, fhirPathMappings.valueX);
-    const effective = evaluateValue(ob, fhirPathMappings.effectiveX);
+const evaluatePregnancyMedicationsAdministered = (fhirBundle: Bundle) => {
+  const pregnancyMedicationAdministrationRefs =
+    evaluateAllReferences<MedicationAdministration>(
+      fhirBundle,
+      fhirPathMappings.pregnancyMedicationAdministrationRefs,
+    );
 
-    return value + "\n" + effective;
-  });
+  const entries = pregnancyMedicationAdministrationRefs.map(
+    (medicationAdministration) => {
+      let medication: Medication | undefined;
+      if (medicationAdministration?.medicationReference?.reference) {
+        medication = evaluateReference(
+          fhirBundle,
+          medicationAdministration.medicationReference.reference,
+        );
+      }
+
+      const name = formatCodeableConcept(medication?.code);
+      const effective = evaluateValue(
+        medicationAdministration,
+        fhirPathMappings.effectiveX,
+      );
+
+      return name + "\n" + effective;
+    },
+  );
 
   return entries.join("\n\n");
 };

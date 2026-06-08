@@ -3,6 +3,53 @@
   "type": "document",
   "entry": [
     {
+      "id": "df2a6b09-0dc8-5787-6b48-5cd6610e2882",
+      "title": "Pregnancy Section",
+      "text": {
+        "status": "generated",
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><table><thead><tr><th>Pregnancy Status</th><th>Date(s) over which status holds <br /> (if no high date, status was <br /> current at time of recording) </th><th>Determination Method</th><th>Determination Date</th><th>Recorded Date</th></tr></thead><tbody><tr><td>Pregnant</td><td>AUG 26, 2017</td><td>Diagnostic ultrasonography</td><td>OCT 1, 2017</td><td>OCT 1, 2017 10:35</td></tr><tr><td><ul><li><table><thead><tr><th>Estimated Date of Delivery</th><th>EDD</th><th>EDD Determination Date</th></tr></thead><tbody><tr><td>Delivery date estimated from ovulation date</td><td>MAY 22, 2017</td><td>OCT 1, 2017 10:15</td></tr></tbody></table><table><thead><tr><th>Estimated Gestational Age of Pregnancy</th><th>Days</th><th>Determination Date</th></tr></thead><tbody><tr><td>Gestational age Estimated from selected delivery date</td><td>143 d</td><td>OCT 1, 2017 10:15</td></tr><tr><td><ul><li><table><thead><tr><th>Reference to selected delivery date</th></tr></thead><tbody><tr><td><a>Link to referenced entry</a></td></tr></tbody></table></li></ul></td></tr></tbody></table><table><thead><tr><th>Pregnancy Outcome</th><th>Birth Order</th><th>Time</th><th>Method of Delivery</th></tr></thead><tbody><tr><td>Stillbirth (finding)</td><td>1</td><td>JAN 5, 2020 08:50</td><td>Breech delivery (procedure)</td></tr><tr><td>Term birth of newborn (finding)</td><td>2</td><td>JAN 5, 2020 10:05</td><td>Breech delivery (procedure)</td></tr></tbody></table></li></ul></td></tr></tbody></table><table><thead><tr><th>Last menstrual period start date</th><th>Observation Date</th></tr></thead><tbody><tr><td>AUG 1, 2017</td><td>JAN 5, 2020 10:15</td></tr></tbody></table><table><thead><tr><th>Postpartum Status</th><th>Observation date</th></tr></thead><tbody><tr><td>Mid postpartum state (finding)</td><td>JAN 5, 2020 10:15</td></tr></tbody></table></div>"
+      },
+      "code": {
+        "coding": [
+          {
+            "code": "90767-5",
+            "system": "http://loinc.org",
+            "display": "Pregnancy summary Document"
+          }
+        ]
+      },
+      "mode": "snapshot",
+      "entry": [
+        {
+          "reference": "Observation/269441b1-b1ed-0fe9-bcc5-7562ff93db14"
+        },
+        {
+          "reference": "Observation/269441b1-b1ed-0fe9-bcc5-7562ff93db14"
+        },
+        {
+          "reference": "Observation/1d93a81a-783d-c53d-54c4-24e9f036600d"
+        },
+        {
+          "reference": "Observation/94fe2533-e208-a1b4-c510-c9ece8a2d490"
+        },
+        {
+          "reference": "Observation/8f159cad-01e6-3b31-a441-5707770558f7"
+        },
+        {
+          "reference": "Observation/a5707dfe-bb51-0e8c-4334-51d643b10869"
+        },
+        {
+          "reference": "Observation/e20dc03b-e0b8-dcc7-5976-ace986ef4178"
+        },
+        {
+          "reference": "Observation/71df50d4-290d-7051-df1e-3eaa8ea1436b"
+        },
+        {
+          "reference": "MedicationAdministration/ceacfcfd-ca17-208e-3425-119c3a64ce92"
+        }
+      ]
+    },
+    {
       "fullUrl": "urn:uuid:445b6f64-03c9-e940-575d-a3bf6c5856d9",
       "resource": {
         "resourceType": "Observation",
@@ -674,49 +721,6 @@
         },
         "valueDateTime": "2016-05-01",
         "effectiveDateTime": "2018-01-05T10:15:00",
-        "subject": {
-          "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
-        }
-      }
-    },
-    {
-      "fullUrl": "urn:uuid:ceacfcfd-ca17-208e-3425-119c3a64ce92",
-      "resource": {
-        "resourceType": "Observation",
-        "id": "ceacfcfd-ca17-208e-3425-119c3a64ce92",
-        "meta": {
-          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"],
-          "source": "ecr"
-        },
-        "identifier": [
-          {
-            "system": "urn:ietf:rfc:3986",
-            "value": "urn:uuid:7abe5aa2-c1ba-4552-85fc-796b4c00c50d"
-          }
-        ],
-        "status": "final",
-        "effectivePeriod": {
-          "start": "2017-06-18"
-        },
-        "code": {
-          "coding": [
-            {
-              "system": "http://loinc.org",
-              "code": "73813-8",
-              "display": "Characteristics of labor and delivery [US Standard Certificate of Live Birth]"
-            }
-          ],
-          "text": "Characteristics of labor and delivery"
-        },
-        "valueCodeableConcept": {
-          "coding": [
-            {
-              "code": "1790513",
-              "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
-              "display": "13 ML Rho(D) immune globulin, human 1154 UNT/ML Injection [WinRho]"
-            }
-          ]
-        },
         "subject": {
           "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
         }
