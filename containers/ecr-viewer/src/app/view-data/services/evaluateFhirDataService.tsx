@@ -822,6 +822,10 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
       value: evaluatePregnancyRhType(fhirBundle),
     },
     {
+      title: "D(Rh) Sensitized",
+      value: evaluatePregnancyDRhSensitized(fhirBundle),
+    },
+    {
       title: "Medications Administered",
       value: evaluatePregnancyMedicationsAdministered(fhirBundle),
     },
@@ -1106,6 +1110,16 @@ const evaluatePregnancyRhType = (fhirBundle: Bundle) => {
 
   if (!observation) return;
 
+  return evaluateValue(observation, fhirPathMappings.valueX);
+};
+
+const evaluatePregnancyDRhSensitized = (fhirBundle: Bundle) => {
+  const observation = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.pregnancyDRhSensitized,
+  );
+
+  if (!observation) return;
   return evaluateValue(observation, fhirPathMappings.valueX);
 };
 
