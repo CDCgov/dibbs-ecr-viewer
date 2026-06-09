@@ -233,21 +233,18 @@ Once initialized, your IDP handles authentication. The user with the email provi
 **Admins**: Have full access to manage program areas, user accounts, and to view all eCRs in the eCR Library.
 
 1. **Program Area Management**
-
-    - Can create, edit, and delete program areas.
-    - Each program area must have at least one condition, and each program area name must be unique.
-    - A condition cannot belong to more than one program area.
+   - Can create, edit, and delete program areas.
+   - Each program area must have at least one condition, and each program area name must be unique.
+   - A condition cannot belong to more than one program area.
 
 2. **User Management**
-
-    - Can create, edit, and delete users.
-    - Users must have unique emails and standard users should be added to program areas to be able to view any eCRs.
-    - Deleting users will only remove them from the User management table and remove them from all assigned program areas, but will not delete them from the database and instead mark them as `"deleted"`.
+   - Can create, edit, and delete users.
+   - Users must have unique emails and standard users should be added to program areas to be able to view any eCRs.
+   - Deleting users will only remove them from the User management table and remove them from all assigned program areas, but will not delete them from the database and instead mark them as `"deleted"`.
 
 3. **Access**
-
-    - Can access both the User Management and Program Management pages.
-    - Can access all eCRs in the eCR Library.
+   - Can access both the User Management and Program Management pages.
+   - Can access all eCRs in the eCR Library.
 
 **Standard users**: Have limited access to eCRs based on their assigned program areas.
 
