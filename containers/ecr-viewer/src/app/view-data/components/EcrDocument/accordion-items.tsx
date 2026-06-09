@@ -79,7 +79,7 @@ export const getEcrDocumentAccordionItems = (
       clinicalData.vitalData.unavailableData,
       clinicalData.immunizationsDetails.unavailableData,
       clinicalData.treatmentData.unavailableData,
-      clinicalData.clinicalNotes.unavailableData,
+      clinicalData.historyOfPresentIllness.unavailableData,
       ...ecrMetadata.eicrDetails.unavailableData,
       ...ecrMetadata.ecrCustodianDetails.unavailableData,
       ecrMetadata.eicrAuthorDetails.map((details) => details.unavailableData),
@@ -110,7 +110,6 @@ export const getEcrDocumentAccordionItems = (
     providerData.availableData.length > 0 && "Provider Details",
   );
   const subNavClinical = defined(
-    clinicalData.clinicalNotes.availableData.length > 0 && "Clinical Notes",
     (clinicalData.reasonForVisitDetails.availableData.length > 0 ||
       clinicalData.activeProblemsDetails.availableData.length > 0 ||
       clinicalData.emergencyOutbreakInfo.availableData.length > 0) &&
@@ -190,7 +189,9 @@ export const getEcrDocumentAccordionItems = (
         (section) => section.availableData.length > 0,
       ) ? (
         <ClinicalInfo
-          clinicalNotes={clinicalData.clinicalNotes.availableData}
+          historyOfPresentIllness={
+            clinicalData.historyOfPresentIllness.availableData
+          }
           reasonForVisitDetails={
             clinicalData.reasonForVisitDetails.availableData
           }
@@ -282,7 +283,7 @@ export const getEcrDocumentAccordionItems = (
                 clinicalData.treatmentData.unavailableData
               }
               clinicalNotesUnavailableData={
-                clinicalData.clinicalNotes.unavailableData
+                clinicalData.historyOfPresentIllness.unavailableData
               }
               ecrMetadataUnavailableData={[
                 ...ecrMetadata.eicrDetails.unavailableData,

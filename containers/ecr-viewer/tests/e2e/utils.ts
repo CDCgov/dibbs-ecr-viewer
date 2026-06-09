@@ -82,9 +82,26 @@ const logInToKeycloak = async (
   userName: string,
   password: string,
 ) => {
-  await page.getByRole("textbox", { name: "username" }).fill(userName!);
-  await page.getByRole("textbox", { name: "password" }).fill(password!);
-  await page.getByRole("button", { name: "Sign in" }).click();
+  // Guarantee Keycloak is fully loaded and hydrated
+  await expect(
+    page.getByRole("heading", { name: "Sign in to your account" }),
+  ).toBeVisible();
+
+  // Give WebKit a half-second breather BEFORE typing.
+  // This lets Keycloak's delayed autofocus script finish running so it stops stealing the cursor!
+  await sleep(500);
+
+  // Use precise accessible names
+  await page.getByRole("textbox", { name: "Username or email" }).fill(userName);
+  await page
+    .getByRole("textbox", { name: "Password", exact: true })
+    .fill(password);
+
+  // Ensure the JS state has caught up before form submission
+  await sleep(200);
+
+  // Submit
+  await page.getByRole("button", { name: "Sign In" }).click();
 };
 
 const sleep = async (ms: number) => {

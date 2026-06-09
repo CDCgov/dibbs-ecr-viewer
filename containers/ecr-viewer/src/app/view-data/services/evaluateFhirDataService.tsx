@@ -807,6 +807,22 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
       toolTip:
         "Last Menstrual Period represents the first day of the last menstrual period of the patient. This section lists multiple periods in collected in chronological order.",
     },
+    {
+      title: "Pregnancy Intention in the Next Year",
+      value: evaluatePregnancyIntention(fhirBundle),
+    },
+    {
+      title: "Date of Last Live Birth",
+      value: evaluateDateOfLastLiveBirth(fhirBundle),
+    },
+    {
+      title: "Rh Blood Type",
+      value: evaluatePregnancyRhType(fhirBundle),
+    },
+    {
+      title: "D(Rh) Sensitized",
+      value: evaluatePregnancyDRhSensitized(fhirBundle),
+    },
   ];
 
   return evaluateData(data);
@@ -1058,6 +1074,47 @@ const evaluateLastMenstrualPeriod = (fhirBundle: Bundle) => {
   ];
 
   return <EvaluateTable resources={observations} columns={columns} />;
+};
+
+const evaluatePregnancyIntention = (fhirBundle: Bundle) => {
+  const observation = evaluateOne(fhirBundle, fhirPathMappings.pregnancyIntent);
+
+  if (!observation) return;
+
+  const value = evaluateValue(observation, fhirPathMappings.valueX);
+  const effective = evaluateValue(observation, fhirPathMappings.effectiveX);
+
+  return value + "\n" + effective;
+};
+
+const evaluateDateOfLastLiveBirth = (fhirBundle: Bundle) => {
+  const observation = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.pregnancyLastLiveBirth,
+  );
+
+  if (!observation) return;
+
+  const value = evaluateValue(observation, fhirPathMappings.valueX);
+  return value;
+};
+
+const evaluatePregnancyRhType = (fhirBundle: Bundle) => {
+  const observation = evaluateOne(fhirBundle, fhirPathMappings.pregnancyRhType);
+
+  if (!observation) return;
+
+  return evaluateValue(observation, fhirPathMappings.valueX);
+};
+
+const evaluatePregnancyDRhSensitized = (fhirBundle: Bundle) => {
+  const observation = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.pregnancyDRhSensitized,
+  );
+
+  if (!observation) return;
+  return evaluateValue(observation, fhirPathMappings.valueX);
 };
 
 // =============================================================================

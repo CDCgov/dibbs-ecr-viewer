@@ -1,0 +1,9 @@
+pydantic>=2.12.5
+pydantic-settings>=2.14.1
+fastapi>=0.136.3
+python-multipart>=0.0.18 # required by fastapi
+uvicorn[standard]>=0.46.0
+lxml
+httpx[http2]>=0.28.1
+python-dotenv
+starlette>=1.2.1

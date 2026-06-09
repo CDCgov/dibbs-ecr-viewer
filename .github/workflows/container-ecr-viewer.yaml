@@ -58,7 +58,7 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm test
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -159,19 +159,25 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm ci
 
-      - name: Install Playwright Browsers
-        working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run test:e2e:install
-
       - name: Run local docker and wait for it to be ready
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check ${{ !matrix.azure_ad  && 'localhost:8071/health/ready' || '' }}
         env:
           APP_VERSION: vTest
 
+      - name: Configure Playwright Docker Command
+        run: |
+          # We run Playwright via Docker to prevent browser installation hangs on the runner.
+          # --network host                 : Allows the container to hit our local docker compose (localhost:3000)
+          # --ipc=host & --security-opt    : Prevents Firefox/Chromium from crashing due to sandbox restrictions
+          # -e HOME=/tmp & --user 1001     : Runs as the GitHub runner user to prevent root file permission errors
+          # -v ...:/work & -w /work        : Mounts our code into the container and sets the working directory
+          CMD="docker run --rm --network host --ipc=host --security-opt seccomp=unconfined -e HOME=/tmp --user 1001:1001 -v ${{ github.workspace }}/containers/${{ env.CONTAINER }}:/work -w /work mcr.microsoft.com/playwright:v1.58.2-jammy"
+          echo "PLAYWRIGHT_DOCKER=$CMD" >> $GITHUB_ENV
+
       - name: Run Playwright tests - Migrations
         working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run test:e2e:migrations
+        run: $PLAYWRIGHT_DOCKER npm run test:e2e:migrations
 
       - name: Get docker logs
         if: ${{ !cancelled() }}
@@ -205,11 +211,11 @@ jobs:
 
       - name: Seed standard user and COVID program
         working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run test:e2e:seed-user-prog
+        run: $PLAYWRIGHT_DOCKER npm run test:e2e:seed-user-prog
 
       - name: Run Playwright tests
         working-directory: ./containers/${{env.CONTAINER}}
-        run: npm run test:e2e
+        run: $PLAYWRIGHT_DOCKER npm run test:e2e
 
       - name: Get docker logs
         if: ${{ !cancelled() }}
@@ -304,7 +310,7 @@ jobs:
         run: npm run test:integration:${{ matrix.db_type }}
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}

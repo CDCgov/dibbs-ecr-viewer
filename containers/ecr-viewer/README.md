@@ -94,7 +94,22 @@ By default, the seed data in the `star-wars` subfolder converts. To convert othe
 
 Additional commands can be found in [`package.json`](package.json).
 
-#### Creating a Migration
+### Adding packages
+
+This repo has security mitations that prevent scripts from running during npm installation. If you need to add a package follow these steps:
+
+1. Run `npm install <package-name>`. The package will download safely, but any install scripts will be blocked.
+2. Determine if it needs allow-listing:
+   - Run `npx can-i-ignore-scripts`. This tool will tell you if the package has install scripts. Check the output for your package under `Found following packages with scripts:`.
+   - If your package has scripts, do some research on what these scripts do to make sure no malicious code will be executed.
+3. If the script is required, run:
+   ```bash
+   npx allow-scripts setup
+   ```
+4. Open `package.json` and verify the new package is set to true inside the lavamoat.allowScripts object.
+5. You should be able to use your new package now!
+
+### Creating a Migration
 
 To create a new Kysely migration file, run:
 

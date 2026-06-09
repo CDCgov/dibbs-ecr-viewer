@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Snapshot tests Snapshot test for Clinical Notes should match snapshot for non table notes 1`] = `
+exports[`Snapshot tests Snapshot test for History of Present Illness should match snapshot for non table notes 1`] = `
 <div>
   <div
     class="margin-top-0"
@@ -16,34 +16,49 @@ exports[`Snapshot tests Snapshot test for Clinical Notes should match snapshot f
         >
           <h4
             class="usa-summary-box__heading padding-y-105"
-            id="clinical-notes"
+            id="symptoms-and-problems"
           >
-            Clinical Notes
+            Symptoms and Problems
           </h4>
           <div
-            class="usa-summary-box__text clinical_info_container"
+            class="usa-summary-box__text"
           >
-            <div>
-              <div
-                class="grid-row"
-              >
-                <div
-                  class="data-title padding-right-1"
-                >
-                  Miscellaneous Notes
-                </div>
-                <div
-                  class="grid-col maxw7 text-pre-line p-list"
-                >
-                  <p>
-                    This patient was only recently discharged for a recurrent GI bleed as described
-                  </p>
-                </div>
-              </div>
-              <div
-                class="section__line_gray"
-              />
+            <div
+              data-testid="reason-for-visit"
+            />
+            <div
+              data-testid="active-problems"
+            >
+              <div />
             </div>
+            <div
+              data-testid="history-of-present-illness"
+            >
+              <div>
+                <div
+                  class="grid-row"
+                >
+                  <div
+                    class="data-title padding-right-1"
+                  >
+                    History of Present Illness
+                  </div>
+                  <div
+                    class="grid-col maxw7 text-pre-line p-list"
+                  >
+                    <p>
+                      This patient was only recently discharged for a recurrent GI bleed as described
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="section__line_gray"
+                />
+              </div>
+            </div>
+            <div
+              data-testid="emergency-outbreak-info"
+            />
           </div>
         </div>
       </div>
@@ -52,7 +67,7 @@ exports[`Snapshot tests Snapshot test for Clinical Notes should match snapshot f
 </div>
 `;
 
-exports[`Snapshot tests Snapshot test for Clinical Notes should match snapshot for table notes 1`] = `
+exports[`Snapshot tests Snapshot test for History of Present Illness should match snapshot for table notes 1`] = `
 <div>
   <div
     class="margin-top-0"
@@ -68,123 +83,138 @@ exports[`Snapshot tests Snapshot test for Clinical Notes should match snapshot f
         >
           <h4
             class="usa-summary-box__heading padding-y-105"
-            id="clinical-notes"
+            id="symptoms-and-problems"
           >
-            Clinical Notes
+            Symptoms and Problems
           </h4>
           <div
-            class="usa-summary-box__text clinical_info_container"
+            class="usa-summary-box__text"
           >
-            <div>
-              <div
-                class="grid-row flex-column"
-              >
+            <div
+              data-testid="reason-for-visit"
+            />
+            <div
+              data-testid="active-problems"
+            >
+              <div />
+            </div>
+            <div
+              data-testid="history-of-present-illness"
+            >
+              <div>
                 <div
-                  class="data-title padding-right-1"
+                  class="grid-row flex-column"
                 >
-                  Miscellaneous Notes
-                </div>
-                <div
-                  class="grid-col width-full text-pre-line p-list"
-                >
-                  <table
-                    class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 border-top border-left border-right"
-                    data-testid="table"
+                  <div
+                    class="data-title padding-right-1"
                   >
-                    <caption>
-                      <div
-                        class="display-flex flex-align-baseline"
-                      >
+                    Miscellaneous Notes
+                  </div>
+                  <div
+                    class="grid-col width-full text-pre-line p-list"
+                  >
+                    <table
+                      class="usa-table usa-table--borderless width-full table-caption-margin caption-normal-weight margin-bottom-2 border-top border-left border-right"
+                      data-testid="table"
+                    >
+                      <caption>
                         <div
-                          class="data-title"
-                        >
-                          Miscellaneous Notes
-                        </div>
-                        <span
-                          class="usa-tooltip"
-                          data-testid="tooltipWrapper"
+                          class="display-flex flex-align-baseline"
                         >
                           <div
-                            aria-describedby="tooltip-r:id"
-                            class="usa-tooltip__trigger margin-left-05 usa-tooltip"
-                            data-testid="triggerElement"
-                            tabindex="0"
+                            class="data-title"
                           >
-                            <svg
-                              aria-label="description"
-                              class="usa-icon tooltip-icon text-secondary flex-align-center"
-                              focusable="false"
-                              height="1em"
-                              role="img"
-                              viewBox="0 0 24 24"
-                              width="1em"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M0 0h24v24H0V0z"
-                                fill="none"
-                              />
-                              <path
-                                d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-                              />
-                            </svg>
+                            Miscellaneous Notes
                           </div>
                           <span
-                            aria-hidden="true"
-                            class="usa-tooltip__body"
-                            data-testid="tooltipBody"
-                            id="tooltip-r:id"
-                            role="tooltip"
-                            title="Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR."
+                            class="usa-tooltip"
+                            data-testid="tooltipWrapper"
                           >
-                            Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.
+                            <div
+                              aria-describedby="tooltip-r:id"
+                              class="usa-tooltip__trigger margin-left-05 usa-tooltip"
+                              data-testid="triggerElement"
+                              tabindex="0"
+                            >
+                              <svg
+                                aria-label="description"
+                                class="usa-icon tooltip-icon text-secondary flex-align-center"
+                                focusable="false"
+                                height="1em"
+                                role="img"
+                                viewBox="0 0 24 24"
+                                width="1em"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M0 0h24v24H0V0z"
+                                  fill="none"
+                                />
+                                <path
+                                  d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                                />
+                              </svg>
+                            </div>
+                            <span
+                              aria-hidden="true"
+                              class="usa-tooltip__body"
+                              data-testid="tooltipBody"
+                              id="tooltip-r:id"
+                              role="tooltip"
+                              title="Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR."
+                            >
+                              Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.
+                            </span>
                           </span>
-                        </span>
-                      </div>
-                    </caption>
-                    <thead>
-                      <tr>
-                        <th
-                          class="table-header bg-gray-5"
-                          scope="col"
-                          style="min-width: 10rem;"
-                        >
-                          Active Problems
-                        </th>
-                        <th
-                          class="table-header bg-gray-5"
-                          scope="col"
-                          style="min-width: 10rem;"
-                        >
-                          Noted Date
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>
-                          Parkinson's syndrome
-                        </td>
-                        <td>
-                          07/25/2022
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          Essential hypertension
-                        </td>
-                        <td>
-                          07/21/2022
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                        </div>
+                      </caption>
+                      <thead>
+                        <tr>
+                          <th
+                            class="table-header bg-gray-5"
+                            scope="col"
+                            style="min-width: 10rem;"
+                          >
+                            Active Problems
+                          </th>
+                          <th
+                            class="table-header bg-gray-5"
+                            scope="col"
+                            style="min-width: 10rem;"
+                          >
+                            Noted Date
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            Parkinson's syndrome
+                          </td>
+                          <td>
+                            07/25/2022
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            Essential hypertension
+                          </td>
+                          <td>
+                            07/21/2022
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
+                <div
+                  class="section__line_gray"
+                />
               </div>
-              <div
-                class="section__line_gray"
-              />
             </div>
+            <div
+              data-testid="emergency-outbreak-info"
+            />
           </div>
         </div>
       </div>
@@ -771,6 +801,9 @@ exports[`Snapshot tests Snapshot tests for Clinical Info components should match
                 </div>
               </div>
             </div>
+            <div
+              data-testid="history-of-present-illness"
+            />
             <div
               data-testid="emergency-outbreak-info"
             >
