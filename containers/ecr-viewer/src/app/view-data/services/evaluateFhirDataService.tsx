@@ -56,6 +56,7 @@ import {
   evaluateOne,
   evaluateOneReference,
   evaluateReference,
+  evaluateReference2,
   evaluateValue,
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
@@ -799,7 +800,10 @@ export const evaluateSocialData = (
  * @param fhirBundle - The FHIR bundle containing pregnancy data.
  * @returns An array of evaluated and formatted pregnancy data.
  */
-export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
+export const evaluatePregnancyData = (
+  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
+): CompleteData => {
   const data = [
     ...evaluatePregnancyStatus(fhirBundle),
     {
@@ -827,7 +831,7 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
     },
     {
       title: "Medications Administered",
-      value: evaluatePregnancyMedicationsAdministered(fhirBundle),
+      value: evaluatePregnancyMedicationsAdministered(fhirBundle, fhirIndex),
     },
   ];
 
@@ -1123,7 +1127,10 @@ const evaluatePregnancyDRhSensitized = (fhirBundle: Bundle) => {
   return evaluateValue(observation, fhirPathMappings.valueX);
 };
 
-const evaluatePregnancyMedicationsAdministered = (fhirBundle: Bundle) => {
+const evaluatePregnancyMedicationsAdministered = (
+  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
+) => {
   const pregnancyMedicationAdministrationRefs =
     evaluateAllReferences<MedicationAdministration>(
       fhirBundle,
@@ -1134,8 +1141,8 @@ const evaluatePregnancyMedicationsAdministered = (fhirBundle: Bundle) => {
     (medicationAdministration) => {
       let medication: Medication | undefined;
       if (medicationAdministration?.medicationReference?.reference) {
-        medication = evaluateReference(
-          fhirBundle,
+        medication = evaluateReference2(
+          fhirIndex,
           medicationAdministration.medicationReference.reference,
         );
       }
