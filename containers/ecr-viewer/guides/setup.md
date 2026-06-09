@@ -93,7 +93,7 @@ The full list of environment variables can be found in {@link NodeJS.ProcessEnv}
 
 Base required variables are ones required for all deployments regardless of mode or cloud environment. If variables are not set, this may cause issues starting the app. The variables can be found in {@link EnvironmentVariables.BaseRequired}.
 
-### eCR Fhir Storage
+### eCR FHIR Storage
 
 A storage container for the eCRs must be created for all deployments. Depending on the storage container used additional variables may be required. The variables can be found in {@link EnvironmentVariables.EcrStorage}.
 
@@ -111,7 +111,7 @@ Non-Integrated/Dual rely on an external authentication provider, like Azure AD, 
 
 #### Token Authentication for `api` routes
 
-Most `/ecr-viewer/api/` routes require authentication to be used. The exceptions are pubic routes such as the health check and authentication routes. If a user has a logged in browser session (non-integrated auth only), they can use the developer console of that browser to emit authenticated post routes. More often, a machine will be making the post requests to upload data to the viewer. To enable this, we allow tokens to be sent on the `Authorization` header of request and used to authenticate the request.
+Most `/ecr-viewer/api/` routes require authentication to be used. The exceptions are public routes such as the health check and authentication routes. If a user has a logged in browser session (non-integrated auth only), they can use the developer console of that browser to emit authenticated post routes. More often, a machine will be making the post requests to upload data to the viewer. To enable this, we allow tokens to be sent on the `Authorization` header of request and used to authenticate the request.
 
 For integrated auth, the token will be generated via a key pair, similar to how it is done for authentication to the `/view-data` page, but using a different private/public key pair. See {@link EnvironmentVariables.Authentication} for where to set the public key.
 
@@ -180,6 +180,8 @@ When using the curl command to send zip files to ecr-viewer, the user has to use
 
 ## Deleting data
 
+When a file is removed from blob storage (e.g., S3), it is no longer accessible within the eCR Viewer. However, the record will continue to appear in the library view, and any attempt to open the document will return a 404. To fully remove the record, it must also be deleted from the database.
+
 SQL scripts for removing eCR records from the metadata database are provided in `seed-scripts/sql/`. Each script targets one database type and handles foreign key constraints automatically.
 
 | Script                                               | Database   | Behavior                                                         |
@@ -232,20 +234,20 @@ Once initialized, your IDP handles authentication. The user with the email provi
 
 1. **Program Area Management**
 
-- Can create, edit, and delete program areas.
-- Each program area must have at least one condition, and each program area name must be unique.
-- A condition cannot belong to more than one program area.
+    - Can create, edit, and delete program areas.
+    - Each program area must have at least one condition, and each program area name must be unique.
+    - A condition cannot belong to more than one program area.
 
 2. **User Management**
 
-- Can create, edit, and delete users.
-- Users must have unique emails and standard users should be added to program areas to be able to view any eCRs.
-- Deleting users will only remove them from the User management table and remove them from all assigned program areas, but will not delete them from the database and instead mark them as `"deleted"`.
+    - Can create, edit, and delete users.
+    - Users must have unique emails and standard users should be added to program areas to be able to view any eCRs.
+    - Deleting users will only remove them from the User management table and remove them from all assigned program areas, but will not delete them from the database and instead mark them as `"deleted"`.
 
 3. **Access**
 
-- Can access both the User Management and Program Management pages.
-- Can access all eCRs in the eCR Library.
+    - Can access both the User Management and Program Management pages.
+    - Can access all eCRs in the eCR Library.
 
 **Standard users**: Have limited access to eCRs based on their assigned program areas.
 
