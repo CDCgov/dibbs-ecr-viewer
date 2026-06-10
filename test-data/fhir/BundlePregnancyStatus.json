@@ -680,40 +680,56 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:ceacfcfd-ca17-208e-3425-119c3a64ce92",
+      "fullUrl": "urn:uuid:71df50d4-290d-7051-df1e-3eaa8ea1436b",
       "resource": {
         "resourceType": "Observation",
-        "id": "ceacfcfd-ca17-208e-3425-119c3a64ce92",
+        "id": "71df50d4-290d-7051-df1e-3eaa8ea1436b",
         "meta": {
-          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"],
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-lab-result-observation"
+          ],
           "source": "ecr"
         },
         "identifier": [
           {
             "system": "urn:ietf:rfc:3986",
-            "value": "urn:uuid:7abe5aa2-c1ba-4552-85fc-796b4c00c50d"
+            "value": "urn:uuid:fbf72855-a67e-4a70-a05a-f4abde14d69b"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
           }
         ],
         "status": "final",
-        "effectivePeriod": {
-          "start": "2017-06-18"
-        },
         "code": {
           "coding": [
             {
+              "code": "55607006",
+              "system": "http://snomed.info/sct",
+              "display": "Problem"
+            },
+            {
+              "code": "75318-6",
               "system": "http://loinc.org",
-              "code": "73813-8",
-              "display": "Characteristics of labor and delivery [US Standard Certificate of Live Birth]"
+              "display": "Problem Family member"
             }
-          ],
-          "text": "Characteristics of labor and delivery"
+          ]
+        },
+        "effectivePeriod": {
+          "start": "2018-01-01"
         },
         "valueCodeableConcept": {
           "coding": [
             {
-              "code": "1790513",
-              "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
-              "display": "13 ML Rho(D) immune globulin, human 1154 UNT/ML Injection [WinRho]"
+              "code": "199583002",
+              "system": "http://snomed.info/sct",
+              "display": "Rhesus isoimmunization with antenatal problem"
             }
           ]
         },

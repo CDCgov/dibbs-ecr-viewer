@@ -820,8 +820,8 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
       value: evaluatePregnancyRhType(fhirBundle),
     },
     {
-      title: "Characteristics of Labor and Delivery",
-      value: evaluateCharacteristicsOfLaborAndDelivery(fhirBundle),
+      title: "D(Rh) Sensitized",
+      value: evaluatePregnancyDRhSensitized(fhirBundle),
     },
   ];
 
@@ -1107,18 +1107,14 @@ const evaluatePregnancyRhType = (fhirBundle: Bundle) => {
   return evaluateValue(observation, fhirPathMappings.valueX);
 };
 
-const evaluateCharacteristicsOfLaborAndDelivery = (fhirBundle: Bundle) => {
-  const entries = evaluateAll(
+const evaluatePregnancyDRhSensitized = (fhirBundle: Bundle) => {
+  const observation = evaluateOne(
     fhirBundle,
-    fhirPathMappings.characteristicsOfLaborAndDelivery,
-  ).map((ob) => {
-    const value = evaluateValue(ob, fhirPathMappings.valueX);
-    const effective = evaluateValue(ob, fhirPathMappings.effectiveX);
+    fhirPathMappings.pregnancyDRhSensitized,
+  );
 
-    return value + "\n" + effective;
-  });
-
-  return entries.join("\n\n");
+  if (!observation) return;
+  return evaluateValue(observation, fhirPathMappings.valueX);
 };
 
 // =============================================================================

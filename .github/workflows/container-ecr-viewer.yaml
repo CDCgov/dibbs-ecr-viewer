@@ -58,7 +58,7 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm test
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -310,7 +310,7 @@ jobs:
         run: npm run test:integration:${{ matrix.db_type }}
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
