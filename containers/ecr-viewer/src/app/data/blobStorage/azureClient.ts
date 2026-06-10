@@ -55,6 +55,17 @@ export const azureBlobStorageHealthCheck = async () => {
 };
 
 /**
+ * Checks whether a blob exists in Azure Blob Storage.
+ * @param objectKey - The name of the blob.
+ * @returns True if the blob exists, false otherwise.
+ */
+export const existsInAzure = async (objectKey: string): Promise<boolean> => {
+  const containerClient = azureBlobContainerClient();
+  if (!containerClient) return false;
+  return containerClient.getBlockBlobClient(objectKey).exists();
+};
+
+/**
  * Saves a blob to Azure Blob Storage.
  * @param body - The string or buffer(zip) content to save as a blob.
  * @param objectKey - The name of the blob.

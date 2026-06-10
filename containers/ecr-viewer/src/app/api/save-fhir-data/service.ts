@@ -5,10 +5,19 @@ import { Kysely, Transaction } from "kysely";
 
 import {
   deleteFromAzure,
+  existsInAzure,
   saveToAzure,
 } from "@/app/data/blobStorage/azureClient";
-import { deleteFromGCP, saveToGCP } from "@/app/data/blobStorage/gcpClient";
-import { deleteFromS3, saveToS3 } from "@/app/data/blobStorage/s3Client";
+import {
+  deleteFromGCP,
+  existsInGCP,
+  saveToGCP,
+} from "@/app/data/blobStorage/gcpClient";
+import {
+  deleteFromS3,
+  existsInS3,
+  saveToS3,
+} from "@/app/data/blobStorage/s3Client";
 import {
   S3_SOURCE,
   AZURE_SOURCE,
@@ -54,10 +63,19 @@ export const saveToStorage = async (
   }
 
   if (saveSource === S3_SOURCE) {
+    if (await existsInS3(objectKey)) {
+      return { message: `eCR already loaded: ${ecrId}`, status: 409 };
+    }
     return await saveToS3(body, objectKey);
   } else if (saveSource === AZURE_SOURCE) {
+    if (await existsInAzure(objectKey)) {
+      return { message: `eCR already loaded: ${ecrId}`, status: 409 };
+    }
     return await saveToAzure(body, objectKey);
   } else if (saveSource === GCP_SOURCE) {
+    if (await existsInGCP(objectKey)) {
+      return { message: `eCR already loaded: ${ecrId}`, status: 409 };
+    }
     return await saveToGCP(body, objectKey);
   } else {
     return {

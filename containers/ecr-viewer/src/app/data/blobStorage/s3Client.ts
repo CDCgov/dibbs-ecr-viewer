@@ -2,6 +2,7 @@ import {
   DeleteObjectCommand,
   DeleteObjectCommandOutput,
   HeadBucketCommand,
+  HeadObjectCommand,
   PutObjectCommand,
   PutObjectCommandOutput,
   S3Client,
@@ -42,6 +43,25 @@ export const s3HealthCheck = async () => {
   } catch (error: unknown) {
     console.error(error);
     return "DOWN";
+  }
+};
+
+/**
+ * Checks whether an object exists in an AWS S3 bucket.
+ * @param objectKey - The name of the blob.
+ * @returns True if the object exists, false otherwise.
+ */
+export const existsInS3 = async (objectKey: string): Promise<boolean> => {
+  try {
+    await s3Client.send(
+      new HeadObjectCommand({
+        Bucket: process.env.ECR_BUCKET_NAME,
+        Key: objectKey,
+      }),
+    );
+    return true;
+  } catch {
+    return false;
   }
 };
 

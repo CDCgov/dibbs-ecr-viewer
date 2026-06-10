@@ -10,10 +10,19 @@ import {
 } from "@/app/api/save-fhir-data/service";
 import {
   deleteFromAzure,
+  existsInAzure,
   saveToAzure,
 } from "@/app/data/blobStorage/azureClient";
-import { deleteFromGCP, saveToGCP } from "@/app/data/blobStorage/gcpClient";
-import { deleteFromS3, saveToS3 } from "@/app/data/blobStorage/s3Client";
+import {
+  deleteFromGCP,
+  existsInGCP,
+  saveToGCP,
+} from "@/app/data/blobStorage/gcpClient";
+import {
+  deleteFromS3,
+  existsInS3,
+  saveToS3,
+} from "@/app/data/blobStorage/s3Client";
 
 jest.mock("@/app/data/blobStorage/azureClient");
 jest.mock("@/app/data/blobStorage/gcpClient");
@@ -38,6 +47,7 @@ describe("Cloud save and delete", () => {
 
     it("should call s3 when given a fhir bundle", async () => {
       process.env.ECR_BUCKET_NAME = "bucket";
+      (existsInS3 as jest.Mock).mockResolvedValue(false);
 
       await saveToStorage(fhirBundle, ecrId, "s3", "fhir");
       expect(saveToS3).toHaveBeenCalledOnce();
@@ -45,6 +55,7 @@ describe("Cloud save and delete", () => {
 
     it("should call azure when given a fhir bundle", async () => {
       process.env.ECR_BUCKET_NAME = "bucket";
+      (existsInAzure as jest.Mock).mockResolvedValue(false);
 
       await saveToStorage(fhirBundle, ecrId, "azure", "fhir");
       expect(saveToAzure).toHaveBeenCalledOnce();
@@ -52,6 +63,7 @@ describe("Cloud save and delete", () => {
 
     it("should call gcp when given a fhir bundle", async () => {
       process.env.ECR_BUCKET_NAME = "bucket";
+      (existsInGCP as jest.Mock).mockResolvedValue(false);
 
       await saveToStorage(fhirBundle, ecrId, "gcp", "fhir");
       expect(saveToGCP).toHaveBeenCalledOnce();
@@ -59,6 +71,7 @@ describe("Cloud save and delete", () => {
 
     it("should call s3 when given a zip", async () => {
       process.env.ECR_BUCKET_NAME = "bucket";
+      (existsInS3 as jest.Mock).mockResolvedValue(false);
 
       await saveToStorage(mockZip, ecrId, "s3", "xml");
       expect(saveToS3).toHaveBeenCalledOnce();
@@ -66,6 +79,7 @@ describe("Cloud save and delete", () => {
 
     it("should call azure when given a zip", async () => {
       process.env.ECR_BUCKET_NAME = "bucket";
+      (existsInAzure as jest.Mock).mockResolvedValue(false);
 
       await saveToStorage(mockZip, ecrId, "azure", "xml");
       expect(saveToAzure).toHaveBeenCalledOnce();
@@ -73,9 +87,46 @@ describe("Cloud save and delete", () => {
 
     it("should call gcp when given a zip", async () => {
       process.env.ECR_BUCKET_NAME = "bucket";
+      (existsInGCP as jest.Mock).mockResolvedValue(false);
 
       await saveToStorage(mockZip, ecrId, "gcp", "xml");
       expect(saveToGCP).toHaveBeenCalledOnce();
+    });
+
+    it("should return 409 and not save when the blob already exists in s3", async () => {
+      (existsInS3 as jest.Mock).mockResolvedValue(true);
+
+      const result = await saveToStorage(fhirBundle, ecrId, "s3", "fhir");
+
+      expect(result).toEqual({
+        message: `eCR already loaded: ${ecrId}`,
+        status: 409,
+      });
+      expect(saveToS3).not.toHaveBeenCalled();
+    });
+
+    it("should return 409 and not save when the blob already exists in azure", async () => {
+      (existsInAzure as jest.Mock).mockResolvedValue(true);
+
+      const result = await saveToStorage(fhirBundle, ecrId, "azure", "fhir");
+
+      expect(result).toEqual({
+        message: `eCR already loaded: ${ecrId}`,
+        status: 409,
+      });
+      expect(saveToAzure).not.toHaveBeenCalled();
+    });
+
+    it("should return 409 and not save when the blob already exists in gcp", async () => {
+      (existsInGCP as jest.Mock).mockResolvedValue(true);
+
+      const result = await saveToStorage(fhirBundle, ecrId, "gcp", "fhir");
+
+      expect(result).toEqual({
+        message: `eCR already loaded: ${ecrId}`,
+        status: 409,
+      });
+      expect(saveToGCP).not.toHaveBeenCalled();
     });
 
     it("should return an error for an invalid save source", async () => {
