@@ -446,11 +446,10 @@ class FhirParser:
                 curr_ref = fhirpathpy.evaluate(message, ref_parser)
 
             if len(curr_ref) == 0:
-                self.response.status_code = status.HTTP_400_BAD_REQUEST
-                raise ValueError(
-                    "Provided `reference_lookup` location does not point to a "
-                    "referencing identifier"
-                )
+                # No matching reference was found. Treat as missing data and
+                # propagate an empty reference so the downstream lookup resolves to
+                # a null value instead of failing the entire parse.
+                curr_ref.append("")
             # Future refactor: Each reference_parser can only refer to one reference
             elif len(curr_ref) > 1:
                 self.response.status_code = status.HTTP_400_BAD_REQUEST
