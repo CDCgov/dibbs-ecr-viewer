@@ -290,8 +290,10 @@ const saveExtendedMetadata = async (
         .values({
           uuid: randomUUID(),
           eicr_id: ecrId,
-          administration_date: asDate(immunization.administration_date),
+          effective_date: asDate(immunization.effective_date),
           name: immunization.name,
+          status: immunization.status,
+          status_reason: immunization.status_reason,
         })
         .execute();
     }

@@ -299,7 +299,9 @@ describe("saveFhirData - extended", () => {
         {
           uuid: undefined,
           name: "COVID-19 Vaccine",
-          administration_date: "2023-06-15",
+          effective_date: "2023-06-15",
+          status: "not-done",
+          status_reason: "patient objection"
         },
       ],
     };
