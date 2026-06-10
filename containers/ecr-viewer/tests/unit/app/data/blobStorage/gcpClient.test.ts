@@ -15,7 +15,11 @@ const mockSave = jest.fn().mockResolvedValue(undefined);
 const mockFileExists = jest.fn();
 const mockFile = jest
   .fn()
-  .mockReturnValue({ save: mockSave, delete: mockDelete, exists: mockFileExists });
+  .mockReturnValue({
+    save: mockSave,
+    delete: mockDelete,
+    exists: mockFileExists,
+  });
 
 const mockBucket = jest.fn().mockImplementation(() => ({
   exists: mockExists,
