@@ -312,14 +312,30 @@ const getRandomProgramArea = async (page: Page, notThese: string[] = []) => {
   await page.getByText("Create program area").click();
   await page.waitForURL("/ecr-viewer/admin/program/create");
 
-  const checkboxesCond = await page.getByRole("checkbox").all();
-  const index = Math.floor(Math.random() * checkboxesCond.length);
-  const checkboxCond = checkboxesCond[index];
-  await checkboxCond.scrollIntoViewIfNeeded();
-  await checkboxCond.dispatchEvent("click");
+  // Wait for checkboxes to attach, count dynamically
+  await expect(page.getByRole("checkbox").first()).toBeAttached();
+  const count = await page.getByRole("checkbox").count();
+  const index = Math.floor(Math.random() * count);
 
+  const checkboxCond = await page.getByRole("checkbox").nth(index);
+  await checkboxCond.scrollIntoViewIfNeeded();
+
+  // Read the value BEFORE clicking it, avoiding any DOM-blocking modal issues
   const conditionName = await checkboxCond.inputValue();
   const programName = `Test Program ${conditionName}`;
+
+  await checkboxCond.dispatchEvent("click");
+
+  // Conditionally handle the reassignment modal if we picked an assigned condition
+  try {
+    const yesButton = page.getByRole("button", { name: "Yes, add condition" });
+    // Wait up to 1.5 seconds to see if the modal appears
+    await yesButton.waitFor({ state: "visible", timeout: 1500 });
+    await yesButton.click();
+  } catch (e) {
+    // If we reach here, it means the modal never appeared (we picked an unassigned condition).
+    // This is perfectly fine, we just swallow the timeout error and move on!
+  }
 
   await page.getByLabel("Program area name").fill(programName);
   await page.getByRole("button", { name: "Save program area" }).first().click();
