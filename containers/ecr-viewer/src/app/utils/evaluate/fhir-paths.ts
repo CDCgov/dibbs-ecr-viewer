@@ -145,6 +145,7 @@ export type PathTypes = {
   procedureHistoryRefs: Reference;
   procedureDate: TimeX;
   status: string;
+  statusReason: CodeableConcept;
   procedureReason: string;
   procedureLocationRef: Reference;
   procedureOrgRef: Reference;
@@ -632,6 +633,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "performed | effective",
   },
   status: { type: "string", path: "status" },
+  statusReason: { type: "CodeableConcept", path: "statusReason"},
 
   // extra details
   procedureReason: { type: "string", path: "reasonCode.text" },

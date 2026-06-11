@@ -50,13 +50,20 @@ export const returnImmunizations = (
 
   const columnInfo: ColumnInfoInput[] = [
     { columnName: "Name", infoPath: "immunizationsName" },
-    { columnName: "Administration Dates", infoPath: "immunizationsAdminDate" },
-    { columnName: "Dose Number", infoPath: "immunizationsDoseNumber" },
+    { columnName: "Effective Date/Time", infoPath: "immunizationsAdminDate", className: "minw-10" },
+    { columnName: "Status", infoPath: "status", className: "minw-15" },
+    {
+      columnName: "Status Reason",
+      infoPath: "statusReason",
+      className: "minw-15",
+    },
+    { columnName: "Dose Number", infoPath: "immunizationsDoseNumber", className: "minw-10" },
     {
       columnName: "Manufacturer",
       infoPath: "immunizationsManufacturerName",
+      className: "minw-18",
     },
-    { columnName: "Lot Number", infoPath: "immunizationsLotNumber" },
+    { columnName: "Lot Number", infoPath: "immunizationsLotNumber", className: "minw-15" },
   ];
 
   const modifiedImmunizations: ModifiedImmunization[] = immunizationsArray.map(
