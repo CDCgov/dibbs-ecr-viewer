@@ -30,7 +30,70 @@ describe("JWT Auth Middleware", () => {
   afterEach(() => {
     delete process.env.JWT_PUB_KEY;
     delete process.env.JWT_API_PUB_KEY;
+    delete process.env.NBS_PUB_KEY;
+    delete process.env.NBS_API_PUB_KEY;
     process.env.BASE_PATH = ORIG_BASE_PATH;
+  });
+
+  describe("deprecated NBS_PUB_KEY / NBS_API_PUB_KEY fallback", () => {
+    it("should use NBS_PUB_KEY when JWT_PUB_KEY is not set", async () => {
+      const warnSpy = jest
+        .spyOn(console, "warn")
+        .mockImplementation(() => undefined);
+      delete process.env.JWT_PUB_KEY;
+      process.env.NBS_PUB_KEY = "mock-pub-key";
+      (jwtVerify as jest.Mock).mockResolvedValue({ payload: {} });
+      const req = new NextRequest(
+        "https://www.example.com/ecr-viewer/view-data?id=1234",
+      );
+      req.cookies.set("jwt-auth-token", "mytoken");
+
+      const resp = await middleware(req);
+      expect(jwtVerify).toHaveBeenCalled();
+      expect(importSPKI).toHaveBeenCalledWith("mock-pub-key", "RS256");
+      expect(resp.headers.get("location")).toBe(
+        "https://www.example.com/ecr-viewer/view-data",
+      );
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining("NBS_PUB_KEY is deprecated"),
+      );
+      warnSpy.mockRestore();
+    });
+
+    it("should use NBS_API_PUB_KEY when JWT_API_PUB_KEY is not set", async () => {
+      const warnSpy = jest
+        .spyOn(console, "warn")
+        .mockImplementation(() => undefined);
+      delete process.env.JWT_API_PUB_KEY;
+      process.env.NBS_API_PUB_KEY = "mock-api-pub-key";
+      (jwtVerify as jest.Mock).mockResolvedValue({ payload: {} });
+      const req = new NextRequest(
+        "https://www.example.com/ecr-viewer/api/process-zip/",
+      );
+      req.headers.set("Authorization", "Bearer foobar");
+
+      const resp = await middleware(req);
+      expect(jwtVerify).toHaveBeenCalled();
+      expect(importSPKI).toHaveBeenCalledWith("mock-api-pub-key", "RS256");
+      expect(resp.status).toBe(200);
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining("NBS_API_PUB_KEY is deprecated"),
+      );
+      warnSpy.mockRestore();
+    });
+
+    it("should prefer JWT_PUB_KEY over NBS_PUB_KEY when both are set", async () => {
+      process.env.JWT_PUB_KEY = "new-pub-key";
+      process.env.NBS_PUB_KEY = "old-pub-key";
+      (jwtVerify as jest.Mock).mockResolvedValue({ payload: {} });
+      const req = new NextRequest(
+        "https://www.example.com/ecr-viewer/view-data?id=1234",
+      );
+      req.cookies.set("jwt-auth-token", "mytoken");
+
+      await middleware(req);
+      expect(importSPKI).toHaveBeenCalledWith("new-pub-key", "RS256");
+    });
   });
 
   describe("setAuthCookie", () => {
@@ -62,6 +125,8 @@ describe("JWT Auth Middleware", () => {
     it("should not consume ?auth= when neither key is set", async () => {
       delete process.env.JWT_PUB_KEY;
       delete process.env.JWT_API_PUB_KEY;
+      delete process.env.NBS_PUB_KEY;
+      delete process.env.NBS_API_PUB_KEY;
       const req = new NextRequest(
         "https://www.example.com/ecr-viewer/view-data?id=1234&auth=mytoken",
       );

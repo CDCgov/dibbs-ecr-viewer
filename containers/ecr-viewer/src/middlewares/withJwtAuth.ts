@@ -9,6 +9,31 @@ export const JWT_AUTH_HEADER = "x-jwt-authorized";
 const JWT_AUTH_COOKIE = "jwt-auth-token";
 const JWT_ECR_ID_COOKIE = "jwt-ecr-id";
 
+const DEPRECATED_ENV_WARNED = new Set<string>();
+
+/**
+ * Returns process.env[newEnv] if set; otherwise falls back to process.env[deprecatedEnv]
+ * and emits a one-time deprecation warning.
+ */
+const resolveKey = (
+  newEnv: string,
+  deprecatedEnv: string,
+): string | undefined => {
+  const val = process.env[newEnv];
+  if (val) return val;
+  const fallback = process.env[deprecatedEnv];
+  if (fallback) {
+    if (!DEPRECATED_ENV_WARNED.has(deprecatedEnv)) {
+      DEPRECATED_ENV_WARNED.add(deprecatedEnv);
+      console.warn(
+        `[ecr-viewer] ${deprecatedEnv} is deprecated — rename it to ${newEnv}. Support will be removed in a future release.`,
+      );
+    }
+    return fallback;
+  }
+  return undefined;
+};
+
 /**
  * Middleware for handling JWT-based authorization from integrated case management
  * systems (NBS, EpiTrax, etc.).
@@ -28,6 +53,10 @@ const JWT_ECR_ID_COOKIE = "jwt-ecr-id";
  *   JWT_PUB_KEY     — RSA public key (SPKI PEM) for view-data page auth
  *   JWT_API_PUB_KEY — RSA public key (SPKI PEM) for /api/ route auth
  *
+ * Deprecated (kept for backwards compatibility — rename to the above):
+ *   NBS_PUB_KEY     — deprecated alias for JWT_PUB_KEY
+ *   NBS_API_PUB_KEY — deprecated alias for JWT_API_PUB_KEY
+ *
  * @param next Next middleware in the chain
  * @param end Early exit the chain
  * @returns a NextResponse
@@ -39,7 +68,10 @@ export const withJwtAuth: MiddlewareFactory = (
   return async function (request: NextRequest) {
     request.headers.delete(JWT_AUTH_HEADER);
 
-    if (!process.env.JWT_PUB_KEY && !process.env.JWT_API_PUB_KEY)
+    if (
+      !resolveKey("JWT_PUB_KEY", "NBS_PUB_KEY") &&
+      !resolveKey("JWT_API_PUB_KEY", "NBS_API_PUB_KEY")
+    )
       return next(request);
 
     const cookieResp = setAuthCookie(request);
@@ -61,7 +93,8 @@ const handleViewData = async (
   next: ChainableMiddleware,
   end: ChainableMiddleware,
 ): Promise<NextResponse> => {
-  if (!process.env.JWT_PUB_KEY) return next(request);
+  const pubKey = resolveKey("JWT_PUB_KEY", "NBS_PUB_KEY");
+  if (!pubKey) return next(request);
 
   const token = request.cookies.get(JWT_AUTH_COOKIE)?.value;
   if (!token) return next(request);
@@ -70,7 +103,7 @@ const handleViewData = async (
   try {
     const result = await jwtVerify(
       token,
-      await importSPKI(process.env.JWT_PUB_KEY.trim(), "RS256"),
+      await importSPKI(pubKey.trim(), "RS256"),
     );
     payload = result.payload as Record<string, unknown>;
   } catch {
@@ -120,7 +153,8 @@ const handleApi = async (
   next: ChainableMiddleware,
   end: ChainableMiddleware,
 ): Promise<NextResponse> => {
-  if (!process.env.JWT_API_PUB_KEY) return next(request);
+  const apiPubKey = resolveKey("JWT_API_PUB_KEY", "NBS_API_PUB_KEY");
+  if (!apiPubKey) return next(request);
 
   const token = getTokenFromHeaders(request);
   if (!token) return next(request);
@@ -128,7 +162,7 @@ const handleApi = async (
   try {
     await jwtVerify(
       token,
-      await importSPKI(process.env.JWT_API_PUB_KEY.trim(), "RS256"),
+      await importSPKI(apiPubKey.trim(), "RS256"),
     );
     return end(request);
   } catch {
