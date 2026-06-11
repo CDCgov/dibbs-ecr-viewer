@@ -139,7 +139,16 @@ const logInToAd = async (page: Page, userName: string, password: string) => {
   await page.getByRole("textbox", { name: "password" }).fill(password!);
   await sleep(100);
   await page.getByRole("button", { name: "Sign in" }).click();
-  await sleep(100);
+
+  // Wait for the "Stay signed in?" prompt to load
+  await expect(
+    page.getByRole("heading", { name: "Stay signed in?" }),
+  ).toBeVisible();
+
+  // Give Microsoft's scripts a moment to bind event listeners to the buttons
+  await sleep(500);
+
+  // Now it is safe to click No
   await page.getByRole("button", { name: "No" }).click();
 };
 
