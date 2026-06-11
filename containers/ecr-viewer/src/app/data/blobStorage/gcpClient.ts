@@ -57,7 +57,11 @@ export const gcpHealthCheck = async () => {
  */
 export const existsInGCP = async (objectKey: string): Promise<boolean> => {
   const client = gcpClient();
-  if (!client) return false;
+  if (!client) {
+    throw new Error(
+      "GCP storage client is not configured. Verify SOURCE and ECR_BUCKET_NAME environment variables.",
+    );
+  }
   const [exists] = await client.file(objectKey).exists();
   return exists;
 };

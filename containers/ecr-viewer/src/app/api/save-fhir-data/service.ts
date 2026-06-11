@@ -62,6 +62,13 @@ export const saveToStorage = async (
     objectKey = `${ecrId}.zip`;
   }
 
+  if (!objectKey) {
+    return {
+      message: `Invalid fileType or contents for fileType "${fileType}". Could not determine object key.`,
+      status: 400,
+    };
+  }
+
   if (saveSource === S3_SOURCE) {
     if (await existsInS3(objectKey)) {
       return { message: `eCR already loaded: ${ecrId}`, status: 409 };

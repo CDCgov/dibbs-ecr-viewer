@@ -157,12 +157,12 @@ describe("azure blob container", () => {
       expect(result).toBe(false);
     });
 
-    it("should return false when the container client is not configured", async () => {
+    it("should throw when the container client is not configured", async () => {
       delete process.env.AZURE_STORAGE_CONNECTION_STRING;
 
-      const result = await existsInAzure(fileName);
-
-      expect(result).toBe(false);
+      await expect(existsInAzure(fileName)).rejects.toThrow(
+        "Azure storage client is not configured",
+      );
     });
   });
 

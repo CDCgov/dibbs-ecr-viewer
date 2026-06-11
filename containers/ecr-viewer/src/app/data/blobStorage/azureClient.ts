@@ -61,7 +61,11 @@ export const azureBlobStorageHealthCheck = async () => {
  */
 export const existsInAzure = async (objectKey: string): Promise<boolean> => {
   const containerClient = azureBlobContainerClient();
-  if (!containerClient) return false;
+  if (!containerClient) {
+    throw new Error(
+      "Azure storage client is not configured. Verify AZURE_STORAGE_CONNECTION_STRING environment variable.",
+    );
+  }
   return containerClient.getBlockBlobClient(objectKey).exists();
 };
 

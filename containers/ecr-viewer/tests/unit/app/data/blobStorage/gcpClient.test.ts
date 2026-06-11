@@ -176,12 +176,12 @@ describe("gcp", () => {
       expect(result).toBe(false);
     });
 
-    it("should return false when GCP is not configured", async () => {
+    it("should throw when GCP is not configured", async () => {
       process.env.SOURCE = "azure";
 
-      const result = await existsInGCP(fileName);
-
-      expect(result).toBe(false);
+      await expect(existsInGCP(fileName)).rejects.toThrow(
+        "GCP storage client is not configured",
+      );
     });
   });
 

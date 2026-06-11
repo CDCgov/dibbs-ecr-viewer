@@ -118,11 +118,26 @@ describe("s3 client", () => {
 
     it("should return false when the object does not exist", async () => {
       process.env.ECR_BUCKET_NAME = "bucket";
-      mockSend.mockRejectedValue(new Error("NoSuchKey"));
+      mockSend.mockRejectedValue(
+        Object.assign(new Error("NotFound"), {
+          $metadata: { httpStatusCode: 404 },
+        }),
+      );
 
       const result = await existsInS3(fileName);
 
       expect(result).toBe(false);
+    });
+
+    it("should rethrow non-404 errors", async () => {
+      process.env.ECR_BUCKET_NAME = "bucket";
+      mockSend.mockRejectedValue(
+        Object.assign(new Error("AccessDenied"), {
+          $metadata: { httpStatusCode: 403 },
+        }),
+      );
+
+      await expect(existsInS3(fileName)).rejects.toThrow("AccessDenied");
     });
   });
 

@@ -143,6 +143,17 @@ describe("Cloud save and delete", () => {
         status: 400,
       });
     });
+
+    it("should return 400 for an invalid fileType", async () => {
+      const result = await saveToStorage(fhirBundle, ecrId, "s3", "invalid");
+
+      expect(result).toEqual({
+        message:
+          'Invalid fileType or contents for fileType "invalid". Could not determine object key.',
+        status: 400,
+      });
+      expect(existsInS3).not.toHaveBeenCalled();
+    });
   });
 
   describe("deleteFromStorage", () => {
