@@ -177,7 +177,7 @@ describe("Immunizations Table", () => {
         status: "not-done",
         note: [
           {
-            text: 'Patient objected to influenza, intradermal, quadrivalent on 11/15/2015',
+            text: "Patient objected to influenza, intradermal, quadrivalent on 11/15/2015",
           },
         ],
         meta: {
