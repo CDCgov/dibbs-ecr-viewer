@@ -1,4 +1,4 @@
-import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { GetObjectCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
 import JSZip from "jszip";
 
 import { s3Client } from "@/app/data/blobStorage/s3Client";
@@ -14,6 +14,20 @@ export interface EcrXmls {
   ecrXml: string | null;
   rrXml: string | null;
 }
+
+export const ecrXmlsExist = async (id: string): Promise<boolean> => {
+  try {
+    await s3Client.send(
+      new HeadObjectCommand({
+        Bucket: process.env.ECR_BUCKET_NAME,
+        Key: `${id}.zip`,
+      }),
+    );
+    return true;
+  } catch {
+    return false;
+  }
+};
 
 export const getEcrXmls = async (id: string): Promise<EcrXmls> => {
   const command = new GetObjectCommand({

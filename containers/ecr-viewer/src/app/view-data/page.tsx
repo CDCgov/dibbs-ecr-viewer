@@ -18,6 +18,7 @@ import {
   getPatient,
 } from "./services/evaluateFhirDataService";
 import { getFhirData, isSuccessResponse } from "./services/fhirDataService";
+import { ecrXmlsExist } from "./services/xmlService";
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 import {
   evaluateEcrSummaryConditionSummary,
@@ -75,11 +76,14 @@ const ECRViewerPage = async ({
     fhirIndex,
   );
 
+  const xmlsExist =
+    process.env.SAVE_XML === "true" && (await ecrXmlsExist(fhirId));
+
   return (
     <ECRViewerLayout patientName={patientName} patientDOB={patientDOB}>
       <XmlViewer
         sideNav={<SideNav ecrDocumentNavConfig={ecrDocumentNavConfig} />}
-        ecrId={process.env.SAVE_XML === "true" ? fhirId : undefined}
+        ecrId={xmlsExist ? fhirId : undefined}
       >
         <EcrSummary
           patientDetails={

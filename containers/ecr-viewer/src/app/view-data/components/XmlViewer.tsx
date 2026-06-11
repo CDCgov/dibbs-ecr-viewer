@@ -104,7 +104,7 @@ const XmlViewer = ({ children, sideNav, ecrId }: XmlViewerProps) => {
               </button>
             </div>
 
-            {availableTabs.length > 1 && (
+            {availableTabs.length >= 1 && (
               <div
                 role="tablist"
                 className="display-flex border-bottom border-base-light"
