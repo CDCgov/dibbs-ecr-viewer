@@ -160,10 +160,7 @@ const handleApi = async (
   if (!token) return next(request);
 
   try {
-    await jwtVerify(
-      token,
-      await importSPKI(apiPubKey.trim(), "RS256"),
-    );
+    await jwtVerify(token, await importSPKI(apiPubKey.trim(), "RS256"));
     return end(request);
   } catch {
     return next(request);
