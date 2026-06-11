@@ -8,6 +8,8 @@ import {
   Element,
   Encounter,
   Location,
+  Medication,
+  MedicationAdministration,
   Observation,
   Organization,
   Patient,
@@ -54,6 +56,7 @@ import {
   evaluateOne,
   evaluateOneReference,
   evaluateReference,
+  evaluateReference2,
   evaluateValue,
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
@@ -797,7 +800,10 @@ export const evaluateSocialData = (
  * @param fhirBundle - The FHIR bundle containing pregnancy data.
  * @returns An array of evaluated and formatted pregnancy data.
  */
-export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
+export const evaluatePregnancyData = (
+  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
+): CompleteData => {
   const data = [
     ...evaluatePregnancyStatus(fhirBundle),
     {
@@ -810,6 +816,22 @@ export const evaluatePregnancyData = (fhirBundle: Bundle): CompleteData => {
     {
       title: "Pregnancy Intention in the Next Year",
       value: evaluatePregnancyIntention(fhirBundle),
+    },
+    {
+      title: "Date of Last Live Birth",
+      value: evaluateDateOfLastLiveBirth(fhirBundle),
+    },
+    {
+      title: "Rh Blood Type",
+      value: evaluatePregnancyRhType(fhirBundle),
+    },
+    {
+      title: "D(Rh) Sensitized",
+      value: evaluatePregnancyDRhSensitized(fhirBundle),
+    },
+    {
+      title: "Medications Administered",
+      value: evaluatePregnancyMedicationsAdministered(fhirBundle, fhirIndex),
     },
   ];
 
@@ -1073,6 +1095,69 @@ const evaluatePregnancyIntention = (fhirBundle: Bundle) => {
   const effective = evaluateValue(observation, fhirPathMappings.effectiveX);
 
   return value + "\n" + effective;
+};
+
+const evaluateDateOfLastLiveBirth = (fhirBundle: Bundle) => {
+  const observation = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.pregnancyLastLiveBirth,
+  );
+
+  if (!observation) return;
+
+  const value = evaluateValue(observation, fhirPathMappings.valueX);
+  return value;
+};
+
+const evaluatePregnancyRhType = (fhirBundle: Bundle) => {
+  const observation = evaluateOne(fhirBundle, fhirPathMappings.pregnancyRhType);
+
+  if (!observation) return;
+
+  return evaluateValue(observation, fhirPathMappings.valueX);
+};
+
+const evaluatePregnancyDRhSensitized = (fhirBundle: Bundle) => {
+  const observation = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.pregnancyDRhSensitized,
+  );
+
+  if (!observation) return;
+  return evaluateValue(observation, fhirPathMappings.valueX);
+};
+
+const evaluatePregnancyMedicationsAdministered = (
+  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
+) => {
+  const pregnancyMedicationAdministrationRefs =
+    evaluateAllReferences<MedicationAdministration>(
+      fhirBundle,
+      fhirPathMappings.pregnancyMedicationAdministrationRefs,
+    );
+
+  const entries = pregnancyMedicationAdministrationRefs.map(
+    (medicationAdministration) => {
+      let medication: Medication | undefined;
+      if (medicationAdministration?.medicationReference?.reference) {
+        medication = evaluateReference2(
+          fhirIndex,
+          medicationAdministration.medicationReference.reference,
+        );
+      }
+
+      const name = formatCodeableConcept(medication?.code);
+      const effective = evaluateValue(
+        medicationAdministration,
+        fhirPathMappings.effectiveX,
+      );
+
+      return name + "\n" + effective;
+    },
+  );
+
+  return entries.join("\n\n");
 };
 
 // =============================================================================
