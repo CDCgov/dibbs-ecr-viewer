@@ -15,7 +15,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     dbNamespace(),
     "ecr_immunizations",
     "administration_date",
-    "effective_date"
+    "effective_date",
   );
 
   await _db.schema
@@ -23,29 +23,27 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn("status", "varchar(50)")
     .addColumn("status_reason", getSql("maxVarchar"))
     .execute();
-};
+}
 
 export async function down(db: Kysely<unknown>): Promise<void> {
-    if (dbSchema() !== "extended") {
-    console.log(
-        `${dbSchema()} schema detected. Skipping extended migration.`
-    );
+  if (dbSchema() !== "extended") {
+    console.log(`${dbSchema()} schema detected. Skipping extended migration.`);
     return;
-    }
+  }
 
-    const _db = db.withSchema(dbNamespace());
+  const _db = db.withSchema(dbNamespace());
 
-    await _db.schema
-        .alterTable("ecr_immunizations")
-        .dropColumn("status_reason")
-        .dropColumn("status")
-        .execute();
+  await _db.schema
+    .alterTable("ecr_immunizations")
+    .dropColumn("status_reason")
+    .dropColumn("status")
+    .execute();
 
-    await renameColumn(
-        db,
-        dbNamespace(),
-        "ecr_immunizations",
-        "effective_date",
-        "administration_date",
-    );
-};
+  await renameColumn(
+    db,
+    dbNamespace(),
+    "ecr_immunizations",
+    "effective_date",
+    "administration_date",
+  );
+}

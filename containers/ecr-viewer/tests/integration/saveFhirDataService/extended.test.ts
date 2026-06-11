@@ -301,7 +301,7 @@ describe("saveFhirData - extended", () => {
           name: "COVID-19 Vaccine",
           effective_date: "2023-06-15",
           status: "not-done",
-          status_reason: "patient objection"
+          status_reason: "patient objection",
         },
       ],
     };
