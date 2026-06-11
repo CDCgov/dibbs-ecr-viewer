@@ -6,11 +6,11 @@ category: Guides
 
 # Database Documentation
 
-This document provides an overview of the database schema used by the DIBBS eCR Viewer, including both the core and extended schemas, and information about supported database types.
+This document provides an overview of the database schema used by the DIBBs eCR Viewer, including both the core and extended schemas, and information about supported database types.
 
 ## Supported Database Types
 
-The DIBBS eCR Viewer supports the following relational database types for storing metadata:
+The DIBBs eCR Viewer supports the following relational database types for storing metadata:
 
 - **SQL Server**
 - **PostgreSQL**
