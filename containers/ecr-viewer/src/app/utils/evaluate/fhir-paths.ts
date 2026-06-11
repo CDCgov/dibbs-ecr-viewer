@@ -73,6 +73,7 @@ export type PathTypes = {
   patientReligion: ValueX;
   patientMaritalStatus: ValueX;
   lastMenstrualPeriod: Observation;
+  pregnancyMedicationAdministrationRefs: Reference;
   pregnancyOutcome: Observation;
   pregnancyBirthOrder: ValueX;
   pregnancyStatus: Observation;
@@ -354,6 +355,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   lastMenstrualPeriod: {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8665-2'))",
+  },
+  pregnancyMedicationAdministrationRefs: {
+    type: "Reference",
+    path: "entry.resource.section.where(code.coding.exists(system = 'http://loinc.org' and code = '90767-5')).entry.where(reference.startsWith('MedicationAdministration/'))",
   },
   pregnancyOutcome: {
     type: "Observation",
