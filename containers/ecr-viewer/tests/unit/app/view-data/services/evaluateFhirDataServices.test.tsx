@@ -19,7 +19,7 @@ import * as _BundlePatientWithCovid from "@/../../../test-data/fhir/BundlePatien
 import BundlePractitionerRole from "@/../../../test-data/fhir/BundlePractitionerRole.json";
 import * as _BundleWithSexualOrientation from "@/../../../test-data/fhir/BundleSexualOrientation.json";
 import * as _BundleWithTravelHistory from "@/../../../test-data/fhir/BundleTravelHistory.json";
-import BundleWithPregnancyStatus from "@/../../../test-data/fhir/BundlePregnancyStatus.json";
+import * as _BundleWithPregnancyStatus from "@/../../../test-data/fhir/BundlePregnancyStatus.json";
 import { formatAge } from "@/app/services/formatService";
 import { evaluateValue } from "@/app/utils/evaluate";
 import mappings from "@/app/utils/evaluate/fhir-paths";
@@ -67,6 +67,12 @@ const fhirIndexBundleWithDeceasedPatient = getFhirIndex(
 
 const BundleWithTravelHistory = _BundleWithTravelHistory as unknown as Bundle;
 const fhirIndexBundleWithTravelHistory = getFhirIndex(BundleWithTravelHistory);
+
+const BundleWithPregnancyStatus =
+  _BundleWithPregnancyStatus as unknown as Bundle;
+const fhirIndexBundleWithPregnancyStatus = getFhirIndex(
+  BundleWithPregnancyStatus,
+);
 
 const BundleWithSexualOrientation =
   _BundleWithSexualOrientation as unknown as Bundle;
@@ -1556,7 +1562,10 @@ Home: 123-456-6909`,
 
   describe("Evaluate Patient Info: Pregnancy Info", () => {
     it("should have no available data when there is no data", () => {
-      const actual = evaluatePregnancyData(undefined as any);
+      const actual = evaluatePregnancyData(undefined as any, {
+        fhirIndexByType: {},
+        fhirIndexByTypeAndId: {},
+      });
 
       expect(actual.availableData).toBeEmpty();
       expect(actual.unavailableData).not.toBeEmpty();
@@ -1600,14 +1609,18 @@ Home: 123-456-6909`,
           },
         ],
       };
-      const actual = evaluatePregnancyData(pregnancyBundle);
+      const actual = evaluatePregnancyData(pregnancyBundle, {
+        fhirIndexByType: {},
+        fhirIndexByTypeAndId: {},
+      });
       render(actual.availableData[0].value);
       expect(screen.getAllByText("Pregnancy Status").length).toEqual(1);
     });
 
     it("should display all pregnancy data ", () => {
       const actual = evaluatePregnancyData(
-        BundleWithPregnancyStatus as unknown as Bundle,
+        BundleWithPregnancyStatus,
+        fhirIndexBundleWithPregnancyStatus,
       );
 
       actual.availableData.forEach((data) => {
@@ -1617,7 +1630,10 @@ Home: 123-456-6909`,
     });
 
     it("should display nothing when no pregnancy data is available", () => {
-      const actual = evaluatePregnancyData({} as unknown as Bundle);
+      const actual = evaluatePregnancyData({} as unknown as Bundle, {
+        fhirIndexByType: {},
+        fhirIndexByTypeAndId: {},
+      });
       expect(actual.availableData).toBeEmpty();
     });
 
@@ -1643,7 +1659,10 @@ Home: 123-456-6909`,
           },
         ],
       };
-      const actual = evaluatePregnancyData(pregnancyBundle);
+      const actual = evaluatePregnancyData(pregnancyBundle, {
+        fhirIndexByType: {},
+        fhirIndexByTypeAndId: {},
+      });
       render(<PregnancyInfo pregnancyData={actual.availableData} />);
       expect(screen.getAllByText("Postpartum Status").length).toEqual(1);
     });
@@ -1673,7 +1692,10 @@ Home: 123-456-6909`,
           },
         ],
       };
-      const actual = evaluatePregnancyData(pregnancyBundle);
+      const actual = evaluatePregnancyData(pregnancyBundle, {
+        fhirIndexByType: {},
+        fhirIndexByTypeAndId: {},
+      });
       render(<PregnancyInfo pregnancyData={actual.availableData} />);
       expect(screen.getByText("Last Menstrual Period")).toBeVisible();
       expect(screen.getByText("01/01/2020")).toBeVisible();
