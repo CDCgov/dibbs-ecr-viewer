@@ -29,9 +29,7 @@ test.describe("integrated - nbs auth", () => {
         "The eCR Viewer couldn't retrieve the associated eCR file",
       ),
     ).toBeVisible();
-    await expect(page).toHaveURL(
-      "http://localhost:3000/ecr-viewer/view-data",
-    );
+    await expect(page).toHaveURL("http://localhost:3000/ecr-viewer/view-data");
   });
 
   test("should not grant access to library when a valid token is provided", async ({
