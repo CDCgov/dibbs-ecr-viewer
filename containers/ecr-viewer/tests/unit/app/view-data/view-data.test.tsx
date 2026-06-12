@@ -12,6 +12,7 @@ import {
   getFhirData,
   isSuccessResponse,
 } from "@/app/view-data/services/fhirDataService";
+import { ecrXmlsExist } from "@/app/view-data/services/xmlService";
 
 const resolveParams = (
   v: PageSearchParams,
@@ -42,6 +43,7 @@ jest.mock("@/app/services/userService");
 jest.mock("@/app/services/loggedInUserService");
 
 jest.mock("@/app/view-data/components/SideNav");
+jest.mock("@/app/view-data/services/xmlService");
 
 describe("ECRViewerPage", () => {
   const ORIG_BASE_PATH = process.env.BASE_PATH;
@@ -104,6 +106,7 @@ describe("ECRViewerPage", () => {
         payload: { fhirBundle: BundleEcrMetadata },
       });
       (isSuccessResponse as unknown as jest.Mock).mockReturnValue(true);
+      (ecrXmlsExist as jest.Mock).mockResolvedValue(true);
     });
 
     afterEach(() => jest.resetAllMocks());
