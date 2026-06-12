@@ -145,9 +145,7 @@ test.describe("auth", () => {
     await expect(
       page.getByRole("button", { name: "Sign Out" }),
     ).not.toBeVisible();
-    await expect(page).toHaveURL(
-      "http://localhost:3000/ecr-viewer/view-data",
-    );
+    await expect(page).toHaveURL("http://localhost:3000/ecr-viewer/view-data");
   });
 
   test("should authenticate on api route if NBS auth token header provided", async ({
