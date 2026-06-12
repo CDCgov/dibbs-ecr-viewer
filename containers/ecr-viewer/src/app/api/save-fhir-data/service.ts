@@ -192,7 +192,11 @@ export const saveFhirMetadata = async (
 
         // Make sure the fhir data also saves
         const fhirDataResponse = await fhirDataPromise;
-        if (fhirDataResponse.status !== 200) {
+        if (fhirDataResponse.status === 409) {
+          // Blob already exists; the DB check above confirmed no duplicate metadata,
+          // so proceed — the blob is valid and we didn't create it, so skip rollback.
+          rollBackFhirData = false;
+        } else if (fhirDataResponse.status !== 200) {
           rollBackFhirData = false;
           throw new Error(
             `Failed to save fhir data - rolling back metadata: ${JSON.stringify(
