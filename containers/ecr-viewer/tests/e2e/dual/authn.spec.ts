@@ -146,7 +146,7 @@ test.describe("auth", () => {
       page.getByRole("button", { name: "Sign Out" }),
     ).not.toBeVisible();
     await expect(page).toHaveURL(
-      "http://localhost:3000/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
+      "http://localhost:3000/ecr-viewer/view-data",
     );
   });
 
