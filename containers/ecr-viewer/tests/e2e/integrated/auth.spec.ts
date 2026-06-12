@@ -30,7 +30,7 @@ test.describe("integrated - nbs auth", () => {
       ),
     ).toBeVisible();
     await expect(page).toHaveURL(
-      "http://localhost:3000/ecr-viewer/view-data?id=1234",
+      "http://localhost:3000/ecr-viewer/view-data",
     );
   });
 
