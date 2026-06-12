@@ -83,6 +83,11 @@ export const evaluatePregnancyData = (
       title: "Medications Administered",
       value: evaluatePregnancyMedicationsAdministered(fhirBundle, fhirIndex),
     },
+    {
+      title: "History of Pregnancies",
+      value: evaluatePregnancySummary(fhirBundle),
+      fullWidthContent: true,
+    },
   ];
 
   return evaluateData(data);
@@ -416,4 +421,37 @@ const evaluatePregnancyMedicationsAdministered = (
   );
 
   return entries.join("\n\n");
+};
+
+const evaluatePregnancySummary = (fhirBundle: Bundle) => {
+  const observation = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.pregnancySummary,
+  );
+
+  const pregnancySummaryObs = evaluateAllReferences<Observation>(
+    observation,
+    fhirPathMappings.hasMember,
+  );
+
+  console.log(pregnancySummaryObs);
+
+  if (!pregnancySummaryObs.length) return undefined;
+
+  const columns: ColumnInfoInput[] = [
+    {
+      columnName: "Context",
+      infoPath: "code",
+    },
+    {
+      columnName: "Value",
+      infoPath: "valueX",
+    },
+    {
+      columnName: "Date",
+      infoPath: "effectiveX",
+    },
+  ];
+
+  return <EvaluateTable resources={pregnancySummaryObs} columns={columns} />;
 };
