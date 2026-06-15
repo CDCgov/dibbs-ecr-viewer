@@ -26,7 +26,7 @@ export const retrieveFromSessionStorage = (
 ): string | object | null => {
   if (typeof window !== "undefined" && window.sessionStorage) {
     const storedValue = sessionStorage.getItem(key);
-    return JSON.parse(storedValue as string);
+    return JSON.parse(<string>storedValue);
   } else {
     console.warn("sessionStorage is not available");
     return null;

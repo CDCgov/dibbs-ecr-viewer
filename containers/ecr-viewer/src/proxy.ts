@@ -10,9 +10,7 @@ import { withUrlParamChecks } from "./proxies/withUrlParamChecks";
 // https://reacthustle.com/blog/how-to-chain-multiple-middleware-functions-in-nextjs
 // https://github.com/jmarioste/next-middleware-guide/
 
-export type ChainableProxy = (
-  request: NextRequest,
-) => Promise<NextResponse>;
+export type ChainableProxy = (request: NextRequest) => Promise<NextResponse>;
 
 export type ProxyFactory = (
   next: ChainableProxy,
@@ -96,8 +94,3 @@ export const config = {
     "/",
   ],
 };
-
-// Aliases for backward compatibility during migration
-export type ChainableMiddleware = ChainableProxy;
-export type MiddlewareFactory = ProxyFactory;
-export const chainMiddleware = chainProxy;
