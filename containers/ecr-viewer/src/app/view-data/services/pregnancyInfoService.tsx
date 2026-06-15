@@ -85,7 +85,7 @@ export const evaluatePregnancyData = (
     },
     {
       title: "History of Pregnancies",
-      value: evaluatePregnancySummary(fhirBundle),
+      value: evaluatePregnancySummary(fhirBundle, fhirIndex),
       fullWidthContent: true,
     },
   ];
@@ -423,20 +423,22 @@ const evaluatePregnancyMedicationsAdministered = (
   return entries.join("\n\n");
 };
 
-const evaluatePregnancySummary = (fhirBundle: Bundle) => {
+const evaluatePregnancySummary = (fhirBundle: Bundle, fhirIndex: FhirIndex) => {
   const observation = evaluateOne(
     fhirBundle,
     fhirPathMappings.pregnancySummary,
   );
 
-  const pregnancySummaryObs = evaluateAllReferences<Observation>(
-    observation,
-    fhirPathMappings.hasMember,
-  );
+  const pregnancySummaryObs: Observation[] = [];
 
-  console.log(pregnancySummaryObs);
+  observation?.hasMember?.forEach((memberRef) => {
+    const memberObs = evaluateReference2<Observation>(fhirIndex, memberRef);
+    if (memberObs) {
+      pregnancySummaryObs.push(memberObs);
+    }
+  });
 
-  if (!pregnancySummaryObs.length) return undefined;
+  if (!pregnancySummaryObs?.length) return undefined;
 
   const columns: ColumnInfoInput[] = [
     {

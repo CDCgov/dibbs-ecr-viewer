@@ -395,7 +395,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '55607006'))",
   },
   pregnancySummary: {
-    type: "Reference",
+    type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '10162-6'))",
   },
 
