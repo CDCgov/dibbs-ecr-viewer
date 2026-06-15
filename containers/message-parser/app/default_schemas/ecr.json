@@ -290,8 +290,12 @@
         "nullable": true
       },
       "specimen_type": {
-        "fhir_path": "Observation.extension.where(url='http://hl7.org/fhir/R4/specimen.html').extension.where(url='specimen source').valueString",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Specimen' and id = %ref).type.coding.display",
         "data_type": "string",
+        "reference_lookup": [
+          "Observation.id",
+          "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(result.where(reference.endsWith(%ref)).exists()).specimen[0].reference"
+        ],
         "nullable": true
       },
       "performing_lab": {
@@ -300,8 +304,12 @@
         "nullable": true
       },
       "specimen_collection_date": {
-        "fhir_path": "Observation.extension.where(url='http://hl7.org/fhir/R4/specimen.html').extension.where(url='specimen collection time').valueDateTime",
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Specimen' and id = %ref).collection.collectedPeriod.start | Bundle.entry.resource.where(resourceType = 'Specimen' and id = %ref).collection.collectedDateTime",
         "data_type": "datetime",
+        "reference_lookup": [
+          "Observation.id",
+          "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(result.where(reference.endsWith(%ref)).exists()).specimen[0].reference"
+        ],
         "nullable": true
       }
     }
