@@ -4,9 +4,9 @@
 import { jwtVerify } from "jose";
 import { NextRequest } from "next/server";
 
-import { chainMiddleware } from "@/middleware";
-import { withApiTokenAuth } from "@/middlewares/withApiTokenAuth";
-import { withUnauthorized } from "@/middlewares/withUnauthorized";
+import { chainProxy } from "@/proxy";
+import { withApiTokenAuth } from "@/proxies/withApiTokenAuth";
+import { withUnauthorized } from "@/proxies/withUnauthorized";
 
 jest.mock("jose", () => ({
   importSPKI: jest.fn(() => true),
@@ -25,9 +25,9 @@ jest.mock("@/app/api/auth/providers", () => ({
   ],
 }));
 
-const middleware = chainMiddleware([withApiTokenAuth, withUnauthorized]);
+const proxy = chainProxy([withApiTokenAuth, withUnauthorized]);
 
-describe("API Token Auth Middleware", () => {
+describe("API Token Auth Proxy", () => {
   const ORIG_NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET;
   const ORIG_NBS_PUB_KEY = process.env.NBS_PUB_KEY;
   const ORIG_BASE_PATH = process.env.BASE_PATH;
@@ -57,7 +57,7 @@ describe("API Token Auth Middleware", () => {
     );
     req.headers.set("Authorization", "Bearer foobar");
 
-    const resp = await middleware(req);
+    const resp = await proxy(req);
     expect(jwtVerify).toHaveBeenCalled();
     expect(resp?.status).toBe(200);
   });
@@ -69,7 +69,7 @@ describe("API Token Auth Middleware", () => {
     );
     req.headers.set("Authorization", "Bearer foobar");
 
-    const resp = await middleware(req);
+    const resp = await proxy(req);
     expect(jwtVerify).not.toHaveBeenCalled();
     expect(resp?.status).not.toBe(200);
   });
@@ -78,7 +78,7 @@ describe("API Token Auth Middleware", () => {
     const req = new NextRequest("https://www.example.com/ecr-viewer/");
     req.headers.set("Authorization", "Bearer foobar");
 
-    const resp = await middleware(req);
+    const resp = await proxy(req);
     expect(jwtVerify).not.toHaveBeenCalled();
     expect(resp?.status).not.toBe(200);
   });
@@ -87,7 +87,7 @@ describe("API Token Auth Middleware", () => {
     const req = new NextRequest(
       "https://www.example.com/ecr-viewer/api/process-zip",
     );
-    const resp = await middleware(req);
+    const resp = await proxy(req);
     expect(resp?.status).not.toBe(200);
   });
 });

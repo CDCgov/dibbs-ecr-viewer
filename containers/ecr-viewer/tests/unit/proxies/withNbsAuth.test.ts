@@ -4,9 +4,9 @@
 import { importSPKI, jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
 
-import { chainMiddleware } from "@/middleware";
-import { withNbsAuth } from "@/middlewares/withNbsAuth";
-import { withUnauthorized } from "@/middlewares/withUnauthorized";
+import { chainProxy } from "@/proxy";
+import { withNbsAuth } from "@/proxies/withNbsAuth";
+import { withUnauthorized } from "@/proxies/withUnauthorized";
 
 jest.mock("jose", () => ({
   importSPKI: jest.fn(() => true),
@@ -14,9 +14,9 @@ jest.mock("jose", () => ({
   createLocalJWKSet: jest.fn(() => true),
 }));
 
-const middleware = chainMiddleware([withNbsAuth, withUnauthorized]);
+const proxy = chainProxy([withNbsAuth, withUnauthorized]);
 
-describe("NBS Auth Middleware", () => {
+describe("NBS Auth Proxy", () => {
   const ORIG_BASE_PATH = process.env.BASE_PATH;
   beforeEach(() => {
     process.env.BASE_PATH = "ecr-viewer";
@@ -35,7 +35,7 @@ describe("NBS Auth Middleware", () => {
       "https://www.example.com/ecr-viewer/view-data?id=1234&auth=abcd",
     );
 
-    const resp = await middleware(req);
+    const resp = await proxy(req);
     expect((resp as NextResponse).cookies.get("auth-token")).toEqual({
       name: "auth-token",
       path: "/",
@@ -53,7 +53,7 @@ describe("NBS Auth Middleware", () => {
     );
     req.headers.set("Authorization", "Bearer foobar");
 
-    const resp = await middleware(req);
+    const resp = await proxy(req);
     expect(jwtVerify).toHaveBeenCalled();
     expect(resp?.status).toBe(200);
   });
@@ -66,7 +66,7 @@ describe("NBS Auth Middleware", () => {
     );
     req.cookies.set("auth-token", "foobar");
 
-    const resp = await middleware(req);
+    const resp = await proxy(req);
 
     expect(jwtVerify).toHaveBeenCalled();
     expect(importSPKI).toHaveBeenCalledWith("FOOBAR", "RS256");
@@ -77,7 +77,7 @@ describe("NBS Auth Middleware", () => {
     const req = new NextRequest("https://www.example.com/ecr-viewer/");
     req.cookies.set("auth-token", "foobar");
 
-    const resp = await middleware(req);
+    const resp = await proxy(req);
     expect(resp?.status).toBe(307);
     expect(resp?.headers.get("Location")).toBe(
       "https://www.example.com/ecr-viewer/error/notfound",
@@ -88,7 +88,7 @@ describe("NBS Auth Middleware", () => {
     const req = new NextRequest(
       "https://www.example.com/ecr-viewer/view-data?id=1234",
     );
-    const resp = await middleware(req);
+    const resp = await proxy(req);
     expect(req?.headers.get("x-nbs-authorized")).toBe(null);
     expect(resp?.status).toBe(307);
     expect(resp?.headers.get("Location")).toBe(
@@ -100,7 +100,7 @@ describe("NBS Auth Middleware", () => {
     const req = new NextRequest(
       "https://www.example.com/ecr-viewer/api/process-zip",
     );
-    const resp = await middleware(req);
+    const resp = await proxy(req);
     expect(req?.headers.get("x-nbs-authorized")).toBe(null);
     expect(resp?.status).toBe(401);
   });

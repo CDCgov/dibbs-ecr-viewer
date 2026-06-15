@@ -3,12 +3,12 @@
  */
 import { NextRequest } from "next/server";
 
-import { chainMiddleware } from "@/middleware";
-import { withProcessZipRewrite } from "@/middlewares/withProcessZipRewrite";
+import { chainProxy } from "@/proxy";
+import { withProcessZipRewrite } from "@/proxies/withProcessZipRewrite";
 
-const middleware = chainMiddleware([withProcessZipRewrite]);
+const proxy = chainProxy([withProcessZipRewrite]);
 
-describe("Process zip rewrite Middleware", () => {
+describe("Process zip rewrite Proxy", () => {
   it("should rewrite process-zip to process-ecr", async () => {
     let message = "";
     jest.spyOn(console, "warn").mockImplementation((m) => {
@@ -18,7 +18,7 @@ describe("Process zip rewrite Middleware", () => {
       "https://www.example.com/ecr-viewer/api/process-zip",
     );
 
-    const resp = await middleware(req);
+    const resp = await proxy(req);
     expect(resp.status).toBe(200);
     expect(resp.headers.get("x-middleware-rewrite")).toEqual(
       "https://www.example.com/ecr-viewer/api/process-ecr",
@@ -32,7 +32,7 @@ describe("Process zip rewrite Middleware", () => {
   it("should not rewrite when a non-process-zip-endpoint", async () => {
     const req = new NextRequest("https://www.example.com/ecr-viewer?page=3");
 
-    const resp = await middleware(req);
+    const resp = await proxy(req);
     expect(resp.status).toBe(200);
     expect(resp.headers.get("x-middleware-rewrite")).toBeNull();
   });

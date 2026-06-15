@@ -1,19 +1,19 @@
-// Adapted from 'next-auth' to work with chained middleware approach
+// Adapted from 'next-auth' to work with chained proxy approach
 
 import { NextRequest, NextResponse } from "next/server";
 import withAuth, { NextRequestWithAuth } from "next-auth/middleware";
 
-import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
+import { ChainableProxy, ProxyFactory } from "@/proxy";
 
 /**
- * Middleware for handling next authorization
- * @param next Next middleware in the chain
+ * Proxy for handling next authorization
+ * @param next Next proxy in the chain
  * @param end Early exit the chain
  * @returns a NextResponse
  */
-export const withNextAuth: MiddlewareFactory = (
-  next: ChainableMiddleware,
-  end: ChainableMiddleware,
+export const withNextAuth: ProxyFactory = (
+  next: ChainableProxy,
+  end: ChainableProxy,
 ) => {
   return async function (request: NextRequest) {
     // IDP Auth not actually set up, so bail out

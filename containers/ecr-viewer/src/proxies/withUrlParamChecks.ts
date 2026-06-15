@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { LIBRARY_SEARCH_PARAMS } from "@/app/utils/search-param-utils";
-import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
+import { ChainableProxy, ProxyFactory } from "@/proxy";
 
 // This is currently hard coded on the library search params, but could be made configurable
 // with a matcher down the road.
@@ -10,11 +10,11 @@ import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
  * Checks that all URL params are valid and deletes them and redirects the url if not.
  * Note, we only check params that we expect and have validators for, all others will
  * pass through unchanged.
- * @param next The next middleware to call
- * @returns middleware function
+ * @param next The next proxy to call
+ * @returns proxy function
  */
-export const withUrlParamChecks: MiddlewareFactory = (
-  next: ChainableMiddleware,
+export const withUrlParamChecks: ProxyFactory = (
+  next: ChainableProxy,
 ) => {
   return async function (request: NextRequest) {
     const url = request.nextUrl.clone();

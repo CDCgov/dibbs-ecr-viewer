@@ -1,21 +1,21 @@
 import { importSPKI, jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
 
-import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
+import { ChainableProxy, ProxyFactory } from "@/proxy";
 
 import { getTokenFromHeaders } from "./withApiTokenAuth";
 
 export const NBS_AUTH_HEADER = "x-nbs-authorized";
 
 /**
- * Middleware for handling NBS authorization
- * @param next Next middleware in the chain
+ * Proxy for handling NBS authorization
+ * @param next Next proxy in the chain
  * @param end Early exit the chain
  * @returns a NextResponse
  */
-export const withNbsAuth: MiddlewareFactory = (
-  next: ChainableMiddleware,
-  end: ChainableMiddleware,
+export const withNbsAuth: ProxyFactory = (
+  next: ChainableProxy,
+  end: ChainableProxy,
 ) => {
   return async function (request: NextRequest) {
     // make sure only internal values are valid
