@@ -29,18 +29,18 @@ const proxy = chainProxy([withApiTokenAuth, withUnauthorized]);
 
 describe("API Token Auth Proxy", () => {
   const ORIG_NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET;
-  const ORIG_NBS_PUB_KEY = process.env.NBS_PUB_KEY;
+  const ORIG_JWT_PUB_KEY = process.env.JWT_PUB_KEY;
   const ORIG_BASE_PATH = process.env.BASE_PATH;
   beforeEach(() => {
     process.env.BASE_PATH = "ecr-viewer";
     process.env.AUTH_PROVIDER = "keycloak";
     process.env.NEXTAUTH_SECRET = "test-secret";
-    delete process.env.NBS_PUB_KEY;
+    delete process.env.JWT_PUB_KEY;
     jest.resetAllMocks(); // Reset mocks before each test
   });
   afterEach(() => {
     process.env.NEXTAUTH_SECRET = ORIG_NEXTAUTH_SECRET;
-    process.env.NBS_PUB_KEY = ORIG_NBS_PUB_KEY;
+    process.env.JWT_PUB_KEY = ORIG_JWT_PUB_KEY;
     process.env.BASE_PATH = ORIG_BASE_PATH;
     delete process.env.AUTH_PROVIDER;
   });

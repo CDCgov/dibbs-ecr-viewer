@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { ChainableProxy, ProxyFactory } from "@/proxy";
 
-import { NBS_AUTH_HEADER } from "./withNbsAuth";
+import { JWT_AUTH_HEADER } from "./withJwtAuth";
 
 /**
  * Proxy for handling no prior auth succeeding
@@ -36,7 +36,7 @@ export const withUnauthorized: ProxyFactory = (
     }
 
     const problem =
-      request.headers.get(NBS_AUTH_HEADER) === "false" ? "auth" : "notfound";
+      request.headers.get(JWT_AUTH_HEADER) === "false" ? "auth" : "notfound";
     return NextResponse.redirect(
       new URL(
         `${process.env.BASE_PATH}/error/${problem}`,

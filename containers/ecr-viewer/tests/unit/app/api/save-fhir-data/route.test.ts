@@ -6,6 +6,7 @@ import {
   S3Client,
   PutObjectCommand,
   PutObjectCommandOutput,
+  HeadObjectCommand,
 } from "@aws-sdk/client-s3";
 import { mockClient } from "aws-sdk-client-mock";
 import { NextRequest } from "next/server";
@@ -14,9 +15,11 @@ import { POST } from "@/app/api/save-fhir-data/route";
 
 const s3Mock = mockClient(S3Client);
 jest.mock("@azure/storage-blob", () => {
+  const existsMock = jest.fn().mockResolvedValue(false);
   const uploadMock = jest.fn();
   const getBlockBlobClientMock = jest.fn(() => ({
     upload: uploadMock,
+    exists: existsMock,
   }));
 
   const getContainerClientMock = jest.fn(() => ({
@@ -59,6 +62,10 @@ const fakeData = (source: string) => ({
 describe("POST Save FHIR Data API Route", () => {
   beforeEach(() => {
     s3Mock.reset();
+    const notFoundError = Object.assign(new Error("NotFound"), {
+      $metadata: { httpStatusCode: 404 },
+    });
+    s3Mock.on(HeadObjectCommand).rejects(notFoundError);
   });
 
   it("sends data to S3 and returns a success response", async () => {
