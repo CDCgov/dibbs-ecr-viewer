@@ -13,9 +13,7 @@ import { ChainableProxy, ProxyFactory } from "@/proxy";
  * @param next The next proxy to call
  * @returns proxy function
  */
-export const withUrlParamChecks: ProxyFactory = (
-  next: ChainableProxy,
-) => {
+export const withUrlParamChecks: ProxyFactory = (next: ChainableProxy) => {
   return async function (request: NextRequest) {
     const url = request.nextUrl.clone();
     for (const [param, spec] of Object.entries(LIBRARY_SEARCH_PARAMS)) {

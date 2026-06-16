@@ -8,9 +8,7 @@ import { ChainableProxy, ProxyFactory } from "@/proxy";
  * @param next The next proxy to call
  * @returns proxy function
  */
-export const withProcessZipRewrite: ProxyFactory = (
-  next: ChainableProxy,
-) => {
+export const withProcessZipRewrite: ProxyFactory = (next: ChainableProxy) => {
   return async function (request: NextRequest) {
     const url = request.nextUrl.toString();
     if (url.endsWith("/api/process-zip")) {
