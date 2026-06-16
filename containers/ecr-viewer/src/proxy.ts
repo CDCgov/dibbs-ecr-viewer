@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { withApiTokenAuth } from "./proxies/withApiTokenAuth";
-import { withNbsAuth } from "./proxies/withNbsAuth";
+import { withJwtAuth } from "./proxies/withJwtAuth";
 import { withNextAuth } from "./proxies/withNextAuth";
 import { withProcessZipRewrite } from "./proxies/withProcessZipRewrite";
 import { withUnauthorized } from "./proxies/withUnauthorized";
@@ -61,7 +61,7 @@ export const chainProxy = (
 // Sub-chain for auth, which early exits back to the main chain
 const authProxy: ProxyFactory = (next: ChainableProxy, _endFn) =>
   chainProxy(
-    [withNbsAuth, withApiTokenAuth, withNextAuth, withUnauthorized],
+    [withJwtAuth, withApiTokenAuth, withNextAuth, withUnauthorized],
     next,
   );
 

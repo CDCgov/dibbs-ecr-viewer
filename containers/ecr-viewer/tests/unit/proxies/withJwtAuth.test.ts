@@ -4,9 +4,9 @@
 import { importSPKI, jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
 
-import { chainMiddleware } from "@/middleware";
-import { withJwtAuth } from "@/middlewares/withJwtAuth";
-import { withUnauthorized } from "@/middlewares/withUnauthorized";
+import { chainProxy } from "@/proxy";
+import { withJwtAuth } from "@/proxies/withJwtAuth";
+import { withUnauthorized } from "@/proxies/withUnauthorized";
 
 jest.mock("jose", () => ({
   importSPKI: jest.fn(() => "mock-key"),
@@ -14,9 +14,9 @@ jest.mock("jose", () => ({
   createLocalJWKSet: jest.fn(() => true),
 }));
 
-const middleware = chainMiddleware([withJwtAuth, withUnauthorized]);
+const proxy = chainProxy([withJwtAuth, withUnauthorized]);
 
-describe("JWT Auth Middleware", () => {
+describe("JWT Auth Proxy", () => {
   const ORIG_BASE_PATH = process.env.BASE_PATH;
 
   beforeEach(() => {
@@ -48,7 +48,7 @@ describe("JWT Auth Middleware", () => {
       );
       req.cookies.set("jwt-auth-token", "mytoken");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(jwtVerify).toHaveBeenCalled();
       expect(importSPKI).toHaveBeenCalledWith("mock-pub-key", "RS256");
       expect(resp.headers.get("location")).toBe(
@@ -72,7 +72,7 @@ describe("JWT Auth Middleware", () => {
       );
       req.headers.set("Authorization", "Bearer foobar");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(jwtVerify).toHaveBeenCalled();
       expect(importSPKI).toHaveBeenCalledWith("mock-api-pub-key", "RS256");
       expect(resp.status).toBe(200);
@@ -91,7 +91,7 @@ describe("JWT Auth Middleware", () => {
       );
       req.cookies.set("jwt-auth-token", "mytoken");
 
-      await middleware(req);
+      await proxy(req);
       expect(importSPKI).toHaveBeenCalledWith("new-pub-key", "RS256");
     });
   });
@@ -102,7 +102,7 @@ describe("JWT Auth Middleware", () => {
         "https://www.example.com/ecr-viewer/view-data?id=1234&auth=mytoken",
       );
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(resp.headers.get("location")).toBe(
         "https://www.example.com/ecr-viewer/view-data?id=1234",
       );
@@ -118,7 +118,7 @@ describe("JWT Auth Middleware", () => {
         "https://www.example.com/ecr-viewer/?auth=mytoken",
       );
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(resp.cookies.get("jwt-auth-token")).toBeUndefined();
     });
 
@@ -131,7 +131,7 @@ describe("JWT Auth Middleware", () => {
         "https://www.example.com/ecr-viewer/view-data?id=1234&auth=mytoken",
       );
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(resp.cookies.get("jwt-auth-token")).toBeUndefined();
     });
   });
@@ -144,7 +144,7 @@ describe("JWT Auth Middleware", () => {
       );
       req.cookies.set("jwt-auth-token", "mytoken");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(jwtVerify).not.toHaveBeenCalled();
       expect(resp.status).toBe(307);
     });
@@ -153,7 +153,7 @@ describe("JWT Auth Middleware", () => {
       const req = new NextRequest("https://www.example.com/ecr-viewer/");
       req.cookies.set("jwt-auth-token", "mytoken");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(jwtVerify).not.toHaveBeenCalled();
       expect(resp.status).toBe(307);
     });
@@ -163,7 +163,7 @@ describe("JWT Auth Middleware", () => {
         "https://www.example.com/ecr-viewer/view-data?id=1234",
       );
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(jwtVerify).not.toHaveBeenCalled();
       expect(resp.status).toBe(307);
     });
@@ -175,7 +175,7 @@ describe("JWT Auth Middleware", () => {
       );
       req.cookies.set("jwt-auth-token", "bad-token");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(resp.status).toBe(307);
     });
   });
@@ -190,7 +190,7 @@ describe("JWT Auth Middleware", () => {
       );
       req.cookies.set("jwt-auth-token", "mytoken");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(resp.headers.get("location")).toBe(
         "https://www.example.com/ecr-viewer/view-data",
       );
@@ -210,7 +210,7 @@ describe("JWT Auth Middleware", () => {
       );
       req.cookies.set("jwt-auth-token", "mytoken");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(resp.status).toBe(307);
       expect(resp.cookies.get("jwt-ecr-id")).toBeUndefined();
     });
@@ -227,7 +227,7 @@ describe("JWT Auth Middleware", () => {
       req.cookies.set("jwt-auth-token", "mytoken");
       req.cookies.set("jwt-ecr-id", "1234");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(resp.status).toBe(200);
       expect(resp.headers.get("x-middleware-rewrite")).toBe(
         "https://www.example.com/ecr-viewer/view-data?id=1234",
@@ -243,7 +243,7 @@ describe("JWT Auth Middleware", () => {
       );
       req.cookies.set("jwt-auth-token", "mytoken");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(resp.status).toBe(307);
     });
 
@@ -257,7 +257,7 @@ describe("JWT Auth Middleware", () => {
       req.cookies.set("jwt-auth-token", "mytoken");
       req.cookies.set("jwt-ecr-id", "1234");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(resp.status).toBe(307);
     });
   });
@@ -270,7 +270,7 @@ describe("JWT Auth Middleware", () => {
       );
       req.cookies.set("jwt-auth-token", "mytoken");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(resp.headers.get("location")).toBe(
         "https://www.example.com/ecr-viewer/view-data",
       );
@@ -291,7 +291,7 @@ describe("JWT Auth Middleware", () => {
       req.cookies.set("jwt-auth-token", "mytoken");
       req.cookies.set("jwt-ecr-id", "1234");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(resp.status).toBe(200);
       expect(resp.headers.get("x-middleware-rewrite")).toBe(
         "https://www.example.com/ecr-viewer/view-data?id=1234",
@@ -305,7 +305,7 @@ describe("JWT Auth Middleware", () => {
       );
       req.cookies.set("jwt-auth-token", "mytoken");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(resp.status).toBe(200);
     });
   });
@@ -318,7 +318,7 @@ describe("JWT Auth Middleware", () => {
       );
       req.headers.set("Authorization", "Bearer foobar");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(jwtVerify).toHaveBeenCalled();
       expect(importSPKI).toHaveBeenCalledWith("mock-api-pub-key", "RS256");
       expect(resp.status).toBe(200);
@@ -331,7 +331,7 @@ describe("JWT Auth Middleware", () => {
       );
       req.headers.set("Authorization", "Bearer foobar");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(jwtVerify).not.toHaveBeenCalled();
       expect(resp.status).toBe(401);
     });
@@ -341,7 +341,7 @@ describe("JWT Auth Middleware", () => {
         "https://www.example.com/ecr-viewer/api/process-zip",
       );
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(resp.status).toBe(401);
     });
 
@@ -352,7 +352,7 @@ describe("JWT Auth Middleware", () => {
       );
       req.headers.set("Authorization", "Bearer badtoken");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(resp.status).toBe(401);
     });
   });
