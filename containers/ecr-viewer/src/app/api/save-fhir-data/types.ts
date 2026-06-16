@@ -38,7 +38,9 @@ interface Lab {
 interface Immunization {
   uuid: string | undefined;
   name: string | undefined;
-  administration_date: string | undefined;
+  effective_date: string | undefined;
+  status: string | undefined;
+  status_reason: string | undefined;
 }
 
 interface ruleSummary {

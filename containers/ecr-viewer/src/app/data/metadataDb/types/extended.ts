@@ -83,7 +83,9 @@ export interface ecr_immunizations {
   uuid: Generated<string>;
   eicr_id: string;
   name: string | undefined;
-  administration_date: Date | undefined;
+  effective_date: Date | undefined;
+  status: string | undefined;
+  status_reason: string | undefined;
 }
 
 export type ExtendedECR = Selectable<extended_ecr_data>;

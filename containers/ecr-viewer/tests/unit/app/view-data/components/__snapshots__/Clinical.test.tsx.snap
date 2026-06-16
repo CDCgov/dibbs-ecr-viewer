@@ -1388,25 +1388,37 @@ Result: 2 m
                             Name
                           </th>
                           <th
-                            class="table-header"
+                            class="table-header minw-10"
                             scope="col"
                           >
-                            Administration Dates
+                            Effective Date/Time
                           </th>
                           <th
-                            class="table-header"
+                            class="table-header minw-15"
+                            scope="col"
+                          >
+                            Status
+                          </th>
+                          <th
+                            class="table-header minw-15"
+                            scope="col"
+                          >
+                            Status Reason
+                          </th>
+                          <th
+                            class="table-header minw-10"
                             scope="col"
                           >
                             Dose Number
                           </th>
                           <th
-                            class="table-header"
+                            class="table-header minw-18"
                             scope="col"
                           >
                             Manufacturer
                           </th>
                           <th
-                            class="table-header"
+                            class="table-header minw-15"
                             scope="col"
                           >
                             Lot Number
@@ -1428,6 +1440,20 @@ Result: 2 m
                             class="text-top text-pre-line"
                           >
                             04/04/2004
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            completed
+                          </td>
+                          <td
+                            class="text-top text-pre-line"
+                          >
+                            <span
+                              class="text-italic text-base"
+                            >
+                              No data
+                            </span>
                           </td>
                           <td
                             class="text-top text-pre-line"

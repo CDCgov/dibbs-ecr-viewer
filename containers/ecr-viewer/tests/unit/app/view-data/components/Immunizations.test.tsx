@@ -151,6 +151,39 @@ describe("Immunizations Table", () => {
         primarySource: true,
         occurrenceDateTime: "03/21/1974",
       },
+      {
+        resourceType: "Immunization",
+        id: "f3a8b2cd-61e4-498b-9d41-fa627e31c8b7",
+        statusReason: {
+          coding: [
+            {
+              code: "PATOBJ",
+              system: "urn:oid:2.16.840.1.113883.5.8",
+              display: "patient objection",
+            },
+          ],
+        },
+        occurrenceDateTime: "2015-01-15",
+        vaccineCode: {
+          coding: [
+            {
+              code: "166",
+              system: "urn:oid:2.16.840.1.113883.12.292",
+              display: "influenza, intradermal, quadrivalent",
+            },
+          ],
+          text: "influenza, intradermal, quadrivalent",
+        },
+        status: "not-done",
+        note: [
+          {
+            text: "Patient objected to influenza, intradermal, quadrivalent on 11/15/2015",
+          },
+        ],
+        meta: {
+          source: "ecr",
+        },
+      },
     ] as unknown as Immunization[];
 
     container = render(
