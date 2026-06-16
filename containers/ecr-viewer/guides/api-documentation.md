@@ -14,9 +14,9 @@ Display an eCR
 
 **URL Parameters** :
 
-- `id=[string]` where `id` is the ID of the eCR.
+- `id=[string]` Where `id` is the ID of the eCR.
 - `snomed-code=[string]` Optional. If the eCR contains multiple conditions, this parameter ensures the matching condition is displayed first and expanded by default in the eCR Summary.
-- `auth=[string]` where `auth` is the authentication token for the user. Only required if NBS_PUB_KEY is set and other auth not enabled.
+- `auth=[string]` Where `auth` is the authentication token for the user. Only required if NBS_PUB_KEY is set and other auth not enabled.
 
 **Method** : `GET`
 
@@ -30,7 +30,7 @@ Display an eCR
 
 ### Success Response
 
-**Condition** : eCR exists and authentication is valid.
+**Condition** : eCR exists and authentication is valid
 
 **Code** : `200 OK`
 
@@ -56,14 +56,14 @@ Display an eCR
 
 Deprecated - please use [Process eCR](#process-ecr) instead.
 
-Process a zip file containing an eCR/RR pair
+Process a zip file containing an eCR/RR pair.
 
 **URL** : `/ecr-viewer/api/process-zip`
 
 **POST Form Fields** :
 
 - `upload_file=[File]` where the file is a zip containing an eCR named `CDA_eICR.xml` and optionally a reportability response named `CDA_RR.xml`.
-- `return_fhir_bundle=[true|false]` Optional. By default, the fhir bundle is not returned. Set this field to `"true"` to have the response include the `bundle` field with the FHIR json object.
+- `return_fhir_bundle=[true|false]` Optional. By default, the FHIR bundle is not returned. Set this field to `"true"` to have the response include the `bundle` field with the FHIR json object.
 
 **Method** : `POST`
 
@@ -108,7 +108,7 @@ curl --location '<DIBBS_URL>/ecr-viewer/api/process-zip' \
 
 ## Process eCR
 
-Process a message containing an eCR/RR pair
+Process a message containing an eCR/RR pair.
 
 **URL** : `/ecr-viewer/api/process-ecr`
 
@@ -116,7 +116,7 @@ Process a message containing an eCR/RR pair
 
 - `ecr=[string|File]` Either a string containing the content of the eCR, an eCR xml file, or a zipped eCR/RR pair
 - `rr=[string|File]` Optional. Either a string or file containing the content of the RR
-- `return_fhir_bundle=[true|false]` Optional. By default, the fhir bundle is not returned. Set this field to `"true"` to have the response include the `bundle` field with the FHIR json object.
+- `return_fhir_bundle=[true|false]` Optional. By default, the FHIR bundle is not returned. Set this field to `"true"` to have the response include the `bundle` field with the FHIR json object.
 
 Note, in addition to accepting these fields as a form body, a stringified JSON body is also accepted.
 
@@ -192,8 +192,8 @@ the state of the application, including updating the conditions used in the view
 
 **POST Form Fields** :
 
-- `migration_secret=[secret string]` confirm that you have permission to perform migrations. The secret is logged to the server and can optionally be set to a known value via the `METADATA_DATABASE_MIGRATION_SECRET` environment variable.
-- `direction=[up|down]` Optional. By default an `up` migration to the latest state will be applied. If `down` is passed, the database will be migrated downward one step at a time. This means it may take multiple calls to the database to revert back to the desired state.
+- `migration_secret=[secret string]` Confirm that you have permission to perform migrations. The secret is logged to the server and can optionally be set to a known value via the `METADATA_DATABASE_MIGRATION_SECRET` environment variable.
+- `direction=[up|down]` Optional. By default, an `up` migration to the latest state will be applied. If `down` is passed, the database will be migrated downward one step at a time. This means it may take multiple calls to the database to revert back to the desired state.
 - `skip_condition_update=[true|false]` Optional. By default, when migrating up, the conditions reference data will be updated from the Trigger Code Reference Service. Conditions are never deleted, but names or categories could be updated if new data is available. To skip this update, pass the string `"true"` to this field.
 - `init_admin_email=[string]` Optional. If passed and there is no admin already set up, this will create an admin user. Note, in order to be useful, the email must match a user who is able to sign in via the authentication provider used in the deployment.
 
@@ -224,7 +224,7 @@ curl --location '<DIBBS_URL>/ecr-viewer/api/migrate-db' \
 
 ### Success Response
 
-**Condition** : migration was successfully applied.
+**Condition** : migration was successfully applied
 
 **Code** : `200 OK`
 

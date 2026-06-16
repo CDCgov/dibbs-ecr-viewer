@@ -312,7 +312,7 @@
         "data_type": "string",
         "reference_lookup": [
           "Observation.id",
-          "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(result.where(reference.endsWith(%ref)).exists()).specimen.reference"
+          "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(result.where(reference.endsWith(%ref)).exists()).specimen[0].reference"
         ],
         "nullable": true
       },
@@ -326,7 +326,7 @@
         "data_type": "datetime",
         "reference_lookup": [
           "Observation.id",
-          "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(result.where(reference.endsWith(%ref)).exists()).specimen.reference"
+          "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(result.where(reference.endsWith(%ref)).exists()).specimen[0].reference"
         ],
         "nullable": true
       }
