@@ -197,9 +197,19 @@
         "data_type": "string",
         "nullable": true
       },
-      "administration_date": {
+      "effective_date": {
         "fhir_path": "Immunization.occurrenceDateTime",
         "data_type": "datetime",
+        "nullable": true
+      },
+      "status": {
+        "fhir_path": "Immunization.status",
+        "data_type": "string",
+        "nullable": true
+      },
+      "status_reason": {
+        "fhir_path": "Immunization.statusReason.coding.display",
+        "data_type": "string",
         "nullable": true
       }
     }
