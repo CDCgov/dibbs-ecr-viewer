@@ -5,10 +5,19 @@ import { Kysely, Transaction } from "kysely";
 
 import {
   deleteFromAzure,
+  existsInAzure,
   saveToAzure,
 } from "@/app/data/blobStorage/azureClient";
-import { deleteFromGCP, saveToGCP } from "@/app/data/blobStorage/gcpClient";
-import { deleteFromS3, saveToS3 } from "@/app/data/blobStorage/s3Client";
+import {
+  deleteFromGCP,
+  existsInGCP,
+  saveToGCP,
+} from "@/app/data/blobStorage/gcpClient";
+import {
+  deleteFromS3,
+  existsInS3,
+  saveToS3,
+} from "@/app/data/blobStorage/s3Client";
 import {
   S3_SOURCE,
   AZURE_SOURCE,
@@ -53,11 +62,27 @@ export const saveToStorage = async (
     objectKey = `${ecrId}.zip`;
   }
 
+  if (!objectKey) {
+    return {
+      message: `Invalid fileType or contents for fileType "${fileType}". Could not determine object key.`,
+      status: 400,
+    };
+  }
+
   if (saveSource === S3_SOURCE) {
+    if (await existsInS3(objectKey)) {
+      return { message: `eCR already loaded: ${ecrId}`, status: 409 };
+    }
     return await saveToS3(body, objectKey);
   } else if (saveSource === AZURE_SOURCE) {
+    if (await existsInAzure(objectKey)) {
+      return { message: `eCR already loaded: ${ecrId}`, status: 409 };
+    }
     return await saveToAzure(body, objectKey);
   } else if (saveSource === GCP_SOURCE) {
+    if (await existsInGCP(objectKey)) {
+      return { message: `eCR already loaded: ${ecrId}`, status: 409 };
+    }
     return await saveToGCP(body, objectKey);
   } else {
     return {
@@ -167,7 +192,11 @@ export const saveFhirMetadata = async (
 
         // Make sure the fhir data also saves
         const fhirDataResponse = await fhirDataPromise;
-        if (fhirDataResponse.status !== 200) {
+        if (fhirDataResponse.status === 409) {
+          // Blob already exists; the DB check above confirmed no duplicate metadata,
+          // so proceed — the blob is valid and we didn't create it, so skip rollback.
+          rollBackFhirData = false;
+        } else if (fhirDataResponse.status !== 200) {
           rollBackFhirData = false;
           throw new Error(
             `Failed to save fhir data - rolling back metadata: ${JSON.stringify(

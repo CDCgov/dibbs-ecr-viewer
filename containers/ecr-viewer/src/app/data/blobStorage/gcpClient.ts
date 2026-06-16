@@ -51,6 +51,22 @@ export const gcpHealthCheck = async () => {
 };
 
 /**
+ * Checks whether an object exists in Google Cloud Storage.
+ * @param objectKey - The unique ID for the blob.
+ * @returns True if the object exists, false otherwise.
+ */
+export const existsInGCP = async (objectKey: string): Promise<boolean> => {
+  const client = gcpClient();
+  if (!client) {
+    throw new Error(
+      "GCP storage client is not configured. Verify SOURCE and ECR_BUCKET_NAME environment variables.",
+    );
+  }
+  const [exists] = await client.file(objectKey).exists();
+  return exists;
+};
+
+/**
  * Saves content to Google Cloud Storage.
  * @param body - The string content to be saved.
  * @param objectKey - The unique ID for the blob.

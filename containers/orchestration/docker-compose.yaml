@@ -37,7 +37,7 @@ services:
       - METADATA_DATABASE_SCHEMA=core
       - METADATA_DATABASE_MIGRATION_SECRET=test
       - |
-        NBS_API_PUB_KEY=
+        JWT_API_PUB_KEY=
         -----BEGIN PUBLIC KEY-----
         MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAnlA1YmmbydxQdBh7DAq0
         wUfsjR25eWZOB995mHclT3C46oLat3YLu70akLfoMXd9YcJe0d4q3sP7tS1J4QDO
