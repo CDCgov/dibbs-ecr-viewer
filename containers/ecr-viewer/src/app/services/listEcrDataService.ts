@@ -138,7 +138,12 @@ const executeSearchQuery = async (
         "ecr_data.set_id",
         "ecr_data.eicr_version_number",
       ])
-      .orderBy(generateSortStatement(sortColumn, sortDirection))
+      .$call((qb) => {
+        generateSortStatement(sortColumn, sortDirection).forEach((sort) => {
+          qb = qb.orderBy(sort.column as any, sort.direction);
+        });
+        return qb;
+      })
       .offset(startIndex)
       .fetch(itemsPerPage),
   );
@@ -226,7 +231,7 @@ const getMetaModelData = async (
       "ecr_data.eicr_version_number",
       "ecr_data.date_created",
     ])
-    .orderBy(["ecr_data.date_created desc"])
+    .orderBy("ecr_data.date_created", "desc")
     .where((eb) =>
       eb(
         "ecr_sets.max_version_number",
@@ -450,7 +455,7 @@ export const generateFilterDateStatement = (
 export const generateSortStatement = (
   columnName: string,
   direction: string,
-): OrderByExpression<Core, "ecr_data", {}>[] => {
+): { column: string; direction: "asc" | "desc" }[] => {
   // Valid columns and directions
   const validColumns: { [key: string]: string } = {
     patient: "patient",
@@ -464,20 +469,16 @@ export const generateSortStatement = (
   if (!validDirections.includes(direction)) {
     direction = "DESC";
   }
-  direction = direction.toLowerCase();
+  const dir = direction.toLowerCase() as "asc" | "desc";
 
   if (columnName === "patient") {
     return [
-      `first_name ${direction}`,
-      `last_name ${direction}`,
-    ] as unknown as OrderByExpression<Core, "ecr_data", {}>[];
+      { column: "first_name", direction: dir },
+      { column: "last_name", direction: dir },
+    ];
   }
   // Default case for other columns
-  return [`${columnName} ${direction}`] as unknown as OrderByExpression<
-    Core,
-    "ecr_data",
-    {}
-  >[];
+  return [{ column: columnName, direction: dir }];
 };
 
 /**
