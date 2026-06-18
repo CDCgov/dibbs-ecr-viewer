@@ -605,11 +605,11 @@ class FhirParser:
         :param evaluation_phase: Whether this is a field value or reference lookup.
         :return: A list of values from the optimized lookup or fhirpathpy.
         """
-        cached_value = self._try_get_field_path_without_fhirpath(
+        fast_lookup_value = self._try_get_field_path_without_fhirpath(
             current_message, field_path, evaluation_phase, context
         )
-        if cached_value is not FAST_LOOKUP_MISS:
-            return cached_value
+        if fast_lookup_value is not FAST_LOOKUP_MISS:
+            return fast_lookup_value
         if context is None:
             return fhirpathpy.evaluate(current_message, fhir_path)
 
