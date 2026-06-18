@@ -31,7 +31,6 @@ from app.phdc.models import (
 )
 from app.transport.http import http_request_with_retry
 
-
 FAST_LOOKUP_MISS = object()
 FHIR_PATH_VALUE_PHASE = "value"
 REFERENCE_LOOKUP_PHASE = "reference_lookup"
@@ -64,6 +63,7 @@ LAB_FIELD_ACCESSORS = {
     "labs.test_result_reference_range_high_units": ["referenceRange", "high", "unit"],
     "labs.performing_lab": ["performer", "display"],
 }
+
 
 @cache
 def load_parsing_schema(schema_name: str) -> dict:
