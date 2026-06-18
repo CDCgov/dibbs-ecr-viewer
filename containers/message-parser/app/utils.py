@@ -32,7 +32,7 @@ from app.phdc.models import (
 from app.transport.http import http_request_with_retry
 
 
-FHIR_PATH_CACHE_MISS = object()
+FAST_LOOKUP_MISS = object()
 FHIR_PATH_VALUE_PHASE = "value"
 REFERENCE_LOOKUP_PHASE = "reference_lookup"
 SPECIMEN_TYPE_FIELD_PATH = "labs.specimen_type"
@@ -515,7 +515,7 @@ class FhirParser:
             return []
         return self._extract_values(value.get(accessors[0]), accessors[1:])
 
-    def _try_get_field_path_from_cache(
+    def _try_get_field_path_without_fhirpath(
         self, current_message, field_path, evaluation_phase, context=None
     ):
         """
@@ -530,7 +530,7 @@ class FhirParser:
         :param field_path: The schema field path being evaluated.
         :param evaluation_phase: Whether this is a field value or reference lookup.
         :param context: Optional FHIRPath context variables.
-        :return: A result list, or FHIR_PATH_CACHE_MISS if unsupported.
+        :return: A result list, or FAST_LOOKUP_MISS if unsupported.
         """
         if (
             evaluation_phase == FHIR_PATH_VALUE_PHASE
@@ -552,7 +552,7 @@ class FhirParser:
                 return self._extract_values(current_message, ["id"])
 
         if current_message is not self.message or context is None:
-            return FHIR_PATH_CACHE_MISS
+            return FAST_LOOKUP_MISS
 
         reference = context.get("ref")
         if not reference:
@@ -582,9 +582,9 @@ class FhirParser:
             ) + self._extract_values(specimen, ["collection", "collectedDateTime"])
 
         if evaluation_phase != FHIR_PATH_VALUE_PHASE:
-            return FHIR_PATH_CACHE_MISS
+            return FAST_LOOKUP_MISS
 
-        return FHIR_PATH_CACHE_MISS
+        return FAST_LOOKUP_MISS
 
     def _evaluate_fhir_path_value(
         self,
@@ -605,10 +605,10 @@ class FhirParser:
         :param evaluation_phase: Whether this is a field value or reference lookup.
         :return: A list of values from the optimized lookup or fhirpathpy.
         """
-        cached_value = self._try_get_field_path_from_cache(
+        cached_value = self._try_get_field_path_without_fhirpath(
             current_message, field_path, evaluation_phase, context
         )
-        if cached_value is not FHIR_PATH_CACHE_MISS:
+        if cached_value is not FAST_LOOKUP_MISS:
             return cached_value
         if context is None:
             return fhirpathpy.evaluate(current_message, fhir_path)
