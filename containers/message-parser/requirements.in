@@ -11,7 +11,7 @@ google-cloud-storage>=3.9.0
 httpx>=0.28.1
 lxml
 packaging
-pydantic-settings>=2.13.0
+pydantic-settings>=2.14.2
 pydantic>=2.12.5
 requests>=2.32.4
 starlette>=1.2.1
