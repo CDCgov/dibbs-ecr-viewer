@@ -29,9 +29,9 @@ This table stores the primary eCR data.
 | `set_id`               | `varchar(255)` | NULL        |                   | Identifier for a set of related eICRs        |
 | `eicr_version_number`  | `varchar(50)`  | NULL        |                   | Version number of the eICR                   |
 | `fhir_reference_link`  | `varchar(255)` | NULL        |                   | Reference link to the FHIR resource          |
-| `last_name`            | `varchar(255)` | NOT NULL    |                   | Patient's last name                          |
-| `first_name`           | `varchar(255)` | NOT NULL    |                   | Patient's first name                         |
-| `birth_date`           | `date`         | NOT NULL    |                   | Patient's birth date                         |
+| `last_name`            | `varchar(255)` | NULL        |                   | Patient's last name                          |
+| `first_name`           | `varchar(255)` | NULL        |                   | Patient's first name                         |
+| `birth_date`           | `date`         | NULL        |                   | Patient's birth date                         |
 | `encounter_start_date` | `datetime`     | NULL        |                   | Start date and time of the patient encounter |
 | `date_created`         | `datetime`     | NOT NULL    | Current timestamp | Date and time when the record was created    |
 

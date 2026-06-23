@@ -54,9 +54,9 @@ interface RR {
 }
 
 export interface BundleMetadata {
-  last_name: string;
-  first_name: string;
-  birth_date: string;
+  last_name: string | undefined;
+  first_name: string | undefined;
+  birth_date: string | undefined;
   set_id: string | undefined;
   eicr_version_number: string | undefined;
   rr: RR[] | undefined;

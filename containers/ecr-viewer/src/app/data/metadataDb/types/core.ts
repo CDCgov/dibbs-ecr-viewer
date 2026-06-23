@@ -12,9 +12,9 @@ export interface ecr_data {
   eicr_version_number: string | undefined;
   fhir_reference_link: string | undefined;
   date_created: Generated<Date>;
-  last_name: string;
-  first_name: string;
-  birth_date: ColumnType<Date, string>;
+  last_name: string | undefined;
+  first_name: string | undefined;
+  birth_date: ColumnType<Date, string> | undefined;
   encounter_start_date: Date | undefined;
 }
 
