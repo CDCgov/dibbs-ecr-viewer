@@ -4,7 +4,11 @@ import JSZip from "jszip";
 import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
 import { gcpClient } from "@/app/data/blobStorage/gcpClient";
 import { s3Client } from "@/app/data/blobStorage/s3Client";
-import { AZURE_SOURCE, GCP_SOURCE, S3_SOURCE } from "@/app/data/blobStorage/utils";
+import {
+  AZURE_SOURCE,
+  GCP_SOURCE,
+  S3_SOURCE,
+} from "@/app/data/blobStorage/utils";
 
 export class XmlNotFoundError extends Error {
   constructor(message: string) {
@@ -24,7 +28,10 @@ export const ecrXmlsExist = async (id: string): Promise<boolean> => {
     switch (process.env.SOURCE) {
       case S3_SOURCE: {
         await s3Client.send(
-          new HeadObjectCommand({ Bucket: process.env.ECR_BUCKET_NAME, Key: key }),
+          new HeadObjectCommand({
+            Bucket: process.env.ECR_BUCKET_NAME,
+            Key: key,
+          }),
         );
         return true;
       }
