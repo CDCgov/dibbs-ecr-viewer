@@ -41,8 +41,22 @@ export const getEcrXmls = async (id: string): Promise<EcrXmls> => {
   const buffer = Buffer.from(await Body.transformToByteArray());
   const zip = await JSZip.loadAsync(buffer);
 
-  const ecrFile = zip.file(`${id}-CDA_eICR.xml`);
-  const rrFile = zip.file(`${id}-CDA_RR.xml`);
+  let ecrFile = zip.file(`${id}-CDA_eICR.xml`);
+  let rrFile = zip.file(`${id}-CDA_RR.xml`);
+
+  if (!ecrFile || !rrFile) {
+    for (const [name, entry] of Object.entries(zip.files)) {
+      if (entry.dir || name.startsWith("__MACOSX/") || name.startsWith("._"))
+        continue;
+      if (!name.endsWith(".xml")) continue;
+      const baseName = name.split("/").pop()!;
+      if (!ecrFile && /eicr/i.test(baseName)) {
+        ecrFile = entry;
+      } else if (!rrFile && /_rr/i.test(baseName)) {
+        rrFile = entry;
+      }
+    }
+  }
 
   if (!ecrFile && !rrFile)
     throw new XmlNotFoundError("No XML files found in archive");
