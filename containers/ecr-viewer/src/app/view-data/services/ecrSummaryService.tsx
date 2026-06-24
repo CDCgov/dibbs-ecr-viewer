@@ -70,9 +70,10 @@ export const evaluateEcrSummaryPatientDetails = (
       ? [
           {
             title: "Parent/Guardian",
-            value: formatPatientContactList(
-              evaluateAll(fhirBundle, fhirPathMappings.patientGuardian),
-            ) || noData,
+            value:
+              formatPatientContactList(
+                evaluateAll(fhirBundle, fhirPathMappings.patientGuardian),
+              ) || noData,
           },
         ]
       : [];
@@ -101,9 +102,10 @@ export const evaluateEcrSummaryPatientDetails = (
     },
     {
       title: "Patient Address",
-      value: formatCurrentAddress(
-        evaluateAll(patient, fhirPathMappings.patientAddressList),
-      ) || noData,
+      value:
+        formatCurrentAddress(
+          evaluateAll(patient, fhirPathMappings.patientAddressList),
+        ) || noData,
     },
     {
       title: "Patient Contact",
@@ -145,12 +147,13 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
     },
     {
       title: "Facility Contact",
-      value: formatContactPoint(
-        evaluateOneReference<Organization>(
-          encounter,
-          fhirPathMappings.facilityOrgRef
-        )?.telecom
-      ) || noData,
+      value:
+        formatContactPoint(
+          evaluateOneReference<Organization>(
+            encounter,
+            fhirPathMappings.facilityOrgRef,
+          )?.telecom,
+        ) || noData,
     },
   ];
 };

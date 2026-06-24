@@ -30,14 +30,14 @@ import { formatPeriodDate } from "./formatDateService";
 export const formatName = (
   humanName: HumanName | undefined,
   withUse: boolean = false,
-  isPatient: boolean = false
+  isPatient: boolean = false,
 ): string => {
   if (!humanName) {
     return "";
   }
 
   const { use, prefix, given, family, suffix } = humanName;
-  const isOfficial: boolean = (use === "official") || (!use);
+  const isOfficial: boolean = use === "official" || !use;
 
   const normalizedGiven =
     isPatient && isOfficial && (!given || given.length === 0)
@@ -65,7 +65,7 @@ export const formatName = (
  */
 export const formatNameList = (
   humanNames: HumanName[] | HumanName | undefined,
-  isPatient: boolean = false
+  isPatient: boolean = false,
 ): string => {
   if (!humanNames) return "";
   if (Array.isArray(humanNames)) {

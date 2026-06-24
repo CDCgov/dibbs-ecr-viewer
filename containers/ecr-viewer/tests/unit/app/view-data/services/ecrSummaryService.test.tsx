@@ -317,9 +317,7 @@ describe("ecrSummaryService Tests", () => {
         fhirIndexBundlePatient,
       );
 
-      const guardian = actual.find(
-        (d) => d.title === "Parent/Guardian",
-      );
+      const guardian = actual.find((d) => d.title === "Parent/Guardian");
 
       expect(guardian).toBeUndefined();
     });
@@ -342,9 +340,7 @@ describe("ecrSummaryService Tests", () => {
       const fhirIndexBundle = getFhirIndex(bundle);
       const actual = evaluateEcrSummaryPatientDetails(bundle, fhirIndexBundle);
 
-      const guardian = actual.find(
-        (d) => d.title === "Parent/Guardian",
-      );
+      const guardian = actual.find((d) => d.title === "Parent/Guardian");
 
       expect(guardian?.value).toEqual(
         `Grandparent\nLuthen Rael\n1357 Galactic Drive\nSometown, OR 94949\nUS\nHome: 123-456-6909`,
