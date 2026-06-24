@@ -6,15 +6,15 @@ Run each service in the eCR Viewer stack as a standalone container using `docker
 
 ## Service overview
 
-| Service | Container name | Host port | Image | Env vars |
-|---|---|---|---|---|
-| ecr-viewer | dibbs-ecr-viewer | 3000 | `ecr-viewer` | BaseRequired |
-| ingestion | dibbs-ingestion | 8080 | `ingestion` | none |
-| fhir-converter-proxy | dibbs-fhir-converter-proxy | 8082 | `fhir-converter-proxy` | proxy variables |
-| fhir-converter | dibbs-fhir-converter | 8083 | `fhir-converter` | none |
-| message-parser | dibbs-message-parser | 8084 | `message-parser` | none |
-| trigger-code-reference | dibbs-trigger-code-reference | 8085 | `trigger-code-reference` | none |
-| orchestration | dibbs-orchestration | 8086 | `orchestration` | URL variables |
+| Service | Container name | Host port | Container port | Image | Env vars |
+|---|---|---|---|---|---|
+| ecr-viewer | dibbs-ecr-viewer | 3000 | 3000 | `ecr-viewer` | BaseRequired |
+| ingestion | dibbs-ingestion | - | 8080 | `ingestion` | none |
+| fhir-converter-proxy | dibbs-fhir-converter-proxy | - | 8080 | `fhir-converter-proxy` | proxy variables |
+| fhir-converter | dibbs-fhir-converter | - | 8080 | `fhir-converter` | none |
+| message-parser | dibbs-message-parser | - | 8080 | `message-parser` | none |
+| trigger-code-reference | dibbs-trigger-code-reference | - | 8080 | `trigger-code-reference` | none |
+| orchestration | dibbs-orchestration | - | 8080 | `orchestration` | URL variables |
 
 Images live at `ghcr.io/cdcgov/dibbs-ecr-viewer/`. Internal service ports are 8080 for backend services and 3000 for the viewer.
 
@@ -24,9 +24,8 @@ The ecr-viewer container requires these variables for all deployments, as define
 
 | Variable | Description | Example |
 |---|---|---|
-| `BASE_PATH` | Base URL path for the eCR Viewer | `/ecr-viewer` |
 | `CONFIG_NAME` | Determines storage provider, database type, and authentication profile | `AWS_INTEGRATED`, `AZURE_PG_NON_INTEGRATED` |
-| `ECR_BUCKET_NAME` | Name of the container storage holding eCR documents | `ecr-documents-env` |
+| `ECR_BUCKET_NAME` | Name of the container storage holding eCR documents | `ecr-documents-bucket` |
 | `NEXTAUTH_SECRET` | Random key for session encryption, generated with `openssl rand -base64 32` | *(generated value)* |
 | `ORCHESTRATION_URL` | Full URL of the orchestration service | `http://dibbs-orchestration:8080` |
 
@@ -34,8 +33,9 @@ The fhir-converter proxy requires these variables, [additional docs for this ser
 
 | Variable | Description | Example |
 |---|---|---|
-| `FHIR_CONVERTER_PROXY_PORT` | Port the proxy listens on | `8000` |
-| `ENVIRONMENT` | Deployment environment | `production` |
+| `FHIR_CONVERTER_HOST` | Hostname of the fhir-converter service (overrides default `fhir-converter-service`) | `dibbs-fhir-converter` |
+| `FHIR_CONVERTER_PROXY_PORT` | Port the proxy listens on | `8080` |
+| `ENVIRONMENT` | Deployment environment | `local` |
 | `FHIR_CONVERTER_ECS_NAMESPACE` | ECS namespace for the converter service | `dibbs` |
 | `FHIR_CONVERTER_PORT` | Port the converter service runs on | `8080` |
 
@@ -43,7 +43,7 @@ Orchestration requires these variables:
 
 | Variable | Description | Example |
 |---|---|---|
-| `FHIR_CONVERTER_URL` | URL to the fhir-converter service | `http://dibbs-fhir-converter:8080` |
+| `FHIR_CONVERTER_URL` | URL to the fhir-converter proxy service | `http://dibbs-fhir-converter-proxy:8080` |
 | `INGESTION_URL` | URL to the ingestion service | `http://dibbs-ingestion:8080` |
 | `MESSAGE_PARSER_URL` | URL to the message-parser service | `http://dibbs-message-parser:8080` |
 | `TRIGGER_CODE_REFERENCE_URL` | URL to the trigger-code-reference service | `http://dibbs-trigger-code-reference:8080` |
@@ -73,11 +73,10 @@ docker run -d \
   --network dibbs \
   -p 3000:3000 \
   --restart unless-stopped \
-  -e BASE_PATH=/ecr-viewer \
   -e CONFIG_NAME=AWS_INTEGRATED \
-  -e ECR_BUCKET_NAME=ecr-documents-env \
+  -e ECR_BUCKET_NAME=ecr-documents-bucket \
   -e NEXTAUTH_SECRET=$(openssl rand -base64 32) \
-  -e ORCHESTRATION_URL=http://dibbs-orchestration:8085 \
+  -e ORCHESTRATION_URL=http://dibbs-orchestration:8080 \
   ghcr.io/cdcgov/dibbs-ecr-viewer/ecr-viewer:$DIBBS_VERSION
 ```
 
@@ -87,7 +86,6 @@ docker run -d \
 docker run -d \
   --name dibbs-ingestion \
   --network dibbs \
-  -p 8080:8080 \
   --restart unless-stopped \
   ghcr.io/cdcgov/dibbs-ecr-viewer/ingestion:$DIBBS_VERSION
 ```
@@ -98,12 +96,12 @@ docker run -d \
 docker run -d \
   --name dibbs-fhir-converter-proxy \
   --network dibbs \
-  -p 8081:8000 \
   --restart unless-stopped \
-  -e FHIR_CONVERTER_PROXY_PORT=8001 \
-  -e ENVIRONMENT=production \
+  -e FHIR_CONVERTER_PROXY_PORT=8080 \
+  -e ENVIRONMENT=local \
   -e FHIR_CONVERTER_ECS_NAMESPACE=dibbs \
-  -e FHIR_CONVERTER_PORT=8082 \
+  -e FHIR_CONVERTER_HOST=dibbs-fhir-converter \
+  -e FHIR_CONVERTER_PORT=8080 \
   ghcr.io/cdcgov/dibbs-ecr-viewer/fhir-converter-proxy:$DIBBS_VERSION
 ```
 
@@ -113,7 +111,6 @@ docker run -d \
 docker run -d \
   --name dibbs-fhir-converter \
   --network dibbs \
-  -p 8082:8080 \
   --restart unless-stopped \
   ghcr.io/cdcgov/dibbs-ecr-viewer/fhir-converter:$DIBBS_VERSION
 ```
@@ -124,7 +121,6 @@ docker run -d \
 docker run -d \
   --name dibbs-message-parser \
   --network dibbs \
-  -p 8083:8080 \
   --restart unless-stopped \
   ghcr.io/cdcgov/dibbs-ecr-viewer/message-parser:$DIBBS_VERSION
 ```
@@ -135,7 +131,6 @@ docker run -d \
 docker run -d \
   --name dibbs-trigger-code-reference \
   --network dibbs \
-  -p 8084:8080 \
   --restart unless-stopped \
   ghcr.io/cdcgov/dibbs-ecr-viewer/trigger-code-reference:$DIBBS_VERSION
 ```
@@ -146,16 +141,15 @@ docker run -d \
 docker run -d \
   --name dibbs-orchestration \
   --network dibbs \
-  -p 8085:8080 \
   --restart unless-stopped \
   -e INGESTION_URL=http://dibbs-ingestion:8080 \
-  -e FHIR_CONVERTER_URL=http://dibbs-fhir-converter-proxy:8081 \
-  -e MESSAGE_PARSER_URL=http://dibbs-message-parser:8083 \
-  -e TRIGGER_CODE_REFERENCE_URL=http://dibbs-trigger-code-reference:8084 \
+  -e FHIR_CONVERTER_URL=http://dibbs-fhir-converter-proxy:8080 \
+  -e MESSAGE_PARSER_URL=http://dibbs-message-parser:8080 \
+  -e TRIGGER_CODE_REFERENCE_URL=http://dibbs-trigger-code-reference:8080 \
   ghcr.io/cdcgov/dibbs-ecr-viewer/orchestration:$DIBBS_VERSION
 ```
 
-<!-- ## Start order and health checks
+## Start order and health checks
 
 The orchestration service depends on all other services. Run it after the others are started and healthy.
 
@@ -170,17 +164,6 @@ docker inspect --format='{{.State.Health.Status}}' dibbs-message-parser
 docker inspect --format='{{.State.Health.Status}}' dibbs-trigger-code-reference
 docker inspect --format='{{.State.Health.Status}}' dibbs-orchestration
 ```
-
-A service is ready when the status is `healthy`. The ecr-viewer health check probes `http://127.0.0.1:3000/api/health-check`. The backend services probe their root path at `http://127.0.0.1:8080/`.
-
-The Compose health check configuration for all services is:
-
-| Setting | ecr-viewer | Backend services |
-|---|---|---|
-| Interval | 5s | 5s |
-| Timeout | 2s | 2s |
-| Retries | 5 | 5 |
-| Start period | 30s | 10s | -->
 
 ## Container management
 
