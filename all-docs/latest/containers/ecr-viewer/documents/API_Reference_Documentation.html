@@ -4,9 +4,9 @@
 <p><strong>URL</strong> : <code>/ecr-viewer/view-data?id=:id&amp;snomed-code=:snomed&amp;auth=:auth</code></p>
 <p><strong>URL Parameters</strong> :</p>
 <ul>
-<li><code>id=[string]</code> where <code>id</code> is the ID of the eCR.</li>
+<li><code>id=[string]</code> Where <code>id</code> is the ID of the eCR.</li>
 <li><code>snomed-code=[string]</code> Optional. If the eCR contains multiple conditions, this parameter ensures the matching condition is displayed first and expanded by default in the eCR Summary.</li>
-<li><code>auth=[string]</code> where <code>auth</code> is the authentication token for the user. Only required if NBS_PUB_KEY is set and other auth not enabled.</li>
+<li><code>auth=[string]</code> Where <code>auth</code> is the authentication token for the user. Only required if NBS_PUB_KEY is set and other auth not enabled.</li>
 </ul>
 <p><strong>Method</strong> : <code>GET</code></p>
 <p><strong>Auth required</strong> : Yes, via <code>auth</code> param or browser login flow</p>
@@ -14,7 +14,7 @@
 <h3 id="example-architecture" class="tsd-anchor-link">Example Architecture<a href="#example-architecture" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p><img src="../media/nbs-ecr-viewer-arch.png" alt="NBS -&gt; eCR Viewer sequence diagram"></p>
 <h3 id="success-response" class="tsd-anchor-link">Success Response<a href="#success-response" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p><strong>Condition</strong> : eCR exists and authentication is valid.</p>
+<p><strong>Condition</strong> : eCR exists and authentication is valid</p>
 <p><strong>Code</strong> : <code>200 OK</code></p>
 <p><strong>Content</strong> : eCR will be displayed to the user</p>
 <h3 id="error-responses" class="tsd-anchor-link">Error Responses<a href="#error-responses" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
@@ -27,12 +27,12 @@
 <p><strong>Content</strong> : Error will be displayed to user</p>
 <h2 id="process-ecr-zip" class="tsd-anchor-link">Process eCR zip<a href="#process-ecr-zip" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>Deprecated - please use <a href="#process-ecr">Process eCR</a> instead.</p>
-<p>Process a zip file containing an eCR/RR pair</p>
+<p>Process a zip file containing an eCR/RR pair.</p>
 <p><strong>URL</strong> : <code>/ecr-viewer/api/process-zip</code></p>
 <p><strong>POST Form Fields</strong> :</p>
 <ul>
 <li><code>upload_file=[File]</code> where the file is a zip containing an eCR named <code>CDA_eICR.xml</code> and optionally a reportability response named <code>CDA_RR.xml</code>.</li>
-<li><code>return_fhir_bundle=[true|false]</code> Optional. By default, the fhir bundle is not returned. Set this field to <code>&quot;true&quot;</code> to have the response include the <code>bundle</code> field with the FHIR json object.</li>
+<li><code>return_fhir_bundle=[true|false]</code> Optional. By default, the FHIR bundle is not returned. Set this field to <code>&quot;true&quot;</code> to have the response include the <code>bundle</code> field with the FHIR json object.</li>
 </ul>
 <p><strong>Method</strong> : <code>POST</code></p>
 <p><strong>Auth required</strong> : Yes, token passed via <code>Authorization</code> header</p>
@@ -55,13 +55,13 @@
 <p><strong>Code</strong> : <code>409 CONFLICT</code></p>
 <p><strong>Content</strong> : <code>message</code> with details on error</p>
 <h2 id="process-ecr" class="tsd-anchor-link">Process eCR<a href="#process-ecr" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>Process a message containing an eCR/RR pair</p>
+<p>Process a message containing an eCR/RR pair.</p>
 <p><strong>URL</strong> : <code>/ecr-viewer/api/process-ecr</code></p>
 <p><strong>POST Form Fields</strong> :</p>
 <ul>
 <li><code>ecr=[string|File]</code> Either a string containing the content of the eCR, an eCR xml file, or a zipped eCR/RR pair</li>
 <li><code>rr=[string|File]</code> Optional. Either a string or file containing the content of the RR</li>
-<li><code>return_fhir_bundle=[true|false]</code> Optional. By default, the fhir bundle is not returned. Set this field to <code>&quot;true&quot;</code> to have the response include the <code>bundle</code> field with the FHIR json object.</li>
+<li><code>return_fhir_bundle=[true|false]</code> Optional. By default, the FHIR bundle is not returned. Set this field to <code>&quot;true&quot;</code> to have the response include the <code>bundle</code> field with the FHIR json object.</li>
 </ul>
 <p>Note, in addition to accepting these fields as a form body, a stringified JSON body is also accepted.</p>
 <p><strong>Method</strong> : <code>POST</code></p>
@@ -99,8 +99,8 @@ the state of the application, including updating the conditions used in the view
 <p><strong>URL</strong> : <code>/ecr-viewer/api/migrate-db</code></p>
 <p><strong>POST Form Fields</strong> :</p>
 <ul>
-<li><code>migration_secret=[secret string]</code> confirm that you have permission to perform migrations. The secret is logged to the server and can optionally be set to a known value via the <code>METADATA_DATABASE_MIGRATION_SECRET</code> environment variable.</li>
-<li><code>direction=[up|down]</code> Optional. By default an <code>up</code> migration to the latest state will be applied. If <code>down</code> is passed, the database will be migrated downward one step at a time. This means it may take multiple calls to the database to revert back to the desired state.</li>
+<li><code>migration_secret=[secret string]</code> Confirm that you have permission to perform migrations. The secret is logged to the server and can optionally be set to a known value via the <code>METADATA_DATABASE_MIGRATION_SECRET</code> environment variable.</li>
+<li><code>direction=[up|down]</code> Optional. By default, an <code>up</code> migration to the latest state will be applied. If <code>down</code> is passed, the database will be migrated downward one step at a time. This means it may take multiple calls to the database to revert back to the desired state.</li>
 <li><code>skip_condition_update=[true|false]</code> Optional. By default, when migrating up, the conditions reference data will be updated from the Trigger Code Reference Service. Conditions are never deleted, but names or categories could be updated if new data is available. To skip this update, pass the string <code>&quot;true&quot;</code> to this field.</li>
 <li><code>init_admin_email=[string]</code> Optional. If passed and there is no admin already set up, this will create an admin user. Note, in order to be useful, the email must match a user who is able to sign in via the authentication provider used in the deployment.</li>
 </ul>
@@ -117,7 +117,7 @@ the state of the application, including updating the conditions used in the view
 </code><button type="button">Copy</button></pre>
 
 <h3 id="success-response-3" class="tsd-anchor-link">Success Response<a href="#success-response-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p><strong>Condition</strong> : migration was successfully applied.</p>
+<p><strong>Condition</strong> : migration was successfully applied</p>
 <p><strong>Code</strong> : <code>200 OK</code></p>
 <p><strong>Content</strong> : <code>message</code></p>
 <h3 id="error-responses-3" class="tsd-anchor-link">Error Responses<a href="#error-responses-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
