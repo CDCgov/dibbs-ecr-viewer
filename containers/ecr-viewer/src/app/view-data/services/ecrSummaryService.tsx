@@ -10,10 +10,7 @@ import {
   Organization,
 } from "fhir/r4";
 
-import {
-  formatDate,
-  formatStartEndDateTime,
-} from "@/app/services/formatDateService";
+import { formatStartEndDateTime } from "@/app/services/formatDateService";
 import {
   formatCodeableConcept,
   formatCoding,
@@ -21,7 +18,7 @@ import {
   formatCurrentAddress,
   formatPatientContactList,
 } from "@/app/services/formatService";
-import { evaluateData } from "@/app/utils/data-utils";
+import { noData } from "@/app/utils/data-utils";
 import {
   evaluateAll,
   evaluateOne,
@@ -75,47 +72,47 @@ export const evaluateEcrSummaryPatientDetails = (
             title: "Parent/Guardian",
             value: formatPatientContactList(
               evaluateAll(fhirBundle, fhirPathMappings.patientGuardian),
-            ),
+            ) || noData,
           },
         ]
       : [];
 
-  return evaluateData([
+  return [
     {
       title: "Patient Name",
       value: evaluatePatientName(patient, false),
     },
     {
       title: "DOB",
-      value: evaluatePatientDOB(patient),
+      value: evaluatePatientDOB(patient) || noData,
     },
     {
       title: "Sex",
       // Unknown and Other sex options removed to be in compliance with Executive Order 14168
-      value: censorGender(patientSex),
+      value: censorGender(patientSex) || noData,
     },
     {
       title: "Race",
-      value: evaluatePatientRace(patient),
+      value: evaluatePatientRace(patient) || noData,
     },
     {
       title: "Ethnicity",
-      value: evaluatePatientEthnicity(patient),
+      value: evaluatePatientEthnicity(patient) || noData,
     },
     {
       title: "Patient Address",
       value: formatCurrentAddress(
         evaluateAll(patient, fhirPathMappings.patientAddressList),
-      ),
+      ) || noData,
     },
     {
       title: "Patient Contact",
       value: formatContactPoint(
-        evaluateAll(patient, fhirPathMappings.patientTelecom),
+        evaluateAll(patient, fhirPathMappings.patientTelecom) || noData,
       ),
     },
     ...parentGuardian,
-  ]);
+  ];
 };
 
 /**
@@ -129,33 +126,33 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
     fhirPathMappings.compositionEncounterRef,
   );
 
-  return evaluateData([
+  return [
     {
       title: "Encounter Date/Time",
-      value: formatStartEndDateTime(encounter?.period),
+      value: formatStartEndDateTime(encounter?.period) || noData,
     },
     {
       title: "Encounter Type",
-      value: formatCoding(encounter?.class),
+      value: formatCoding(encounter?.class) || noData,
     },
     {
       title: "Encounter Diagnosis",
-      value: evaluateEncounterDiagnosis(fhirBundle, encounter),
+      value: evaluateEncounterDiagnosis(fhirBundle, encounter) || noData,
     },
     {
       title: "Facility Name",
-      value: getLocationName(fhirBundle, encounter),
+      value: getLocationName(fhirBundle, encounter) || noData,
     },
     {
       title: "Facility Contact",
       value: formatContactPoint(
         evaluateOneReference<Organization>(
           encounter,
-          fhirPathMappings.facilityOrgRef,
-        )?.telecom,
-      ),
+          fhirPathMappings.facilityOrgRef
+        )?.telecom
+      ) || noData,
     },
-  ]);
+  ];
 };
 
 /**

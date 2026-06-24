@@ -18,6 +18,7 @@ import {
   FhirIndex,
   getFhirIndex,
 } from "@/app/view-data/services/fhirResourcesIndexService";
+import { evaluateData } from "@/app/utils/data-utils";
 
 const BundleLab = _BundleLab as unknown as Bundle;
 const fhirIndexBundleLab = getFhirIndex(BundleLab);
@@ -307,7 +308,7 @@ describe("ecrSummaryService Tests", () => {
         fhirIndexBundlePatient,
       );
 
-      expect(actual.unavailableData).toBeEmpty();
+      expect(evaluateData(actual).unavailableData).toBeEmpty();
     });
 
     it("should not show parent/guardian info if adult", () => {
@@ -316,7 +317,7 @@ describe("ecrSummaryService Tests", () => {
         fhirIndexBundlePatient,
       );
 
-      const guardian = actual.availableData.find(
+      const guardian = actual.find(
         (d) => d.title === "Parent/Guardian",
       );
 
@@ -341,7 +342,7 @@ describe("ecrSummaryService Tests", () => {
       const fhirIndexBundle = getFhirIndex(bundle);
       const actual = evaluateEcrSummaryPatientDetails(bundle, fhirIndexBundle);
 
-      const guardian = actual.availableData.find(
+      const guardian = actual.find(
         (d) => d.title === "Parent/Guardian",
       );
 
