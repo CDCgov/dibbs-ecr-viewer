@@ -57,6 +57,57 @@ describe("FormatService tests", () => {
       expect(result).toEqual(expectedName);
     });
 
+    it("should return UNKNOWN UNKNOWN if no patient name", () => {
+      const emptyPatientName = {
+        given: [],
+        family: "",
+        prefix: [],
+        suffix: [],
+      } as HumanName;
+      const expectedName = "UNKNOWN UNKNOWN";
+
+      const result = formatName(emptyPatientName, false, true);
+      expect(result).toEqual(expectedName);
+    });
+
+    it("should return UNKNOWN if no patient family or given name", () => {
+      const noGivenName = {
+        given: [],
+        family: "Everywoman",
+        prefix: [],
+        suffix: [],
+      } as HumanName;
+      const expectedNoGivenName = "UNKNOWN Everywoman";
+
+      const resultNoGiven = formatName(noGivenName, false, true);
+      expect(resultNoGiven).toEqual(expectedNoGivenName);
+
+      const noFamilyName = {
+        given: ["Eve"],
+        family: "",
+        prefix: [],
+        suffix: [],
+      } as HumanName;
+      const expectedNoFamilyName = "Eve UNKNOWN";
+
+      const resultNoFamily = formatName(noFamilyName, false, true);
+      expect(resultNoFamily).toEqual(expectedNoFamilyName);
+    });
+
+    it("should return name as is if given usual name", () => {
+      const noGivenName = {
+        use: "usual",
+        given: [],
+        family: "Rihanna",
+        prefix: [],
+        suffix: [],
+      } as HumanName;
+      const expectedNoGivenName = "Rihanna";
+
+      const resultNoGiven = formatName(noGivenName, false, true);
+      expect(resultNoGiven).toEqual(expectedNoGivenName);
+    });
+
     it("should not format", () => {
       const mixedHumanName = {
         given: ["I aM", "A Name"],

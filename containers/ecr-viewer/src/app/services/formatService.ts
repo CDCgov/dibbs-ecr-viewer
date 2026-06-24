@@ -30,18 +30,27 @@ import { formatPeriodDate } from "./formatDateService";
 export const formatName = (
   humanName: HumanName | undefined,
   withUse: boolean = false,
+  isPatient: boolean = false
 ): string => {
   if (!humanName) {
     return "";
   }
 
   const { use, prefix, given, family, suffix } = humanName;
+  const isOfficial: boolean = (use === "official") || (!use);
+
+  const normalizedGiven =
+    isPatient && isOfficial && (!given || given.length === 0)
+      ? ["UNKNOWN"]
+      : given;
+  const normalizedFamily =
+    isPatient && isOfficial && !family ? "UNKNOWN" : family;
 
   const segments = [
     ...(withUse && use ? [`${toSentenceCase(use)}:`] : []),
     ...(prefix ?? []),
-    ...(given ?? []),
-    family,
+    ...(normalizedGiven ?? []),
+    normalizedFamily,
     ...(suffix ?? []),
   ];
 
@@ -56,14 +65,15 @@ export const formatName = (
  */
 export const formatNameList = (
   humanNames: HumanName[] | HumanName | undefined,
+  isPatient: boolean = false
 ): string => {
   if (!humanNames) return "";
   if (Array.isArray(humanNames)) {
     return humanNames
-      .map((name) => formatName(name, humanNames.length > 1))
+      .map((name) => formatName(name, humanNames.length > 1, isPatient))
       .join("\n");
   } else {
-    return formatName(humanNames);
+    return formatName(humanNames, false, isPatient);
   }
 };
 

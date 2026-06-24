@@ -120,10 +120,10 @@ export const evaluatePatientName = (
 
   if (isPatientBanner) {
     const officialName = nameList.find((n) => n.use === "official");
-    return formatName(officialName ?? nameList[0]);
+    return formatName(officialName ?? nameList[0], false, true);
   }
 
-  return formatNameList(nameList);
+  return formatNameList(nameList, true);
 };
 
 /**

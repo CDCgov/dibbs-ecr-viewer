@@ -274,11 +274,11 @@ export const processMetadata = (responseBody: MetadataModel[]) => {
       eicr_set_id: object.set_id,
       eicr_version_number: object.eicr_version_number,
       related_ecrs: object.related_ecrs || [],
-      patient_first_name: object.first_name || "",
-      patient_last_name: object.last_name || "",
+      patient_first_name: object.first_name || "UNKNOWN",
+      patient_last_name: object.last_name || "UNKNOWN",
       patient_date_of_birth: object.birth_date
-        ? formatDate(object.birth_date.toISOString())
-        : "",
+        ? formatDate((object.birth_date as Date).toISOString())
+        : "UNKNOWN",
       patient_report_date: object.encounter_start_date
         ? formatDateTime(object.encounter_start_date.toISOString())
         : "",
