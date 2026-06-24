@@ -30,4 +30,6 @@ ENV SMARTY_AUTH_TOKEN=$SMARTY_AUTH_TOKEN
 RUN apk update && apk add --no-cache curl
 
 EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
+  CMD curl -f http://localhost:8080/ || exit 1
 CMD uvicorn app.main:app --host 0.0.0.0 --port 8080 --log-config app/log_config.yaml
