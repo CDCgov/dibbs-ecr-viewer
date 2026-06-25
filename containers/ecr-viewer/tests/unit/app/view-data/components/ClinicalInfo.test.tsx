@@ -11,7 +11,7 @@ import {
   evaluateNotes,
   returnProceduresTable,
   returnImmunizations
-} from "@/app/view-data/services/clinicalService";
+} from "@/app/view-data/services/clinicalInfoService";
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
 const BundleClinicalInfo =

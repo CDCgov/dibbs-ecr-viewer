@@ -38,7 +38,7 @@ import {
 } from "@/app/view-data/components/common";
 import {
   returnImmunizations,
-} from "@/app/view-data/services/clinicalService";
+} from "@/app/view-data/services/clinicalInfoService";
 
 import {
   evaluatePatientName,
