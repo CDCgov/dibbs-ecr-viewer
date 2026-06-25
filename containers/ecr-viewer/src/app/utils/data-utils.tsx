@@ -14,7 +14,9 @@ export type RenderableNode = string | React.JSX.Element;
 
 export const noData = <span className="text-italic text-base">No data</span>;
 // A11y: Rquires darker text against summary box to meet WCAG 2 AA minimum constrast ratio
-export const noDataSummary = <span className="text-italic text-ink">No data</span>;
+export const noDataSummary = (
+  <span className="text-italic text-ink">No data</span>
+);
 
 /**
  * Evaluates the provided display data to determine availability.
