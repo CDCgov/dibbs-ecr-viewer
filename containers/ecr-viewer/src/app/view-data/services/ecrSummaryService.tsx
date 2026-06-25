@@ -42,7 +42,7 @@ import {
   evaluateEncounterDiagnosis,
   getLocationName,
 } from "./evaluateFhirDataService";
-import {  
+import {
   evaluatePatientName,
   evaluatePatientRace,
   evaluatePatientEthnicity,
@@ -50,7 +50,7 @@ import {
   calculatePatientAge,
   getPatient,
   evaluatePatientDOB,
-} from "@/app/view-data/services/demographicsService"
+} from "@/app/view-data/services/demographicsService";
 import { evaluateLabInfoData } from "./labsService";
 import { getReportabilityRulesReasons } from "./reportabilityService";
 import { FhirIndex, getResourcesByType } from "./fhirResourcesIndexService";

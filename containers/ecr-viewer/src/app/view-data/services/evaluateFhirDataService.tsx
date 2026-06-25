@@ -75,9 +75,7 @@ import {
   returnDisabilityStatusTable,
   evaluateSocialDeterminantsOfHealth,
 } from "./socialHistoryService";
-import {
-  FhirIndex,
-} from "./fhirResourcesIndexService";
+import { FhirIndex } from "./fhirResourcesIndexService";
 
 // =============================================================================
 // Patient Info: Social History

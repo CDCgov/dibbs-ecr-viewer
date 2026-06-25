@@ -79,7 +79,7 @@ describe("Evaluate Patient Info: Demographics", () => {
     it("should return all 2 of the names", () => {
       const actual = evaluatePatientName(patientMultiple, false);
       expect(actual).toEqual(
-        "Official: Anakin Skywalker\n" + "Nickname: Darth Vader"
+        "Official: Anakin Skywalker\n" + "Nickname: Darth Vader",
       );
     });
     it("should only return the official name for the banner", () => {
@@ -184,7 +184,7 @@ describe("Evaluate Patient Info: Demographics", () => {
     it("should return Age at Death if there is a date of death", () => {
       const patientAgeProp = createPatientAgeDataProp(
         BundleWithDeceasedPatient,
-        patientDeceased
+        patientDeceased,
       );
       expect(patientAgeProp).toEqual({
         title: "Age at Death",
@@ -230,13 +230,13 @@ describe("Evaluate Patient Info: Demographics", () => {
         ],
       };
       const fhirIndexPatientBundleWithEncounter = getFhirIndex(
-        patientBundleWithEncounter
+        patientBundleWithEncounter,
       );
       const patientResource = getPatient(fhirIndexPatientBundleWithEncounter);
 
       const patientAgeProp = createPatientAgeDataProp(
         patientBundleWithEncounter,
-        patientResource
+        patientResource,
       );
 
       expect(patientAgeProp).toEqual({
@@ -280,13 +280,13 @@ describe("Evaluate Patient Info: Demographics", () => {
         ],
       };
       const fhirIndexPatientBundleWithEncounter = getFhirIndex(
-        patientBundleWithEncounter
+        patientBundleWithEncounter,
       );
       const patientResource = getPatient(fhirIndexPatientBundleWithEncounter);
 
       const patientAgeProp = createPatientAgeDataProp(
         patientBundleWithEncounter,
-        patientResource
+        patientResource,
       );
 
       expect(patientAgeProp).toEqual({
@@ -334,13 +334,13 @@ describe("Evaluate Patient Info: Demographics", () => {
         ],
       };
       const fhirIndexPatientBundleWithEncounter = getFhirIndex(
-        patientBundleWithEncounter
+        patientBundleWithEncounter,
       );
       const patientResource = getPatient(fhirIndexPatientBundleWithEncounter);
 
       const patientAgeProp = createPatientAgeDataProp(
         patientBundleWithEncounter,
-        patientResource
+        patientResource,
       );
 
       expect(patientAgeProp).toEqual({
@@ -372,15 +372,13 @@ describe("Evaluate Patient Info: Demographics", () => {
         ],
       };
       const fhirIndexPatientBundleWithCreatedDate = getFhirIndex(
-        patientBundleWithCreatedDate
+        patientBundleWithCreatedDate,
       );
-      const patientResource = getPatient(
-        fhirIndexPatientBundleWithCreatedDate
-      );
+      const patientResource = getPatient(fhirIndexPatientBundleWithCreatedDate);
 
       const patientAgeProp = createPatientAgeDataProp(
         patientBundleWithCreatedDate,
-        patientResource
+        patientResource,
       );
 
       expect(patientAgeProp).toEqual({
@@ -405,14 +403,14 @@ describe("Evaluate Patient Info: Demographics", () => {
   it("should return Tribal Affiliation if available", () => {
     const actual = evaluateDemographicsData(
       BundleWithPatient,
-      fhirIndexBundleWithPatient
+      fhirIndexBundleWithPatient,
     );
     const ext = actual.availableData.filter(
-      (d) => d.title === "Tribal Affiliation"
+      (d) => d.title === "Tribal Affiliation",
     );
     expect(ext).toHaveLength(1);
     expect(ext[0].value).toEqual(
-      "Fort Mojave Indian Tribe of Arizona, California"
+      "Fort Mojave Indian Tribe of Arizona, California",
     );
   });
 
@@ -473,7 +471,7 @@ describe("Evaluate Patient Info: Demographics", () => {
         ],
       } as unknown as Bundle;
       const fhirIndexBundlePatientLanguage = getFhirIndex(
-        bundlePatientLanguage
+        bundlePatientLanguage,
       );
       const patientLanguage = getPatient(fhirIndexBundlePatientLanguage);
 
@@ -518,7 +516,7 @@ describe("Evaluate Patient Info: Demographics", () => {
         ],
       } as unknown as Bundle;
       const fhirIndexBundlePatientNoLanguage = getFhirIndex(
-        bundlePatientNoLanguage
+        bundlePatientNoLanguage,
       );
       const patientNoLanguage = getPatient(fhirIndexBundlePatientNoLanguage);
 
@@ -554,7 +552,7 @@ describe("Evaluate Patient Info: Demographics", () => {
           "Work:\n" +
           "1 Main St\n" +
           "Death Star, AZ 00001\n" +
-          "USA"
+          "USA",
       );
     });
   });
@@ -562,10 +560,10 @@ describe("Evaluate Patient Info: Demographics", () => {
   it("should return Parent/Guardian if available", () => {
     const actual = evaluateDemographicsData(
       BundleWithPatient,
-      fhirIndexBundleWithPatient
+      fhirIndexBundleWithPatient,
     );
     const ext = actual.availableData.filter(
-      (d) => d.title === "Parent/Guardian"
+      (d) => d.title === "Parent/Guardian",
     );
     expect(ext).toHaveLength(1);
     expect(ext[0].value).toEqual(
@@ -580,7 +578,7 @@ Work:
 123 Galactic Drive
 Sometown, OR 94949
 US
-Home: 123-456-6909`
+Home: 123-456-6909`,
     );
   });
 
@@ -593,7 +591,7 @@ Home: 123-456-6909`
   it("should return all correct demographic info not covered by other tests", () => {
     const actual = evaluateDemographicsData(
       BundleWithPatient,
-      fhirIndexBundleWithPatient
+      fhirIndexBundleWithPatient,
     );
     const expectedContact = [
       {
@@ -603,7 +601,7 @@ Home: 123-456-6909`
     ];
 
     expect(actual.availableData.filter((d) => d.title === "Contact")).toEqual(
-      expectedContact
+      expectedContact,
     );
   });
 });

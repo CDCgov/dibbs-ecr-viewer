@@ -1,11 +1,6 @@
 import "server-only"; // FHIR evaluation should be done server side
 
-import {
-  Bundle,
-  Encounter,
-  Patient,
-  RelatedPerson,
-} from "fhir/r4";
+import { Bundle, Encounter, Patient, RelatedPerson } from "fhir/r4";
 import { DateTime } from "luxon";
 
 import { formatDate } from "@/app/services/formatDateService";
