@@ -1895,7 +1895,7 @@ exports[`Tests for eCR Document Given no data, info message for empty sections s
                     class="usa-summary-box__heading padding-y-105"
                     id="unavailable-diagnostics-and-vital-signs"
                   >
-                    Diagnostics and  Vital Signs
+                    Diagnostics and Vital Signs
                   </h4>
                   <div
                     class="usa-summary-box__text"

@@ -1,6 +1,8 @@
 import {
   Bundle,
   CareTeamParticipant,
+  Coding,
+  Condition,
   Device,
   Element,
   Immunization,
@@ -24,6 +26,7 @@ import {
 import {
   formatAddress,
   formatAddressList,
+  formatAge,
   formatCodeableConcept,
   formatContactPoint,
   formatName,
@@ -44,7 +47,7 @@ import {
   evaluateValue,
 } from "@/app/utils/evaluate";
 import fhirPathMappings, { FhirPath } from "@/app/utils/evaluate/fhir-paths";
-import { toSentenceCase } from "@/app/utils/format-utils";
+import { makePlural, toSentenceCase } from "@/app/utils/format-utils";
 import {
   AdministeredMedication,
   AdministeredMedicationTableData,
@@ -57,13 +60,12 @@ import EvaluateTable, {
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
-import {
-  returnProblemsTable,
-} from "@/app/view-data/components/common";
 import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
 import { FhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 import classNames from "classnames";
+import { FieldValue } from "../components/FieldValue";
+import { calculatePatientAge, getPatient } from "./evaluateFhirDataService";
 
 
 // =============================================================================
@@ -226,6 +228,113 @@ export const evaluateNotes = (
       />
     ),
     fullWidthContent: true,
+  };
+};
+
+/**
+ * Generates a formatted table representing the list of problems based on the provided array of problems and mappings.
+ * @param fhirBundle - The FHIR bundle containing patient information.
+ * @param problemsArray - An array containing the list of Conditions.
+ * @returns - A formatted table React element representing the list of problems, or undefined if the problems array is empty.
+ */
+export const returnProblemsTable = (
+  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
+  problemsArray: Condition[],
+): React.JSX.Element | undefined => {
+  problemsArray = problemsArray.filter((entry) =>
+    entry.code?.coding?.some((c: Coding) => c?.display),
+  );
+
+  if (problemsArray.length === 0) {
+    return undefined;
+  }
+
+  const columnInfo: ColumnInfoInput[] = [
+    {
+      columnName: "Active Problem",
+      infoPath: "code",
+    },
+    { columnName: "Status", infoPath: "activeProblemsStatus" },
+    { columnName: "Onset Date/Time", infoPath: "conditionOnsetDate" },
+    { columnName: "Onset Age", infoPath: "activeProblemsOnsetAge" },
+    {
+      columnName: "Comments",
+      infoPath: "noteText",
+      applyToValue: (v) => <FieldValue>{safeParse(v)}</FieldValue>,
+      hiddenBaseText: "comment",
+    },
+  ];
+
+  const conditions: ConditionWithFormattedOnsetAge[] = problemsArray.map((pr) =>
+    createFormattedCondition(pr, fhirBundle, fhirIndex),
+  );
+
+  if (conditions.length === 0) {
+    return undefined;
+  }
+
+  conditions.sort(
+    (a, b) =>
+      new Date(b.onsetDateTime ?? "").getTime() -
+      new Date(a.onsetDateTime ?? "").getTime(),
+  );
+
+  return (
+    <EvaluateTable
+      resources={conditions}
+      columns={columnInfo}
+      caption="Problems List"
+      className="margin-y-0"
+      fixed={false}
+    />
+  );
+};
+
+type ConditionWithFormattedOnsetAge = Omit<Condition, "onsetAge"> & {
+  onsetAge?: { value: string | undefined };
+};
+
+const createFormattedCondition = (
+  condition: Condition,
+  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
+): ConditionWithFormattedOnsetAge => {
+  const formattedOnsetDateTime = formatDateTime(condition.onsetDateTime);
+
+  const formattedCondition: ConditionWithFormattedOnsetAge = {
+    ...condition,
+    onsetDateTime: formattedOnsetDateTime,
+    onsetAge: getFormattedOnsetAge(
+      condition.onsetAge,
+      formattedOnsetDateTime,
+      fhirBundle,
+      fhirIndex,
+    ),
+  };
+
+  return formattedCondition;
+};
+
+const getFormattedOnsetAge = (
+  onsetAge: Condition["onsetAge"],
+  onsetDateTime: Condition["onsetDateTime"],
+  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
+) => {
+  const patient = getPatient(fhirIndex);
+
+  // when an onset age value is provided in the patient data (in years) we'll use that
+  if (onsetAge?.value) {
+    return {
+      value: `${onsetAge.value} year${makePlural(onsetAge.value)}`,
+    };
+  }
+
+  if (!onsetDateTime) return undefined;
+
+  return {
+    value: formatAge(calculatePatientAge(patient, onsetDateTime)),
   };
 };
 

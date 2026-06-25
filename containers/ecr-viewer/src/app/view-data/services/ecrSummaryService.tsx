@@ -34,10 +34,8 @@ import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { ConditionSummary } from "@/app/view-data/components/EcrSummary";
 import { LabAccordion } from "@/app/view-data/components/LabAccordion";
 import {
-  returnProblemsTable,
-} from "@/app/view-data/components/common";
-import {
   returnImmunizations,
+  returnProblemsTable,
 } from "@/app/view-data/services/clinicalInfoService";
 
 import {
