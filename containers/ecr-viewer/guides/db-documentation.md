@@ -127,12 +127,14 @@ This table stores laboratory results associated with eCRs. Note that the primary
 
 This table stores immunization records associated with eCRs.
 
-| Column Name           | Data Type      | Nullability | Default Value | Description                                                                                      |
-| :-------------------- | :------------- | :---------- | :------------ | :----------------------------------------------------------------------------------------------- |
-| `uuid`                | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], unique identifier for the immunization record |
-| `eicr_id`             | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], Foreign key, references `ecr_data.eicr_id`    |
-| `name`                | `varchar(255)` | NULL        |               | Name of the vaccine administered                                                                 |
-| `administration_date` | `date`         | NULL        |               | Date the vaccine was administered                                                                |
+| Column Name      | Data Type      | Nullability | Default Value | Description                                                                                      |
+| :--------------- | :------------- | :---------- | :------------ | :----------------------------------------------------------------------------------------------- |
+| `uuid`           | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], unique identifier for the immunization record |
+| `eicr_id`        | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], Foreign key, references `ecr_data.eicr_id`    |
+| `name`           | `varchar(255)` | NULL        |               | Name of the vaccine administered                                                                 |
+| `effective_date` | `date`         | NULL        |               | Date the vaccine was administered or not given                                                   |
+| `status`         | `varchar(50)`  | NULL        |               | Was the vaccine was administered (true/false)                                                    |
+| `status_reason`  | `varchar(max)` | NULL        |               | Reason the vaccine was not administered, if any                                                  |
 
 ### `patient_address` Table
 
