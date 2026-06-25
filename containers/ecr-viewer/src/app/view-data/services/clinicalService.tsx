@@ -79,13 +79,14 @@ export const evaluateClinicalData = (
   fhirBundle: Bundle,
   fhirIndex: FhirIndex,
 ) => {
-  const clinicalNotesTooltip =
+  const historyOfPresentIllnessTooltip =
     "Clinical notes from various parts of a medical record. Type of note found here depends on how the provider's EHR system onboarded to send eCR.";
   const historyOfPresentIllness: DisplayDataProps[] = [
     evaluateNotes(
       fhirBundle,
       fhirPathMappings.historyOfPresentIllness,
       "History of Present Illness",
+      historyOfPresentIllnessTooltip
     ),
   ];
   const reasonForVisitData: DisplayDataProps[] = [
