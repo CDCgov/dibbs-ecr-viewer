@@ -11,7 +11,7 @@ import {
   evaluateNotes,
   returnProceduresTable,
   returnImmunizations,
-  returnProblemsTable
+  returnProblemsTable,
 } from "@/app/view-data/services/clinicalInfoService";
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
@@ -831,8 +831,8 @@ describe("Snapshot tests", () => {
         returnImmunizations(
           BundleClinicalInfo as unknown as Bundle,
           immunizationsData,
-          "Immunization History"
-        )!
+          "Immunization History",
+        )!,
       ).container;
     });
     it("should match snapshot", () => {
@@ -842,7 +842,7 @@ describe("Snapshot tests", () => {
       expect(await axe(container)).toHaveNoViolations();
     });
   });
-  
+
   describe("Snapshot test for Active Problems Table", () => {
     let container: HTMLElement;
     beforeEach(() => {
@@ -1075,8 +1075,8 @@ describe("Snapshot tests", () => {
         returnProblemsTable(
           BundleWithPatient,
           fhirIndexBundleWithPatient,
-          activeProblemsData
-        )!
+          activeProblemsData,
+        )!,
       ).container;
     });
     it("should match snapshot", () => {
