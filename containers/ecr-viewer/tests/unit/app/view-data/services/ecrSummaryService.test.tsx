@@ -20,7 +20,7 @@ import {
   FhirIndex,
   getFhirIndex,
 } from "@/app/view-data/services/fhirResourcesIndexService";
-import { evaluateData, noData } from "@/app/utils/data-utils";
+import { evaluateData, noDataSummary } from "@/app/utils/data-utils";
 
 const BundleLab = _BundleLab as unknown as Bundle;
 const fhirIndexBundleLab = getFhirIndex(BundleLab);
@@ -387,7 +387,7 @@ describe("ecrSummaryService Tests", () => {
         fhirIndexPatientEmpty
       );
       actual.forEach((a) => {
-        expect(a.value === noData);
+        expect(a.value === noDataSummary);
       });
     });
   });
@@ -430,7 +430,7 @@ describe("ecrSummaryService Tests", () => {
         BundleEncounterEmpty
       );
       actual.forEach((a) => {
-        expect(a.value === noData);
+        expect(a.value === noDataSummary);
       });
     });
   })

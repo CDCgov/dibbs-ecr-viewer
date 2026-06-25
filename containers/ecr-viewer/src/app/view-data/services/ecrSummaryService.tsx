@@ -21,7 +21,7 @@ import {
   formatCurrentAddress,
   formatPatientContactList,
 } from "@/app/services/formatService";
-import { evaluateData, noData } from "@/app/utils/data-utils";
+import { noDataSummary } from "@/app/utils/data-utils";
 import {
   evaluateAll,
   evaluateOne,
@@ -75,7 +75,7 @@ export const evaluateEcrSummaryPatientDetails = (
             title: "Parent/Guardian",
             value: formatPatientContactList(
               evaluateAll(fhirBundle, fhirPathMappings.patientGuardian),
-            ) || noData,
+            ) || noDataSummary,
           },
         ]
       : [];
@@ -83,36 +83,36 @@ export const evaluateEcrSummaryPatientDetails = (
   return [
     {
       title: "Patient Name",
-      value: evaluatePatientName(patient, false) || noData,
+      value: evaluatePatientName(patient, false) || noDataSummary,
     },
     {
       title: "DOB",
-      value: evaluatePatientDOB(patient) || noData,
+      value: evaluatePatientDOB(patient) || noDataSummary,
     },
     {
       title: "Sex",
       // Unknown and Other sex options removed to be in compliance with Executive Order 14168
-      value: censorGender(patientSex) || noData,
+      value: censorGender(patientSex) || noDataSummary,
     },
     {
       title: "Race",
-      value: evaluatePatientRace(patient) || noData,
+      value: evaluatePatientRace(patient) || noDataSummary,
     },
     {
       title: "Ethnicity",
-      value: evaluatePatientEthnicity(patient) || noData,
+      value: evaluatePatientEthnicity(patient) || noDataSummary,
     },
     {
       title: "Patient Address",
       value: formatCurrentAddress(
         evaluateAll(patient, fhirPathMappings.patientAddressList),
-      ) || noData,
+      ) || noDataSummary,
     },
     {
       title: "Patient Contact",
       value: formatContactPoint(
         evaluateAll(patient, fhirPathMappings.patientTelecom),
-      ) || noData,
+      ) || noDataSummary,
     },
     ...parentGuardian,
   ];
@@ -135,23 +135,23 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
   return [
     {
       title: "Encounter Date/Time",
-      value: formatStartEndDateTime(encounter?.period) || noData,
+      value: formatStartEndDateTime(encounter?.period) || noDataSummary,
     },
     {
       title: "Encounter Type",
-      value: formatCoding(encounter?.class) || noData,
+      value: formatCoding(encounter?.class) || noDataSummary,
     },
     {
       title: "Encounter Diagnosis",
-      value: evaluateEncounterDiagnosis(fhirBundle, encounter) || noData,
+      value: evaluateEncounterDiagnosis(fhirBundle, encounter) || noDataSummary,
     },
     {
       title: "Facility Name",
-      value: getLocationName(fhirBundle, encounter) || noData,
+      value: getLocationName(fhirBundle, encounter) || noDataSummary,
     },
     {
       title: "Facility Contact",
-      value: formatContactPoint(org?.telecom) || noData,
+      value: formatContactPoint(org?.telecom) || noDataSummary,
     },
   ];
 };
