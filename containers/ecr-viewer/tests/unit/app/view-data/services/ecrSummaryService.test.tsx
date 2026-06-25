@@ -321,9 +321,7 @@ describe("ecrSummaryService Tests", () => {
         fhirIndexBundlePatient,
       );
 
-      const guardian = actual.find(
-        (d) => d.title === "Parent/Guardian",
-      );
+      const guardian = actual.find((d) => d.title === "Parent/Guardian");
 
       expect(guardian).toBeUndefined();
     });
@@ -346,9 +344,7 @@ describe("ecrSummaryService Tests", () => {
       const fhirIndexBundle = getFhirIndex(bundle);
       const actual = evaluateEcrSummaryPatientDetails(bundle, fhirIndexBundle);
 
-      const guardian = actual.find(
-        (d) => d.title === "Parent/Guardian",
-      );
+      const guardian = actual.find((d) => d.title === "Parent/Guardian");
 
       expect(guardian?.value).toEqual(
         `Grandparent\nLuthen Rael\n1357 Galactic Drive\nSometown, OR 94949\nUS\nHome: 123-456-6909`,
@@ -357,34 +353,34 @@ describe("ecrSummaryService Tests", () => {
 
     it("should display noData if no patient details are available", () => {
       const BundlePatientEmpty = {
-        "resourceType": "Bundle",
-        "type": "document",
-        "entry": [
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
           {
-            "fullUrl": "urn:uuid:99999999-4p89-4b96-b6ab-c46406839cea",
-            "resource": {
-              "resourceType": "Patient",
-              "id": "99999999-4p89-4b96-b6ab-c46406839cea",
-              "meta": {
-                "profile": [
-                  "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"
+            fullUrl: "urn:uuid:99999999-4p89-4b96-b6ab-c46406839cea",
+            resource: {
+              resourceType: "Patient",
+              id: "99999999-4p89-4b96-b6ab-c46406839cea",
+              meta: {
+                profile: [
+                  "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient",
                 ],
-                "source": ["ecr"]
+                source: ["ecr"],
               },
-              "identifier": [
+              identifier: [
                 {
-                  "system": "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
-                  "value": "1234567890"
-                }
+                  system: "urn:oid:0.0.000.000000.0.00.000.0.0.0.000000.000",
+                  value: "1234567890",
+                },
               ],
-            }
-          }
-        ]
+            },
+          },
+        ],
       } as unknown as Bundle;
       const fhirIndexPatientEmpty = getFhirIndex(BundlePatientEmpty);
       const actual = evaluateEcrSummaryPatientDetails(
         BundlePatientEmpty,
-        fhirIndexPatientEmpty
+        fhirIndexPatientEmpty,
       );
       actual.forEach((a) => {
         expect(a.value === noDataSummary);
@@ -394,9 +390,7 @@ describe("ecrSummaryService Tests", () => {
 
   describe("Evaluate eCR Summary Encounter Details", () => {
     it("should get all relevant encounter details", () => {
-      const actual = evaluateEcrSummaryEncounterDetails(
-        BundleEcrMetadata
-      );
+      const actual = evaluateEcrSummaryEncounterDetails(BundleEcrMetadata);
       expect(evaluateData(actual).unavailableData).toBeEmpty();
     });
 
@@ -426,12 +420,10 @@ describe("ecrSummaryService Tests", () => {
           },
         ],
       } as unknown as Bundle;
-      const actual = evaluateEcrSummaryEncounterDetails(
-        BundleEncounterEmpty
-      );
+      const actual = evaluateEcrSummaryEncounterDetails(BundleEncounterEmpty);
       actual.forEach((a) => {
         expect(a.value === noDataSummary);
       });
     });
-  })
+  });
 });
