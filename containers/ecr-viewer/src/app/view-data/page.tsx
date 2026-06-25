@@ -86,13 +86,11 @@ const ECRViewerPage = async ({
         ecrId={xmlsExist ? fhirId : undefined}
       >
         <EcrSummary
-          patientDetails={
-            evaluateEcrSummaryPatientDetails(fhirBundle, fhirIndex)
-              .availableData
-          }
-          encounterDetails={
-            evaluateEcrSummaryEncounterDetails(fhirBundle).availableData
-          }
+          patientDetails={evaluateEcrSummaryPatientDetails(
+            fhirBundle,
+            fhirIndex
+          )}
+          encounterDetails={evaluateEcrSummaryEncounterDetails(fhirBundle)}
           conditionSummary={evaluateEcrSummaryConditionSummary(
             fhirBundle,
             fhirIndex,
