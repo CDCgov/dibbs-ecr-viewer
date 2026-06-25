@@ -60,9 +60,9 @@ import {
   returnImmunizations,
   returnProblemsTable,
 } from "@/app/view-data/components/common";
-import { sortResourcesByDate } from "../../utils/fhir-data-utils";
+import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
-import { FhirIndex } from "../../services/fhirResourcesIndexService";
+import { FhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
 /**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.

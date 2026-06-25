@@ -28,7 +28,7 @@ import {
   getResourcesByType,
 } from "@/app/view-data/services/fhirResourcesIndexService";
 
-import { evaluateClinicalData } from "./clinical-data";
+import { evaluateClinicalData } from "@/app/view-data/services/clinicalService";
 
 export type EcrDocumentNavConfig = {
   title: string;

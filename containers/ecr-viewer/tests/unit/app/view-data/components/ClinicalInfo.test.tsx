@@ -10,7 +10,7 @@ import {
   evaluateClinicalData,
   evaluateNotes,
   returnProceduresTable,
-} from "@/app/view-data/components/EcrDocument/clinical-data";
+} from "@/app/view-data/services/clinicalService";
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
 const BundleClinicalInfo =
