@@ -64,6 +64,11 @@ import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
 import { FhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
+
+// =============================================================================
+// Clinical Info (Overall)
+// =============================================================================
+
 /**
  * Evaluates clinical data from the FHIR bundle and formats it into structured data for display.
  * @param fhirBundle - The FHIR bundle containing clinical data.
@@ -174,6 +179,257 @@ export const evaluateClinicalData = (
     vitalData: evaluateData(vitalData),
     immunizationsDetails: evaluateData(immunizationsData),
   };
+};
+
+// =============================================================================
+// Clinical Info: Symptoms and Problems
+// =============================================================================
+
+/**
+ * Helper to evaluate notes which can be either a string or a table.
+ * Used by History of Present Illness and Reason for Visit details
+ * @param fhirBundle - The FHIR bundle containing clinical data.
+ * @param fhirPath - The FHIR path for the field
+ * @param title - The title to appear for the field
+ * @param toolTip - The tooltip to appear for the field
+ * @returns data display props with the appropriate values
+ */
+export const evaluateNotes = (
+  fhirBundle: Bundle,
+  fhirPath: FhirPath<string>,
+  title: string,
+  toolTip?: string,
+): DisplayDataProps => {
+  const content = evaluateValue(fhirBundle, fhirPath);
+  const tables = formatTablesToJSON(content);
+
+  // Not a table, safe parse the string content
+  if (tables.length === 0) {
+    return {
+      title,
+      value: safeParse(content),
+      toolTip,
+    };
+  }
+
+  return {
+    title,
+    value: (
+      <JsonTable
+        jsonTableData={{
+          resultName: title,
+          tables: tables[0].tables,
+        }}
+        captionToolTip={toolTip}
+        captionIsTitle={true}
+      />
+    ),
+    fullWidthContent: true,
+  };
+};
+
+const evaluateOutbreakInfo = (fhirBundle: Bundle): string => {
+  const outbreakInfos = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.emergencyOutbreakInfo
+  );
+
+  return outbreakInfos
+    .map((outbreakInfo) => {
+      const lines = [];
+
+      if (outbreakInfo.effectiveDateTime) {
+        lines.push(
+          "Date/Time: " + formatDateTime(outbreakInfo.effectiveDateTime)
+        );
+      } else if (outbreakInfo.effectivePeriod) {
+        lines.push(formatStartEndDate(outbreakInfo.effectivePeriod));
+      }
+
+      // Get the first display value from the coding array
+      const coding = outbreakInfo.code?.coding?.find((c) => c.display);
+      if (coding?.display) {
+        lines.push("Type: " + coding.display);
+      }
+
+      const value = evaluateValue(outbreakInfo, fhirPathMappings.valueX);
+      if (value) {
+        lines.push("Result: " + value);
+      }
+
+      return lines.join("\n");
+    })
+    .join("\n\n");
+};
+
+// =============================================================================
+// Clinical Info: Treatment Details
+// =============================================================================
+
+const evaluatePlanOfTreatment = (
+  fhirBundle: Bundle
+): React.ReactNode | undefined => {
+  const plans = evaluateAll(fhirBundle, fhirPathMappings.planOfTreatment);
+  const activities = [];
+  const procs = [];
+  const meds = [];
+
+  for (const plan of plans) {
+    if (plan.detail) {
+      activities.push(plan);
+    } else if (plan.reference?.reference?.startsWith("ServiceRequest/")) {
+      const req = evaluateReference<ServiceRequest>(
+        fhirBundle,
+        plan.reference.reference
+      );
+      if (req) {
+        procs.push(req);
+      }
+    } else if (plan.reference?.reference?.startsWith("MedicationRequest/")) {
+      const req = evaluateReference<MedicationRequest>(
+        fhirBundle,
+        plan.reference.reference
+      );
+      if (req) {
+        meds.push(req);
+      }
+    }
+  }
+
+  if (activities.length === 0 && procs.length === 0 && meds.length === 0) {
+    return undefined;
+  }
+
+  return (
+    <>
+      {activities.length > 0 && (
+        <EvaluateTable
+          resources={activities}
+          caption="Planned Activities & Appointments"
+          columns={[
+            { columnName: "Name", infoPath: "plannedActivityName" },
+            { columnName: "Scheduled Time", infoPath: "plannedActivityTime" },
+            { columnName: "Type", infoPath: "plannedActivityType" },
+          ]}
+        />
+      )}
+      {procs.length > 0 && (
+        <EvaluateTable
+          resources={procs}
+          caption="Planned Procedures & Orders"
+          columns={[
+            { columnName: "Name", infoPath: "code" },
+            {
+              columnName: "Scheduled Time",
+              infoPath: "occurrenceX",
+            },
+            { columnName: "Ordered On", infoPath: "authoredOn" },
+          ]}
+        />
+      )}
+      {meds.length > 0 && (
+        <EvaluateTable
+          resources={meds}
+          caption="Planned Medications & Immunizations"
+          columns={[
+            { columnName: "Name", infoPath: "plannedMedicationName" },
+            { columnName: "Ordered On", infoPath: "authoredOn" },
+            { columnName: "Dosage", infoPath: "plannedMedicationDosage" },
+          ]}
+        />
+      )}
+    </>
+  );
+};
+
+type ModifiedCareTeamParticipant = Omit<
+  CareTeamParticipant,
+  "period" | "member"
+> & {
+  period?: Period & { text?: string };
+  member?: Reference & { name?: string };
+};
+
+/**
+ * Returns a table displaying care team information.
+ * @param bundle - The FHIR bundle containing care team data.
+ * @returns The JSX element representing the care team table, or undefined if no care team participants are found.
+ */
+export const returnCareTeamTable = (
+  bundle: Bundle
+): React.JSX.Element | undefined => {
+  const careTeamParticipants = evaluateAll(
+    bundle,
+    fhirPathMappings.careTeamParticipants
+  );
+  if (careTeamParticipants.length === 0) {
+    return undefined;
+  }
+
+  const columnInfo: ColumnInfoInput[] = [
+    { columnName: "Member", infoPath: "careTeamParticipantMemberName" },
+    {
+      columnName: "Role",
+      evaluateEntry: (el) => {
+        const p = el as CareTeamParticipant;
+
+        const roleStr = p.role
+          ?.map((r) => {
+            return formatCodeableConcept(r);
+          })
+          .join("\n");
+
+        return roleStr;
+      },
+    },
+    {
+      columnName: "Status",
+      infoPath: "careTeamParticipantStatus",
+      applyToValue: toSentenceCase,
+    },
+    { columnName: "Dates", infoPath: "careTeamParticipantPeriod" },
+  ];
+
+  const modifiedCareTeamParticipants: ModifiedCareTeamParticipant[] =
+    careTeamParticipants.map((initialParticipant) => {
+      const mctp: ModifiedCareTeamParticipant = {
+        ...initialParticipant,
+      };
+
+      if (initialParticipant.period) {
+        mctp.period = {
+          ...initialParticipant.period,
+          text: formatStartEndDate(initialParticipant.period),
+        };
+      }
+
+      const practitioner = evaluateReference<Practitioner>(
+        bundle,
+        initialParticipant?.member?.reference
+      );
+
+      const practitionerNameObj = practitioner?.name?.find(
+        (nameObject) => nameObject.family
+      );
+
+      if (initialParticipant.member) {
+        mctp.member = {
+          ...initialParticipant.member,
+          name: formatName(practitionerNameObj),
+        };
+      }
+
+      return mctp;
+    });
+
+  return (
+    <EvaluateTable
+      resources={modifiedCareTeamParticipants}
+      columns={columnInfo}
+      className="margin-y-0"
+      fixed={false}
+    />
+  );
 };
 
 /**
@@ -360,215 +616,6 @@ export const returnMedicationsTable = (fhirBundle: Bundle) => {
   );
 };
 
-type ModifiedCareTeamParticipant = Omit<
-  CareTeamParticipant,
-  "period" | "member"
-> & {
-  period?: Period & { text?: string };
-  member?: Reference & { name?: string };
-};
-
-/**
- * Returns a table displaying care team information.
- * @param bundle - The FHIR bundle containing care team data.
- * @returns The JSX element representing the care team table, or undefined if no care team participants are found.
- */
-export const returnCareTeamTable = (
-  bundle: Bundle,
-): React.JSX.Element | undefined => {
-  const careTeamParticipants = evaluateAll(
-    bundle,
-    fhirPathMappings.careTeamParticipants,
-  );
-  if (careTeamParticipants.length === 0) {
-    return undefined;
-  }
-
-  const columnInfo: ColumnInfoInput[] = [
-    { columnName: "Member", infoPath: "careTeamParticipantMemberName" },
-    {
-      columnName: "Role",
-      evaluateEntry: (el) => {
-        const p = el as CareTeamParticipant;
-
-        const roleStr = p.role
-          ?.map((r) => {
-            return formatCodeableConcept(r);
-          })
-          .join("\n");
-
-        return roleStr;
-      },
-    },
-    {
-      columnName: "Status",
-      infoPath: "careTeamParticipantStatus",
-      applyToValue: toSentenceCase,
-    },
-    { columnName: "Dates", infoPath: "careTeamParticipantPeriod" },
-  ];
-
-  const modifiedCareTeamParticipants: ModifiedCareTeamParticipant[] =
-    careTeamParticipants.map((initialParticipant) => {
-      const mctp: ModifiedCareTeamParticipant = {
-        ...initialParticipant,
-      };
-
-      if (initialParticipant.period) {
-        mctp.period = {
-          ...initialParticipant.period,
-          text: formatStartEndDate(initialParticipant.period),
-        };
-      }
-
-      const practitioner = evaluateReference<Practitioner>(
-        bundle,
-        initialParticipant?.member?.reference,
-      );
-
-      const practitionerNameObj = practitioner?.name?.find(
-        (nameObject) => nameObject.family,
-      );
-
-      if (initialParticipant.member) {
-        mctp.member = {
-          ...initialParticipant.member,
-          name: formatName(practitionerNameObj),
-        };
-      }
-
-      return mctp;
-    });
-
-  return (
-    <EvaluateTable
-      resources={modifiedCareTeamParticipants}
-      columns={columnInfo}
-      className="margin-y-0"
-      fixed={false}
-    />
-  );
-};
-
-/**
- * Helper to evaluate notes which can be either a string or a table.
- * Used by Miscellaneous Notes and Reason for Visit details
- * @param fhirBundle - The FHIR bundle containing clinical data.
- * @param fhirPath - The FHIR path for the field
- * @param title - The title to appear for the field
- * @param toolTip - The tooltip to appear for the field
- * @returns data display props with the appropriate values
- */
-export const evaluateNotes = (
-  fhirBundle: Bundle,
-  fhirPath: FhirPath<string>,
-  title: string,
-  toolTip?: string,
-): DisplayDataProps => {
-  const content = evaluateValue(fhirBundle, fhirPath);
-  const tables = formatTablesToJSON(content);
-
-  // Not a table, safe parse the string content
-  if (tables.length === 0) {
-    return {
-      title,
-      value: safeParse(content),
-      toolTip,
-    };
-  }
-
-  return {
-    title,
-    value: (
-      <JsonTable
-        jsonTableData={{
-          resultName: title,
-          tables: tables[0].tables,
-        }}
-        captionToolTip={toolTip}
-        captionIsTitle={true}
-      />
-    ),
-    fullWidthContent: true,
-  };
-};
-
-const evaluatePlanOfTreatment = (
-  fhirBundle: Bundle,
-): React.ReactNode | undefined => {
-  const plans = evaluateAll(fhirBundle, fhirPathMappings.planOfTreatment);
-  const activities = [];
-  const procs = [];
-  const meds = [];
-
-  for (const plan of plans) {
-    if (plan.detail) {
-      activities.push(plan);
-    } else if (plan.reference?.reference?.startsWith("ServiceRequest/")) {
-      const req = evaluateReference<ServiceRequest>(
-        fhirBundle,
-        plan.reference.reference,
-      );
-      if (req) {
-        procs.push(req);
-      }
-    } else if (plan.reference?.reference?.startsWith("MedicationRequest/")) {
-      const req = evaluateReference<MedicationRequest>(
-        fhirBundle,
-        plan.reference.reference,
-      );
-      if (req) {
-        meds.push(req);
-      }
-    }
-  }
-
-  if (activities.length === 0 && procs.length === 0 && meds.length === 0) {
-    return undefined;
-  }
-
-  return (
-    <>
-      {activities.length > 0 && (
-        <EvaluateTable
-          resources={activities}
-          caption="Planned Activities & Appointments"
-          columns={[
-            { columnName: "Name", infoPath: "plannedActivityName" },
-            { columnName: "Scheduled Time", infoPath: "plannedActivityTime" },
-            { columnName: "Type", infoPath: "plannedActivityType" },
-          ]}
-        />
-      )}
-      {procs.length > 0 && (
-        <EvaluateTable
-          resources={procs}
-          caption="Planned Procedures & Orders"
-          columns={[
-            { columnName: "Name", infoPath: "code" },
-            {
-              columnName: "Scheduled Time",
-              infoPath: "occurrenceX",
-            },
-            { columnName: "Ordered On", infoPath: "authoredOn" },
-          ]}
-        />
-      )}
-      {meds.length > 0 && (
-        <EvaluateTable
-          resources={meds}
-          caption="Planned Medications & Immunizations"
-          columns={[
-            { columnName: "Name", infoPath: "plannedMedicationName" },
-            { columnName: "Ordered On", infoPath: "authoredOn" },
-            { columnName: "Dosage", infoPath: "plannedMedicationDosage" },
-          ]}
-        />
-      )}
-    </>
-  );
-};
-
 /**
  * Generates a formatted table representing the list of procedures based on the provided array of procedures and mappings.
  * @param fhirBundle - The fhir bundle
@@ -731,6 +778,15 @@ const evaluateProcedureDetails = (fhirBundle: Bundle, procedure: Element) => {
   ));
 };
 
+// =============================================================================
+// Clinical Info: Immunizations
+// =============================================================================
+
+
+// =============================================================================
+// Clinical Info: Diagnostics and Vital Signs
+// =============================================================================
+
 /**
  * Returns a formatted table displaying vital signs information.
  * @param fhirBundle - The FHIR bundle containing vital signs information.
@@ -771,38 +827,4 @@ export const returnVitalsTable = (fhirBundle: Bundle) => {
       fixed={false}
     />
   );
-};
-
-const evaluateOutbreakInfo = (fhirBundle: Bundle): string => {
-  const outbreakInfos = evaluateAll(
-    fhirBundle,
-    fhirPathMappings.emergencyOutbreakInfo,
-  );
-
-  return outbreakInfos
-    .map((outbreakInfo) => {
-      const lines = [];
-
-      if (outbreakInfo.effectiveDateTime) {
-        lines.push(
-          "Date/Time: " + formatDateTime(outbreakInfo.effectiveDateTime),
-        );
-      } else if (outbreakInfo.effectivePeriod) {
-        lines.push(formatStartEndDate(outbreakInfo.effectivePeriod));
-      }
-
-      // Get the first display value from the coding array
-      const coding = outbreakInfo.code?.coding?.find((c) => c.display);
-      if (coding?.display) {
-        lines.push("Type: " + coding.display);
-      }
-
-      const value = evaluateValue(outbreakInfo, fhirPathMappings.valueX);
-      if (value) {
-        lines.push("Result: " + value);
-      }
-
-      return lines.join("\n");
-    })
-    .join("\n\n");
 };
