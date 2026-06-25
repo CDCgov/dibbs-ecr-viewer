@@ -3,6 +3,7 @@ import {
   CareTeamParticipant,
   Device,
   Element,
+  Immunization,
   Location,
   Medication,
   MedicationAdministration,
@@ -57,12 +58,12 @@ import EvaluateTable, {
 } from "@/app/view-data/components/EvaluateTable";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
 import {
-  returnImmunizations,
   returnProblemsTable,
 } from "@/app/view-data/components/common";
 import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
 import { FhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
+import classNames from "classnames";
 
 
 // =============================================================================
@@ -782,6 +783,97 @@ const evaluateProcedureDetails = (fhirBundle: Bundle, procedure: Element) => {
 // Clinical Info: Immunizations
 // =============================================================================
 
+type ModifiedImmunization = Omit<Immunization, "manufacturer"> & {
+  manufacturer?: Reference & {
+    name?: string;
+  };
+};
+
+/**
+ * Generates a formatted table representing the list of immunizations based on the provided array of immunizations and mappings.
+ * @param fhirBundle - The FHIR bundle containing patient and immunizations information.
+ * @param immunizationsArray - An array containing the list of immunizations.
+ * @param caption - The string to display above the table
+ * @param className - Optional. The css class to be added to the table.
+ * @returns - A formatted table React element representing the list of immunizations, or undefined if the immunizations array is empty.
+ */
+export const returnImmunizations = (
+  fhirBundle: Bundle,
+  immunizationsArray: Immunization[],
+  caption: string,
+  className?: string
+): React.JSX.Element | undefined => {
+  if (immunizationsArray.length === 0) {
+    return undefined;
+  }
+
+  const columnInfo: ColumnInfoInput[] = [
+    { columnName: "Name", infoPath: "immunizationsName" },
+    {
+      columnName: "Effective Date/Time",
+      infoPath: "immunizationsAdminDate",
+      className: "minw-10",
+    },
+    { columnName: "Status", infoPath: "status", className: "minw-15" },
+    {
+      columnName: "Status Reason",
+      infoPath: "statusReason",
+      className: "minw-15",
+    },
+    {
+      columnName: "Dose Number",
+      infoPath: "immunizationsDoseNumber",
+      className: "minw-10",
+    },
+    {
+      columnName: "Manufacturer",
+      infoPath: "immunizationsManufacturerName",
+      className: "minw-18",
+    },
+    {
+      columnName: "Lot Number",
+      infoPath: "immunizationsLotNumber",
+      className: "minw-15",
+    },
+  ];
+
+  const modifiedImmunizations: ModifiedImmunization[] = immunizationsArray.map(
+    (initialImmunization) => {
+      const newImmunization: ModifiedImmunization = {
+        ...initialImmunization,
+      };
+
+      newImmunization.occurrenceDateTime = formatDateTime(
+        initialImmunization.occurrenceDateTime
+      );
+
+      const manufacturer = evaluateReference<Organization>(
+        fhirBundle,
+        initialImmunization.manufacturer?.reference
+      );
+
+      if (manufacturer) {
+        newImmunization.manufacturer = {
+          ...initialImmunization.manufacturer,
+          name: manufacturer.name || "",
+        };
+      }
+
+      return newImmunization;
+    }
+  );
+
+  sortResourcesByDate(modifiedImmunizations, fhirPathMappings.occurrenceX);
+
+  return (
+    <EvaluateTable
+      resources={modifiedImmunizations}
+      columns={columnInfo}
+      caption={caption}
+      className={classNames("margin-y-0", className)}
+    />
+  );
+};
 
 // =============================================================================
 // Clinical Info: Diagnostics and Vital Signs
