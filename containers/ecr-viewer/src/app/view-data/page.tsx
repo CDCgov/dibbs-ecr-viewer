@@ -88,7 +88,7 @@ const ECRViewerPage = async ({
         <EcrSummary
           patientDetails={evaluateEcrSummaryPatientDetails(
             fhirBundle,
-            fhirIndex
+            fhirIndex,
           )}
           encounterDetails={evaluateEcrSummaryEncounterDetails(fhirBundle)}
           conditionSummary={evaluateEcrSummaryConditionSummary(
