@@ -1,8 +1,8 @@
 import { DOMParser } from "@xmldom/xmldom";
 import { Bundle } from "fhir/r4";
 import JSZip from "jszip";
+import { SaxesParser } from "saxes";
 import { fetch, Agent, FormData } from "undici";
-import xpath from "xpath";
 
 import {
   deleteFromStorage,
@@ -280,32 +280,39 @@ export const getEcrIdFromXml = async (body: RequestBody): Promise<string> => {
     );
   }
 
-  const doc = new DOMParser().parseFromString(xmlString, "text/xml");
+  class FoundEcrId extends Error {}
 
-  // Namespace-aware selector for CDA
-  const select = xpath.useNamespaces({ cda: "urn:hl7-org:v3" });
+  const parser = new SaxesParser();
+  const stack: string[] = [];
+  let root = "";
+  let extension = "";
+  
+  parser.on("opentag", (node) => {
+    const parent = stack.at(-1);
 
-  let root = select(
-    "string(/cda:ClinicalDocument/cda:id/@root)",
-    doc,
-  ) as string;
+    // make sure that we are taking the ID from the root element
+    if (node.name === "id" && parent === "ClinicalDocument") {
+      root = String(node.attributes.root ?? "");
+      extension = String(node.attributes.extension ?? "");
 
-  // Fallback if the document lacks the CDA namespace declaration
-  if (!root) {
-    root = xpath.select("string(/ClinicalDocument/id/@root)", doc) as string;
-  }
+      // A bit of a hack but this allows us to exit without reading the rest of the xml
+      throw new FoundEcrId();
+    }
 
-  let extension = select(
-    "string(/cda:ClinicalDocument/cda:id/@extension)",
-    doc,
-  ) as string;
+    stack.push(node.name);
+  });
 
-  // Fallback if the document lacks the CDA namespace declaration
-  if (!extension) {
-    extension = xpath.select(
-      "string(/ClinicalDocument/id/@extension)",
-      doc,
-    ) as string;
+  parser.on("closetag", () => {
+    stack.pop();
+  });
+
+  try {
+    parser.write(xmlString).close();
+  } catch (error) {
+    // if we have a real error we throw it
+    if (!(error instanceof FoundEcrId)) {
+      throw error;
+    }
   }
 
   return resolveEcrId(root, extension);
