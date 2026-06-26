@@ -10,7 +10,11 @@ import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordio
 import { HtmlTableJsonRow } from "@/app/services/htmlTableService";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
 
-import { formatCodeableConcept, formatCurrentAddress, formatPatientContactList } from "@/app/services/formatService";
+import {
+  formatCodeableConcept,
+  formatCurrentAddress,
+  formatPatientContactList,
+} from "@/app/services/formatService";
 import { evaluateData, noData, notEmpty } from "@/app/utils/data-utils";
 import {
   evaluateAll,
@@ -31,7 +35,10 @@ import EvaluateTable, {
 import { UnstyledDividedList } from "@/app/view-data/components/UnstyledDividedList";
 import { FhirIndex } from "./fhirResourcesIndexService";
 import { getPatient } from "@/app/view-data/services/demographicsService";
-import { formatDateTime, formatPeriodDate } from "@/app/services/formatDateService";
+import {
+  formatDateTime,
+  formatPeriodDate,
+} from "@/app/services/formatDateService";
 import { sortResourcesByDate } from "../utils/fhir-data-utils";
 
 /**

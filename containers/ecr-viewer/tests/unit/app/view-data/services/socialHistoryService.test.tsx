@@ -29,7 +29,7 @@ const BundleWithSDOH = _BundleWithSDOH as unknown as Bundle;
 const BundleWithSexualOrientation =
   _BundleWithSexualOrientation as unknown as Bundle;
 const fhirIndexBundleWithSexualOrientation = getFhirIndex(
-  BundleWithSexualOrientation
+  BundleWithSexualOrientation,
 );
 
 describe("Travel History", () => {
@@ -46,9 +46,7 @@ describe("Travel History", () => {
 
 describe("Disability Status", () => {
   it("should display a table ", () => {
-    const { container } = render(
-      returnDisabilityStatusTable(BundlePatient),
-    );
+    const { container } = render(returnDisabilityStatusTable(BundlePatient));
     // TODO: Remove this once #595 is merged
     // Don't want IDs to dynamically update in this test
     const cleanedContainer = container.innerHTML
@@ -91,7 +89,7 @@ describe("Evaluate Patient Info: Social History", () => {
   it("should have exposure contact when there is a exposure contact observation present", () => {
     const actual = evaluateSocialData(
       BundleWithTravelHistory,
-      fhirIndexBundleWithTravelHistory
+      fhirIndexBundleWithTravelHistory,
     );
 
     render(actual.availableData[0].value);
@@ -102,7 +100,7 @@ describe("Evaluate Patient Info: Social History", () => {
   it("should have travel history when there is a travel history observation present", () => {
     const actual = evaluateSocialData(
       BundleWithTravelHistory,
-      fhirIndexBundleWithTravelHistory
+      fhirIndexBundleWithTravelHistory,
     );
 
     render(actual.availableData[1].value);
@@ -116,7 +114,7 @@ describe("Evaluate Patient Info: Social History", () => {
       expect(actual).toEqual(
         "Use: Current drinker of alcohol\n" +
           "Intake (standard drinks/week): .29/d\n" +
-          "Comment: 1-2 drinks 2 to 4 times a month"
+          "Comment: 1-2 drinks 2 to 4 times a month",
       );
     });
     it("should empty string because there is no use, intake, or comment", () => {
@@ -128,7 +126,7 @@ describe("Evaluate Patient Info: Social History", () => {
   it("should have patient sexual orientation when available", () => {
     const actual = evaluateSocialData(
       BundleWithSexualOrientation,
-      fhirIndexBundleWithSexualOrientation
+      fhirIndexBundleWithSexualOrientation,
     );
 
     expect(actual.availableData[0].value).toEqual("Other");
@@ -276,9 +274,7 @@ describe("Evaluate Patient Info: Social History", () => {
         ],
       };
 
-      expect(evaluateOccupation(bundle)).toEqual(
-        "Dates: 01/04/2020 - Present"
-      );
+      expect(evaluateOccupation(bundle)).toEqual("Dates: 01/04/2020 - Present");
     });
 
     it("should all together now", () => {
@@ -342,7 +338,7 @@ describe("Evaluate Patient Info: Social History", () => {
       };
 
       expect(evaluateOccupation(bundle)).toEqual(
-        "Occupation\n\nIndustry: i'm an industry\n\nStatus: EmploymentStatus\n\nDates: 01/04/2020 - Present"
+        "Occupation\n\nIndustry: i'm an industry\n\nStatus: EmploymentStatus\n\nDates: 01/04/2020 - Present",
       );
     });
   });
@@ -955,24 +951,18 @@ describe("Evaluate Patient Info: Social History", () => {
   });
 
   it("should return religion if available", () => {
-    const actual = evaluateSocialData(
-      BundlePatient,
-      fhirIndexBundlePatient
-    );
+    const actual = evaluateSocialData(BundlePatient, fhirIndexBundlePatient);
     const ext = actual.availableData.filter(
-      (d) => d.title === "Religious Affiliation"
+      (d) => d.title === "Religious Affiliation",
     );
     expect(ext).toHaveLength(1);
     expect(ext[0].value).toEqual("Baptist");
   });
 
   it("should return marital status if available", () => {
-    const actual = evaluateSocialData(
-      BundlePatient,
-      fhirIndexBundlePatient
-    );
+    const actual = evaluateSocialData(BundlePatient, fhirIndexBundlePatient);
     const ext = actual.availableData.filter(
-      (d) => d.title === "Marital Status"
+      (d) => d.title === "Marital Status",
     );
     expect(ext).toHaveLength(1);
     expect(ext[0].value).toEqual("Married");

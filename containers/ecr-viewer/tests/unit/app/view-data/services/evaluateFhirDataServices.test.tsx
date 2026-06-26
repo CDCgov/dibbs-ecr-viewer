@@ -38,7 +38,6 @@ const BundlePatientMultiple = _BundlePatientMultiple as unknown as Bundle;
 const BundleWithAdmissionMedications = _BundleAdmissionMedications as Bundle;
 const BundlePatientWithCovid = _BundlePatientWithCovid as Bundle;
 
-
 const BundleWithPregnancyStatus =
   _BundleWithPregnancyStatus as unknown as Bundle;
 const fhirIndexBundleWithPregnancyStatus = getFhirIndex(
