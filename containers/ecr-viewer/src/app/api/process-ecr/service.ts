@@ -285,7 +285,7 @@ export const getEcrIdFromXml = async (body: RequestBody): Promise<string> => {
   const stack: string[] = [];
   let root = "";
   let extension = "";
-  
+
   parser.on("opentag", (node) => {
     const parent = stack.at(-1);
 
