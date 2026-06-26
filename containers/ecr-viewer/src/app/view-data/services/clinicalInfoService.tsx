@@ -90,7 +90,7 @@ export const evaluateClinicalData = (
     evaluateNotes(
       fhirBundle,
       fhirPathMappings.historyOfPresentIllness,
-      "History of Present Illness"
+      "History of Present Illness",
     ),
   ];
   const reasonForVisitData: DisplayDataProps[] = [
