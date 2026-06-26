@@ -13,7 +13,7 @@ packaging
 phonenumbers
 polling
 pycountry>=24.6.1
-pydantic-settings>=2.13.0
+pydantic-settings>=2.14.2
 pydantic>=2.12.5
 rapidfuzz
 requests>=2.32.4

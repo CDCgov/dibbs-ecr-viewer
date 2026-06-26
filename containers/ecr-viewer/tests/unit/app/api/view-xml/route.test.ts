@@ -52,10 +52,10 @@ describe("GET /api/view-xml", () => {
     expect(response.status).toBe(400);
   });
 
-  it("returns 501 when SOURCE is not s3", async () => {
+  it("returns 404 when storage client is not configured", async () => {
     process.env.SOURCE = "azure";
     const response = await GET(makeRequest("abc"));
-    expect(response.status).toBe(501);
+    expect(response.status).toBe(404);
   });
 
   it("returns 404 when S3 returns no Body", async () => {

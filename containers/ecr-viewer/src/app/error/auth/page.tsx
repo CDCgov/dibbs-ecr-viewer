@@ -14,9 +14,10 @@ const ErrorAuthPage = () => (
   >
     Please try the following:
     <ul className="margin-0 padding-left-3">
-      {process.env.NBS_PUB_KEY && (
+      {(process.env.JWT_PUB_KEY || process.env.NBS_PUB_KEY) && (
         <li>
-          <b>Return to NBS:</b> Return to NBS and try to reopen the eCR.
+          <b>Return to your case management system:</b> Return and try to reopen
+          the eCR.
         </li>
       )}
       {process.env.AUTH_PROVIDER && (
