@@ -17,7 +17,7 @@ import { makePlural } from "@/app/utils/format-utils";
 import {
   calculatePatientAge,
   getPatient,
-} from "@/app/view-data/services/evaluateFhirDataService";
+} from "@/app/view-data/services/demographicsService";
 import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 
 import EvaluateTable, { ColumnInfoInput } from "./EvaluateTable";
