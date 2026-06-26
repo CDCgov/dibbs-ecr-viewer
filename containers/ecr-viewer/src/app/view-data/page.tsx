@@ -16,7 +16,7 @@ import {
   evaluatePatientDOB,
   evaluatePatientName,
   getPatient,
-} from "./services/evaluateFhirDataService";
+} from "@/app/view-data/services/demographicsService";
 import { getFhirData, isSuccessResponse } from "./services/fhirDataService";
 import { ecrXmlsExist } from "./services/xmlService";
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";

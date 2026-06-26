@@ -30,7 +30,7 @@ import EvaluateTable, {
 } from "@/app/view-data/components/EvaluateTable";
 import { UnstyledDividedList } from "@/app/view-data/components/UnstyledDividedList";
 import { FhirIndex } from "./fhirResourcesIndexService";
-import { getPatient } from "./evaluateFhirDataService";
+import { getPatient } from "@/app/view-data/services/demographicsService";
 import { formatDateTime, formatPeriodDate } from "@/app/services/formatDateService";
 import { sortResourcesByDate } from "../utils/fhir-data-utils";
 
