@@ -1,4 +1,3 @@
-import { DOMParser } from "@xmldom/xmldom";
 import { Bundle } from "fhir/r4";
 import JSZip from "jszip";
 import { SaxesParser } from "saxes";
