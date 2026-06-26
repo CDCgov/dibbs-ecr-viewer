@@ -65,7 +65,10 @@ import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordio
 import { FhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 import classNames from "classnames";
 import { FieldValue } from "../components/FieldValue";
-import { calculatePatientAge, getPatient } from "@/app/view-data/services/demographicsService";
+import {
+  calculatePatientAge,
+  getPatient,
+} from "@/app/view-data/services/demographicsService";
 
 // =============================================================================
 // Clinical Info (Overall)
