@@ -67,7 +67,6 @@ import classNames from "classnames";
 import { FieldValue } from "../components/FieldValue";
 import { calculatePatientAge, getPatient } from "./evaluateFhirDataService";
 
-
 // =============================================================================
 // Clinical Info (Overall)
 // =============================================================================
@@ -338,7 +337,7 @@ const getFormattedOnsetAge = (
 const evaluateOutbreakInfo = (fhirBundle: Bundle): string => {
   const outbreakInfos = evaluateAll(
     fhirBundle,
-    fhirPathMappings.emergencyOutbreakInfo
+    fhirPathMappings.emergencyOutbreakInfo,
   );
 
   return outbreakInfos
@@ -347,7 +346,7 @@ const evaluateOutbreakInfo = (fhirBundle: Bundle): string => {
 
       if (outbreakInfo.effectiveDateTime) {
         lines.push(
-          "Date/Time: " + formatDateTime(outbreakInfo.effectiveDateTime)
+          "Date/Time: " + formatDateTime(outbreakInfo.effectiveDateTime),
         );
       } else if (outbreakInfo.effectivePeriod) {
         lines.push(formatStartEndDate(outbreakInfo.effectivePeriod));
@@ -374,7 +373,7 @@ const evaluateOutbreakInfo = (fhirBundle: Bundle): string => {
 // =============================================================================
 
 const evaluatePlanOfTreatment = (
-  fhirBundle: Bundle
+  fhirBundle: Bundle,
 ): React.ReactNode | undefined => {
   const plans = evaluateAll(fhirBundle, fhirPathMappings.planOfTreatment);
   const activities = [];
@@ -387,7 +386,7 @@ const evaluatePlanOfTreatment = (
     } else if (plan.reference?.reference?.startsWith("ServiceRequest/")) {
       const req = evaluateReference<ServiceRequest>(
         fhirBundle,
-        plan.reference.reference
+        plan.reference.reference,
       );
       if (req) {
         procs.push(req);
@@ -395,7 +394,7 @@ const evaluatePlanOfTreatment = (
     } else if (plan.reference?.reference?.startsWith("MedicationRequest/")) {
       const req = evaluateReference<MedicationRequest>(
         fhirBundle,
-        plan.reference.reference
+        plan.reference.reference,
       );
       if (req) {
         meds.push(req);
@@ -463,11 +462,11 @@ type ModifiedCareTeamParticipant = Omit<
  * @returns The JSX element representing the care team table, or undefined if no care team participants are found.
  */
 export const returnCareTeamTable = (
-  bundle: Bundle
+  bundle: Bundle,
 ): React.JSX.Element | undefined => {
   const careTeamParticipants = evaluateAll(
     bundle,
-    fhirPathMappings.careTeamParticipants
+    fhirPathMappings.careTeamParticipants,
   );
   if (careTeamParticipants.length === 0) {
     return undefined;
@@ -512,11 +511,11 @@ export const returnCareTeamTable = (
 
       const practitioner = evaluateReference<Practitioner>(
         bundle,
-        initialParticipant?.member?.reference
+        initialParticipant?.member?.reference,
       );
 
       const practitionerNameObj = practitioner?.name?.find(
-        (nameObject) => nameObject.family
+        (nameObject) => nameObject.family,
       );
 
       if (initialParticipant.member) {
@@ -907,7 +906,7 @@ export const returnImmunizations = (
   fhirBundle: Bundle,
   immunizationsArray: Immunization[],
   caption: string,
-  className?: string
+  className?: string,
 ): React.JSX.Element | undefined => {
   if (immunizationsArray.length === 0) {
     return undefined;
@@ -950,12 +949,12 @@ export const returnImmunizations = (
       };
 
       newImmunization.occurrenceDateTime = formatDateTime(
-        initialImmunization.occurrenceDateTime
+        initialImmunization.occurrenceDateTime,
       );
 
       const manufacturer = evaluateReference<Organization>(
         fhirBundle,
-        initialImmunization.manufacturer?.reference
+        initialImmunization.manufacturer?.reference,
       );
 
       if (manufacturer) {
@@ -966,7 +965,7 @@ export const returnImmunizations = (
       }
 
       return newImmunization;
-    }
+    },
   );
 
   sortResourcesByDate(modifiedImmunizations, fhirPathMappings.occurrenceX);

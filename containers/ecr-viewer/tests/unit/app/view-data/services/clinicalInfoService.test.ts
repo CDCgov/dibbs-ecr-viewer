@@ -13,8 +13,8 @@ describe("Render Active Problem table", () => {
       fhirIndex,
       evaluateAll(
         BundleNoActiveProblems as unknown as Bundle,
-        fhirPathMappings.activeProblems
-      )
+        fhirPathMappings.activeProblems,
+      ),
     );
     expect(actual).toBeUndefined();
   });
