@@ -30,11 +30,7 @@ import {
   formatCoding,
 } from "@/app/services/formatService";
 import { HtmlTableJsonRow } from "@/app/services/htmlTableService";
-import {
-  evaluateData,
-  noData,
-  notEmpty,
-} from "@/app/utils/data-utils";
+import { evaluateData, noData, notEmpty } from "@/app/utils/data-utils";
 import {
   evaluateAll,
   evaluateAllReferences,
@@ -55,9 +51,7 @@ import EvaluateTable, {
 } from "@/app/view-data/components/EvaluateTable";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
 import { UnstyledDividedList } from "@/app/view-data/components/UnstyledDividedList";
-import {
-  sortResourcesByDate,
-} from "@/app/view-data/utils/fhir-data-utils";
+import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 
 import { getPatient } from "@/app/view-data/services/demographicsService";
 import {

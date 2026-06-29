@@ -11,7 +11,7 @@ interface PregnancyInfoProps {
 
 /**
  * PregnancyInfo component displays pregnancy-related information.
- * @ 
+ * @
  * @param props - The props object.
  * @param props.pregnancyData - The pregnancy data to be displayed.
  * @returns The rendered component.

@@ -10,12 +10,8 @@ import {
 } from "fhir/r4";
 
 import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
-import {
-  formatDateTime,
-} from "@/app/services/formatDateService";
-import {
-  formatCodeableConcept,
-} from "@/app/services/formatService";
+import { formatDateTime } from "@/app/services/formatDateService";
+import { formatCodeableConcept } from "@/app/services/formatService";
 import {
   CompleteData,
   evaluateData,
@@ -56,7 +52,7 @@ import { FhirIndex } from "./fhirResourcesIndexService";
  */
 export const evaluatePregnancyData = (
   fhirBundle: Bundle,
-  fhirIndex: FhirIndex
+  fhirIndex: FhirIndex,
 ): CompleteData => {
   const data = [
     ...evaluatePregnancyStatus(fhirBundle),
@@ -102,7 +98,7 @@ const evaluatePregnancyStatus = (fhirBundle: Bundle) => {
     evaluatePregnancyStatusEntries(fhirBundle);
   const postpartumStatusObservationEntries = evaluateAll(
     fhirBundle,
-    fhirPathMappings.postpartumStatus
+    fhirPathMappings.postpartumStatus,
   ).map((ob) => {
     return {
       type: "Postpartum Status",
@@ -144,8 +140,8 @@ const evaluatePregnancyStatus = (fhirBundle: Bundle) => {
     compareResourcesByDate(
       a.observation,
       b.observation,
-      fhirPathMappings.effectiveX
-    )
+      fhirPathMappings.effectiveX,
+    ),
   );
 
   if (allPregnancyObservations.length > 0) {
@@ -177,7 +173,7 @@ const evaluatePregnancyStatus = (fhirBundle: Bundle) => {
                   <span className="text-base" style={{ fontSize: "1rem" }}>
                     {evaluateValue(
                       obs.observation,
-                      fhirPathMappings.effectiveX
+                      fhirPathMappings.effectiveX,
                     )}
                   </span>
                 </div>
@@ -199,7 +195,7 @@ const evaluatePregnancyStatus = (fhirBundle: Bundle) => {
 const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
   const pregnancyOutcomeObservations = evaluateAll(
     fhirBundle,
-    fhirPathMappings.pregnancyOutcome
+    fhirPathMappings.pregnancyOutcome,
   );
   return evaluateAll(fhirBundle, fhirPathMappings.pregnancyStatus).map((ob) => {
     const status = evaluateValue(ob, "valueCodeableConcept");
@@ -228,15 +224,15 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
           evaluateValue(
             component,
             fhirPathMappings.code,
-            "Observation.component"
-          )
+            "Observation.component",
+          ),
         ),
         value: evaluateValue(
           component,
           fhirPathMappings.valueX,
-          "Observation.component"
+          "Observation.component",
         ),
-      })
+      }),
     );
 
     const fullId = `${ob.resourceType}/${ob.id}`;
@@ -268,7 +264,7 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
           const procedureName = evaluateValue(procedure, fhirPathMappings.code);
           const procedureDate = evaluateValue(
             procedure,
-            fhirPathMappings.procedureDate
+            fhirPathMappings.procedureDate,
           );
           outcomeItems.push({
             title: "Procedure",
@@ -291,7 +287,7 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
                   item={{ title, value, dividerLine: false, titleNormal: true }}
                   key={`item-${i}`}
                 />
-              ))
+              )),
             )}
           />
         ),
@@ -303,7 +299,7 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
         evaluateReference(fhirBundle, ref.reference);
       data.push({
         title: toTitleCase(
-          evaluateValue(supplementalObservation, fhirPathMappings.code)
+          evaluateValue(supplementalObservation, fhirPathMappings.code),
         ),
         value: evaluateValue(supplementalObservation, fhirPathMappings.valueX),
       });
@@ -321,7 +317,7 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
 const evaluateLastMenstrualPeriod = (fhirBundle: Bundle) => {
   const observations = sortResourcesByDate(
     evaluateAll(fhirBundle, fhirPathMappings.lastMenstrualPeriod),
-    fhirPathMappings.effectiveX
+    fhirPathMappings.effectiveX,
   );
   if (observations.length === 0) return;
 
@@ -354,7 +350,7 @@ const evaluatePregnancyIntention = (fhirBundle: Bundle) => {
 const evaluateDateOfLastLiveBirth = (fhirBundle: Bundle) => {
   const observation = evaluateOne(
     fhirBundle,
-    fhirPathMappings.pregnancyLastLiveBirth
+    fhirPathMappings.pregnancyLastLiveBirth,
   );
 
   if (!observation) return;
@@ -374,7 +370,7 @@ const evaluatePregnancyRhType = (fhirBundle: Bundle) => {
 const evaluatePregnancyDRhSensitized = (fhirBundle: Bundle) => {
   const observation = evaluateOne(
     fhirBundle,
-    fhirPathMappings.pregnancyDRhSensitized
+    fhirPathMappings.pregnancyDRhSensitized,
   );
 
   if (!observation) return;
@@ -383,12 +379,12 @@ const evaluatePregnancyDRhSensitized = (fhirBundle: Bundle) => {
 
 const evaluatePregnancyMedicationsAdministered = (
   fhirBundle: Bundle,
-  fhirIndex: FhirIndex
+  fhirIndex: FhirIndex,
 ) => {
   const pregnancyMedicationAdministrationRefs =
     evaluateAllReferences<MedicationAdministration>(
       fhirBundle,
-      fhirPathMappings.pregnancyMedicationAdministrationRefs
+      fhirPathMappings.pregnancyMedicationAdministrationRefs,
     );
 
   const entries = pregnancyMedicationAdministrationRefs.map(
@@ -397,18 +393,18 @@ const evaluatePregnancyMedicationsAdministered = (
       if (medicationAdministration?.medicationReference?.reference) {
         medication = evaluateReference2(
           fhirIndex,
-          medicationAdministration.medicationReference.reference
+          medicationAdministration.medicationReference.reference,
         );
       }
 
       const name = formatCodeableConcept(medication?.code);
       const effective = evaluateValue(
         medicationAdministration,
-        fhirPathMappings.effectiveX
+        fhirPathMappings.effectiveX,
       );
 
       return name + "\n" + effective;
-    }
+    },
   );
 
   return entries.join("\n\n");
