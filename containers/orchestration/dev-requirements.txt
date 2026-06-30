@@ -4,4 +4,4 @@ pytest>=9.0.3
 pytest-asyncio>=1.4.0
 pytest-env
 pytest-mock
-testcontainers[compose]>=4.14.1
+testcontainers[compose]>=4.14.2

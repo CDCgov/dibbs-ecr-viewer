@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 # Download FHIR-Converter
 
-RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch angela/1331-fix-condition-resources --depth 1 /App
+RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch 8.7.5 --depth 1 /App
 
 WORKDIR /App
 

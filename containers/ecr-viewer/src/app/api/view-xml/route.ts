@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { S3_SOURCE } from "@/app/data/blobStorage/utils";
 import {
   getEcrXmls,
   XmlNotFoundError,
@@ -19,13 +18,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       { message: "Missing id parameter" },
       { status: 400 },
-    );
-  }
-
-  if (process.env.SOURCE !== S3_SOURCE) {
-    return NextResponse.json(
-      { message: "XML viewing is only supported for S3 storage" },
-      { status: 501 },
     );
   }
 
