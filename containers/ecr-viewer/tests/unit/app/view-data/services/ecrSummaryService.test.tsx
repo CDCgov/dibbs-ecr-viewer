@@ -383,7 +383,7 @@ describe("ecrSummaryService Tests", () => {
         fhirIndexPatientEmpty,
       );
       actual.forEach((a) => {
-        expect(a.value === noDataSummary);
+        expect(a.value).toEqual(noDataSummary);
       });
     });
   });
@@ -422,7 +422,7 @@ describe("ecrSummaryService Tests", () => {
       } as unknown as Bundle;
       const actual = evaluateEcrSummaryEncounterDetails(BundleEncounterEmpty);
       actual.forEach((a) => {
-        expect(a.value === noDataSummary);
+        expect(a.value).toEqual(noDataSummary);
       });
     });
   });
