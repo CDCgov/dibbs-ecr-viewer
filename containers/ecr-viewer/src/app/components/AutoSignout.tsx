@@ -5,6 +5,7 @@ import { signOut, useSession } from "next-auth/react";
 
 import { SessionExpiryModal } from "./SessionExpiryModal";
 import { useActivityReset } from "./useActivityReset";
+import { ModalRef } from "./modal/Modal";
 
 const WARNING_DURATION = 90;
 
@@ -13,7 +14,7 @@ export const signOutGoHome = () => signOut({ callbackUrl: "/ecr-viewer" });
 export const AutoSignout = () => {
   const { update, data } = useSession();
   const [timeToExpireSecs, setTimeToExpireSecs] = useState(99999999999);
-  const modalRef = useRef(null);
+  const modalRef = useRef<ModalRef>(null);
 
   // On activity: refresh the server session (delayed so any in-flight signout completes first)
   const isActive = useActivityReset(() => {

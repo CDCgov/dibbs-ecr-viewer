@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 
+import { ModalRef } from "./modal/Modal";
 import { SessionExpiryModal } from "./SessionExpiryModal";
 import { useActivityReset } from "./useActivityReset";
 
@@ -20,7 +21,7 @@ export const AutoSignoutIntegrated = ({
   _navigate?: (path: string) => void;
 }) => {
   const [timeToExpireSecs, setTimeToExpireSecs] = useState(sessionDurationSec);
-  const modalRef = useRef(null);
+  const modalRef = useRef<ModalRef>(null);
   const deadlineRef = useRef(Date.now() + sessionDurationSec * 1000);
 
   // On activity: reset the client-side idle deadline
