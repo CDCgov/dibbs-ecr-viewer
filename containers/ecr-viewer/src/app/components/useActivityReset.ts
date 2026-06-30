@@ -21,7 +21,8 @@ export const useActivityReset = (
     if (isActive) return;
     const markActive = () => setIsActive(true);
     ACTIVE_EVENTS.forEach((e) => window.addEventListener(e, markActive));
-    return () => ACTIVE_EVENTS.forEach((e) => window.removeEventListener(e, markActive));
+    return () =>
+      ACTIVE_EVENTS.forEach((e) => window.removeEventListener(e, markActive));
   }, [isActive]);
 
   useEffect(() => {
