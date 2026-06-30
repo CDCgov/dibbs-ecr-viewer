@@ -186,10 +186,28 @@ SQL scripts for removing eCR records from the metadata database are provided in 
 
 | Script                                               | Database   | Behavior                                                         |
 | ---------------------------------------------------- | ---------- | ---------------------------------------------------------------- |
+| `seed-scripts/sql/postgres/delete-ecr-by-id.sql`     | Postgres   | Deletes one eCR (and all child records) by `ecr_data.eicr_id`    |
+| `seed-scripts/sql/sqlserver/delete-ecr-by-id.sql`    | SQL Server | Deletes one eCR (and all child records) by `ecr_data.eicr_id`    |
 | `seed-scripts/sql/postgres/delete-ecrs-by-date.sql`  | Postgres   | Deletes eCRs (and all child records) created before a given date |
 | `seed-scripts/sql/sqlserver/delete-ecrs-by-date.sql` | SQL Server | Deletes eCRs (and all child records) created before a given date |
 | `seed-scripts/sql/postgres/delete-all-data.sql`      | Postgres   | Deletes **all** data from every table in the `ecr_viewer` schema |
 | `seed-scripts/sql/sqlserver/delete-all-data.sql`     | SQL Server | Deletes **all** data from every table in the `ecr_viewer` schema |
+
+### Delete by eCR ID
+
+Open the appropriate script for your database and set the ID variable near the top of the file to the target `ecr_data.eicr_id`. Then run:
+
+```bash
+# Postgres
+psql "$DATABASE_URL" -f seed-scripts/sql/postgres/delete-ecr-by-id.sql
+# or
+psql -U postgres -h <host> -d ecr_viewer_db -f seed-scripts/sql/postgres/delete-ecr-by-id.sql
+
+# SQL Server
+sqlcmd -S <server> -U <user> -P <password> -i seed-scripts/sql/sqlserver/delete-ecr-by-id.sql
+```
+
+Both scripts are safe to run against core and extended schema deployments - extended schema tables (`ecr_labs`, `ecr_immunizations`, `patient_address`) are deleted only when present.
 
 ### Delete by date
 
@@ -198,6 +216,8 @@ Open the appropriate script for your database and set the `cutoff_date` variable
 ```bash
 # Postgres
 psql "$DATABASE_URL" -f seed-scripts/sql/postgres/delete-ecrs-by-date.sql
+# or
+psql -U postgres -h <host> -d ecr_viewer_db -f seed-scripts/sql/postgres/delete-ecrs-by-date.sql
 
 # SQL Server
 sqlcmd -S <server> -U <user> -P <password> -i seed-scripts/sql/sqlserver/delete-ecrs-by-date.sql
@@ -213,6 +233,8 @@ Both scripts are safe to run against core and extended schema deployments — ex
 ```bash
 # Postgres
 psql "$DATABASE_URL" -f seed-scripts/sql/postgres/delete-all-data.sql
+# or
+psql -U postgres -h <host> -d ecr_viewer_db -f seed-scripts/sql/postgres/delete-all-data.sql
 
 # SQL Server
 sqlcmd -S <server> -U <user> -P <password> -i seed-scripts/sql/sqlserver/delete-all-data.sql

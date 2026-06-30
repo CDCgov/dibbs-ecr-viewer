@@ -14,7 +14,6 @@ import SocialHistory from "@/app/view-data/components/SocialHistory";
 import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
 import { evaluateEcrMetadata } from "@/app/view-data/services/ecrMetadataService";
 import {
-  evaluateDemographicsData,
   evaluateSocialData,
   evaluateEncounterData,
   evaluateProviderData,
@@ -22,6 +21,7 @@ import {
   evaluateHospitalEncounterData,
   evaluatePregnancyData,
 } from "@/app/view-data/services/evaluateFhirDataService";
+import { evaluateDemographicsData } from "@/app/view-data/services/demographicsService";
 import { evaluateLabInfoData } from "@/app/view-data/services/labsService";
 import {
   FhirIndex,
