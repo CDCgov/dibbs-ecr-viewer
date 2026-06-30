@@ -2,6 +2,7 @@ import {
   DeleteObjectCommand,
   DeleteObjectCommandOutput,
   HeadBucketCommand,
+  HeadObjectCommand,
   PutObjectCommand,
   PutObjectCommandOutput,
   S3Client,
@@ -42,6 +43,40 @@ export const s3HealthCheck = async () => {
   } catch (error: unknown) {
     console.error(error);
     return "DOWN";
+  }
+};
+
+/**
+ * Checks whether an object exists in an AWS S3 bucket.
+ * @param objectKey - The name of the blob.
+ * @returns True if the object exists, false otherwise.
+ */
+export const existsInS3 = async (objectKey: string): Promise<boolean> => {
+  try {
+    // HeadObjectCommand checks for existence and gets the file's metadata
+    // without downloading its contents, unlike GetObjectCommand which
+    // would stream the full file. send() throws on any non-2xx response,
+    // so a clean resolve means the object exists.
+    await s3Client.send(
+      new HeadObjectCommand({
+        Bucket: process.env.ECR_BUCKET_NAME,
+        Key: objectKey,
+      }),
+    );
+    return true;
+  } catch (error: unknown) {
+    // Unlike GCP/Azure, s3Client is always built, misconfiguration are
+    // thrown rather than an undefined client. A 404 means the
+    // object doesn't exist; rethrow anything else so callers aren't misled into
+    // treating a storage error as a non-duplicate.
+    if (
+      error instanceof Error &&
+      (error as { $metadata?: { httpStatusCode?: number } }).$metadata
+        ?.httpStatusCode === 404
+    ) {
+      return false;
+    }
+    throw error;
   }
 };
 

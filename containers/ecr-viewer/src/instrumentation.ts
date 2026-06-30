@@ -31,10 +31,10 @@ export function setupConfigurationVariables() {
   };
   process.env.SOURCE = sourceMap[process.env.CONFIG_NAME?.split("_")[0]];
 
-  // INTEGRATED and DUAL should have NBS auth
+  // INTEGRATED and DUAL should have JWT auth
   if (process.env.CONFIG_NAME?.endsWith("_NON_INTEGRATED")) {
-    delete process.env.NBS_PUB_KEY; // makes dev life easier
-    delete process.env.NBS_API_PUB_KEY; // makes dev life easier
+    delete process.env.JWT_PUB_KEY; // makes dev life easier
+    delete process.env.JWT_API_PUB_KEY; // makes dev life easier
   } else if (process.env.CONFIG_NAME?.endsWith("_INTEGRATED")) {
     delete process.env.AUTH_PROVIDER; // makes dev life easier
   }

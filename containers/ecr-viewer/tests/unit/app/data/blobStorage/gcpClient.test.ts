@@ -2,6 +2,7 @@ import { Storage } from "@google-cloud/storage";
 
 import {
   deleteFromGCP,
+  existsInGCP,
   gcpClient,
   gcpHealthCheck,
   saveToGCP,
@@ -11,9 +12,12 @@ const mockExists = jest.fn();
 
 const mockDelete = jest.fn().mockResolvedValue(undefined);
 const mockSave = jest.fn().mockResolvedValue(undefined);
-const mockFile = jest
-  .fn()
-  .mockReturnValue({ save: mockSave, delete: mockDelete });
+const mockFileExists = jest.fn();
+const mockFile = jest.fn().mockReturnValue({
+  save: mockSave,
+  delete: mockDelete,
+  exists: mockFileExists,
+});
 
 const mockBucket = jest.fn().mockImplementation(() => ({
   exists: mockExists,
@@ -150,6 +154,34 @@ describe("gcp", () => {
       const result = await gcpHealthCheck();
 
       expect(result).toBeUndefined();
+    });
+  });
+
+  describe("check exists", () => {
+    it("should return true when the object exists", async () => {
+      mockFileExists.mockResolvedValue([true]);
+
+      const result = await existsInGCP(fileName);
+
+      expect(result).toBe(true);
+      expect(mockFile).toHaveBeenCalledExactlyOnceWith(fileName);
+      expect(mockFileExists).toHaveBeenCalledOnce();
+    });
+
+    it("should return false when the object does not exist", async () => {
+      mockFileExists.mockResolvedValue([false]);
+
+      const result = await existsInGCP(fileName);
+
+      expect(result).toBe(false);
+    });
+
+    it("should throw when GCP is not configured", async () => {
+      process.env.SOURCE = "azure";
+
+      await expect(existsInGCP(fileName)).rejects.toThrow(
+        "GCP storage client is not configured",
+      );
     });
   });
 

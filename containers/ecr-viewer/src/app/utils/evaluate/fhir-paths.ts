@@ -73,11 +73,15 @@ export type PathTypes = {
   patientReligion: ValueX;
   patientMaritalStatus: ValueX;
   lastMenstrualPeriod: Observation;
+  pregnancyMedicationAdministrationRefs: Reference;
   pregnancyOutcome: Observation;
   pregnancyBirthOrder: ValueX;
   pregnancyStatus: Observation;
   pregnancyDeterminationDate: ValueX;
   pregnancyIntent: Observation;
+  pregnancyLastLiveBirth: Observation;
+  pregnancyRhType: Observation;
+  pregnancyDRhSensitized: Observation;
   postpartumStatus: Observation;
   patientNationality: ValueX;
   patientCountryResidence: ValueX;
@@ -140,6 +144,7 @@ export type PathTypes = {
   procedureHistoryRefs: Reference;
   procedureDate: TimeX;
   status: string;
+  statusReason: CodeableConcept;
   procedureReason: string;
   procedureLocationRef: Reference;
   procedureOrgRef: Reference;
@@ -349,6 +354,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8665-2'))",
   },
+  pregnancyMedicationAdministrationRefs: {
+    type: "Reference",
+    path: "entry.resource.section.where(code.coding.exists(system = 'http://loinc.org' and code = '90767-5')).entry.where(reference.startsWith('MedicationAdministration/'))",
+  },
   pregnancyOutcome: {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '63893-2'))",
@@ -372,6 +381,18 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   pregnancyIntent: {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '86645-9'))",
+  },
+  pregnancyLastLiveBirth: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '68499-3'))",
+  },
+  pregnancyRhType: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '10331-7'))",
+  },
+  pregnancyDRhSensitized: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '55607006'))",
   },
 
   // eCR Metadata
@@ -607,6 +628,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "performed | effective",
   },
   status: { type: "string", path: "status" },
+  statusReason: { type: "CodeableConcept", path: "statusReason" },
 
   // extra details
   procedureReason: { type: "string", path: "reasonCode.text" },

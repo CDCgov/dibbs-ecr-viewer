@@ -40,16 +40,18 @@ import {
 } from "@/app/view-data/components/common";
 
 import {
+  evaluateEncounterDiagnosis,
+  getLocationName,
+} from "./evaluateFhirDataService";
+import {
   evaluatePatientName,
   evaluatePatientRace,
   evaluatePatientEthnicity,
   censorGender,
   calculatePatientAge,
-  evaluateEncounterDiagnosis,
-  getLocationName,
   getPatient,
   evaluatePatientDOB,
-} from "./evaluateFhirDataService";
+} from "@/app/view-data/services/demographicsService";
 import { evaluateLabInfoData } from "./labsService";
 import { getReportabilityRulesReasons } from "./reportabilityService";
 import { FhirIndex, getResourcesByType } from "./fhirResourcesIndexService";
