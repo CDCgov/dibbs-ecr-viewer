@@ -1,6 +1,6 @@
 // This file contains declarations used in the styling of the ecr-viewer page
 
-@use "uswds-core" as *;
+@use "../../node_modules/@uswds/uswds/packages/uswds-core" as *;
 @use "common" as *;
 @use "variables" as *;
 
@@ -357,7 +357,7 @@ main {
   }
 
   .usa-accordion__button {
-    padding: 0.88rem 0.75rem;
+    padding: 1rem 3.5rem 1rem 0.75rem;
   }
 }
 

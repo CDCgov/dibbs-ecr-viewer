@@ -19,6 +19,8 @@ export const ECRViewerLayout = ({
   patientDOB?: string;
   children: React.ReactNode;
 }) => {
+  const shouldDisplayLinks = process.env.DISPLAY_FEEDBACK_LINKS === "true";
+
   return (
     <main className="width-full minw-main">
       <PatientBanner name={patientName} dob={patientDOB} />
@@ -27,14 +29,16 @@ export const ECRViewerLayout = ({
           <div className="content-wrapper">{children}</div>
         </div>
       </div>
-      <a
-        className="usa-button position-fixed right-3 bottom-0"
-        target="_blank"
-        title="External link opens in new window"
-        href="https://touchpoints.app.cloud.gov/touchpoints/e93de6ae/submit"
-      >
-        How can we improve eCR Viewer?
-      </a>
+      {shouldDisplayLinks && (
+        <a
+          className="usa-button position-fixed right-3 bottom-0"
+          target="_blank"
+          title="External link opens in new window"
+          href="https://touchpoints.app.cloud.gov/touchpoints/e93de6ae/submit"
+        >
+          How can we improve eCR Viewer?
+        </a>
+      )}
     </main>
   );
 };

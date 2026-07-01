@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`UnavailableInfo should match snapshot 1`] = `
 <div>
@@ -572,6 +572,25 @@ exports[`UnavailableInfo should match snapshot 1`] = `
                 class="section__line_gray"
               />
             </div>
+            <div>
+              <div
+                class="grid-row"
+              >
+                <div
+                  class="data-title padding-right-1"
+                >
+                  Emergency Outbreak Info
+                </div>
+                <div
+                  class="grid-col maxw7 text-pre-line p-list text-italic text-base"
+                >
+                  No data
+                </div>
+              </div>
+              <div
+                class="section__line_gray"
+              />
+            </div>
           </div>
         </div>
         <div
@@ -581,7 +600,7 @@ exports[`UnavailableInfo should match snapshot 1`] = `
             class="usa-summary-box__heading padding-y-105"
             id="unavailable-diagnostics-and-vital-signs"
           >
-            Diagnostics and  Vital Signs
+            Diagnostics and Vital Signs
           </h4>
           <div
             class="usa-summary-box__text"

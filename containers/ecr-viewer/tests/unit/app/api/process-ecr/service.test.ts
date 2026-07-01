@@ -7,6 +7,7 @@ import { Agent, FormData, Interceptable, MockAgent } from "undici";
 
 import { createFakeZip } from "../../../helpers";
 import {
+  createOrchestrationAgent,
   getEcrIdFromXml,
   getOrchestrationResponse,
   orchestrationRequest,
@@ -14,29 +15,44 @@ import {
   zipAndSaveXml,
 } from "@/app/api/process-ecr/service";
 import {
+  deleteFromStorage,
   saveToStorage,
   saveWithMetadata,
 } from "@/app/api/save-fhir-data/service";
 import { S3_SOURCE } from "@/app/data/blobStorage/utils";
+import { getDb } from "@/app/data/metadataDb/database";
 
 jest.mock("@/app/api/save-fhir-data/service");
-jest.mock("@/app/data/metadataDb/database");
+jest.mock("@/app/data/metadataDb/database", () => ({
+  getDb: jest.fn(),
+}));
 
 const mockAgent = new MockAgent();
 mockAgent.disableNetConnect();
 
 describe("orchestrationRequest", () => {
-  const mockFile = new File(["content"], "test.zip", {
-    type: "application/zip",
-  });
-  const mockEcr = { id: "123" };
+  let mockFile: File;
+  const mockEcr = {
+    id: "123",
+    identifier: { system: "hello", value: "world" },
+  };
   const mockMetadata = { key: "value" };
 
   let mockPool: Interceptable;
 
-  beforeAll(() => {
+  beforeAll(async () => {
     process.env.SOURCE = S3_SOURCE;
     process.env.ORCHESTRATION_URL = "http://orchestration-service";
+
+    const zip = new JSZip();
+    zip.file(
+      "ecr.xml",
+      `<ClinicalDocument xmlns="urn:hl7-org:v3"><id root="test-root" extension="test-ext" /></ClinicalDocument>`,
+    );
+    const buf = await zip.generateAsync({ type: "nodebuffer" });
+    mockFile = new File([buf as BlobPart], "test.zip", {
+      type: "application/zip",
+    });
   });
 
   beforeEach(() => {
@@ -73,7 +89,7 @@ describe("orchestrationRequest", () => {
     expect(response).toStrictEqual({ status: 200, message: "Success" });
     expect(saveWithMetadata).toHaveBeenCalledWith(
       mockEcr,
-      "123",
+      "hello^world",
       S3_SOURCE,
       mockMetadata,
     );
@@ -105,7 +121,7 @@ describe("orchestrationRequest", () => {
     expect(response).toStrictEqual({ status: 200, message: "Success" });
     expect(saveToStorage).toHaveBeenCalledWith(
       mockEcr,
-      "123",
+      "hello^world",
       S3_SOURCE,
       "fhir",
     );
@@ -141,21 +157,89 @@ describe("orchestrationRequest", () => {
     });
     expect(saveToStorage).toHaveBeenCalledWith(
       mockEcr,
-      "123",
+      "hello^world",
       S3_SOURCE,
       "fhir",
     );
   });
 
-  it("should return 500 status when orchestration response fails", async () => {
+  it("should return 500 status with received error details when orchestration response fails", async () => {
     mockPool
       .intercept({
         path: "/process-zip",
         method: "POST",
       })
       .reply(500, {
-        message: "Error",
+        detail: "Error",
       });
+
+    jest.spyOn(console, "error").mockImplementation(() => {});
+
+    const response = await orchestrationRequest(
+      { ecr: mockFile },
+      false,
+      mockAgent as unknown as Agent,
+    );
+
+    expect(response).toEqual({
+      message: "Error",
+      status: 500,
+    });
+  });
+
+  it("should return 500 status with received response text when orchestration response fails with unexpected response format", async () => {
+    mockPool
+      .intercept({
+        path: "/process-zip",
+        method: "POST",
+      })
+      .reply(500, {
+        somethingElse: "Error",
+      });
+
+    jest.spyOn(console, "error").mockImplementation(() => {});
+
+    const response = await orchestrationRequest(
+      { ecr: mockFile },
+      false,
+      mockAgent as unknown as Agent,
+    );
+
+    expect(response).toEqual({
+      message: '{"somethingElse":"Error"}',
+      status: 500,
+    });
+  });
+
+  it("should return 500 status with received response text when orchestration response fails with non-json response text", async () => {
+    mockPool
+      .intercept({
+        path: "/process-zip",
+        method: "POST",
+      })
+      .reply(500, "error");
+
+    jest.spyOn(console, "error").mockImplementation(() => {});
+
+    const response = await orchestrationRequest(
+      { ecr: mockFile },
+      false,
+      mockAgent as unknown as Agent,
+    );
+
+    expect(response).toEqual({
+      message: "error",
+      status: 500,
+    });
+  });
+
+  it("should return 500 status with default error details when orchestration response fails without error details", async () => {
+    mockPool
+      .intercept({
+        path: "/process-zip",
+        method: "POST",
+      })
+      .reply(500);
 
     jest.spyOn(console, "error").mockImplementation(() => {});
 
@@ -168,6 +252,213 @@ describe("orchestrationRequest", () => {
     expect(response).toEqual({
       message: "Failed to process orchestration response",
       status: 500,
+    });
+  });
+
+  describe("early duplicate check", () => {
+    const xmlBody = {
+      ecr: `<ClinicalDocument xmlns="urn:hl7-org:v3"><id root="test-root" extension="test-ext" /></ClinicalDocument>`,
+    };
+
+    //mock database query chain, configure how many records query should return
+    const makeDbMock = (count: number) => {
+      const chain = {
+        selectFrom: jest.fn().mockReturnThis(),
+        select: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        executeTakeFirst: jest.fn().mockResolvedValue({ num_ecr: count }),
+      };
+      (getDb as jest.Mock).mockReturnValue(chain);
+      return chain;
+    };
+
+    afterEach(() => {
+      delete process.env.METADATA_DATABASE_TYPE;
+    });
+
+    it("returns 409 without calling orchestration when ECR already exists in DB", async () => {
+      process.env.METADATA_DATABASE_TYPE = "postgres";
+      makeDbMock(1);
+
+      const response = await orchestrationRequest(xmlBody);
+
+      expect(response).toEqual({
+        message: "eCR already loaded: test-root^test-ext",
+        status: 409,
+      });
+      expect(saveWithMetadata).not.toHaveBeenCalled();
+      expect(saveToStorage).not.toHaveBeenCalled();
+    });
+
+    it("proceeds with orchestration when ECR does not exist in DB", async () => {
+      process.env.METADATA_DATABASE_TYPE = "postgres";
+      makeDbMock(0);
+
+      mockPool
+        .intercept({ path: "/process-message", method: "POST" })
+        .reply(200, {
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        });
+
+      (saveToStorage as jest.Mock).mockResolvedValue({
+        status: 200,
+        message: "Success",
+      });
+
+      const response = await orchestrationRequest(
+        xmlBody,
+        false,
+        mockAgent as unknown as Agent,
+      );
+
+      expect(response).toEqual({ status: 200, message: "Success" });
+    });
+
+    it("skips the check and proceeds when no DB is configured", async () => {
+      delete process.env.METADATA_DATABASE_TYPE;
+
+      mockPool
+        .intercept({ path: "/process-message", method: "POST" })
+        .reply(200, {
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        });
+
+      (saveToStorage as jest.Mock).mockResolvedValue({
+        status: 200,
+        message: "Success",
+      });
+
+      const response = await orchestrationRequest(
+        xmlBody,
+        false,
+        mockAgent as unknown as Agent,
+      );
+
+      expect(response).toEqual({ status: 200, message: "Success" });
+      expect(getDb).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("XML save coordination", () => {
+    const xmlBody = {
+      ecr: `<ClinicalDocument xmlns="urn:hl7-org:v3"><id root="xml-root" extension="xml-ext" /></ClinicalDocument>`,
+    };
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      delete process.env.METADATA_DATABASE_TYPE;
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
+    it("saves XML in parallel with orchestration when shouldSaveXml is true", async () => {
+      mockPool
+        .intercept({ path: "/process-message", method: "POST" })
+        .reply(200, {
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        });
+
+      (saveToStorage as jest.Mock).mockResolvedValue({
+        status: 200,
+        message: "ok",
+      });
+
+      await orchestrationRequest(
+        xmlBody,
+        false,
+        mockAgent as unknown as Agent,
+        true,
+      );
+
+      const calls = (saveToStorage as jest.Mock).mock.calls;
+      expect(calls.some(([, , , type]) => type === "xml")).toBe(true);
+    });
+
+    it("deletes XML when orchestration fails and XML save succeeded", async () => {
+      mockPool
+        .intercept({ path: "/process-message", method: "POST" })
+        .reply(500, { detail: "fail" });
+
+      (saveToStorage as jest.Mock).mockResolvedValue(undefined);
+      jest.spyOn(console, "error").mockImplementation(() => {});
+
+      const result = await orchestrationRequest(
+        xmlBody,
+        false,
+        mockAgent as unknown as Agent,
+        true,
+      );
+
+      expect(deleteFromStorage).toHaveBeenCalledWith(
+        "xml-root^xml-ext",
+        S3_SOURCE,
+        "xml",
+      );
+      expect(result.status).toBe(500);
+    });
+
+    it("does not delete XML when XML save also failed", async () => {
+      mockPool
+        .intercept({ path: "/process-message", method: "POST" })
+        .reply(500, { detail: "fail" });
+
+      (saveToStorage as jest.Mock).mockRejectedValue(
+        new Error("storage failure"),
+      );
+      jest.spyOn(console, "error").mockImplementation(() => {});
+
+      const result = await orchestrationRequest(
+        xmlBody,
+        false,
+        mockAgent as unknown as Agent,
+        true,
+      );
+
+      expect(deleteFromStorage).not.toHaveBeenCalled();
+      expect(result.status).toBe(500);
+    });
+  });
+
+  describe("createOrchestrationAgent", () => {
+    describe("Default timeout path", () => {
+      it("If ECR_PROCESSING_TIMEOUT is not set, defaults to 900000ms timeout when creating the orchestration Agent", () => {
+        const agent = createOrchestrationAgent();
+
+        const optsSym = Object.getOwnPropertySymbols(agent).find(
+          (s) => s.toString() === "Symbol(options)",
+        )!;
+        const opts = (agent as any)[optsSym];
+
+        expect(agent).toBeInstanceOf(Agent);
+        expect(opts.headersTimeout).toBe(900000);
+      });
+    });
+
+    describe("Env var timeout path", () => {
+      afterEach(() => {
+        delete process.env.ECR_PROCESSING_TIMEOUT;
+      });
+      it("uses ECR_PROCESSING_TIMEOUT when creating the orchestration Agent", () => {
+        process.env.ECR_PROCESSING_TIMEOUT = "12345";
+
+        const agent = createOrchestrationAgent();
+
+        const optsSym = Object.getOwnPropertySymbols(agent).find(
+          (s) => s.toString() === "Symbol(options)",
+        )!;
+        const opts = (agent as any)[optsSym];
+
+        expect(agent).toBeInstanceOf(Agent);
+        expect(opts.headersTimeout).toBe(12345);
+      });
     });
   });
 
@@ -293,6 +584,23 @@ describe("orchestrationRequest", () => {
       appendMock = jest.spyOn(FormData.prototype, "append");
       process.env.METADATA_DATABASE_TYPE = undefined;
       process.env.METADATA_DATABASE_SCHEMA = undefined;
+
+      const dbChain = {
+        selectFrom: jest.fn().mockReturnThis(),
+        select: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        executeTakeFirst: jest.fn().mockResolvedValue({ num_ecr: 0 }),
+      };
+      (getDb as jest.Mock).mockReturnValue(dbChain);
+
+      (saveToStorage as jest.Mock).mockResolvedValue({
+        status: 200,
+        message: "ok",
+      });
+      (saveWithMetadata as jest.Mock).mockResolvedValue({
+        status: 200,
+        message: "ok",
+      });
     });
     it("should use bundle-only.json when no metadata db", async () => {
       delete process.env.METADATA_DATABASE_TYPE;
@@ -373,9 +681,24 @@ describe("orchestrationRequest", () => {
         expect(Object.keys(zip.files)).toContain(`${ecrId}-CDA_eICR.xml`);
       });
 
+      it("zipAndSaveXml should include RR xml when ecr and rr are both strings", async () => {
+        const body = {
+          ecr: "<ClinicalDocument>eICR</ClinicalDocument>",
+          rr: "<ReportabilityResponse>RR</ReportabilityResponse>",
+        };
+
+        await zipAndSaveXml(body, ecrId);
+
+        const [zipBuffer] = (saveToStorage as jest.Mock).mock.calls[0];
+        const zip = await JSZip.loadAsync(zipBuffer);
+        const files = Object.keys(zip.files);
+        expect(files).toContain(`${ecrId}-CDA_eICR.xml`);
+        expect(files).toContain(`${ecrId}-CDA_RR.xml`);
+      });
+
       it("zipAndSaveXml should take in a zip then call saveToStorage with a zipBuffer", async () => {
         const fakeZipBuffer = createFakeZip("<xml/>");
-        const mockZip = new File([fakeZipBuffer], "test.zip", {
+        const mockZip = new File([fakeZipBuffer as BlobPart], "test.zip", {
           type: "application/zip",
         });
 
@@ -429,7 +752,7 @@ describe("orchestrationRequest", () => {
     describe("unzipXml", () => {
       it("should extract the xml string from a valid zip", async () => {
         const fakeZipBuffer = createFakeZip(xmlContent);
-        const mockFile = new File([fakeZipBuffer], "test.zip", {
+        const mockFile = new File([fakeZipBuffer as BlobPart], "test.zip", {
           type: "application/zip",
         });
 
@@ -450,7 +773,7 @@ describe("orchestrationRequest", () => {
 
       it("should throw when no XML file is found", async () => {
         const fakeZipBuffer = createFakeZip("junk");
-        const mockFile = new File([fakeZipBuffer], "test.zip", {
+        const mockFile = new File([fakeZipBuffer as BlobPart], "test.zip", {
           type: "application/zip",
         });
 
@@ -473,13 +796,13 @@ describe("orchestrationRequest", () => {
     describe("getEcrIdFromXml", () => {
       const xmlString = `
     <ClinicalDocument>
-      <id root="1234-uuid" />
+      <id root="1234-uuid" extension="bananas" />
     </ClinicalDocument>
   `;
 
       it("extracts ID when ecr is a string", async () => {
         const result = await getEcrIdFromXml({ ecr: xmlString } as any);
-        expect(result).toBe("1234-uuid");
+        expect(result).toBe("1234-uuid^bananas");
       });
 
       it("extracts ID when ecr is an XML file", async () => {
@@ -487,7 +810,7 @@ describe("orchestrationRequest", () => {
           type: "application/xml",
         });
         const result = await getEcrIdFromXml({ ecr: xmlFile } as any);
-        expect(result).toBe("1234-uuid");
+        expect(result).toBe("1234-uuid^bananas");
       });
 
       it("extracts ID when ecr is a zipped XML file", async () => {
@@ -495,12 +818,12 @@ describe("orchestrationRequest", () => {
         zip.file("whatever.xml", xmlString);
         const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
 
-        const zipFile = new File([zipBuffer], "test.zip", {
+        const zipFile = new File([zipBuffer as BlobPart], "test.zip", {
           type: "application/zip",
         });
 
         const result = await getEcrIdFromXml({ ecr: zipFile } as any);
-        expect(result).toBe("1234-uuid");
+        expect(result).toBe("1234-uuid^bananas");
       });
 
       it("throws for unsupported upload types", async () => {

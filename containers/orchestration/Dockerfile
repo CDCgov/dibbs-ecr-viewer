@@ -4,7 +4,7 @@ ARG TRIGGER_CODE_REFERENCE_URL
 ARG SMARTY_AUTH_ID
 ARG SMARTY_AUTH_TOKEN
 
-FROM python:3.13.7-alpine
+FROM python:3.14.5-alpine
 
 RUN apk update && \
     apk upgrade --no-cache
@@ -14,7 +14,7 @@ RUN pip install --upgrade pip --break-system-packages
 WORKDIR /code
 
 COPY ./requirements.txt /code/requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install --require-hashes --only-binary :all: -r requirements.txt
 
 COPY ./app /code/app
 COPY ./assets /code/assets

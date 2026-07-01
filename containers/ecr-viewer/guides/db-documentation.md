@@ -6,11 +6,11 @@ category: Guides
 
 # Database Documentation
 
-This document provides an overview of the database schema used by the DIBBS eCR Viewer, including both the core and extended schemas, and information about supported database types.
+This document provides an overview of the database schema used by the DIBBs eCR Viewer, including both the core and extended schemas, and information about supported database types.
 
 ## Supported Database Types
 
-The DIBBS eCR Viewer supports the following relational database types for storing metadata:
+The DIBBs eCR Viewer supports the following relational database types for storing metadata:
 
 - **SQL Server**
 - **PostgreSQL**
@@ -85,6 +85,8 @@ The following columns are added to the `ecr_data` table in the extended schema:
 | `processing_status`        | `varchar(255)` | NULL        |               | Processing status of the eCR                                                             |
 | `authoring_date`           | `datetime`     | NULL        |               | Date of authoring                                                                        |
 | `authoring_provider`       | `varchar(255)` | NULL        |               | Authoring provider                                                                       |
+| `ehr_manufacturer_model`   | `varchar(255)` | NULL        |               | EHR manufacturer model                                                                   |
+| `ehr_software`             | `varchar(255)` | NULL        |               | EHR software                                                                             |
 | `provider_id`              | `varchar(255)` | NULL        |               | Provider ID                                                                              |
 | `facility_id`              | `varchar(255)` | NULL        |               | Facility ID                                                                              |
 | `facility_name`            | `varchar(255)` | NULL        |               | Facility name                                                                            |
@@ -97,7 +99,7 @@ The following columns are added to the `ecr_data` table in the extended schema:
 
 This table stores laboratory results associated with eCRs. Note that the primary key for this table is a compound primary key consisting of `uuid` and `eicr_id`.
 
-| Column Name                              | Data Type      | Nullability | Default Value | Description                                                                                   |
+| Column Name                              | Data Type      | Nullability | Default Value | Description `                                                                                 |
 | :--------------------------------------- | :------------- | :---------- | :------------ | :-------------------------------------------------------------------------------------------- |
 | `uuid`                                   | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], unique identifier for the lab record       |
 | `eicr_id`                                | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], Foreign key, references `ecr_data.eicr_id` |
@@ -120,6 +122,19 @@ This table stores laboratory results associated with eCRs. Note that the primary
 | `specimen_type`                          | `varchar(255)` | NULL        |               | Type of specimen                                                                              |
 | `specimen_collection_date`               | `date`         | NULL        |               | Date of specimen collection                                                                   |
 | `performing_lab`                         | `varchar(255)` | NULL        |               | Performing laboratory                                                                         |
+
+### `ecr_immunizations` Table
+
+This table stores immunization records associated with eCRs.
+
+| Column Name      | Data Type      | Nullability | Default Value | Description                                                                                      |
+| :--------------- | :------------- | :---------- | :------------ | :----------------------------------------------------------------------------------------------- |
+| `uuid`           | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], unique identifier for the immunization record |
+| `eicr_id`        | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], Foreign key, references `ecr_data.eicr_id`    |
+| `name`           | `varchar(255)` | NULL        |               | Name of the vaccine administered                                                                 |
+| `effective_date` | `date`         | NULL        |               | Date the vaccine was administered or not given                                                   |
+| `status`         | `varchar(50)`  | NULL        |               | Was the vaccine was administered (true/false)                                                    |
+| `status_reason`  | `varchar(max)` | NULL        |               | Reason the vaccine was not administered, if any                                                  |
 
 ### `patient_address` Table
 

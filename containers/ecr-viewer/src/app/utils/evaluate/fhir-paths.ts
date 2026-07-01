@@ -7,10 +7,12 @@ import {
   Condition,
   ContactPoint,
   DiagnosticReport,
+  Dosage,
   EncounterParticipant,
   Extension,
   HumanName,
   Immunization,
+  MedicationStatement,
   Observation,
   ObservationReferenceRange,
   Organization,
@@ -19,6 +21,7 @@ import {
   Period,
   Procedure,
   Quantity,
+  QuestionnaireResponseItem,
   Reference,
   RelatedPerson,
 } from "fhir/r4";
@@ -56,8 +59,9 @@ export type PathTypes = {
   patientTribalAffiliation: ValueX;
   patientEmergencyContact: PatientContact;
   patientGuardian: RelatedPerson;
-  patientOccupation: Observation;
-  patientOccupationHistory: Observation;
+  patientOccupationUsual: Observation;
+  patientOccupationFromPastOrPresent: Observation;
+  patientOccupationFromSocialHistory: Observation;
   patientEmploymentStatus: Observation;
   patientTobaccoUse: ValueX;
   patientHomelessStatus: ValueX;
@@ -69,14 +73,21 @@ export type PathTypes = {
   patientReligion: ValueX;
   patientMaritalStatus: ValueX;
   lastMenstrualPeriod: Observation;
+  pregnancyMedicationAdministrationRefs: Reference;
   pregnancyOutcome: Observation;
   pregnancyBirthOrder: ValueX;
   pregnancyStatus: Observation;
   pregnancyDeterminationDate: ValueX;
+  pregnancyIntent: Observation;
+  pregnancyLastLiveBirth: Observation;
+  pregnancyRhType: Observation;
+  pregnancyDRhSensitized: Observation;
   postpartumStatus: Observation;
   patientNationality: ValueX;
   patientCountryResidence: ValueX;
   patientDisabilityStatus: Observation;
+  historyOfSocialFunction: Observation;
+  questionnaireItem: QuestionnaireResponseItem;
   eicrIdentifier: string;
   eicrReleaseVersion: ValueX;
   eicrCustodianRef: string;
@@ -113,7 +124,7 @@ export type PathTypes = {
   adminMedicationTherapeuticResponseObs: CodeableConcept;
   careTeamParticipants: CareTeamParticipant;
   careTeamParticipantMemberName: string;
-  careTeamParticipantRole: string;
+  careTeamParticipantRole: CodeableConcept;
   careTeamParticipantStatus: string;
   careTeamParticipantPeriod: string;
   immunizations: Immunization;
@@ -127,11 +138,16 @@ export type PathTypes = {
   medicationDose: ValueX;
   medicationAdministrationPerformerRef: Reference;
   medicationAdministrationReactionRef: Reference;
+  medicationStatementRefs: Reference;
+  medicationStatementMedicationRef: Reference;
+  medicationStatementMedicationRequestRef: Reference;
+  medicationStatementDosageTimingPeriod: number;
   procedures: Procedure;
   procedureHistoryRefs: Reference;
   procedureDate: TimeX;
   status: string;
-  procedureReason: CodeableConcept;
+  statusReason: CodeableConcept;
+  procedureReason: string;
   procedureLocationRef: Reference;
   procedureOrgRef: Reference;
   procedureBodySite: CodeableConcept;
@@ -141,9 +157,7 @@ export type PathTypes = {
   procedureSpecimen: CodeableConcept;
   procedureMethod: CodeableConcept;
   procedurePriority: CodeableConcept;
-  diagnosticReports: DiagnosticReport;
   diagnosticReportStatus: string;
-  observations: Observation;
   labResultDiv: string;
   specimenCollectionTime: TimeX;
   specimenReceivedTime: TimeX;
@@ -155,14 +169,14 @@ export type PathTypes = {
   observationDeviceReference: Reference;
   observationOrganismMethod: ValueX;
   observationResultStatus: string;
+  observationDerivedFrom: Reference;
   labReportInterpretation: ValueX;
   observationInterpretation: Coding;
-  organizations: Organization;
   organizationType: ValueX;
   patientTravelHistory: Observation;
   travelHistoryLocation: string;
   travelHistoryPurpose: ValueX;
-  travelHistoryMember: Reference;
+  hasMember: Reference;
   exposureObservations: Observation;
   exposureAgent: ValueX;
   exposureAddress: ValueX;
@@ -175,6 +189,8 @@ export type PathTypes = {
   method: CodeableConcept;
   name: string;
   noteText: string;
+  dosage: Dosage;
+  codingDisplay: string;
   valueX: ValueX;
   occurrenceX: TimeX;
 };
@@ -190,58 +206,58 @@ export interface FhirPath<K> {
 // Make sure the "type" here matches the type-land type described in `PathTypes`
 // "name" field is added programmatically below
 const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
+  // Demographics
   patientNameList: {
     type: "HumanName",
-    path: "entry.resource.Patient.name",
+    path: "Patient.name",
   },
   patientAddressList: {
     type: "Address",
-    path: "entry.resource.Patient.address",
+    path: "Patient.address",
   },
   patientTelecom: {
     type: "ContactPoint",
-    path: "entry.resource.Patient.telecom",
+    path: "Patient.telecom",
   },
-
   patientIds: {
     type: "string",
-    path: "entry.resource.Patient.identifier.where(system != 'urn:ietf:rfc:3986').value.join('\n')",
+    path: "Patient.identifier.where(system != 'urn:ietf:rfc:3986').value.join('\n')",
   },
   patientDOB: {
     type: "string",
-    path: "entry.resource.Patient.birthDate",
+    path: "Patient.birthDate",
   },
   patientVitalStatus: {
     type: "boolean",
-    path: "entry.resource.Patient.deceasedBoolean",
+    path: "Patient.deceasedBoolean",
   },
   patientDOD: {
     type: "string",
-    path: "entry.resource.Patient.deceasedDate",
+    path: "Patient.deceasedDate",
   },
   patientGender: {
     type: "string",
-    path: "entry.resource.Patient.gender",
+    path: "Patient.gender",
   },
   patientRace: {
     type: "ValueX",
-    path: "entry.resource.Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension('ombCategory').value",
+    path: "Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension('ombCategory').value",
   },
   patientRaceDetailed: {
     type: "ValueX",
-    path: "entry.resource.Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension('detailed').value",
+    path: "Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-race').extension('detailed').value",
   },
   patientEthnicity: {
     type: "ValueX",
-    path: "entry.resource.Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension('ombCategory').value",
+    path: "Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension('ombCategory').value",
   },
   patientEthnicityDetailed: {
     type: "ValueX",
-    path: "entry.resource.Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension('detailed').value",
+    path: "Patient.extension('http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity').extension('detailed').value",
   },
   patientCommunication: {
     type: "PatientCommunication",
-    path: "entry.resource.Patient.communication",
+    path: "Patient.communication",
   },
   patientProficiencyExtension: {
     type: "Extension",
@@ -249,11 +265,11 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientTribalAffiliation: {
     type: "ValueX",
-    path: "entry.resource.Patient.extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-tribal-affiliation-extension').extension('TribeName').value",
+    path: "Patient.extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-tribal-affiliation-extension').extension('TribeName').value",
   },
   patientEmergencyContact: {
     type: "PatientContact",
-    path: "entry.resource.Patient.contact",
+    path: "Patient.contact",
   },
   patientGuardian: {
     type: "RelatedPerson",
@@ -261,13 +277,17 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // Social History
-  patientOccupation: {
+  patientOccupationUsual: {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '21843-8'))",
   },
-  patientOccupationHistory: {
+  patientOccupationFromPastOrPresent: {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '11341-5'))",
+  },
+  patientOccupationFromSocialHistory: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(code = '11295-3' or code = '36473007'))",
   },
   patientEmploymentStatus: {
     type: "Observation",
@@ -300,15 +320,15 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientGenderIdentity: {
     type: "ValueX",
-    path: "entry.resource.Patient.extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-genderidentity-extension').value",
+    path: "Patient.extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-genderidentity-extension').value",
   },
   patientReligion: {
     type: "ValueX",
-    path: "entry.resource.Patient.extension('http://hl7.org/fhir/StructureDefinition/patient-religion').value",
+    path: "Patient.extension('http://hl7.org/fhir/StructureDefinition/patient-religion').value",
   },
   patientMaritalStatus: {
     type: "ValueX",
-    path: "entry.resource.Patient.maritalStatus",
+    path: "Patient.maritalStatus",
   },
   patientNationality: {
     type: "ValueX",
@@ -322,11 +342,23 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Observation",
     path: "entry.resource.Observation.where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-disability-status')",
   },
+  historyOfSocialFunction: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8689-2'))",
+  },
+  questionnaireItem: {
+    type: "QuestionnaireResponseItem",
+    path: "item",
+  },
 
   // Pregnancy Data
   lastMenstrualPeriod: {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8665-2'))",
+  },
+  pregnancyMedicationAdministrationRefs: {
+    type: "Reference",
+    path: "entry.resource.section.where(code.coding.exists(system = 'http://loinc.org' and code = '90767-5')).entry.where(reference.startsWith('MedicationAdministration/'))",
   },
   pregnancyOutcome: {
     type: "Observation",
@@ -347,6 +379,22 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   postpartumStatus: {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '249197004'))",
+  },
+  pregnancyIntent: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '86645-9'))",
+  },
+  pregnancyLastLiveBirth: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '68499-3'))",
+  },
+  pregnancyRhType: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '10331-7'))",
+  },
+  pregnancyDRhSensitized: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '55607006'))",
   },
 
   // eCR Metadata
@@ -394,7 +442,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
 
   hospitalEncounterDiagnosisRef: {
     type: "Reference",
-    path: "entry.resource.Composition.section.where(code.coding.code = %code).entry",
+    path: "entry.resource.Composition.section.where(code.coding.exists(code = %code)).entry",
   },
 
   facilityOrgRef: {
@@ -403,7 +451,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   facilityLocationRef: {
     type: "string",
-    path: "location[0].location.reference",
+    path: "location.location.reference",
   },
   compositionEncounterRef: {
     type: "string",
@@ -503,7 +551,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "entry.resource.CareTeam.participant",
   },
   careTeamParticipantMemberName: { type: "string", path: "member.name" },
-  careTeamParticipantRole: { type: "string", path: "role.text" },
+  careTeamParticipantRole: {
+    type: "CodeableConcept",
+    path: "role",
+  },
   careTeamParticipantStatus: {
     type: "string",
     path: "modifierExtension.where(url = 'participant.status').valueString",
@@ -553,6 +604,24 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   medicationDose: { type: "ValueX", path: "dosage.dose.value" },
 
+  // === Medications ===
+  medicationStatementRefs: {
+    type: "Reference",
+    path: "entry.resource.section.where(code.coding.code = '10160-0').entry.where(reference.startsWith('MedicationStatement/'))",
+  },
+  medicationStatementMedicationRef: {
+    type: "Reference",
+    path: "MedicationStatement.medicationReference",
+  },
+  medicationStatementMedicationRequestRef: {
+    type: "Reference",
+    path: "MedicationStatement.basedOn",
+  },
+  medicationStatementDosageTimingPeriod: {
+    type: "number",
+    path: "timing.repeat.period",
+  },
+
   // === Procedure ===
   procedures: {
     type: "Procedure",
@@ -569,9 +638,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "performed | effective",
   },
   status: { type: "string", path: "status" },
+  statusReason: { type: "CodeableConcept", path: "statusReason" },
 
   // extra details
-  procedureReason: { type: "CodeableConcept", path: "reasonCode" },
+  procedureReason: { type: "string", path: "reasonCode.text" },
   procedureLocationRef: { type: "Reference", path: "location" },
   procedureOrgRef: { type: "Reference", path: "performer.actor" },
   procedureBodySite: { type: "CodeableConcept", path: "bodySite" },
@@ -598,21 +668,13 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // === Lab Info ===
-  diagnosticReports: {
-    type: "DiagnosticReport",
-    path: "entry.resource.DiagnosticReport",
-  },
   diagnosticReportStatus: {
     type: "string",
     path: "iif(extension('http://terminology.hl7.org/CodeSystem/v2-0123').valueCodeableConcept.coding.display.exists(), extension('http://terminology.hl7.org/CodeSystem/v2-0123').valueCodeableConcept.coding.display, status)",
   },
-  observations: {
-    type: "Observation",
-    path: "entry.resource.Observation",
-  },
   labResultDiv: {
     type: "string",
-    path: "entry.resource.section.where(code.coding.exists(system = 'http://loinc.org' and code = '30954-2')).text.`div`",
+    path: "section.where(code.coding.exists(system = 'http://loinc.org' and code = '30954-2')).text.`div`",
   },
   specimenCollectionTime: {
     type: "TimeX",
@@ -665,10 +727,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
 
   // Organization
-  organizations: {
-    type: "Organization",
-    path: "entry.resource.Organization",
-  },
   organizationType: {
     type: "ValueX",
     path: "type.coding.display",
@@ -686,10 +744,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   travelHistoryPurpose: {
     type: "ValueX",
     path: "component.where(code.coding.code = '280147009').value",
-  },
-  travelHistoryMember: {
-    type: "Reference",
-    path: "hasMember",
   },
 
   // Exposure Details
@@ -744,6 +798,23 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "name",
   },
+  dosage: {
+    type: "Dosage",
+    path: "dosage",
+  },
+  hasMember: {
+    type: "Reference",
+    path: "hasMember",
+  },
+  observationDerivedFrom: {
+    type: "Reference",
+    path: "derivedFrom",
+  },
+  codingDisplay: {
+    type: "string",
+    path: "coding.display",
+  },
+
   /**
    * A FHIR path that is only the name of a choice element, e.g. `value` for the field `value[x]`, will only return
    * the value of the choice element if it is on a resource, e.g. `Observation`. Otherwise it will return an empty

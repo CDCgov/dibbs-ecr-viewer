@@ -8,9 +8,10 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 
 const nextConfig = {
   sassOptions: {
-    includePaths: [
+    loadPaths: [
       path.join(__dirname, "node_modules", "@uswds", "uswds", "packages"),
     ],
+    api: "legacy",
     quietDeps: true,
   },
   experimental: {
@@ -20,6 +21,7 @@ const nextConfig = {
     serverActions: {
       allowedOrigins: ["**.cloudapp.azure.com", "**.azurecontainerapps.io"],
     },
+    middlewareClientMaxBodySize: "50mb",
   },
   output: "standalone",
   basePath,

@@ -201,9 +201,11 @@ def _get_coding(valueSet: ValueSet) -> list[str]:
     """
     return list(
         filter(
-            lambda x: x.code.code == "focus"
-            and x.code.system
-            == "http://terminology.hl7.org/CodeSystem/usage-context-type",
+            lambda x: (
+                x.code.code == "focus"
+                and x.code.system
+                == "http://terminology.hl7.org/CodeSystem/usage-context-type"
+            ),
             valueSet.useContext,
         )
     )[0].valueCodeableConcept.coding[0]

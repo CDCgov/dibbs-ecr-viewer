@@ -11,16 +11,20 @@ import EcrDocument from "./components/EcrDocument";
 import { getEcrDocumentAccordionItems } from "./components/EcrDocument/accordion-items";
 import EcrSummary from "./components/EcrSummary";
 import SideNav from "./components/SideNav";
+import XmlViewer from "./components/XmlViewer";
+import {
+  evaluatePatientDOB,
+  evaluatePatientName,
+  getPatient,
+} from "@/app/view-data/services/demographicsService";
+import { getFhirData, isSuccessResponse } from "./services/fhirDataService";
+import { ecrXmlsExist } from "./services/xmlService";
+import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 import {
   evaluateEcrSummaryConditionSummary,
   evaluateEcrSummaryEncounterDetails,
   evaluateEcrSummaryPatientDetails,
 } from "./services/ecrSummaryService";
-import {
-  evaluatePatientDOB,
-  evaluatePatientName,
-} from "./services/evaluateFhirDataService";
-import { getFhirData, isSuccessResponse } from "./services/fhirDataService";
 
 /**
  * Functional component for rendering the eCR Viewer page.
@@ -61,37 +65,41 @@ const ECRViewerPage = async ({
   }
 
   const fhirBundle = resp.payload.fhirBundle;
-  const patientName = evaluatePatientName(fhirBundle, true);
-  const patientDOB = evaluatePatientDOB(fhirBundle);
+  const fhirIndex = getFhirIndex(fhirBundle);
 
-  const accordionItems = getEcrDocumentAccordionItems(fhirBundle);
+  const patient = getPatient(fhirIndex);
+  const patientName = evaluatePatientName(patient, true);
+  const patientDOB = evaluatePatientDOB(patient);
+
+  const { ecrDocumentNavConfig, accordionItems } = getEcrDocumentAccordionItems(
+    fhirBundle,
+    fhirIndex,
+  );
+
+  const xmlsExist =
+    process.env.SAVE_XML === "true" && (await ecrXmlsExist(fhirId));
+
   return (
     <ECRViewerLayout patientName={patientName} patientDOB={patientDOB}>
-      <SideNav />
-      <div className="ecr-viewer-container">
-        <div className="margin-bottom-3">
-          <h2 className="margin-bottom-05 margin-top-3" id="ecr-summary">
-            eCR Summary
-          </h2>
-          <div className="text-base-darker line-height-sans-5">
-            Provides key info upfront to help you understand the eCR at a glance
-          </div>
-        </div>
+      <XmlViewer
+        sideNav={<SideNav ecrDocumentNavConfig={ecrDocumentNavConfig} />}
+        ecrId={xmlsExist ? fhirId : undefined}
+      >
         <EcrSummary
-          patientDetails={
-            evaluateEcrSummaryPatientDetails(fhirBundle).availableData
-          }
-          encounterDetails={
-            evaluateEcrSummaryEncounterDetails(fhirBundle).availableData
-          }
+          patientDetails={evaluateEcrSummaryPatientDetails(
+            fhirBundle,
+            fhirIndex,
+          )}
+          encounterDetails={evaluateEcrSummaryEncounterDetails(fhirBundle)}
           conditionSummary={evaluateEcrSummaryConditionSummary(
             fhirBundle,
+            fhirIndex,
             snomedCode,
           )}
           snomed={snomedCode}
         />
         <EcrDocument initialAccordionItems={accordionItems} />
-      </div>
+      </XmlViewer>
     </ECRViewerLayout>
   );
 };

@@ -30,6 +30,10 @@ import {
 import { notEmpty } from "@/app/utils/data-utils";
 
 import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
+import {
+  FhirIndex,
+  getResourceById,
+} from "@/app/view-data/services/fhirResourcesIndexService";
 
 // TODO: Follow up on FHIR/fhirpath typing
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -246,7 +250,10 @@ export const evaluateValue = (
   const originalValue =
     evaluateOneAndCheck<ValueX>(entry, fhirPath, type, undefined, base) ?? "";
 
-  if (type === "TimeX" && typeof originalValue === "string") {
+  if (
+    typeof originalValue === "string" &&
+    (type === "TimeX" || isFhirDateTime(originalValue))
+  ) {
     return formatDateTime(originalValue) || "";
   }
 
@@ -300,6 +307,27 @@ const isReference = (v: object, p: string): v is Reference => p === "Reference";
 const isPeriod = (v: object, p: string): v is Period => p === "Period";
 const isAddress = (v: object, p: string): v is Address => p === "Address";
 
+const isFhirDateTime = (str: string): boolean => {
+  const trimmed = str.trim();
+
+  // Official HL7 FHIR specification pattern matching regex (timezone offset segment made optional)
+  // See "dateTime" section here: https://fhir.hl7.org/fhir/datatypes.html
+  const fhirRegex =
+    /^([0-9]{4})(-([0-9]{2})(-([0-9]{2})(T([0-9]{2}):([0-9]{2}):([0-9]{2})(\.[0-9]+)?(Z|(\+|-)(([0-9]{2}):([0-9]{2})))?)?)?)?$/;
+
+  if (!fhirRegex.test(trimmed)) {
+    return false;
+  }
+
+  // Reject short numbers (e.g. "0") that slip past regex segments
+  if (trimmed.length < 4) {
+    return false;
+  }
+
+  // Fallback logic calendar check to avoid impossible dates (e.g. Feb 31st)
+  return !isNaN(Date.parse(trimmed));
+};
+
 /**
  * Evaluates a reference in a FHIR bundle. The resulting type of the expected resource
  * must be provided as a type parameter. This will also be checked at runtime and an
@@ -339,6 +367,43 @@ export const evaluateReference = <T extends Resource>(
   }
 
   return result;
+};
+
+/**
+ * Evaluates a reference to return a resource. The resulting type of the expected resource
+ * must be provided as a type parameter. This will also be checked at runtime and an
+ * error logged if it does not match.
+ *
+ * Expects a single element to be returned from the reference.
+ *
+ * @param fhirIndex - FHIR resources indexed by type & by ID
+ * @param ref - The reference string (e.g., "Patient/123").
+ * @returns The FHIR Resource or undefined if not found.
+ */
+// TODO: Eventually want this to replace evaluateReference completely
+export const evaluateReference2 = <T extends Resource>(
+  fhirIndex: FhirIndex,
+  ref?: string | Reference,
+): T | undefined => {
+  if (typeof ref !== "string") {
+    ref = formatReference(ref);
+  }
+  if (!ref) return undefined;
+
+  const [resourceType, id] = ref.split("/");
+  const result = getResourceById<T>(
+    fhirIndex,
+    resourceType as T["resourceType"],
+    id,
+  );
+
+  if (result && result?.resourceType !== resourceType) {
+    console.error(
+      `Resource type mismatch: Expected ${resourceType}, but got ${result?.resourceType}`,
+    );
+  }
+
+  return result as T;
 };
 
 type RefPathTypes = {

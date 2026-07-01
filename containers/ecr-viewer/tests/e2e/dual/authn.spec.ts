@@ -100,11 +100,13 @@ test.describe("auth", () => {
   test("should require a login on view-data page", async ({ page }) => {
     await logIn(page, {
       url: "/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
-      expectedHeading: "Facility Details",
+      expectedHeading: "eCR Metadata",
     });
 
     // via regular auth, should be able to navigate to library
-    await expect(page.getByText("Back to eCR Library")).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Back to eCR Library" }),
+    ).toBeVisible();
     await expect(page).toHaveURL(
       "http://localhost:3000/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
     );
@@ -143,9 +145,7 @@ test.describe("auth", () => {
     await expect(
       page.getByRole("button", { name: "Sign Out" }),
     ).not.toBeVisible();
-    await expect(page).toHaveURL(
-      "http://localhost:3000/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
-    );
+    await expect(page).toHaveURL("http://localhost:3000/ecr-viewer/view-data");
   });
 
   test("should authenticate on api route if NBS auth token header provided", async ({

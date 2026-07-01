@@ -1,4 +1,4 @@
-FROM python:3.13.6-alpine
+FROM python:3.14.2-alpine
 
 RUN apk update && \
     apk upgrade --no-cache
@@ -8,7 +8,7 @@ RUN pip install --upgrade pip --break-system-packages
 WORKDIR /code
 
 COPY ./requirements.txt /code/requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install --require-hashes --only-binary :all: --no-binary google-crc32c,polling -r requirements.txt
 
 COPY ./app /code/app
 COPY ./assets /code/assets

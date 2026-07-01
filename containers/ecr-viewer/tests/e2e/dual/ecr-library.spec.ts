@@ -11,6 +11,14 @@ test.describe("ecr library page", () => {
       await expect(page).toHaveTitle(/DIBBs eCR Viewer/);
     });
 
+    test("displays version number", async ({ page }) => {
+      await expect(page.getByText(/vTest/)).toBeVisible();
+
+      await page.getByTestId("user-menu-button").click();
+      const version = page.locator(".user-menu .version-number");
+      await expect(version).toHaveText(/vTest/);
+    });
+
     test("should pass accessibility", async ({ page }) => {
       const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
       expect(accessibilityScanResults.violations).toEqual([]);
@@ -124,9 +132,11 @@ test.describe("ecr library page", () => {
 
       await expect(page.getByLabel("Page 2")).not.toBeVisible();
       await expect(page.getByText("Showing 1-3")).toBeVisible();
+
+      // Make sure the table has 3 rows before checking specific entries
+      await expect(page.locator("tbody > tr")).toHaveCount(3);
       // Regex to make sure name is formatted correctly
       await expect(page.getByText(/O'Rendar木/)).toBeVisible();
-      await expect(page.locator("tbody > tr")).toHaveCount(3);
     });
 
     test("When visiting a direct url all query parameters should be applied", async ({
@@ -216,14 +226,24 @@ test.describe("ecr library page", () => {
 
   test.describe("eCR grouping", () => {
     test("expanding group", async ({ page }) => {
-      await expect(
-        page.getByRole("button", { name: "View Related eCRs" }),
-      ).toBeVisible();
-      await page.getByRole("button", { name: "View Related eCRs" }).click();
+      // Find the button for Mon Mothma
+      const patientCell = page
+        .locator(".patient-name-cell")
+        .filter({ hasText: "Mon Mothma" });
+
+      // Find the button within that patient cell
+      const expandButton = patientCell.getByRole("button", {
+        name: "View Related eCRs",
+      });
+
+      await expect(expandButton).toBeVisible();
+      await expandButton.click();
       await expect(page.getByRole("row", { level: 2 })).toHaveCount(2);
 
       // collapse it back down
-      await page.getByRole("button", { name: "Hide Related eCRs" }).click();
+      await patientCell
+        .getByRole("button", { name: "Hide Related eCRs" })
+        .click();
       await expect(page.getByRole("row", { level: 2 })).toHaveCount(0);
     });
   });

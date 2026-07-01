@@ -32,6 +32,8 @@
               "eicr_id": "",
               "eicr_version_number": "",
               "authoring_datetime": "",
+              "ehr_manufacturer_model": "",
+              "ehr_software": "",
               "provider_id": "",
               "facility_id_number": "",
               "facility_name": "",

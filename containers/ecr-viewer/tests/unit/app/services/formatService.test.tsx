@@ -233,11 +233,12 @@ describe("FormatService tests", () => {
       expect(formatPhoneNumber(" ")).toBe(undefined);
     });
 
-    it("should return 'Invalid Number' when junk things passed", () => {
-      expect(formatPhoneNumber("+11111111")).toBe("Invalid Number: +11111111");
+    it("should return original unformatted number", () => {
+      expect(formatPhoneNumber("+11111111")).toBe("+11111111");
       expect(formatPhoneNumber("+11111111111111111")).toBe(
-        "Invalid Number: +11111111111111111",
+        "+11111111111111111",
       );
+      expect(formatPhoneNumber("+81234567890")).toBe("+81234567890");
     });
 
     it("should format a valid phone number", () => {
@@ -681,6 +682,10 @@ describe("FormatService tests", () => {
   describe("formatQuantity", () => {
     it("should handle missing data", () => {
       expect(formatQuantity({})).toBeUndefined();
+    });
+
+    it("should handle zero data with a unit", () => {
+      expect(formatQuantity({ value: 0, unit: "mmol/L" })).toBe("0 mmol/L");
     });
 
     it("should handle missing unit", () => {

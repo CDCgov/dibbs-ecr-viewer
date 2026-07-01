@@ -11,7 +11,10 @@ type AdministeredMedicationProps = {
 export type AdministeredMedicationTableData = {
   name?: string;
   date?: string;
+  dose?: string;
+  route?: string;
   therapeuticResponse?: string;
+  text?: string;
 };
 
 /**
@@ -34,7 +37,19 @@ export const AdministeredMedication = ({
       className: "bg-gray-5 minw-15",
     },
     {
+      columnName: "Dose",
+      className: "bg-gray-5 minw-15",
+    },
+    {
+      columnName: "Route",
+      className: "bg-gray-5 minw-15",
+    },
+    {
       columnName: "Therapeutic Response Observation",
+      className: "bg-gray-5 minw-15",
+    },
+    {
+      columnName: "Text",
       className: "bg-gray-5 minw-15",
     },
   ];
@@ -45,7 +60,10 @@ export const AdministeredMedication = ({
         <tr key={`table-row-${index}`}>
           <td>{entry?.name ?? noData}</td>
           <td>{formatDateTime(entry?.date) ?? noData}</td>
+          <td>{entry?.dose ?? noData}</td>
+          <td>{entry?.route ?? noData}</td>
           <td>{entry?.therapeuticResponse ?? noData}</td>
+          <td>{entry?.text ?? noData}</td>
         </tr>
       ))}
     </BaseTable>

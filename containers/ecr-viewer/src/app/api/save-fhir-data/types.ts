@@ -35,6 +35,14 @@ interface Lab {
   specimen_collection_date: string | undefined;
 }
 
+interface Immunization {
+  uuid: string | undefined;
+  name: string | undefined;
+  effective_date: string | undefined;
+  status: string | undefined;
+  status_reason: string | undefined;
+}
+
 interface ruleSummary {
   rule_summary: string;
 }
@@ -70,6 +78,8 @@ export interface BundleExtendedMetadata extends BundleMetadata {
   replaced_eicr_id: string | undefined;
   replaced_eicr_version: string | undefined;
   authoring_date: string | undefined;
+  ehr_software: string | undefined;
+  ehr_manufacturer_model: string | undefined;
   provider_id: string | undefined;
   facility_id: string | undefined;
   facility_name: string | undefined;
@@ -79,6 +89,7 @@ export interface BundleExtendedMetadata extends BundleMetadata {
   reason_for_visit: string | undefined;
   active_problems: string | undefined;
   labs: Lab[] | undefined;
+  immunizations: Immunization[] | undefined;
   birth_sex: string | undefined;
   gender_identity: string | undefined;
   homelessness_status: string | undefined;

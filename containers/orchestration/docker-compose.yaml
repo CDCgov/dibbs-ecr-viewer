@@ -37,7 +37,7 @@ services:
       - METADATA_DATABASE_SCHEMA=core
       - METADATA_DATABASE_MIGRATION_SECRET=test
       - |
-        NBS_API_PUB_KEY=
+        JWT_API_PUB_KEY=
         -----BEGIN PUBLIC KEY-----
         MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAnlA1YmmbydxQdBh7DAq0
         wUfsjR25eWZOB995mHclT3C46oLat3YLu70akLfoMXd9YcJe0d4q3sP7tS1J4QDO
@@ -58,7 +58,7 @@ services:
       context: .
     depends_on:
       [
-        fhir-converter-service,
+        fhir-converter-proxy-service,
         ingestion-service,
         trigger-code-reference-service,
         message-parser-service,
@@ -80,6 +80,25 @@ services:
       - "${FHIR_CONVERTER_PORT_NUMBER}:8080"
     logging:
       driver: "json-file"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://fhir-converter-service:8080/"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s # Give it 10s to boot
+  fhir-converter-proxy-service:
+    platform: linux/amd64
+    build:
+      context: ../fhir-converter-proxy
+    depends_on:
+      fhir-converter-service:
+        condition: service_healthy
+    ports:
+      - "${FHIR_CONVERTER_PROXY_PORT_NUMBER}:8080"
+    environment:
+      FHIR_CONVERTER_PROXY_PORT: ${FHIR_CONVERTER_PROXY_PORT:-8080}
+      FHIR_CONVERTER_PORT: ${FHIR_CONVERTER_PORT:-8080}
+      ENVIRONMENT: local
   ingestion-service:
     platform: linux/amd64
     build:

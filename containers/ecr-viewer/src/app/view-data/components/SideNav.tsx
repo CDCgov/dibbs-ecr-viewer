@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
 import { SideNav as UswdsSideNav } from "@trussworks/react-uswds";
 
@@ -7,6 +7,7 @@ import { BackButton } from "@/app/components/BackButton";
 import { toKebabCase } from "@/app/utils/format-utils";
 
 import { SideNavLoadingSkeleton } from "./LoadingComponent";
+import { EcrDocumentNavConfig } from "./EcrDocument/accordion-items";
 
 export class SectionConfig {
   title: string;
@@ -29,189 +30,312 @@ export class SectionConfig {
   }
 }
 
-interface HeadingObject {
-  text: string;
-  level: string;
-  priority: number;
-}
-
-const headingLevels = ["h1", "h2", "h3", "h4", "h5", "h6"];
 const headingSelector =
   "h2:not([id^='unavailable-']):not(.side-nav-ignore), h3:not([id^='unavailable-']):not(.side-nav-ignore), h4:not([id^='unavailable-']):not(.side-nav-ignore)";
 
 /**
- * Counts the total number of `SectionConfig` objects within a given array, including those nested
- * within `subNavItems` properties.
- * @param sectionConfigs - An array of `SectionConfig` objects, each potentially containing
- *   a `subNavItems` property with further `SectionConfig` objects.
- * @returns The total count of `SectionConfig` objects within the array, including all nested
- * objects within `subNavItems`.
+ * Builds flat map of child ID -> parent ID from the SectonConfig tree.
+ * Determines which section needs to be expanded when a child's
+ * heading is collapsed or not yet in the DOM.
  */
-export function countObjects(sectionConfigs: SectionConfig[]): number {
-  let count = 0;
-  sectionConfigs.forEach((config) => (count += countRecursively(config, 0)));
-
-  return count;
-}
-
-/**
- * Recursively counts the number of `SectionConfig` objects, including any nested objects within
- * `subNavItems`.
- * @param config - The `SectionConfig` object to be counted. This object may contain
- *   `subNavItems`, which are also `SectionConfig` objects and will be recursively counted.
- * @param count - The initial count of `SectionConfig` objects. Typically starts at 0 and
- *   increments as the function processes each item and its `subNavItems`.
- * @returns The total count of `SectionConfig` objects, including all nested `subNavItems`.
- */
-function countRecursively(config: SectionConfig, count: number): number {
-  count += 1;
-  if (config.subNavItems) {
-    config.subNavItems.forEach(
-      (subHead) => (count += countRecursively(subHead, 0)),
-    );
+function buildParentMap(
+  configs: SectionConfig[],
+  parentId: string | null = null,
+  map: Map<string, string> = new Map(),
+): Map<string, string> {
+  for (const config of configs) {
+    if (parentId !== null) map.set(config.id, parentId);
+    if (config.subNavItems) buildParentMap(config.subNavItems, config.id, map);
   }
-  return count;
+  return map;
 }
 
 /**
- * Sorts an array of `HeadingObject` instances into a structured array of `SectionConfig` objects.
- * The sorting is based on the `priority` property of each heading, arranging them into a hierarchy
- * where headings of lower priority become nested within those of higher priority. This function
- * recursively processes headings to construct a nested structure, encapsulated as `SectionConfig`
- * instances, which may contain other `SectionConfig` objects as nested sections.
- *
- * The function evaluates each heading in sequence and determines its placement in the result based
- * on its priority relative to subsequent headings. Headings with the same priority are placed at the
- * same level, while a heading with a lower priority than its predecessor is nested within the previous
- * heading's section.
- * @param headings - An array of heading objects to be sorted. Each `HeadingObject`
- *   must have a `text` property for the section title and a
- *   `priority` property that determines the heading's hierarchical level.
- * @returns An array of `SectionConfig` objects representing the structured hierarchy
- *   of headings. Each `SectionConfig` may contain nested `SectionConfig` objects
- *   if the original headings array indicated a nested structure based on priorities.
+ * Walks up the DOM from a heading element looking for an expand <button>
+ * at any ancestor level.
  */
-export const sortHeadings = (headings: HeadingObject[]): SectionConfig[] => {
-  const result: SectionConfig[] = [];
-  let headingIndex = 0;
-  while (headingIndex < headings.length) {
-    const currentHeading = headings[headingIndex];
-    const nextHeadings = headings.slice(headingIndex + 1);
-    if (
-      nextHeadings.length > 0 &&
-      nextHeadings[0].priority > currentHeading.priority
-    ) {
-      const nestedResult = sortHeadings(nextHeadings);
-      result.push(new SectionConfig(currentHeading.text, nestedResult));
-      const nestedLength = countObjects(nestedResult);
-      headingIndex += nestedLength + 1;
-    } else if (
-      nextHeadings.length > 0 &&
-      nextHeadings[0].priority === currentHeading.priority
-    ) {
-      result.push(new SectionConfig(currentHeading.text));
-      headingIndex++;
-    } else if (
-      nextHeadings.length > 0 &&
-      nextHeadings[0].priority < currentHeading.priority
-    ) {
-      result.push(new SectionConfig(currentHeading.text));
-      headingIndex += headings.length + 1;
+function findExpandButton(el: Element): HTMLButtonElement | null {
+  // Element has expand button
+  const childBtn = el.querySelector(
+    "button[aria-expanded]",
+  ) as HTMLButtonElement | null;
+  if (childBtn) return childBtn;
+
+  // Walk up DOM to look expand button
+  let current: Element | null = el;
+  while (current && current !== document.body) {
+    const parent = current.parentElement;
+    if (parent) {
+      const siblingBtn = Array.from(parent.children).find(
+        (child) =>
+          child !== current &&
+          child.tagName === "BUTTON" &&
+          child.hasAttribute("aria-expanded"),
+      ) as HTMLButtonElement | undefined;
+      if (siblingBtn) return siblingBtn;
+    }
+    current = current.parentElement;
+  }
+  return null;
+}
+
+/**
+ * Check if element is hidden.
+ */
+function isHidden(el: Element): boolean {
+  const rect = (el as HTMLElement).getBoundingClientRect();
+  return (
+    (el as HTMLElement).offsetParent === null ||
+    (rect.width === 0 && rect.height === 0)
+  );
+}
+
+/**
+ * Scrolls to the heading tagged with the given sectionId.
+ */
+function scrollToSection(sectionId: string, topOffset: number) {
+  const heading = document.querySelector(
+    `[data-sectionid="${sectionId}"]`,
+  ) as HTMLElement | null;
+  if (!heading) return;
+  const top = heading.getBoundingClientRect().top + window.scrollY - topOffset;
+  window.scrollTo({ top, behavior: "instant" });
+}
+
+/**
+ * Waits for a heading with the given sectionId to appear in the DOM
+ * (i.e. after its parent accordion is expanded), then scrolls to it.
+ * Falls back after a timeout if it never appears.
+ */
+function waitForHeadingThenScroll(sectionId: string, topOffset: number) {
+  const TIMEOUT_MS = 2000;
+  let settled = false;
+
+  const observer = new MutationObserver(() => {
+    const heading = document.querySelector(
+      `[data-sectionid="${sectionId}"]`,
+    ) as HTMLElement | null;
+    if (heading && !isHidden(heading)) {
+      settled = true;
+      observer.disconnect();
+      scrollToSection(sectionId, topOffset);
+    }
+  });
+
+  observer.observe(document.querySelector("main") || document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+  });
+
+  // Safety valve: disconnect if the heading never appears
+  setTimeout(() => {
+    if (!settled) observer.disconnect();
+  }, TIMEOUT_MS);
+}
+
+/**
+ * Expands the parent section (if needed) and navigates to the target section.
+ *
+ * Cases:
+ * 1. Heading is in the DOM and visible → scroll immediately.
+ * 2. Heading is in the DOM but hidden (parent collapsed) → click expand button, then scroll.
+ * 3. Heading is not in the DOM yet (never opened) → find parent heading,
+ *    click its expand button, wait for child to render, then scroll.
+ */
+function expandAndNavigate(
+  sectionId: string,
+  topOffset: number,
+  parentMap: Map<string, string>,
+) {
+  const heading = document.querySelector(
+    `[data-sectionid="${sectionId}"]`,
+  ) as HTMLElement | null;
+
+  // Case 1: Heading in DOM & visible - expand accordion if collapsed
+  if (heading && !isHidden(heading)) {
+    const btn = findExpandButton(heading);
+    // If button exists and is not expanded, expand it
+    if (btn && btn.getAttribute("aria-expanded") !== "true") {
+      btn.click();
+      waitForHeadingThenScroll(sectionId, topOffset);
     } else {
-      result.push(new SectionConfig(currentHeading.text));
-      headingIndex++;
+      // Already expanded or no button, just scroll
+      scrollToSection(sectionId, topOffset);
+    }
+    return;
+  }
+
+  // Case 2: Heading in DOM, but hidden - expand parent accordion if collapsed
+  // Wait for expand -> scroll to section
+  if (heading && isHidden(heading)) {
+    const parentId = parentMap.get(sectionId);
+    if (parentId) {
+      const parentHeading = document.querySelector(
+        `[data-sectionid="${parentId}"]`,
+      ) as HTMLElement | null;
+      if (parentHeading) {
+        const parentBtn = findExpandButton(parentHeading);
+        // If parent button exists and is not expanded, expand it first
+        if (parentBtn && parentBtn.getAttribute("aria-expanded") !== "true") {
+          expandAndNavigate(parentId, topOffset, parentMap);
+          waitForHeadingThenScroll(sectionId, topOffset);
+          return;
+        }
+      }
+    }
+
+    const btn = findExpandButton(heading);
+    if (btn) {
+      btn.click();
+      waitForHeadingThenScroll(sectionId, topOffset);
+    } else {
+      scrollToSection(sectionId, topOffset);
+    }
+    return;
+  }
+
+  // Case 3: Heading not in DOM. — find & expand nearest parent in the DOM
+  // Wait for render & expand -> scroll to section
+  let parentId: string | undefined = parentMap.get(sectionId);
+  let parentHeading: HTMLElement | null = null;
+
+  while (parentId) {
+    const candidate = document.querySelector(
+      `[data-sectionid="${parentId}"]`,
+    ) as HTMLElement | null;
+    if (candidate && !isHidden(candidate)) {
+      parentHeading = candidate;
+      break;
+    }
+    parentId = parentMap.get(parentId);
+  }
+
+  if (parentHeading) {
+    const btn = findExpandButton(parentHeading);
+    if (btn) {
+      btn.click();
+      waitForHeadingThenScroll(sectionId, topOffset);
+    } else {
+      scrollToSection(parentId!, topOffset);
     }
   }
-  return result;
-};
+}
 
 /**
  * Functional component for the side navigation.
  * @returns The JSX element representing the side navigation.
  */
-const SideNav: React.FC = () => {
-  const [sectionConfigs, setSectionConfigs] = useState<SectionConfig[]>([]);
+const SideNav: React.FC<{
+  ecrDocumentNavConfig: EcrDocumentNavConfig[];
+}> = ({ ecrDocumentNavConfig }) => {
+  const sectionConfigs: SectionConfig[] = useMemo(
+    () => [
+      new SectionConfig("eCR Summary"),
+      new SectionConfig(
+        "eCR Document",
+        ecrDocumentNavConfig.map(
+          (item) => new SectionConfig(item.title, item.subNavItems),
+        ),
+      ),
+    ],
+    [ecrDocumentNavConfig],
+  );
+
+  const parentMap = buildParentMap(sectionConfigs);
+
+  const [topOffset, setTopOffset] = useState(80);
   const [activeSection, setActiveSection] = useState<string>("");
 
-  // HACK: Once the tooltips render, we need to re-check all the headings
-  // as this breaks references. This is fundamentally a problem with uswds's
-  // Tooltip as it assigns an SSR-unfriendly random id. If this is fixed,
-  // then we can remove this.
-  const [renderAgain, setRenderAgain] = useState(false);
-
   useEffect(() => {
-    // Select all heading tags on the page
-    const headingElements =
-      document.querySelector("main")?.querySelectorAll(headingSelector) || [];
-    // Extract the text content from each heading and store it in the state
-    const headings: HeadingObject[] = Array.from(headingElements).map(
-      (heading) => {
-        const sectionId =
-          heading && heading.textContent
-            ? toKebabCase(heading.textContent)
-            : null;
-        if (sectionId) {
-          heading.setAttribute("data-sectionid", sectionId);
-        }
-        return {
-          text: heading.textContent || "",
-          level: heading.tagName.toLowerCase(),
-          priority: headingLevels.findIndex(
-            (level) => heading.tagName.toLowerCase() === level,
-          ),
-        };
-      },
-    );
-    const sortedHeadings: SectionConfig[] = sortHeadings(headings);
-    setSectionConfigs(sortedHeadings);
+    if (sectionConfigs.length === 0) return;
 
-    // account for patient banner to find intersect line that is mid-header
     const oneRem = parseFloat(
       getComputedStyle(document.documentElement).fontSize,
     );
-    const topOffset = 5 * oneRem;
+    setTopOffset(5 * oneRem);
 
-    const options = {
-      root: null,
-      rootMargin: `-${topOffset}px 0px -${
-        window.innerHeight - topOffset - 1
-      }px 0px`,
-      threshold: 0,
-    };
+    const validIds = new Set(
+      (function flatten(items: SectionConfig[]): string[] {
+        return items.flatMap(({ id, subNavItems }) => [
+          id,
+          ...flatten(subNavItems || []),
+        ]);
+      })(sectionConfigs),
+    );
 
-    const observer = new IntersectionObserver((entries) => {
-      // get the top/first thing that intersected
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          const id = entry.target.getAttribute("data-sectionid") || null;
-          if (id) {
-            setActiveSection(id);
-            break;
+    // Intersection Observer: sets section in view as active section
+    const intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute("data-sectionid") || null;
+            if (id) {
+              setActiveSection(id);
+              break;
+            }
           }
         }
-      }
-    }, options);
+      },
+      {
+        root: null,
+        rootMargin: `-${topOffset}px 0px -${
+          window.innerHeight - topOffset - 1
+        }px 0px`,
+        threshold: 0,
+      },
+    );
+    const observedIds = new Set<string>();
 
-    // initialize active section to closest element
-    let closestElement = headingElements[0];
-    let dist = closestElement?.getBoundingClientRect().top;
+    // Adds intersection observer to each heading section
+    // Runs on initial load & when the DOM changes
+    const tagAndObserve = () => {
+      const headingElements = Array.from(
+        document.querySelector("main")?.querySelectorAll(headingSelector) || [],
+      ) as HTMLElement[];
 
-    headingElements.forEach((element) => {
-      observer.observe(element);
+      headingElements.forEach((heading) => {
+        const text = heading.textContent;
+        const sectionId = text ? toKebabCase(text) : null;
 
-      const elementDist = closestElement.getBoundingClientRect().top;
-      if (elementDist > 0 && elementDist < dist) {
-        closestElement = element;
-        dist = elementDist;
-      }
+        if (sectionId && validIds.has(sectionId)) {
+          heading.setAttribute("data-sectionid", sectionId);
+
+          if (!observedIds.has(sectionId)) {
+            observedIds.add(sectionId);
+            intersectionObserver.observe(heading);
+          }
+        }
+      });
+
+      return headingElements.filter((el) => el.getAttribute("data-sectionid"));
+    };
+
+    // Set initial active section
+    const tagged = tagAndObserve();
+    const initialActive = [...tagged]
+      .reverse()
+      .find((el) => el.getBoundingClientRect().top <= topOffset);
+    setActiveSection(
+      initialActive?.getAttribute("data-sectionid") ??
+        tagged[0]?.getAttribute("data-sectionid") ??
+        "",
+    );
+
+    // Mutation Observer: Watch for DOM changes (sections render after expand)
+    const mutationObserver = new MutationObserver(() => {
+      tagAndObserve();
+    });
+    mutationObserver.observe(document.querySelector("main") || document.body, {
+      childList: true,
+      subtree: true,
     });
 
-    // HACK: get dependency on renderAgain, but always set it to true
-    setRenderAgain(renderAgain ? true : true);
-    setActiveSection(closestElement?.getAttribute("data-sectionid") || "");
-
-    return () => observer.disconnect();
-  }, [renderAgain]);
+    return () => {
+      intersectionObserver.disconnect();
+      mutationObserver.disconnect();
+    };
+  }, [sectionConfigs]);
 
   /**
    * Constructs a side navigation menu as an array of React nodes based on the provided section configurations.
@@ -219,11 +343,12 @@ const SideNav: React.FC = () => {
    *   and potential sub-sections of the side navigation. Each `SectionConfig`
    *   should have an `id` for linking, a `title` for display, and may have
    *   `subNavItems` for nested navigation structures.
+   * @param topOffset - Scroll offset to account for fixed header spacing.
    * @returns An array of React nodes representing the side navigation items, including any
    *   nested sub-navigation items. These nodes are ready to be rendered in a React
    *   component to display the side navigation.
    */
-  function buildSideNav(sectionConfigs: SectionConfig[]) {
+  function buildSideNav(sectionConfigs: SectionConfig[], topOffset: number) {
     const sideNavItems: React.ReactNode[] = [];
     for (const section of sectionConfigs) {
       const sideNavItem = (
@@ -232,6 +357,11 @@ const SideNav: React.FC = () => {
           href={"#" + section.id}
           className={activeSection === section.id ? "usa-current" : ""}
           data-testid="sidenav-link"
+          onClick={(e) => {
+            e.preventDefault();
+            setActiveSection(section.id); // Set on click; prevents some sections not being tagged as active due to short page height
+            expandAndNavigate(section.id, topOffset, parentMap);
+          }}
         >
           {section.title}
         </a>
@@ -239,7 +369,7 @@ const SideNav: React.FC = () => {
       sideNavItems.push(sideNavItem);
 
       if (section.subNavItems) {
-        const subSideNavItems = buildSideNav(section.subNavItems);
+        const subSideNavItems = buildSideNav(section.subNavItems, topOffset);
         sideNavItems.push(
           <UswdsSideNav isSubnav={true} items={subSideNavItems} />,
         );
@@ -249,7 +379,7 @@ const SideNav: React.FC = () => {
     return sideNavItems;
   }
 
-  const sideNavItems = buildSideNav(sectionConfigs);
+  const sideNavItems = buildSideNav(sectionConfigs, topOffset);
 
   // Add a separate loading state here as the side nav is much slower than the main content
   return sectionConfigs.length === 0 ? (

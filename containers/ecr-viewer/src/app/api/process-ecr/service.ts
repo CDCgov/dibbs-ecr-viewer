@@ -5,6 +5,7 @@ import { fetch, Agent, FormData } from "undici";
 import xpath from "xpath";
 
 import {
+  deleteFromStorage,
   saveToStorage,
   saveWithMetadata,
 } from "@/app/api/save-fhir-data/service";
@@ -12,7 +13,10 @@ import {
   BundleExtendedMetadata,
   BundleMetadata,
 } from "@/app/api/save-fhir-data/types";
+import { getDb } from "@/app/data/metadataDb/database";
+import { Core } from "@/app/data/metadataDb/types/core";
 import { dbDialect, dbSchema } from "@/app/data/metadataDb/utils/db-config";
+import { getEcrIdFromIdentifier, resolveEcrId } from "@/app/utils/ecrid-utils";
 
 interface OrchestrationRawResponse {
   message: string;
@@ -106,12 +110,22 @@ export const getOrchestrationResponse = async (
   });
 
   if (response.status !== 200) {
-    const message = "Error thrown from orchestration";
+    let message = "";
+    const text = await response.text();
+
     console.error({
-      message,
+      message: "Error thrown from orchestration",
       status: response.status,
-      body: await response.text(),
+      body: text,
     });
+
+    try {
+      const json = JSON.parse(text);
+      message = json?.detail || text;
+    } catch {
+      message = text;
+    }
+
     throw new Error(message);
   } else {
     const resp = (await response.json()) as OrchestrationRawResponse;
@@ -133,12 +147,30 @@ const saveToSource = (
   bundle: Bundle,
   metadata: BundleMetadata | BundleExtendedMetadata | undefined,
 ) => {
-  const ecrId = bundle.id!;
-  if (metadata) {
-    return saveWithMetadata(bundle, ecrId, process.env.SOURCE, metadata);
+  const identifier = bundle.identifier;
+
+  if (identifier) {
+    const ecrId = getEcrIdFromIdentifier(identifier);
+    if (metadata) {
+      return saveWithMetadata(bundle, ecrId, process.env.SOURCE, metadata);
+    } else {
+      return saveToStorage(bundle, ecrId, process.env.SOURCE, "fhir");
+    }
   } else {
-    return saveToStorage(bundle, ecrId, process.env.SOURCE, "fhir");
+    throw new Error("eCR bundle contains no identifier.");
   }
+};
+
+/**
+ * Set up the orchestration request fetch agent and timeout
+ * @returns a fetch agent with configured timeout from env var or defaults to 15 minutes
+ */
+export const createOrchestrationAgent = () => {
+  return new Agent({
+    headersTimeout: process.env.ECR_PROCESSING_TIMEOUT
+      ? Number(process.env.ECR_PROCESSING_TIMEOUT)
+      : 900_000,
+  });
 };
 
 /**
@@ -151,34 +183,77 @@ const saveToSource = (
 export const orchestrationRequest = async (
   body: RequestBody,
   returnBundle: boolean = false,
-  // 1 hour timeout should allow any eCR to process
-  fetchAgent = new Agent({ headersTimeout: 3600000 }),
+  fetchAgent = createOrchestrationAgent(),
+  shouldSaveXml: boolean = false,
 ) => {
-  let orchestrationResp: BundleInfo;
-  try {
-    orchestrationResp = await getOrchestrationResponse(body, fetchAgent);
-  } catch (error: unknown) {
-    const message = "Failed to process orchestration response";
-    console.error({ message, error });
-    return {
-      message,
-      status: 500,
-    };
-  }
-  const res = await saveToSource(
-    orchestrationResp.ecr,
-    orchestrationResp.metadata,
-  );
+  const ecrId = await getEcrIdFromXml(body);
 
-  if (returnBundle) {
-    return { ...res, bundle: orchestrationResp.ecr };
-  } else {
-    return res;
+  if (dbDialect()) {
+    const existing = await getDb<Core>()
+      .selectFrom("ecr_data")
+      .select((eb) => eb.fn.countAll().as("num_ecr"))
+      .where("ecr_data.eicr_id", "=", ecrId)
+      .executeTakeFirst();
+    if (existing && Number(existing.num_ecr) > 0) {
+      return { message: `eCR already loaded: ${ecrId}`, status: 409 };
+    }
   }
+
+  const promises: [
+    Promise<{ message: string; status: number; bundle?: Bundle }>,
+    Promise<void>?,
+  ] = [
+    (async () => {
+      let orchestrationResp: BundleInfo;
+      try {
+        orchestrationResp = await getOrchestrationResponse(body, fetchAgent);
+      } catch (error: unknown) {
+        const message = "Failed to process orchestration response";
+        console.error({ message, error });
+        return {
+          message:
+            error instanceof Error && error.message ? error.message : message,
+          status: 500,
+        };
+      }
+
+      const res = await saveToSource(
+        orchestrationResp.ecr,
+        orchestrationResp.metadata,
+      );
+      if (returnBundle) {
+        return { ...res, bundle: orchestrationResp.ecr };
+      }
+      return res;
+    })(),
+  ];
+
+  if (shouldSaveXml) {
+    promises.push(zipAndSaveXml(body, ecrId));
+  }
+
+  const [orchestrationResult, saveResult] = await Promise.allSettled(promises);
+
+  if (
+    orchestrationResult.status === "rejected" ||
+    orchestrationResult.value.status >= 500
+  ) {
+    if (shouldSaveXml && saveResult?.status === "fulfilled") {
+      await deleteFromStorage(ecrId, process.env.SOURCE, "xml");
+    }
+
+    const errMsg =
+      orchestrationResult.status === "rejected"
+        ? String(orchestrationResult.reason)
+        : orchestrationResult.value.message;
+    return { message: errMsg, status: 500 };
+  }
+
+  return orchestrationResult.value;
 };
 
 /**
- * Save the original uploaded XML to storage
+ * Reaches into the eCR xml to grab root and extension ID values and returns an eCR ID string
  * @param body - Parsed body of the request
  * @returns The eCR ID as a string
  */
@@ -210,27 +285,30 @@ export const getEcrIdFromXml = async (body: RequestBody): Promise<string> => {
   // Namespace-aware selector for CDA
   const select = xpath.useNamespaces({ cda: "urn:hl7-org:v3" });
 
-  let id =
-    (select(
-      "string(/cda:ClinicalDocument/cda:id/@extension)",
-      doc,
-    ) as string) ||
-    (select("string(/cda:ClinicalDocument/cda:id/@root)", doc) as string);
+  let root = select(
+    "string(/cda:ClinicalDocument/cda:id/@root)",
+    doc,
+  ) as string;
 
   // Fallback if the document lacks the CDA namespace declaration
-  if (!id) {
-    id =
-      (xpath.select(
-        "string(/ClinicalDocument/id/@extension)",
-        doc,
-      ) as string) ||
-      (xpath.select("string(/ClinicalDocument/id/@root)", doc) as string);
+  if (!root) {
+    root = xpath.select("string(/ClinicalDocument/id/@root)", doc) as string;
   }
 
-  if (!id) {
-    throw new Error("Missing ClinicalDocument id (@extension or @root).");
+  let extension = select(
+    "string(/cda:ClinicalDocument/cda:id/@extension)",
+    doc,
+  ) as string;
+
+  // Fallback if the document lacks the CDA namespace declaration
+  if (!extension) {
+    extension = xpath.select(
+      "string(/ClinicalDocument/id/@extension)",
+      doc,
+    ) as string;
   }
-  return id;
+
+  return resolveEcrId(root, extension);
 };
 
 /**
@@ -255,7 +333,7 @@ export const zipAndSaveXml = async (body: RequestBody, ecrId: string) => {
     zip.file(`${ecrId}-CDA_eICR.xml`, body.ecr);
 
     // add RR if exists and is string
-    if (body.rr === "string") {
+    if (typeof body.rr === "string") {
       zip.file(`${ecrId}-CDA_RR.xml`, body.rr);
     }
 

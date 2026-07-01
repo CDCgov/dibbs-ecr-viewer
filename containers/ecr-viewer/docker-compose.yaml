@@ -8,10 +8,12 @@ services:
       context: ./
       dockerfile: Dockerfile
       args:
-        - APP_VERSION=1.0
+        - APP_VERSION=vTest
     network_mode: host
     environment:
       - CONFIG_NAME=${CONFIG_NAME:-AWS_SQLSERVER_NON_INTEGRATED}
+      - JWT_PUB_KEY
+      - JWT_API_PUB_KEY
       - NBS_PUB_KEY
       - NBS_API_PUB_KEY
       - SAVE_XML=false
@@ -79,8 +81,9 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./seed-scripts/sql/.pgpass/:/usr/local/lib/.pgpass # Keep if needed
-      - db:/var/lib/postgresql/data
+      - ./sql/postgres/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./seed-scripts/sql/postgres/.pgpass/:/usr/local/lib/.pgpass # Keep if needed
+      - db:/var/lib/postgresql/
     environment:
       - POSTGRES_USER=postgres
       - PGUSER=postgres
@@ -100,7 +103,9 @@ services:
       - GCP_PG_DUAL
 
   sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    build:
+      context: ./
+      dockerfile: seed-scripts/sql/sqlserver/Dockerfile
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=${SQL_SERVER_PASSWORD:-Password1!}
@@ -148,11 +153,13 @@ services:
       dockerfile: azurite.Dockerfile
     hostname: azurite
     restart: always
+    # Temporary: --skipApiVersionCheck is needed until Azurite supports the latest Azure Storage API version.
+    # See: https://github.com/Azure/Azurite/issues/2623
     command:
       - /bin/sh
       - -c
       - |
-        azurite --blobHost 0.0.0.0 --blobPort 10000 -l data --debug /data/debug.log &
+        azurite --skipApiVersionCheck --blobHost 0.0.0.0 --blobPort 10000 -l data --debug /data/debug.log &
         sleep 5
         az storage container create --name ecr-viewer-files
         tail -f /dev/null

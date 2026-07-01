@@ -3,6 +3,7 @@ import React from "react";
 import {
   Bundle,
   Condition,
+  DiagnosticReport,
   DomainResource,
   Encounter,
   Observation,
@@ -20,7 +21,7 @@ import {
   formatCurrentAddress,
   formatPatientContactList,
 } from "@/app/services/formatService";
-import { evaluateData } from "@/app/utils/data-utils";
+import { noDataSummary } from "@/app/utils/data-utils";
 import {
   evaluateAll,
   evaluateOne,
@@ -35,79 +36,91 @@ import { LabAccordion } from "@/app/view-data/components/LabAccordion";
 import {
   returnImmunizations,
   returnProblemsTable,
-} from "@/app/view-data/components/common";
+} from "@/app/view-data/services/clinicalInfoService";
 
+import {
+  evaluateEncounterDiagnosis,
+  getLocationName,
+} from "./evaluateFhirDataService";
 import {
   evaluatePatientName,
   evaluatePatientRace,
   evaluatePatientEthnicity,
   censorGender,
   calculatePatientAge,
-  evaluateEncounterDiagnosis,
-  getLocationName,
-} from "./evaluateFhirDataService";
+  getPatient,
+  evaluatePatientDOB,
+} from "@/app/view-data/services/demographicsService";
 import { evaluateLabInfoData } from "./labsService";
 import { getReportabilityRulesReasons } from "./reportabilityService";
+import { FhirIndex, getResourcesByType } from "./fhirResourcesIndexService";
 
 /**
  * Evaluates and retrieves patient details from the FHIR bundle using the provided path mappings.
  * @param fhirBundle - The FHIR bundle containing patient data.
  * @returns An array of patient details objects containing title and value pairs.
  */
-export const evaluateEcrSummaryPatientDetails = (fhirBundle: Bundle) => {
-  const patientSex = toTitleCase(
-    evaluateOne(fhirBundle, fhirPathMappings.patientGender),
-  );
+export const evaluateEcrSummaryPatientDetails = (
+  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
+) => {
+  const patient = getPatient(fhirIndex);
 
-  const age = calculatePatientAge(fhirBundle);
+  const patientSex = toTitleCase(
+    evaluateOne(patient, fhirPathMappings.patientGender),
+  );
+  const age = calculatePatientAge(patient);
   const parentGuardian =
     !age || age.years < 18
       ? [
           {
             title: "Parent/Guardian",
-            value: formatPatientContactList(
-              evaluateAll(fhirBundle, fhirPathMappings.patientGuardian),
-            ),
+            value:
+              formatPatientContactList(
+                evaluateAll(fhirBundle, fhirPathMappings.patientGuardian),
+              ) || noDataSummary,
           },
         ]
       : [];
 
-  return evaluateData([
+  return [
     {
       title: "Patient Name",
-      value: evaluatePatientName(fhirBundle, false),
+      value: evaluatePatientName(patient, false) || noDataSummary,
     },
     {
       title: "DOB",
-      value: formatDate(evaluateOne(fhirBundle, fhirPathMappings.patientDOB)),
+      value: evaluatePatientDOB(patient) || noDataSummary,
     },
     {
       title: "Sex",
       // Unknown and Other sex options removed to be in compliance with Executive Order 14168
-      value: censorGender(patientSex),
+      value: censorGender(patientSex) || noDataSummary,
     },
     {
       title: "Race",
-      value: evaluatePatientRace(fhirBundle),
+      value: evaluatePatientRace(patient) || noDataSummary,
     },
     {
       title: "Ethnicity",
-      value: evaluatePatientEthnicity(fhirBundle),
+      value: evaluatePatientEthnicity(patient) || noDataSummary,
     },
     {
       title: "Patient Address",
-      value: formatCurrentAddress(
-        evaluateAll(fhirBundle, fhirPathMappings.patientAddressList),
-      ),
+      value:
+        formatCurrentAddress(
+          evaluateAll(patient, fhirPathMappings.patientAddressList),
+        ) || noDataSummary,
     },
     {
       title: "Patient Contact",
-      value: formatContactPoint(
-        evaluateAll(fhirBundle, fhirPathMappings.patientTelecom),
-      ),
+      value:
+        formatContactPoint(
+          evaluateAll(patient, fhirPathMappings.patientTelecom),
+        ) || noDataSummary,
     },
     ...parentGuardian,
-  ]);
+  ];
 };
 
 /**
@@ -121,82 +134,84 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
     fhirPathMappings.compositionEncounterRef,
   );
 
-  return evaluateData([
+  const orgRef = evaluateOne(encounter, fhirPathMappings.facilityOrgRef);
+  const org = evaluateReference<Organization>(fhirBundle, orgRef);
+
+  return [
     {
       title: "Encounter Date/Time",
-      value: formatStartEndDateTime(encounter?.period),
+      value: formatStartEndDateTime(encounter?.period) || noDataSummary,
     },
     {
       title: "Encounter Type",
-      value: formatCoding(encounter?.class),
+      value: formatCoding(encounter?.class) || noDataSummary,
     },
     {
       title: "Encounter Diagnosis",
-      value: evaluateEncounterDiagnosis(fhirBundle, encounter),
+      value: evaluateEncounterDiagnosis(fhirBundle, encounter) || noDataSummary,
     },
     {
       title: "Facility Name",
-      value: getLocationName(fhirBundle, encounter),
+      value: getLocationName(fhirBundle, encounter) || noDataSummary,
     },
     {
       title: "Facility Contact",
-      value: formatContactPoint(
-        evaluateOneReference<Organization>(
-          encounter,
-          fhirPathMappings.facilityOrgRef,
-        )?.telecom,
-      ),
+      value: formatContactPoint(org?.telecom) || noDataSummary,
     },
-  ]);
+  ];
 };
 
 /**
  * Evaluates and retrieves all condition details in a bundle.
  * @param fhirBundle - The FHIR bundle containing patient data.
- * @param snomedCode - The SNOMED code identifying the main snomed code.
+ * @param fhirIndex - FHIR resources indexed by type & by ID
+ * @param snomedCode - (Optional) The SNOMED code identifying the main snomed code.
  * @returns An array of condition summary objects.
  */
 export const evaluateEcrSummaryConditionSummary = (
   fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
   snomedCode?: string,
 ): ConditionSummary[] => {
   const rrConditions = evaluateAll(fhirBundle, fhirPathMappings.rrConditions);
   const conditionsList: {
-    [index: string]: { ruleSummaries: Set<string>; snomedDisplay: string };
+    [index: string]: { ruleSummaries: Set<string>; displayText: string };
   } = {};
   for (const observation of rrConditions) {
     const coding = observation?.valueCodeableConcept?.coding?.find(
       (coding) => coding.system === "http://snomed.info/sct",
     );
-    if (coding?.code) {
-      const snomed = coding.code;
-      if (!conditionsList[snomed]) {
-        conditionsList[snomed] = {
-          ruleSummaries: new Set(),
-          snomedDisplay:
-            formatCodeableConcept(observation?.valueCodeableConcept) ??
-            "Unknown Condition",
-        };
-      }
 
-      observation?.hasMember?.forEach((ref) => {
-        const rrInfoObs: Observation | undefined = evaluateReference(
-          fhirBundle,
-          ref.reference,
-        );
-        const { rules } = getReportabilityRulesReasons(rrInfoObs);
+    const displayText =
+      formatCodeableConcept(observation?.valueCodeableConcept) ??
+      observation?.valueString ??
+      "Unknown Condition";
 
-        rules.forEach((rule: string) =>
-          conditionsList[snomed].ruleSummaries.add(rule),
-        );
-      });
+    const conditionListKey = coding?.code ?? displayText;
+    if (!conditionsList[conditionListKey]) {
+      conditionsList[conditionListKey] = {
+        ruleSummaries: new Set(),
+        displayText,
+      };
     }
+
+    observation?.hasMember?.forEach((ref) => {
+      const rrInfoObs: Observation | undefined = evaluateReference(
+        fhirBundle,
+        ref.reference,
+      );
+      const { rules } = getReportabilityRulesReasons(rrInfoObs);
+
+      rules.forEach((rule: string) =>
+        conditionsList[conditionListKey].ruleSummaries.add(rule),
+      );
+    });
   }
 
   const conditionSummaries: ConditionSummary[] = [];
   for (const conditionsListKey in conditionsList) {
     const conditionSummary: ConditionSummary = {
-      title: conditionsList[conditionsListKey].snomedDisplay,
+      title: conditionsList[conditionsListKey].displayText,
       snomed: conditionsListKey,
       conditionDetails: [
         {
@@ -220,10 +235,12 @@ export const evaluateEcrSummaryConditionSummary = (
       ),
       clinicalDetails: evaluateEcrSummaryRelevantClinicalDetails(
         fhirBundle,
+        fhirIndex,
         conditionsListKey,
       ),
       labDetails: evaluateEcrSummaryRelevantLabResults(
         fhirBundle,
+        fhirIndex,
         conditionsListKey,
         false,
       ),
@@ -261,6 +278,7 @@ const getRelevantResources = <T extends DomainResource>(
  */
 export const evaluateEcrSummaryRelevantClinicalDetails = (
   fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
   snomedCode: string,
 ): DisplayDataProps[] => {
   if (!snomedCode) {
@@ -276,6 +294,7 @@ export const evaluateEcrSummaryRelevantClinicalDetails = (
 
   const problemsElement = returnProblemsTable(
     fhirBundle,
+    fhirIndex,
     problemsListFiltered as Condition[],
   );
 
@@ -285,12 +304,14 @@ export const evaluateEcrSummaryRelevantClinicalDetails = (
 /**
  * Evaluates and retrieves relevant lab results from the FHIR bundle using the provided SNOMED code and path mappings.
  * @param fhirBundle - The FHIR bundle containing patient data.
+ * @param fhirIndex - FHIR resources indexed by type & by ID
  * @param snomedCode - String containing the SNOMED code search parameter.
  * @param lastDividerLine - Boolean to determine if a divider line should be added to the end of the lab results. Default to true
  * @returns An array of lab result details objects containing title and value pairs.
  */
 export const evaluateEcrSummaryRelevantLabResults = (
   fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
   snomedCode: string,
   lastDividerLine: boolean = true,
 ): DisplayDataProps[] => {
@@ -300,16 +321,16 @@ export const evaluateEcrSummaryRelevantLabResults = (
     return [];
   }
 
-  const labReports = evaluateAll(
-    fhirBundle,
-    fhirPathMappings.diagnosticReports,
+  const labReports = getResourcesByType<DiagnosticReport>(
+    fhirIndex,
+    "DiagnosticReport",
   );
   const labsWithCode = getRelevantResources(labReports, snomedCode);
   const labsWithCodeIds = new Set(labsWithCode.map((lab) => lab.id));
 
-  const observationsList = evaluateAll(
-    fhirBundle,
-    fhirPathMappings.observations,
+  const observationsList = getResourcesByType<Observation>(
+    fhirIndex,
+    "Observation",
   );
   const relevantObsIds = new Set(
     getRelevantResources(observationsList, snomedCode).map((entry) => entry.id),
@@ -335,7 +356,7 @@ export const evaluateEcrSummaryRelevantLabResults = (
     return [];
   }
   const relevantLabElements = evaluateLabInfoData(
-    fhirBundle,
+    fhirIndex,
     relevantLabs,
     "h4",
   );

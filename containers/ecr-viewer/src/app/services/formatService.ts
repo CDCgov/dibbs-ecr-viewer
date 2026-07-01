@@ -187,7 +187,7 @@ const VALID_PHONE_NUMBER_REGEX = /^\d{3}-\d{3}-\d{4}( \D\w*)?$/;
 /**
  * Formats a phone number into a standard format of XXX-XXX-XXXX x123.
  * @param phoneNumber - The phone number to format.
- * @returns The formatted phone number or "Invalid Number: <unformatted phone number>" if the input is invalid or undefined if the input is empty.
+ * @returns The formatted phone number, or the unformatted number if the input does not fit the standard format, or undefined if the input is empty.
  */
 export const formatPhoneNumber = (
   phoneNumber: string | undefined,
@@ -203,7 +203,7 @@ export const formatPhoneNumber = (
   if (VALID_PHONE_NUMBER_REGEX.test(formatted)) {
     return formatted;
   } else {
-    return `Invalid Number: ${phoneNumber}`;
+    return phoneNumber;
   }
 };
 
@@ -367,7 +367,12 @@ const UNIT_MAP = new Map([
 export const formatQuantity = (
   data: Quantity | undefined,
 ): string | undefined => {
-  if (!data || !data.value) return;
+  if (!data) return;
+
+  if (!data.value && data.value !== 0) {
+    return;
+  }
+
   let unit = data.unit || "";
   unit = UNIT_MAP.get(unit) || unit;
   const firstLetterRegex = /^[a-zA-Z0-9]/i;

@@ -8,7 +8,7 @@ import {
   getLastAuditLog,
 } from "../helpers/core";
 import { buildExtended, dropExisting, clearEcrExtended } from "../helpers/ddl";
-import { createExtendedEcr } from "../helpers/extended";
+import { createExtendedEcr, createEcrImmunization } from "../helpers/extended";
 import { seedUserProgramData } from "../helpers/seed";
 import { NewExtendedECR } from "@/app/data/metadataDb/types/extended";
 import {
@@ -52,6 +52,8 @@ const extendedTemplate: NewExtendedECR = {
   eicr_version_number: "2",
   authoring_date: new Date("2024-12-02T05:00:00.000Z"),
   authoring_provider: "Dr. Droid",
+  ehr_software: "EpicCore Galactic - Version 45.7",
+  ehr_manufacturer_model: "EpicCore Galactic - Version 45.7",
   provider_id: "12345",
   facility_id: "12345",
   facility_name: "Jedi Temple",

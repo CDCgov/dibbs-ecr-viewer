@@ -19,20 +19,6 @@ export const getTables = async (
 };
 
 /**
- * Looks up a schema by name and returns if it exists
- * @param db a database
- * @param schemaName the schema that you want to look up
- * @returns whether that schema exists
- */
-export const schemaExistsByName = async (
-  db: Kysely<AnyDb>,
-  schemaName: string,
-): Promise<boolean> => {
-  const schemas = await db.introspection.getSchemas();
-  return schemas.some(({ name }) => name === schemaName);
-};
-
-/**
  * Gets metadata for a table from the database
  * @param db a database
  * @param schemaName the name of the schema that contains the table

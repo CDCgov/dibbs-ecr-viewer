@@ -6,6 +6,7 @@ import {
   S3Client,
   PutObjectCommand,
   PutObjectCommandOutput,
+  HeadObjectCommand,
 } from "@aws-sdk/client-s3";
 import { mockClient } from "aws-sdk-client-mock";
 import { NextRequest } from "next/server";
@@ -14,9 +15,11 @@ import { POST } from "@/app/api/save-fhir-data/route";
 
 const s3Mock = mockClient(S3Client);
 jest.mock("@azure/storage-blob", () => {
+  const existsMock = jest.fn().mockResolvedValue(false);
   const uploadMock = jest.fn();
   const getBlockBlobClientMock = jest.fn(() => ({
     upload: uploadMock,
+    exists: existsMock,
   }));
 
   const getContainerClientMock = jest.fn(() => ({
@@ -38,6 +41,7 @@ const fakeData = (source: string) => ({
     resourceType: "Bundle",
     type: "document",
     identifier: {
+      system: "abcdef",
       value: "12345",
     },
     timestamp: "2000-02-04T09:01:22-05:00",
@@ -58,6 +62,10 @@ const fakeData = (source: string) => ({
 describe("POST Save FHIR Data API Route", () => {
   beforeEach(() => {
     s3Mock.reset();
+    const notFoundError = Object.assign(new Error("NotFound"), {
+      $metadata: { httpStatusCode: 404 },
+    });
+    s3Mock.on(HeadObjectCommand).rejects(notFoundError);
   });
 
   it("sends data to S3 and returns a success response", async () => {
@@ -85,7 +93,7 @@ describe("POST Save FHIR Data API Route", () => {
     s3Mock
       .on(PutObjectCommand, {
         Bucket: process.env.ECR_BUCKET_NAME,
-        Key: "12345.json",
+        Key: "abcdef^12345.json",
         Body: JSON.stringify(fakeData("s3").fhirBundle),
         ContentType: "application/json",
       })
@@ -144,6 +152,7 @@ describe("POST Save FHIR Data API Route", () => {
         resourceType: "Bundle",
         type: "document",
         identifier: {
+          system: "abcdef",
           value: "12345",
         },
         timestamp: "2000-02-04T09:01:22-05:00",
@@ -184,7 +193,7 @@ describe("POST Save FHIR Data API Route", () => {
     s3Mock
       .on(PutObjectCommand, {
         Bucket: process.env.ECR_BUCKET_NAME,
-        Key: "12345.json",
+        Key: "abcdef^12345.json",
         Body: JSON.stringify(reqBody.fhirBundle),
         ContentType: "application/json",
       })
@@ -248,7 +257,7 @@ describe("POST Save FHIR Data API Route - Azure", () => {
     expect(mockBlockBlobClient.upload).toHaveBeenCalledOnce();
     expect(mockBlockBlobClient.upload).toHaveBeenCalledWith(
       JSON.stringify(fakeData("azure").fhirBundle),
-      221,
+      239,
       {
         blobHTTPHeaders: { blobContentType: "application/json" },
       },
@@ -277,7 +286,7 @@ describe("POST Save FHIR Data API Route - Azure", () => {
     expect(mockBlockBlobClient.upload).toHaveBeenCalledOnce();
     expect(mockBlockBlobClient.upload).toHaveBeenCalledWith(
       JSON.stringify(fakeData("azure").fhirBundle),
-      221,
+      239,
       {
         blobHTTPHeaders: { blobContentType: "application/json" },
       },

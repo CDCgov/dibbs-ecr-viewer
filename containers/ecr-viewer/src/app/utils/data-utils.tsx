@@ -13,6 +13,10 @@ export interface CompleteData {
 export type RenderableNode = string | React.JSX.Element;
 
 export const noData = <span className="text-italic text-base">No data</span>;
+// A11y: Rquires darker text against summary box to meet WCAG 2 AA minimum contrast ratio
+export const noDataSummary = (
+  <span className="text-italic text-ink">No data</span>
+);
 
 /**
  * Evaluates the provided display data to determine availability.
@@ -45,15 +49,17 @@ export const isDataAvailable = (item: DisplayDataProps): Boolean => {
   )
     return false;
   const unavailableTerms = [
-    "Not on file",
-    "Not on file documented in this encounter",
-    "Unknown",
-    "Unknown if ever smoked",
-    "Tobacco smoking consumption unknown",
-    "Do not know",
-    "No history of present illness information available",
+    "not on file",
+    "not on file documented in this encounter",
+    "unknown",
+    "unknown if ever smoked",
+    "tobacco smoking consumption unknown",
+    "do not know",
+    "no history of present illness information available",
+    "no information available",
+    "no information",
   ];
-  const valStr = removeHtmlElements(`${item.value}`).trim();
+  const valStr = removeHtmlElements(`${item.value}`).trim().toLowerCase();
   return !unavailableTerms.some((t) => t === valStr);
 };
 

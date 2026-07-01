@@ -15,12 +15,15 @@ import { SignOutButton } from "./SignOutButton";
  * and a sign-out button
  * @param props Component props.
  * @param props.user - Details of the currently logged-in user
+ * @param props.version - eCR Viewer version number
  * @returns The UserMenu component of the application.
  */
 const UserMenu = ({
   user,
+  version,
 }: {
   user: Partial<Pick<User, "email" | "user_type">>;
+  version: string;
 }) => {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -71,6 +74,7 @@ const UserMenu = ({
         <div ref={menuRef} className="user-menu">
           <p className="user-email">{user.email}</p>
           <p className="user-role">{toSentenceCase(user.user_type)}</p>
+          <p className="version-number">version {version}</p>
           <SignOutButton />
         </div>
       )}

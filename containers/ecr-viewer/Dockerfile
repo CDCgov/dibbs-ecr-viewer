@@ -1,6 +1,5 @@
 # syntax=docker.io/docker/dockerfile:1.7-labs
 FROM node:24-alpine AS base
-
 ARG APP_VERSION
 
 # Install dependencies only when needed
@@ -11,7 +10,12 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json* ./
-RUN npm ci
+
+# 🔒 SECURITY: Force ignore-scripts to block malicious payloads during download
+RUN npm ci --ignore-scripts
+
+# 🔒 SECURITY: Explicitly run scripts only for allowed packages (requires @lavamoat/allow-scripts in package.json)
+RUN npx allow-scripts
 
 
 # Rebuild the source code only when needed
@@ -19,6 +23,9 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY --exclude=./seed-scripts . .
+
+ARG APP_VERSION
+ENV APP_VERSION=$APP_VERSION
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
@@ -28,7 +35,12 @@ RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
+
 WORKDIR /app
+
+# Inherits APP_VERSION from base
+ARG APP_VERSION
+ENV APP_VERSION=$APP_VERSION
 
 # Uncomment the following line in case you want to disable telemetry during runtime.
 ENV NEXT_TELEMETRY_DISABLED 1
@@ -50,7 +62,6 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV APP_VERSION=$APP_VERSION
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 

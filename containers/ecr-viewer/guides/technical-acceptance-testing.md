@@ -100,10 +100,10 @@ Instructions have been provided for different operating systems, so follow the i
 Here, we’ll verify that the eCR Viewer service is available to receive requests by running the eCR Viewer Health Check request.
 
 <details>
-<summary>Powershell (compatible with versions 5 and 7)</summary>
+<summary>PowerShell (compatible with versions 5 and 7)</summary>
 
 ```powershell
-Invoke-WebRequest -Uri "https://{{dibbs-url}}/ecr-viewer/api/health-check" -UseBasicParsing
+Invoke-WebRequest -Uri "{{dibbs-url}}/ecr-viewer/api/health-check" -UseBasicParsing
 ```
 
 </details>
@@ -112,7 +112,7 @@ Invoke-WebRequest -Uri "https://{{dibbs-url}}/ecr-viewer/api/health-check" -UseB
 <summary>Unix (Mac, Linux) or Windows Command Prompt</summary>
 
 ```bash
-curl https://{{dibbs-url}}/ecr-viewer/api/health-check
+curl {{dibbs-url}}/ecr-viewer/api/health-check
 ```
 
 </details>
@@ -134,34 +134,55 @@ If you are running the viewer with a metadata database (standalone or dual boot)
 In order to apply migrations, you will need the migration secret. This can be set to a static value by setting the `METADATA_DATABASE_MIGRATION_SECRET`, otherwise it will be generated randomly each time the viewer is started. Once generated, it will be logged to the eCR Viewer server logs. Check your container's logs to find this secret - it will be logged as `migration_secret=<your secret here>`.
 
 <details>
-<summary>Powershell 5 and 7</summary>
+<summary>PowerShell 5 and 7</summary>
 
 ```powershell
 $boundary = [guid]::NewGuid().ToString()
+$FormContentType = "multipart/form-data; boundary=$boundary"
 $body = (
     "--$boundary",
     "Content-Disposition: form-data; name=`"migration_secret`"",
     "Content-Type: application/text",
     "",
     "{{ migration-secret }}",
+    "--$boundary",
+    "Content-Disposition: form-data; name=`"init_admin_email`"",
+    "Content-Type: application/text",
+    "",
+    "{{ admin-email }}",
     "--$boundary--"
 ) -join "`r`n"
 
 $headers = @{
-    "Content-Type" = "multipart/form-data; boundary=$boundary"
+    "Authorization" = "Bearer {{ token }}"
 }
 
-Invoke-RestMethod -Uri "https://{{ dibbs-url }}/ecr-viewer/api/migrate-db" `
--Method Post -Headers $headers -Body $body
+Invoke-RestMethod -Uri "{{ dibbs-url }}/ecr-viewer/api/migrate-db" `
+-Method Post -ContentType $FormContentType -Headers $headers -Body $body
 ```
 
 </details>
 
 <details>
-<summary>Unix (Mac, Linux) and Windows Command Prompt</summary>
+<summary>Unix (Mac, Linux)</summary>
 
 ```bash
-curl {{ dibbs-url }}/ecr-viewer/api/migrate-db --form migration_secret={{ migration-secret }}
+curl --location "{{ dibbs-url }}/ecr-viewer/api/migrate-db" \
+--header "Authorization: Bearer {{ token }}" \
+--form "migration_secret={{ migration-secret }}" \
+--form "init_admin_email={{ admin-email }}"
+```
+
+</details>
+
+<details>
+<summary>Windows Command Prompt</summary>
+
+```bash
+curl --location "{{ dibbs-url }}/ecr-viewer/api/migrate-db" ^
+--header "Authorization: Bearer {{ token }}" ^
+--form "migration_secret={{ migration-secret }}" ^
+--form "init_admin_email={{ admin-email }}"
 ```
 
 </details>
@@ -172,16 +193,16 @@ curl {{ dibbs-url }}/ecr-viewer/api/migrate-db --form migration_secret={{ migrat
 
 Now, we need to verify that an eCR can run through the DIBBs pipeline. Below, you'll need to replace `{{path-to-eCR-zip-file}}` with the actual link to your sample eCR/RR zip file and `{{jwt-token}}` with your generated JWT token.
 
-Please ensure that the sample eCR you're using is a zip file, and the eICR and RR files are named as they are coming out of AIMs — CDA_eICR.xml and CDA_RR.xml.
+Please ensure that the sample eCR you're using is a zip file, and the eICR and RR files are named as they are coming out of AIMS — CDA_eICR.xml and CDA_RR.xml.
 
 Run the Process eCR request:
 
 <details>
-<summary>Powershell 5</summary>
+<summary>PowerShell 5</summary>
 
 ```powershell
 $FilePath = '{{ path-to-eCR-zip-file }}'
-$URL = 'https://{{ dibbs-url }}/ecr-viewer/api/process-ecr'
+$URL = '{{ dibbs-url }}/ecr-viewer/api/process-ecr'
 $Token = '{{ jwt-token }}'
 
 Function Import-ApiForm {
@@ -233,7 +254,7 @@ Import-ApiForm -URI $URL -File $FileInfo -ContentType "application/zip" -NewName
 </details>
 
 <details>
-<summary>Powershell 7</summary>
+<summary>PowerShell 7</summary>
 
 ```powershell
 $FilePath = "{{path-to-eCR-zip-file}}"
@@ -243,7 +264,7 @@ $headers = @{
     "Authorization" = "Bearer $Token"
 }
 
-Invoke-WebRequest -Uri "https://{{ dibbs-url }}/ecr-viewer/api/process-ecr" `
+Invoke-WebRequest -Uri "{{ dibbs-url }}/ecr-viewer/api/process-ecr" `
     -Method Post `
     -UseBasicParsing `
     -Form @{ ecr = Get-Item $FilePath } `
@@ -258,7 +279,7 @@ Invoke-WebRequest -Uri "https://{{ dibbs-url }}/ecr-viewer/api/process-ecr" `
 ```bash
 curl {{ dibbs-url }}/ecr-viewer/api/process-ecr ^
     --form ecr=@"{{ path to file }}";type=application/zip ^
-    --header 'Authorization: Bearer {{jwt-token}}'
+    --header "Authorization: Bearer {{jwt-token}}"
 ```
 
 </details>
@@ -295,7 +316,7 @@ Verify that the eCR Viewer is able to display the eCR that was processed.
 To access that eCR, run the following request in a browser:
 
 ```http
-http://{{dibbs-url}}/ecr-viewer/view-data?id={{ecr-id}}
+{{dibbs-url}}/ecr-viewer/view-data?id={{ecr-id}}
 ```
 
 where `{{ecr-id}}` should be replaced with the eCR ID that you copied from the last step.
@@ -322,10 +343,10 @@ Or:
 { "message": "Internal Server Error" }
 ```
 
-More details can typically be found in the server's logs. Generally speaking, you can get around this error by re-running or choosing a different eCR bundle. You’ll also need to make sure your eCRs are named as they are coming out of AIMs — `CDA_eICR.xml` and `CDA_RR.xml`.
+More details can typically be found in the server's logs. Generally speaking, you can get around this error by re-running or choosing a different eCR bundle. You’ll also need to make sure your eCRs are named as they are coming out of AIMS — `CDA_eICR.xml` and `CDA_RR.xml`.
 
 ## Next Steps
 
 Congratulations! You’ve completed the verification process for the DIBBs installation.
 
-Please reach to your contact within your public health department and [dibbs@cdc.gov](mailto:dibbs@cdc.gov) to confirm that the installation was successful.
+Please reach out to your contact within your public health department and [dibbs@cdc.gov](mailto:dibbs@cdc.gov) to confirm that the installation was successful.

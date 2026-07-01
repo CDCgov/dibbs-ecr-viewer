@@ -2,13 +2,7 @@ import { Bundle, FhirResource } from "fhir/r4";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-import { deleteFromStorage } from "@/app/api/save-fhir-data/service";
-
-import {
-  orchestrationRequest,
-  getEcrIdFromXml,
-  zipAndSaveXml,
-} from "./service";
+import { orchestrationRequest } from "./service";
 
 interface ProcessEcrResponse {
   message: string;
@@ -58,8 +52,8 @@ export const POST = async (
   request: NextRequest,
 ): Promise<NextResponse<ProcessEcrResponse>> => {
   // Parse out the form from the request
+  const shouldSaveXml = process.env.SAVE_XML === "true";
   let rawBody: object;
-  let ecrId: string | undefined = undefined;
   try {
     const contentType = request.headers.get("content-type");
     if (contentType?.includes("form-")) {
@@ -81,40 +75,12 @@ export const POST = async (
 
   try {
     const { return_fhir_bundle, ...body } = routeSchema.parse(rawBody);
-
-    if (process.env.SAVE_XML) {
-      ecrId = await getEcrIdFromXml(body);
-
-      const [saveResult, orchestrationResult] = await Promise.allSettled([
-        zipAndSaveXml(body, ecrId),
-        orchestrationRequest(body, return_fhir_bundle === "true"),
-      ]);
-
-      if (
-        orchestrationResult.status === "rejected" ||
-        orchestrationResult.value.status >= 500
-      ) {
-        if (ecrId && saveResult.status === "fulfilled") {
-          await deleteFromStorage(ecrId, process.env.SOURCE, "xml");
-        }
-
-        const errMsg =
-          orchestrationResult.status === "rejected"
-            ? String(orchestrationResult.reason)
-            : `Orchestration returned ${orchestrationResult.value.status}`;
-        throw new Error(errMsg);
-      }
-
-      const { status, ...payload } = orchestrationResult.value;
-      return NextResponse.json(payload, { status });
-    }
-
-    // Regular path without SAVE_XML set to true
     const { status, ...payload } = await orchestrationRequest(
       body,
       return_fhir_bundle === "true",
+      undefined,
+      shouldSaveXml,
     );
-
     return NextResponse.json(payload, { status });
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {

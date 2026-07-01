@@ -1,9 +1,24 @@
-import { Bundle, Element, Observation, RelatedPerson } from "fhir/r4";
+import {
+  Bundle,
+  Element,
+  Observation,
+  RelatedPerson,
+  QuestionnaireResponse,
+  Organization,
+} from "fhir/r4";
+import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
+import { HtmlTableJsonRow } from "@/app/services/htmlTableService";
+import { JsonTable } from "@/app/view-data/components/JsonTable";
 
-import { formatPatientContactList } from "@/app/services/formatService";
-import { noData, notEmpty } from "@/app/utils/data-utils";
+import {
+  formatCodeableConcept,
+  formatCurrentAddress,
+  formatPatientContactList,
+} from "@/app/services/formatService";
+import { evaluateData, noData, notEmpty } from "@/app/utils/data-utils";
 import {
   evaluateAll,
+  evaluateOne,
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
@@ -12,11 +27,326 @@ import { toSentenceCase } from "@/app/utils/format-utils";
 import {
   DataDisplay,
   DataDisplayList,
+  DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
 import EvaluateTable, {
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
 import { UnstyledDividedList } from "@/app/view-data/components/UnstyledDividedList";
+import { FhirIndex } from "./fhirResourcesIndexService";
+import { getPatient } from "@/app/view-data/services/demographicsService";
+import {
+  formatDateTime,
+  formatPeriodDate,
+} from "@/app/services/formatDateService";
+import { sortResourcesByDate } from "../utils/fhir-data-utils";
+
+/**
+ * Evaluates social data from the FHIR bundle and formats it into structured data for display.
+ * @param fhirBundle - The FHIR bundle containing social data.
+ * @returns An array of evaluated and formatted social data.
+ */
+export const evaluateSocialData = (
+  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
+) => {
+  const patient = getPatient(fhirIndex);
+
+  const socialData: DisplayDataProps[] = [
+    {
+      title: "Exposure Contacts",
+      value: evaluateExposureDetails(fhirBundle),
+      fullWidthContent: true,
+    },
+    {
+      title: "Tobacco Use",
+      value: evaluateValue(fhirBundle, fhirPathMappings.patientTobaccoUse),
+    },
+    {
+      title: "Travel History",
+      value: evaluateTravelHistoryTable(fhirBundle),
+      fullWidthContent: true,
+    },
+    {
+      title: "Homeless Status",
+      value: evaluateValue(fhirBundle, fhirPathMappings.patientHomelessStatus),
+    },
+    {
+      title: "Alcohol Use",
+      value: evaluateAlcoholUse(fhirBundle),
+    },
+    {
+      title: "Sexual Orientation",
+      value: evaluateValue(
+        fhirBundle,
+        fhirPathMappings.patientSexualOrientation,
+      ),
+    },
+    {
+      title: "Occupation",
+      value: evaluateOccupation(fhirBundle),
+    },
+    {
+      title: "Occupation History",
+      value: evaluateOccupationHistory(fhirBundle),
+      fullWidthContent: true,
+    },
+    {
+      title: "Religious Affiliation",
+      value: evaluateValue(patient, fhirPathMappings.patientReligion),
+    },
+    {
+      title: "Marital Status",
+      value: evaluateValue(patient, fhirPathMappings.patientMaritalStatus),
+    },
+    {
+      title: "Nationality",
+      value: evaluateValue(fhirBundle, fhirPathMappings.patientNationality),
+    },
+    {
+      title: "Country of Residence",
+      value: evaluateValue(
+        fhirBundle,
+        fhirPathMappings.patientCountryResidence,
+      ),
+    },
+    {
+      title: "Disability Status",
+      value: returnDisabilityStatusTable(fhirBundle),
+      fullWidthContent: true,
+    },
+    {
+      title: "Social Determinants of Health",
+      value: evaluateSocialDeterminantsOfHealth(fhirBundle),
+      fullWidthContent: true,
+      fullWidthTitle: true,
+    },
+  ];
+
+  return evaluateData(socialData);
+};
+
+/**
+ * Evaluates alcohol use information from the FHIR bundle and formats it into structured data for display.
+ * @param fhirBundle - The FHIR bundle containing alcohol use data.
+ * @returns An array of evaluated and formatted alcohol use data.
+ */
+export const evaluateAlcoholUse = (fhirBundle: Bundle) => {
+  const alcoholUse = evaluateValue(
+    fhirBundle,
+    fhirPathMappings.patientAlcoholUse,
+  );
+  const alcoholIntake = evaluateValue(
+    fhirBundle,
+    fhirPathMappings.patientAlcoholIntake,
+  );
+  let alcoholComment: string | undefined = evaluateValue(
+    fhirBundle,
+    fhirPathMappings.patientAlcoholComment,
+  );
+
+  if (alcoholComment) {
+    alcoholComment = toSentenceCase(alcoholComment);
+  }
+
+  return [
+    alcoholUse ? `Use: ${alcoholUse}` : null,
+    alcoholIntake ? `Intake (standard drinks/week): ${alcoholIntake}` : null,
+    alcoholComment ? `Comment: ${alcoholComment}` : null,
+  ]
+    .filter(Boolean) // Removes null or undefined lines
+    .join("\n"); // Joins the remaining lines with newlines
+};
+
+/**
+ * Evaluates occupation information from the FHIR bundle and formats it into structured data for display.
+ * @param fhirBundle - The FHIR bundle containing alcohol use data.
+ * @returns An array of evaluated and formatted occupation data.
+ */
+export const evaluateOccupation = (fhirBundle: Bundle) => {
+  const occupationObs = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.patientOccupationUsual,
+  );
+  const employmentObs = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.patientEmploymentStatus,
+  );
+  if (!occupationObs && employmentObs.length === 0) return;
+
+  const occTitle = formatCodeableConcept(occupationObs?.valueCodeableConcept);
+  const occDates = formatPeriodDate(occupationObs?.effectivePeriod);
+  const usualIndustryComp = occupationObs?.component?.find(
+    (c) => c?.code.coding?.[0].code === "21844-6",
+  );
+  const usualIndustry = formatCodeableConcept(
+    usualIndustryComp?.valueCodeableConcept,
+  );
+
+  sortResourcesByDate(employmentObs, fhirPathMappings.effectiveX);
+  const currentEmploymentStatus = evaluateValue(
+    employmentObs,
+    fhirPathMappings.valueX,
+  );
+
+  return [
+    occTitle,
+    usualIndustry && `Industry: ${usualIndustry}`,
+    currentEmploymentStatus && `Status: ${currentEmploymentStatus}`,
+    occDates && `Dates: ${occDates}`,
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+};
+
+/**
+ * Evaluates occupation history information from the FHIR bundle and formats it into structured data for display.
+ * @param fhirBundle - The FHIR bundle containing alcohol use data.
+ * @returns An array of evaluated and formatted occupation history data.
+ */
+export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
+  const jobObs = [
+    // Employment detail(s) may come from a Past or Present Occupation Obs
+    ...evaluateAll(
+      fhirBundle,
+      fhirPathMappings.patientOccupationFromPastOrPresent,
+    ),
+    // or a Social History Obs
+    ...evaluateAll(
+      fhirBundle,
+      fhirPathMappings.patientOccupationFromSocialHistory,
+    ),
+  ];
+  if (jobObs.length === 0) return;
+
+  sortResourcesByDate(jobObs, fhirPathMappings.effectiveX);
+
+  return (
+    <ExpandCollapseAccordion
+      className="accordion-rr"
+      descriptor="employment details"
+      items={jobObs.map((obs) => {
+        const getComponentValue = (code: string) => {
+          return (
+            evaluateValue(
+              obs,
+              `component.where(code.coding.code = '${code}').value`,
+            ) || noData
+          );
+        };
+
+        const employerRef = evaluateValue(
+          obs,
+          "extension.where(url = 'http://hl7.org/fhir/us/odh/StructureDefinition/odh-Employer-extension').value",
+        );
+        const employer = evaluateReference<RelatedPerson | Organization>(
+          fhirBundle,
+          employerRef,
+        );
+
+        const workplaceInfo = [
+          {
+            title: "Address",
+            value: formatCurrentAddress(employer?.address) || noData,
+          },
+          {
+            title: "Schedule",
+            value: getComponentValue("74159-5"),
+          },
+          {
+            title: "Hours",
+            value: getComponentValue("87512-0"),
+          },
+          {
+            title: "Days",
+            value: getComponentValue("74160-3"),
+          },
+          {
+            title: "Duties",
+            value: getComponentValue("63761-1"),
+          },
+          {
+            title: "Pay Grade",
+            value: getComponentValue("87707-6"),
+          },
+          {
+            title: "Employment Type",
+            value: getComponentValue("85104-8"),
+          },
+        ];
+
+        const hasWorkplaceContent = workplaceInfo.some(
+          ({ value }) => value !== noData,
+        );
+
+        const workplaceContent = hasWorkplaceContent
+          ? workplaceInfo.map(({ title, value }, i) => (
+              <DataDisplay
+                key={`wi-${i}`}
+                item={{
+                  title,
+                  value,
+                  dividerLine: false,
+                  titleNormal: true,
+                }}
+              />
+            ))
+          : noData;
+
+        const content = (
+          <>
+            <DataDisplay
+              item={{
+                title: "Dates",
+                value: obs.effectivePeriod
+                  ? formatPeriodDate(obs.effectivePeriod)
+                  : formatDateTime(obs.effectiveDateTime),
+              }}
+            />
+            <DataDisplay
+              item={{
+                title: "Industry",
+                value: getComponentValue("86188-0"),
+              }}
+            />
+            <DataDisplay
+              item={{
+                title: "Workplace Information",
+                value: workplaceContent,
+                fullWidthContent: hasWorkplaceContent,
+              }}
+            />
+            <DataDisplay
+              item={{
+                title: "Hazard",
+                value: getComponentValue("87729-0"),
+                dividerLine: false,
+              }}
+            />
+          </>
+        );
+
+        return {
+          title: (
+            <div className="display-flex flex-row flex-no-wrap flex-justify">
+              <span>
+                {formatCodeableConcept(obs.valueCodeableConcept) ??
+                  obs.valueString}
+              </span>
+              <span className="font-size-xs text-base">
+                {!!obs.effectivePeriod?.end ? "Past" : "Current"} Employment
+              </span>
+            </div>
+          ),
+          expanded: false,
+          content,
+          id: obs.id || `${Math.random()}`,
+          headingLevel: "h5",
+        };
+      })}
+    />
+  );
+};
 
 /**
  * Extracts travel history information from the provided FHIR bundle based on the FHIR path mappings.
@@ -59,10 +389,7 @@ const evaluateTravelHistoryDetails = (
   fhirBundle: Bundle,
   travelObs: Element,
 ) => {
-  const memberRefs = evaluateAll(
-    travelObs,
-    fhirPathMappings.travelHistoryMember,
-  );
+  const memberRefs = evaluateAll(travelObs, fhirPathMappings.hasMember);
   const obs = memberRefs
     .map((ref) => evaluateReference<Observation>(fhirBundle, ref))
     .filter(notEmpty);
@@ -319,6 +646,141 @@ export const returnDisabilityStatusTable = (
       columns={columnInfo}
       className="margin-y-1"
       fixed={false}
+    />
+  );
+};
+
+/**
+ * Evaluates Social Determinants of Health (SDOH) from the FHIR bundle and formats it into structured data for display.
+ * @param fhirBundle - The FHIR bundle containing SDOH data.
+ * @returns An array of evaluated and formatted SDOH questionnaire data.
+ */
+export const evaluateSocialDeterminantsOfHealth = (fhirBundle: Bundle) => {
+  const socialFuncObs = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.historyOfSocialFunction,
+  );
+
+  if (socialFuncObs.length === 0) return;
+
+  return (
+    <ExpandCollapseAccordion
+      className="accordion-rr"
+      descriptor="social determinants of health"
+      items={socialFuncObs.map((socialFunc) => {
+        const domainRef = evaluateOne(socialFunc, fhirPathMappings.hasMember);
+
+        const domain = evaluateReference<Observation>(fhirBundle, domainRef);
+
+        const questionnaireResponsesRefs = evaluateAll(
+          domain,
+          fhirPathMappings.observationDerivedFrom,
+        );
+
+        const domainQuestionsAndAnswers = questionnaireResponsesRefs.map(
+          (ref) => {
+            const questionnaireResponse =
+              evaluateReference<QuestionnaireResponse>(fhirBundle, ref);
+
+            const items = evaluateAll(
+              questionnaireResponse,
+              fhirPathMappings.questionnaireItem,
+            );
+
+            const questionsAndAnswers = items.map((item, j) => {
+              const question = item.text;
+
+              const answers = item.answer || [];
+              const answer = answers
+                .map((a) =>
+                  evaluateValue(
+                    a,
+                    fhirPathMappings.valueX,
+                    "QuestionnaireResponse.item.answer",
+                  ),
+                )
+                .join("\n");
+
+              return {
+                Question: {
+                  value: question,
+                },
+                Answer: {
+                  value: answer,
+                },
+              } as HtmlTableJsonRow;
+            });
+
+            return questionsAndAnswers;
+          },
+        );
+
+        const content = [
+          <JsonTable
+            key={`${domain?.id}-questions-and-answers`}
+            jsonTableData={{ tables: domainQuestionsAndAnswers }}
+            className="caption-data-title margin-y-0"
+            outerBorder={false}
+            columnStyles={{
+              0: { width: "200px", minWidth: "100px" }, // First column (Question)
+              1: { width: "80px", minWidth: "80px" }, // Second column (Answer)
+            }}
+          />,
+        ];
+
+        const h6ClassName =
+          "bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205";
+        content.push(
+          <h6
+            key={`${domain?.id}-finding-title`}
+            // inline styling to overwrite usa-prose nested style
+            style={{
+              marginTop: "-1rem",
+              fontWeight: "bold",
+              borderBottom: "1px solid black",
+            }}
+            className={h6ClassName}
+          >
+            Available Social Determinants of Health Information
+          </h6>,
+        );
+
+        const findings = domain?.interpretation?.map((item, i) => {
+          const riskValue = item.text
+            ? item.text
+            : evaluateValue(item, fhirPathMappings.codingDisplay);
+
+          return {
+            title: "Finding",
+            value: riskValue,
+          } as DisplayDataProps;
+        });
+
+        content.push(
+          <DataDisplayList
+            key={`${domain?.id}-findings`}
+            items={findings ?? []}
+          />,
+        );
+
+        const domainTitle = evaluateValue(domain, fhirPathMappings.code);
+
+        return {
+          title: (
+            <div className="display-flex flex-row flex-no-wrap flex-justify">
+              <span>{domainTitle}</span>
+
+              <span className="font-size-xs text-base">
+                {evaluateValue(domain, fhirPathMappings.effectiveX)}
+              </span>
+            </div>
+          ),
+          expanded: false,
+          content,
+          id: socialFunc.id ?? "ID goes here",
+          headingLevel: "h5",
+        };
+      })}
     />
   );
 };
