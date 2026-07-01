@@ -22,6 +22,8 @@ const nextConfig = {
       allowedOrigins: ["**.cloudapp.azure.com", "**.azurecontainerapps.io"],
     },
     middlewareClientMaxBodySize: "50mb",
+    // Disable image caching due to requirement for read only filesystem
+    isrFlushToDisk: false,
   },
   output: "standalone",
   basePath,
