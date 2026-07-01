@@ -12,6 +12,7 @@ import {
   getFhirData,
   isSuccessResponse,
 } from "@/app/view-data/services/fhirDataService";
+import { ecrXmlsExist } from "@/app/view-data/services/xmlService";
 
 const resolveParams = (
   v: PageSearchParams,
@@ -42,6 +43,7 @@ jest.mock("@/app/services/userService");
 jest.mock("@/app/services/loggedInUserService");
 
 jest.mock("@/app/view-data/components/SideNav");
+jest.mock("@/app/view-data/services/xmlService");
 
 describe("ECRViewerPage", () => {
   const ORIG_BASE_PATH = process.env.BASE_PATH;
@@ -95,6 +97,42 @@ describe("ECRViewerPage", () => {
     render(component);
 
     expect(await screen.findByText("eCR Document")).toBeInTheDocument();
+  });
+
+  describe("View XML button", () => {
+    beforeEach(() => {
+      (getFhirData as jest.Mock).mockResolvedValue({
+        status: 200,
+        payload: { fhirBundle: BundleEcrMetadata },
+      });
+      (isSuccessResponse as unknown as jest.Mock).mockReturnValue(true);
+      (ecrXmlsExist as jest.Mock).mockResolvedValue(true);
+    });
+
+    afterEach(() => jest.resetAllMocks());
+
+    it("shows View XML button when SAVE_XML is true", async () => {
+      process.env.SAVE_XML = "true";
+
+      const component = await ECRViewerPage(resolveParams({ id: "123" }));
+      render(component);
+
+      expect(
+        await screen.findByRole("button", { name: "View XML" }),
+      ).toBeInTheDocument();
+    });
+
+    it("hides View XML button when SAVE_XML is not true", async () => {
+      process.env.SAVE_XML = "false";
+
+      const component = await ECRViewerPage(resolveParams({ id: "123" }));
+      render(component);
+
+      await screen.findByText("eCR Document");
+      expect(
+        screen.queryByRole("button", { name: "View XML" }),
+      ).not.toBeInTheDocument();
+    });
   });
 
   describe("auth", () => {

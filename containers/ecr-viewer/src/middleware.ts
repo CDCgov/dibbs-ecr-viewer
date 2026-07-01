@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { withJwtAuth } from "./middlewares/withJwtAuth";
 import { withApiTokenAuth } from "./middlewares/withApiTokenAuth";
-import { withNbsAuth } from "./middlewares/withNbsAuth";
 import { withNextAuth } from "./middlewares/withNextAuth";
 import { withProcessZipRewrite } from "./middlewares/withProcessZipRewrite";
 import { withUnauthorized } from "./middlewares/withUnauthorized";
@@ -63,7 +63,7 @@ export const chainMiddleware = (
 // Sub-chain for auth, which early exits back to the main chain
 const authMiddleware: MiddlewareFactory = (next: ChainableMiddleware, _endFn) =>
   chainMiddleware(
-    [withNbsAuth, withApiTokenAuth, withNextAuth, withUnauthorized],
+    [withJwtAuth, withApiTokenAuth, withNextAuth, withUnauthorized],
     next,
   );
 

@@ -754,6 +754,11 @@
             ]
           }
         ],
+        "class": {
+          "code": "IMP",
+          "system": "urn:oid:2.16.840.1.113883.5.4",
+          "display": "inpatient encounter"
+        },
         "participant": [
           {
             "type": [
@@ -772,6 +777,9 @@
             }
           }
         ],
+        "serviceProvider": {
+          "reference": "Organization/e69fcefd-731c-5e6a-b917-301e9c22a1c7"
+        },
         "diagnosis": [
           {
             "condition": {
@@ -814,6 +822,38 @@
               "display": "OTHER MUSCLE SPASM"
             }
           ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:e69fcefd-731c-5e6a-b917-301e9c22a1c7",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "e69fcefd-731c-5e6a-b917-301e9c22a1c7",
+        "name": "Good Health Hospital",
+        "address": [
+          {
+            "line": ["1000 Hospital Lane"],
+            "city": "Ann Arbor",
+            "state": "MI",
+            "country": "US",
+            "postalCode": "99999"
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "1+(555)-555-1212",
+            "use": "work"
+          },
+          {
+            "system": "fax",
+            "value": "1+(555)-555-3333",
+            "use": "work"
+          }
+        ],
+        "meta": {
+          "source": "ecr"
         }
       }
     }

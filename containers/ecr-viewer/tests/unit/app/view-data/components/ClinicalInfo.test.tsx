@@ -1,7 +1,7 @@
 import React from "react";
 
 import { render, screen } from "@testing-library/react";
-import { Bundle } from "fhir/r4";
+import { Bundle, Condition, Immunization } from "fhir/r4";
 import { axe } from "jest-axe";
 
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
@@ -10,8 +10,14 @@ import {
   evaluateClinicalData,
   evaluateNotes,
   returnProceduresTable,
-} from "@/app/view-data/components/EcrDocument/clinical-data";
+  returnImmunizations,
+  returnProblemsTable,
+} from "@/app/view-data/services/clinicalInfoService";
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
+
+const BundleWithPatient =
+  require("../../../../../../../test-data/fhir/BundlePatient.json") as unknown as Bundle;
+const fhirIndexBundleWithPatient = getFhirIndex(BundleWithPatient);
 
 const BundleClinicalInfo =
   require("../../../../../../../test-data/fhir/BundleClinicalInfo.json") as unknown as Bundle;
@@ -38,7 +44,7 @@ describe("Snapshot tests", () => {
     it("should match snapshot for all Clinical Info components", async () => {
       const { container } = render(
         <ClinicalInfo
-          clinicalNotes={[]}
+          historyOfPresentIllness={[]}
           activeProblemsDetails={testActiveProblemsData}
           emergencyOutbreakInfo={testOutbreakInfo}
           vitalData={testVitalSignsData}
@@ -517,7 +523,7 @@ describe("Snapshot tests", () => {
 
       container = render(
         <ClinicalInfo
-          clinicalNotes={[]}
+          historyOfPresentIllness={[]}
           activeProblemsDetails={[]}
           emergencyOutbreakInfo={[]}
           vitalData={[]}
@@ -535,11 +541,11 @@ describe("Snapshot tests", () => {
     });
   });
 
-  describe("Snapshot test for Clinical Notes", () => {
+  describe("Snapshot test for History of Present Illness", () => {
     it("should match snapshot for non table notes", async () => {
-      const clinicalNotes = [
+      const historyOfPresentIllness = [
         {
-          title: "Miscellaneous Notes",
+          title: "History of Present Illness",
           value: (
             <p>
               This patient was only recently discharged for a recurrent GI bleed
@@ -550,7 +556,7 @@ describe("Snapshot tests", () => {
       ];
       const { container } = render(
         <ClinicalInfo
-          clinicalNotes={clinicalNotes}
+          historyOfPresentIllness={historyOfPresentIllness}
           activeProblemsDetails={[]}
           emergencyOutbreakInfo={[]}
           vitalData={[]}
@@ -616,7 +622,7 @@ describe("Snapshot tests", () => {
           },
         ],
       } as unknown as Bundle;
-      const clinicalNotes = [
+      const historyOfPresentIllness = [
         evaluateNotes(
           bundle,
           fhirPathMappings.historyOfPresentIllness,
@@ -626,7 +632,7 @@ describe("Snapshot tests", () => {
       ];
       const { container } = render(
         <ClinicalInfo
-          clinicalNotes={clinicalNotes}
+          historyOfPresentIllness={historyOfPresentIllness}
           activeProblemsDetails={[]}
           emergencyOutbreakInfo={[]}
           vitalData={[]}
@@ -637,6 +643,456 @@ describe("Snapshot tests", () => {
       );
       expect(container).toMatchSnapshot();
       expect(await axe(container)).toHaveNoViolations();
+    });
+  });
+
+  describe("Snapshot test for Immunizations Table", () => {
+    let container: HTMLElement;
+    beforeAll(() => {
+      const immunizationsData = [
+        {
+          id: "7a4b0e4b-ca8a-a39b-1b44-19efe2c9ee5c",
+          meta: {
+            source: ["ecr"],
+          },
+          note: {
+            text: "DTAP-HIB-IPV (PENTACEL)",
+          },
+          status: "completed",
+          identifier: [
+            {
+              value: "35371",
+              system: "urn:oid:1.2.840.114350.1.13.297.3.7.2.768076",
+            },
+          ],
+          vaccineCode: {
+            coding: [
+              {
+                display: "DTAP-HIB-IPV (PENTACEL)",
+              },
+            ],
+          },
+          resourceType: "Immunization",
+          primarySource: true,
+          occurrenceDateTime: "04/16/2010",
+        },
+        {
+          id: "b5d003f7-cfe2-56a4-6e91-07307f25aa83",
+          meta: {
+            source: ["ecr"],
+          },
+          note: {
+            text: "TDAP, (ADOL/ADULT)",
+          },
+          status: "completed",
+          patient: {
+            reference: "Patient/d2ff4c14-a41b-47f6-9038-6aabfd655ad5",
+          },
+          identifier: [
+            {
+              value: "57643",
+              system: "urn:oid:1.2.840.114350.1.13.297.3.7.2.768076",
+            },
+          ],
+          vaccineCode: {
+            coding: [
+              {
+                code: "49281-400-10",
+                display: "TDAP, (ADOL/ADULT)",
+                system: "urn:oid:2.16.840.1.113883.6.69",
+              },
+            ],
+          },
+          resourceType: "Immunization",
+          primarySource: true,
+          occurrenceDateTime: "2020-11-10T07:20:00-04:00",
+          lotNumber: "369258741",
+          manufacturer: {
+            reference: "Organization/b5c77b86-2764-79f9-10bf-5da5e63eb7c1",
+          },
+          protocolApplied: [
+            {
+              doseNumberPositiveInt: 1,
+            },
+          ],
+        },
+        {
+          id: "cffb2ab8-483c-a93e-56c3-5cc3d11e9168",
+          meta: {
+            source: ["ecr"],
+          },
+          note: {
+            text: "HEP A (ADULT) 2 DOSE",
+          },
+          status: "completed",
+          identifier: [
+            {
+              value: "57644",
+              system: "urn:oid:1.2.840.114350.1.13.297.3.7.2.768076",
+            },
+          ],
+          vaccineCode: {
+            coding: [{ display: "HEP A (ADULT) 2 DOSE" }],
+          },
+          resourceType: "Immunization",
+          primarySource: true,
+          occurrenceDateTime: "11/11/2011",
+        },
+        {
+          id: "35c0d7fc-0bc0-5a24-e65e-dc30321d7e2e",
+          meta: {
+            source: ["ecr"],
+          },
+          note: {
+            text: "MENINGOCOCCAL CONJUGATE,MENACTRA                                        (PED/ADOL/ADULT)",
+          },
+          status: "completed",
+          patient: {
+            reference: "Patient/d2ff4c14-a41b-47f6-9038-6aabfd655ad5",
+          },
+          identifier: [
+            {
+              value: "58353",
+              system: "urn:oid:1.2.840.114350.1.13.297.3.7.2.768076",
+            },
+          ],
+          vaccineCode: {
+            coding: [
+              {
+                code: "50090-1890-1",
+                display:
+                  "MENINGOCOCCAL CONJUGATE,MENACTRA                                        (PED/ADOL/ADULT)",
+                system: "urn:oid:2.16.840.1.113883.6.69",
+              },
+            ],
+          },
+          resourceType: "Immunization",
+          primarySource: true,
+          occurrenceDateTime: "11/16/2020",
+        },
+        {
+          id: "50fc36a0-b859-c4a4-de8f-53c149080081",
+          meta: {
+            source: ["ecr"],
+          },
+          note: {
+            text: "HEP B (PED,ADOLESCENT) 3 DOSE",
+          },
+          status: "completed",
+          identifier: [
+            {
+              value: "123456",
+              system: "urn:oid:1.2.840.114350.1.13.297.3.7.2.768076",
+            },
+          ],
+          vaccineCode: {
+            coding: [{ display: "HEP B (PED,ADOLESCENT) 3 DOSE" }],
+          },
+          resourceType: "Immunization",
+          primarySource: true,
+          occurrenceDateTime: "03/21/1974",
+        },
+        {
+          resourceType: "Immunization",
+          id: "f3a8b2cd-61e4-498b-9d41-fa627e31c8b7",
+          statusReason: {
+            coding: [
+              {
+                code: "PATOBJ",
+                system: "urn:oid:2.16.840.1.113883.5.8",
+                display: "patient objection",
+              },
+            ],
+          },
+          occurrenceDateTime: "2015-01-15",
+          vaccineCode: {
+            coding: [
+              {
+                code: "166",
+                system: "urn:oid:2.16.840.1.113883.12.292",
+                display: "influenza, intradermal, quadrivalent",
+              },
+            ],
+            text: "influenza, intradermal, quadrivalent",
+          },
+          status: "not-done",
+          note: [
+            {
+              text: "Patient objected to influenza, intradermal, quadrivalent on 11/15/2015",
+            },
+          ],
+          meta: {
+            source: "ecr",
+          },
+        },
+      ] as unknown as Immunization[];
+
+      container = render(
+        returnImmunizations(
+          BundleClinicalInfo as unknown as Bundle,
+          immunizationsData,
+          "Immunization History",
+        )!,
+      ).container;
+    });
+    it("should match snapshot", () => {
+      expect(container).toMatchSnapshot();
+    });
+    it("should pass accessibility test", async () => {
+      expect(await axe(container)).toHaveNoViolations();
+    });
+  });
+
+  describe("Snapshot test for Active Problems Table", () => {
+    let container: HTMLElement;
+    beforeEach(() => {
+      const activeProblemsData: Condition[] = [
+        {
+          id: "80db768f-19ea-f1d0-f9e5-22d854d7acc5",
+          code: {
+            coding: [
+              {
+                code: "C50.312",
+                system: "urn:oid:2.16.840.1.113883.6.90",
+                display:
+                  "Malignant neoplasm of lower-inner quadrant of left breast in female, estrogen receptor positive",
+              },
+            ],
+          },
+          subject: {
+            reference: "Patient/34080650-1e86-08fe-c2c9-faa37629edd3",
+          },
+          category: [
+            {
+              coding: [
+                {
+                  code: "problem-item-list",
+                  system:
+                    "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category",
+                  display: "Problem List Item",
+                },
+              ],
+            },
+          ],
+          identifier: [
+            {
+              value: "100952",
+              system: "urn:oid:1.2.840.114350.1.13.297.3.7.2.768076",
+            },
+          ],
+          resourceType: "Condition",
+          onsetDateTime: "12/14/2022",
+          onsetAge: { value: 123 },
+          clinicalStatus: {
+            coding: [
+              {
+                code: "55561003",
+                system: "http://snomed.info/sct",
+                display: "Active",
+              },
+            ],
+          },
+          note: [{ text: "Test note" }],
+        },
+        {
+          id: "4f962a2f-db60-0b87-20cc-557e17124451",
+          code: {
+            coding: [
+              {
+                code: "R51.9",
+                system: "urn:oid:2.16.840.1.113883.6.90",
+                display: "Headache",
+              },
+            ],
+          },
+          subject: {
+            reference: "Patient/34080650-1e86-08fe-c2c9-faa37629edd3",
+          },
+          category: [
+            {
+              coding: [
+                {
+                  code: "problem-item-list",
+                  system:
+                    "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category",
+                  display: "Problem List Item",
+                },
+              ],
+            },
+          ],
+          identifier: [
+            {
+              value: "95240",
+              system: "urn:oid:1.2.840.114350.1.13.297.3.7.2.768076",
+            },
+          ],
+          resourceType: "Condition",
+          onsetAge: { value: 152 },
+          clinicalStatus: {
+            coding: [
+              {
+                code: "55561003",
+                system: "http://snomed.info/sct",
+                display: "Active",
+              },
+            ],
+          },
+        },
+        {
+          id: "9e465247-8dbb-f778-dd7f-4d56c59485b5",
+          code: {
+            coding: [
+              {
+                code: "M54.9",
+                system: "urn:oid:2.16.840.1.113883.6.90",
+                display: "Backache",
+              },
+            ],
+          },
+          subject: {
+            reference: "Patient/34080650-1e86-08fe-c2c9-faa37629edd3",
+          },
+          category: [
+            {
+              coding: [
+                {
+                  code: "problem-item-list",
+                  system:
+                    "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category",
+                  display: "Problem List Item",
+                },
+              ],
+            },
+          ],
+          identifier: [
+            {
+              value: "95252",
+              system: "urn:oid:1.2.840.114350.1.13.297.3.7.2.768076",
+            },
+          ],
+          resourceType: "Condition",
+          onsetDateTime: "08/19/2018 1:00 PM",
+          clinicalStatus: {
+            coding: [
+              {
+                code: "55561003",
+                system: "http://snomed.info/sct",
+                display: "Active",
+              },
+            ],
+          },
+        },
+        {
+          id: "4f962a2f-db60-0b87-20cc-557e17124452",
+          code: {
+            coding: [
+              {
+                code: "R51.9",
+                system: "urn:oid:2.16.840.1.113883.6.90",
+                display: "Headache",
+              },
+            ],
+          },
+          subject: {
+            reference: "Patient/34080650-1e86-08fe-c2c9-faa37629edd3",
+          },
+          category: [
+            {
+              coding: [
+                {
+                  code: "problem-item-list",
+                  system:
+                    "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category",
+                  display: "Problem List Item",
+                },
+              ],
+            },
+          ],
+          identifier: [
+            {
+              value: "95240",
+              system: "urn:oid:1.2.840.114350.1.13.297.3.7.2.768076",
+            },
+          ],
+          resourceType: "Condition",
+          onsetAge: { value: 1 },
+          clinicalStatus: {
+            coding: [
+              {
+                code: "55561003",
+                system: "http://snomed.info/sct",
+                display: "Active",
+              },
+            ],
+          },
+        },
+        {
+          id: "9e465247-8dbb-f778-dd7f-4d56c59485b0",
+          code: {
+            coding: [
+              {
+                code: "M54.9",
+                system: "urn:oid:2.16.840.1.113883.6.90",
+                display: "Backache",
+              },
+            ],
+          },
+          subject: {
+            reference: "Patient/34080650-1e86-08fe-c2c9-faa37629edd3",
+          },
+          category: [
+            {
+              coding: [
+                {
+                  code: "problem-item-list",
+                  system:
+                    "http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category",
+                  display: "Problem List Item",
+                },
+              ],
+            },
+          ],
+          identifier: [
+            {
+              value: "95252",
+              system: "urn:oid:1.2.840.114350.1.13.297.3.7.2.768076",
+            },
+          ],
+          resourceType: "Condition",
+          onsetDateTime: "06/28/1877",
+          clinicalStatus: {
+            coding: [
+              {
+                code: "55561003",
+                system: "http://snomed.info/sct",
+                display: "Active",
+              },
+            ],
+          },
+        },
+      ];
+      container = render(
+        returnProblemsTable(
+          BundleWithPatient,
+          fhirIndexBundleWithPatient,
+          activeProblemsData,
+        )!,
+      ).container;
+    });
+    it("should match snapshot", () => {
+      expect(container).toMatchSnapshot();
+    });
+    it("should pass accessibility test", async () => {
+      expect(await axe(container)).toHaveNoViolations();
+    });
+    it("should use or calculate onset age", () => {
+      expect(screen.getByText("123 years")).toBeInTheDocument();
+      expect(screen.getByText("152 years")).toBeInTheDocument();
+      expect(screen.getByText("141 years")).toBeInTheDocument();
+      expect(screen.getByText("1 year")).toBeInTheDocument();
+
+      // Uses the fallback `onsetDateTime` if no year is available
+      expect(screen.getByText("1 month, 3 days")).toBeInTheDocument();
     });
   });
 });
@@ -651,7 +1107,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         emergencyOutbreakInfo={[]}
         vitalData={[]}
         treatmentData={[]}
-        clinicalNotes={[]}
+        historyOfPresentIllness={[]}
       />,
     );
 
@@ -676,7 +1132,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         emergencyOutbreakInfo={[]}
         vitalData={[]}
         treatmentData={[]}
-        clinicalNotes={[]}
+        historyOfPresentIllness={[]}
       />,
     );
 
@@ -705,7 +1161,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         emergencyOutbreakInfo={[]}
         vitalData={testVitalSignsData}
         treatmentData={[]}
-        clinicalNotes={[]}
+        historyOfPresentIllness={[]}
       />,
     );
 
@@ -744,7 +1200,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         emergencyOutbreakInfo={[]}
         vitalData={[]}
         treatmentData={[]}
-        clinicalNotes={[]}
+        historyOfPresentIllness={[]}
       />,
     );
 
@@ -765,7 +1221,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         emergencyOutbreakInfo={[]}
         vitalData={[]}
         treatmentData={testTreatmentData}
-        clinicalNotes={[]}
+        historyOfPresentIllness={[]}
       />,
     );
 
@@ -787,7 +1243,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         emergencyOutbreakInfo={testOutbreakInfo}
         vitalData={[]}
         treatmentData={[]}
-        clinicalNotes={[]}
+        historyOfPresentIllness={[]}
       />,
     );
     const expectedEmergencyOutbreakElement = clinicalInfo.getByTestId(
@@ -805,7 +1261,7 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
         emergencyOutbreakInfo={[]}
         vitalData={testVitalSignsData}
         treatmentData={testTreatmentData}
-        clinicalNotes={[]}
+        historyOfPresentIllness={[]}
       />,
     );
 

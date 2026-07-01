@@ -93,7 +93,7 @@ The full list of environment variables can be found in {@link NodeJS.ProcessEnv}
 
 Base required variables are ones required for all deployments regardless of mode or cloud environment. If variables are not set, this may cause issues starting the app. The variables can be found in {@link EnvironmentVariables.BaseRequired}.
 
-### eCR Fhir Storage
+### eCR FHIR Storage
 
 A storage container for the eCRs must be created for all deployments. Depending on the storage container used additional variables may be required. The variables can be found in {@link EnvironmentVariables.EcrStorage}.
 
@@ -111,7 +111,7 @@ Non-Integrated/Dual rely on an external authentication provider, like Azure AD, 
 
 #### Token Authentication for `api` routes
 
-Most `/ecr-viewer/api/` routes require authentication to be used. The exceptions are pubic routes such as the health check and authentication routes. If a user has a logged in browser session (non-integrated auth only), they can use the developer console of that browser to emit authenticated post routes. More often, a machine will be making the post requests to upload data to the viewer. To enable this, we allow tokens to be sent on the `Authorization` header of request and used to authenticate the request.
+Most `/ecr-viewer/api/` routes require authentication to be used. The exceptions are public routes such as the health check and authentication routes. If a user has a logged in browser session (non-integrated auth only), they can use the developer console of that browser to emit authenticated post routes. More often, a machine will be making the post requests to upload data to the viewer. To enable this, we allow tokens to be sent on the `Authorization` header of request and used to authenticate the request.
 
 For integrated auth, the token will be generated via a key pair, similar to how it is done for authentication to the `/view-data` page, but using a different private/public key pair. See {@link EnvironmentVariables.Authentication} for where to set the public key.
 
@@ -178,6 +178,70 @@ curl --location '<DIBBS_URL>/ecr-viewer/api/process-ecr' \
 
 When using the curl command to send zip files to ecr-viewer, the user has to use the flag type=application/zip. If not, they will receive this response message {"message":"Failed to process orchestration response"} and will see the error in the screenshot in their ecr-viewer logs.
 
+## Deleting data
+
+When a file is removed from blob storage (e.g., S3), it is no longer accessible within the eCR Viewer. However, the record will continue to appear in the library view, and any attempt to open the document will return a 404. To fully remove the record, it must also be deleted from the database.
+
+SQL scripts for removing eCR records from the metadata database are provided in `seed-scripts/sql/`. Each script targets one database type and handles foreign key constraints automatically.
+
+| Script                                               | Database   | Behavior                                                         |
+| ---------------------------------------------------- | ---------- | ---------------------------------------------------------------- |
+| `seed-scripts/sql/postgres/delete-ecr-by-id.sql`     | Postgres   | Deletes one eCR (and all child records) by `ecr_data.eicr_id`    |
+| `seed-scripts/sql/sqlserver/delete-ecr-by-id.sql`    | SQL Server | Deletes one eCR (and all child records) by `ecr_data.eicr_id`    |
+| `seed-scripts/sql/postgres/delete-ecrs-by-date.sql`  | Postgres   | Deletes eCRs (and all child records) created before a given date |
+| `seed-scripts/sql/sqlserver/delete-ecrs-by-date.sql` | SQL Server | Deletes eCRs (and all child records) created before a given date |
+| `seed-scripts/sql/postgres/delete-all-data.sql`      | Postgres   | Deletes **all** data from every table in the `ecr_viewer` schema |
+| `seed-scripts/sql/sqlserver/delete-all-data.sql`     | SQL Server | Deletes **all** data from every table in the `ecr_viewer` schema |
+
+### Delete by eCR ID
+
+Open the appropriate script for your database and set the ID variable near the top of the file to the target `ecr_data.eicr_id`. Then run:
+
+```bash
+# Postgres
+psql "$DATABASE_URL" -f seed-scripts/sql/postgres/delete-ecr-by-id.sql
+# or
+psql -U postgres -h <host> -d ecr_viewer_db -f seed-scripts/sql/postgres/delete-ecr-by-id.sql
+
+# SQL Server
+sqlcmd -S <server> -U <user> -P <password> -i seed-scripts/sql/sqlserver/delete-ecr-by-id.sql
+```
+
+Both scripts are safe to run against core and extended schema deployments - extended schema tables (`ecr_labs`, `ecr_immunizations`, `patient_address`) are deleted only when present.
+
+### Delete by date
+
+Open the appropriate script for your database and set the `cutoff_date` variable near the top of the file to the earliest date you want to **keep** (records created before that date will be deleted). Then run:
+
+```bash
+# Postgres
+psql "$DATABASE_URL" -f seed-scripts/sql/postgres/delete-ecrs-by-date.sql
+# or
+psql -U postgres -h <host> -d ecr_viewer_db -f seed-scripts/sql/postgres/delete-ecrs-by-date.sql
+
+# SQL Server
+sqlcmd -S <server> -U <user> -P <password> -i seed-scripts/sql/sqlserver/delete-ecrs-by-date.sql
+```
+
+Both scripts are safe to run against core and extended schema deployments — extended schema tables (`ecr_labs`, `ecr_immunizations`, `patient_address`) are deleted only when present.
+
+### Delete all data
+
+> [!WARNING]
+> The delete-all scripts remove every row from every table in the `ecr_viewer` schema, including user accounts and program areas. This cannot be undone. Take a database backup before running.
+
+```bash
+# Postgres
+psql "$DATABASE_URL" -f seed-scripts/sql/postgres/delete-all-data.sql
+# or
+psql -U postgres -h <host> -d ecr_viewer_db -f seed-scripts/sql/postgres/delete-all-data.sql
+
+# SQL Server
+sqlcmd -S <server> -U <user> -P <password> -i seed-scripts/sql/sqlserver/delete-all-data.sql
+```
+
+After running a delete-all script, re-initialize the database by calling the `/migrate-db` endpoint with `init_admin_email` before the app can be used again (see [Database Migrations](#database-migrations)).
+
 ## User and Program Area Setup
 
 ### Initialization
@@ -191,21 +255,18 @@ Once initialized, your IDP handles authentication. The user with the email provi
 **Admins**: Have full access to manage program areas, user accounts, and to view all eCRs in the eCR Library.
 
 1. **Program Area Management**
-
-- Can create, edit, and delete program areas.
-- Each program area must have at least one condition, and each program area name must be unique.
-- A condition cannot belong to more than one program area.
+   - Can create, edit, and delete program areas.
+   - Each program area must have at least one condition, and each program area name must be unique.
+   - A condition cannot belong to more than one program area.
 
 2. **User Management**
-
-- Can create, edit, and delete users.
-- Users must have unique emails and standard users should be added to program areas to be able to view any eCRs.
-- Deleting users will only remove them from the User management table and remove them from all assigned program areas, but will not delete them from the database and instead mark them as `"deleted"`.
+   - Can create, edit, and delete users.
+   - Users must have unique emails and standard users should be added to program areas to be able to view any eCRs.
+   - Deleting users will only remove them from the User management table and remove them from all assigned program areas, but will not delete them from the database and instead mark them as `"deleted"`.
 
 3. **Access**
-
-- Can access both the User Management and Program Management pages.
-- Can access all eCRs in the eCR Library.
+   - Can access both the User Management and Program Management pages.
+   - Can access all eCRs in the eCR Library.
 
 **Standard users**: Have limited access to eCRs based on their assigned program areas.
 

@@ -14,21 +14,21 @@ import SocialHistory from "@/app/view-data/components/SocialHistory";
 import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
 import { evaluateEcrMetadata } from "@/app/view-data/services/ecrMetadataService";
 import {
-  evaluateDemographicsData,
-  evaluateSocialData,
   evaluateEncounterData,
   evaluateProviderData,
   evaluateFacilityData,
   evaluateHospitalEncounterData,
-  evaluatePregnancyData,
 } from "@/app/view-data/services/evaluateFhirDataService";
+import { evaluateSocialData } from "@/app/view-data/services/socialHistoryService";
+import { evaluateDemographicsData } from "@/app/view-data/services/demographicsService";
+import { evaluatePregnancyData } from "@/app/view-data/services/pregnancyInfoService";
 import { evaluateLabInfoData } from "@/app/view-data/services/labsService";
 import {
   FhirIndex,
   getResourcesByType,
 } from "@/app/view-data/services/fhirResourcesIndexService";
 
-import { evaluateClinicalData } from "./clinical-data";
+import { evaluateClinicalData } from "@/app/view-data/services/clinicalInfoService";
 
 export type EcrDocumentNavConfig = {
   title: string;
@@ -52,7 +52,7 @@ export const getEcrDocumentAccordionItems = (
 } => {
   const demographicsData = evaluateDemographicsData(fhirBundle, fhirIndex);
   const socialData = evaluateSocialData(fhirBundle, fhirIndex);
-  const pregnancyData = evaluatePregnancyData(fhirBundle);
+  const pregnancyData = evaluatePregnancyData(fhirBundle, fhirIndex);
   const hospitalEncounterData = evaluateHospitalEncounterData(fhirBundle);
   const encounterData = evaluateEncounterData(fhirBundle);
   const providerData = evaluateProviderData(fhirBundle);
@@ -79,7 +79,7 @@ export const getEcrDocumentAccordionItems = (
       clinicalData.vitalData.unavailableData,
       clinicalData.immunizationsDetails.unavailableData,
       clinicalData.treatmentData.unavailableData,
-      clinicalData.clinicalNotes.unavailableData,
+      clinicalData.historyOfPresentIllness.unavailableData,
       ...ecrMetadata.eicrDetails.unavailableData,
       ...ecrMetadata.ecrCustodianDetails.unavailableData,
       ecrMetadata.eicrAuthorDetails.map((details) => details.unavailableData),
@@ -110,7 +110,6 @@ export const getEcrDocumentAccordionItems = (
     providerData.availableData.length > 0 && "Provider Details",
   );
   const subNavClinical = defined(
-    clinicalData.clinicalNotes.availableData.length > 0 && "Clinical Notes",
     (clinicalData.reasonForVisitDetails.availableData.length > 0 ||
       clinicalData.activeProblemsDetails.availableData.length > 0 ||
       clinicalData.emergencyOutbreakInfo.availableData.length > 0) &&
@@ -190,7 +189,9 @@ export const getEcrDocumentAccordionItems = (
         (section) => section.availableData.length > 0,
       ) ? (
         <ClinicalInfo
-          clinicalNotes={clinicalData.clinicalNotes.availableData}
+          historyOfPresentIllness={
+            clinicalData.historyOfPresentIllness.availableData
+          }
           reasonForVisitDetails={
             clinicalData.reasonForVisitDetails.availableData
           }
@@ -282,7 +283,7 @@ export const getEcrDocumentAccordionItems = (
                 clinicalData.treatmentData.unavailableData
               }
               clinicalNotesUnavailableData={
-                clinicalData.clinicalNotes.unavailableData
+                clinicalData.historyOfPresentIllness.unavailableData
               }
               ecrMetadataUnavailableData={[
                 ...ecrMetadata.eicrDetails.unavailableData,

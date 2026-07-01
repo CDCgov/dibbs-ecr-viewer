@@ -5,6 +5,7 @@ import { fetch, Agent, FormData } from "undici";
 import xpath from "xpath";
 
 import {
+  deleteFromStorage,
   saveToStorage,
   saveWithMetadata,
 } from "@/app/api/save-fhir-data/service";
@@ -12,6 +13,8 @@ import {
   BundleExtendedMetadata,
   BundleMetadata,
 } from "@/app/api/save-fhir-data/types";
+import { getDb } from "@/app/data/metadataDb/database";
+import { Core } from "@/app/data/metadataDb/types/core";
 import { dbDialect, dbSchema } from "@/app/data/metadataDb/utils/db-config";
 import { getEcrIdFromIdentifier, resolveEcrId } from "@/app/utils/ecrid-utils";
 
@@ -181,31 +184,72 @@ export const orchestrationRequest = async (
   body: RequestBody,
   returnBundle: boolean = false,
   fetchAgent = createOrchestrationAgent(),
+  shouldSaveXml: boolean = false,
 ) => {
-  let orchestrationResp: BundleInfo;
-  try {
-    orchestrationResp = await getOrchestrationResponse(body, fetchAgent);
-  } catch (error: unknown) {
-    const message = "Failed to process orchestration response";
-    console.error({ message, error });
+  const ecrId = await getEcrIdFromXml(body);
 
-    return {
-      message:
-        error instanceof Error && error.message ? error.message : message,
-      status: 500,
-    };
+  if (dbDialect()) {
+    const existing = await getDb<Core>()
+      .selectFrom("ecr_data")
+      .select((eb) => eb.fn.countAll().as("num_ecr"))
+      .where("ecr_data.eicr_id", "=", ecrId)
+      .executeTakeFirst();
+    if (existing && Number(existing.num_ecr) > 0) {
+      return { message: `eCR already loaded: ${ecrId}`, status: 409 };
+    }
   }
 
-  const res = await saveToSource(
-    orchestrationResp.ecr,
-    orchestrationResp.metadata,
-  );
+  const promises: [
+    Promise<{ message: string; status: number; bundle?: Bundle }>,
+    Promise<void>?,
+  ] = [
+    (async () => {
+      let orchestrationResp: BundleInfo;
+      try {
+        orchestrationResp = await getOrchestrationResponse(body, fetchAgent);
+      } catch (error: unknown) {
+        const message = "Failed to process orchestration response";
+        console.error({ message, error });
+        return {
+          message:
+            error instanceof Error && error.message ? error.message : message,
+          status: 500,
+        };
+      }
 
-  if (returnBundle) {
-    return { ...res, bundle: orchestrationResp.ecr };
-  } else {
-    return res;
+      const res = await saveToSource(
+        orchestrationResp.ecr,
+        orchestrationResp.metadata,
+      );
+      if (returnBundle) {
+        return { ...res, bundle: orchestrationResp.ecr };
+      }
+      return res;
+    })(),
+  ];
+
+  if (shouldSaveXml) {
+    promises.push(zipAndSaveXml(body, ecrId));
   }
+
+  const [orchestrationResult, saveResult] = await Promise.allSettled(promises);
+
+  if (
+    orchestrationResult.status === "rejected" ||
+    orchestrationResult.value.status >= 500
+  ) {
+    if (shouldSaveXml && saveResult?.status === "fulfilled") {
+      await deleteFromStorage(ecrId, process.env.SOURCE, "xml");
+    }
+
+    const errMsg =
+      orchestrationResult.status === "rejected"
+        ? String(orchestrationResult.reason)
+        : orchestrationResult.value.message;
+    return { message: errMsg, status: 500 };
+  }
+
+  return orchestrationResult.value;
 };
 
 /**
@@ -289,7 +333,7 @@ export const zipAndSaveXml = async (body: RequestBody, ecrId: string) => {
     zip.file(`${ecrId}-CDA_eICR.xml`, body.ecr);
 
     // add RR if exists and is string
-    if (body.rr === "string") {
+    if (typeof body.rr === "string") {
       zip.file(`${ecrId}-CDA_RR.xml`, body.rr);
     }
 

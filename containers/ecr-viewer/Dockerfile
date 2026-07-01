@@ -10,7 +10,12 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json* ./
-RUN npm ci
+
+# 🔒 SECURITY: Force ignore-scripts to block malicious payloads during download
+RUN npm ci --ignore-scripts
+
+# 🔒 SECURITY: Explicitly run scripts only for allowed packages (requires @lavamoat/allow-scripts in package.json)
+RUN npx allow-scripts
 
 
 # Rebuild the source code only when needed
