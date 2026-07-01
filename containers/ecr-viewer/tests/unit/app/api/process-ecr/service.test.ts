@@ -681,6 +681,21 @@ describe("orchestrationRequest", () => {
         expect(Object.keys(zip.files)).toContain(`${ecrId}-CDA_eICR.xml`);
       });
 
+      it("zipAndSaveXml should include RR xml when ecr and rr are both strings", async () => {
+        const body = {
+          ecr: "<ClinicalDocument>eICR</ClinicalDocument>",
+          rr: "<ReportabilityResponse>RR</ReportabilityResponse>",
+        };
+
+        await zipAndSaveXml(body, ecrId);
+
+        const [zipBuffer] = (saveToStorage as jest.Mock).mock.calls[0];
+        const zip = await JSZip.loadAsync(zipBuffer);
+        const files = Object.keys(zip.files);
+        expect(files).toContain(`${ecrId}-CDA_eICR.xml`);
+        expect(files).toContain(`${ecrId}-CDA_RR.xml`);
+      });
+
       it("zipAndSaveXml should take in a zip then call saveToStorage with a zipBuffer", async () => {
         const fakeZipBuffer = createFakeZip("<xml/>");
         const mockZip = new File([fakeZipBuffer as BlobPart], "test.zip", {

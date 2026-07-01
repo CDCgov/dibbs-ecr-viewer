@@ -82,21 +82,25 @@ const logInToKeycloak = async (
   userName: string,
   password: string,
 ) => {
-  // 1. Guarantee Keycloak is fully loaded and hydrated
+  // Guarantee Keycloak is fully loaded and hydrated
   await expect(
     page.getByRole("heading", { name: "Sign in to your account" }),
   ).toBeVisible();
 
-  // 2. Use precise accessible names
+  // Give WebKit a half-second breather BEFORE typing.
+  // This lets Keycloak's delayed autofocus script finish running so it stops stealing the cursor!
+  await sleep(500);
+
+  // Use precise accessible names
   await page.getByRole("textbox", { name: "Username or email" }).fill(userName);
   await page
     .getByRole("textbox", { name: "Password", exact: true })
     .fill(password);
 
-  // 3. Ensure the JS state has caught up before form submission
+  // Ensure the JS state has caught up before form submission
   await sleep(200);
 
-  // 4. Submit
+  // Submit
   await page.getByRole("button", { name: "Sign In" }).click();
 };
 
@@ -135,7 +139,16 @@ const logInToAd = async (page: Page, userName: string, password: string) => {
   await page.getByRole("textbox", { name: "password" }).fill(password!);
   await sleep(100);
   await page.getByRole("button", { name: "Sign in" }).click();
-  await sleep(100);
+
+  // Wait for the "Stay signed in?" prompt to load
+  await expect(
+    page.getByRole("heading", { name: "Stay signed in?" }),
+  ).toBeVisible();
+
+  // Give Microsoft's scripts a moment to bind event listeners to the buttons
+  await sleep(500);
+
+  // Now it is safe to click No
   await page.getByRole("button", { name: "No" }).click();
 };
 

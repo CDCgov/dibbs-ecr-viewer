@@ -100,7 +100,7 @@ Instructions have been provided for different operating systems, so follow the i
 Here, we’ll verify that the eCR Viewer service is available to receive requests by running the eCR Viewer Health Check request.
 
 <details>
-<summary>Powershell (compatible with versions 5 and 7)</summary>
+<summary>PowerShell (compatible with versions 5 and 7)</summary>
 
 ```powershell
 Invoke-WebRequest -Uri "{{dibbs-url}}/ecr-viewer/api/health-check" -UseBasicParsing
@@ -134,7 +134,7 @@ If you are running the viewer with a metadata database (standalone or dual boot)
 In order to apply migrations, you will need the migration secret. This can be set to a static value by setting the `METADATA_DATABASE_MIGRATION_SECRET`, otherwise it will be generated randomly each time the viewer is started. Once generated, it will be logged to the eCR Viewer server logs. Check your container's logs to find this secret - it will be logged as `migration_secret=<your secret here>`.
 
 <details>
-<summary>Powershell 5 and 7</summary>
+<summary>PowerShell 5 and 7</summary>
 
 ```powershell
 $boundary = [guid]::NewGuid().ToString()
@@ -193,12 +193,12 @@ curl --location "{{ dibbs-url }}/ecr-viewer/api/migrate-db" ^
 
 Now, we need to verify that an eCR can run through the DIBBs pipeline. Below, you'll need to replace `{{path-to-eCR-zip-file}}` with the actual link to your sample eCR/RR zip file and `{{jwt-token}}` with your generated JWT token.
 
-Please ensure that the sample eCR you're using is a zip file, and the eICR and RR files are named as they are coming out of AIMs — CDA_eICR.xml and CDA_RR.xml.
+Please ensure that the sample eCR you're using is a zip file, and the eICR and RR files are named as they are coming out of AIMS — CDA_eICR.xml and CDA_RR.xml.
 
 Run the Process eCR request:
 
 <details>
-<summary>Powershell 5</summary>
+<summary>PowerShell 5</summary>
 
 ```powershell
 $FilePath = '{{ path-to-eCR-zip-file }}'
@@ -254,7 +254,7 @@ Import-ApiForm -URI $URL -File $FileInfo -ContentType "application/zip" -NewName
 </details>
 
 <details>
-<summary>Powershell 7</summary>
+<summary>PowerShell 7</summary>
 
 ```powershell
 $FilePath = "{{path-to-eCR-zip-file}}"
@@ -343,10 +343,10 @@ Or:
 { "message": "Internal Server Error" }
 ```
 
-More details can typically be found in the server's logs. Generally speaking, you can get around this error by re-running or choosing a different eCR bundle. You’ll also need to make sure your eCRs are named as they are coming out of AIMs — `CDA_eICR.xml` and `CDA_RR.xml`.
+More details can typically be found in the server's logs. Generally speaking, you can get around this error by re-running or choosing a different eCR bundle. You’ll also need to make sure your eCRs are named as they are coming out of AIMS — `CDA_eICR.xml` and `CDA_RR.xml`.
 
 ## Next Steps
 
 Congratulations! You’ve completed the verification process for the DIBBs installation.
 
-Please reach to your contact within your public health department and [dibbs@cdc.gov](mailto:dibbs@cdc.gov) to confirm that the installation was successful.
+Please reach out to your contact within your public health department and [dibbs@cdc.gov](mailto:dibbs@cdc.gov) to confirm that the installation was successful.

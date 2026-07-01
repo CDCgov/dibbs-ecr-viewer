@@ -42,13 +42,28 @@ test.describe("program management page", () => {
     await page.getByPlaceholder("Search condition or category").fill("i");
     await expect(page.getByText("277 results")).toBeVisible();
 
-    // Find a random condition (avoid clashes in parallel tests)
-    const checkboxes = await page.getByRole("checkbox").all();
-    const index = Math.floor(Math.random() * checkboxes.length);
-    const checkbox = checkboxes[index];
+    // Wait for checkboxes to attach and use .count() / .nth() to avoid stale elements
+    await expect(page.getByRole("checkbox").first()).toBeAttached();
+    const count = await page.getByRole("checkbox").count();
+    const index = Math.floor(Math.random() * count);
+
+    const checkbox = page.getByRole("checkbox").nth(index);
     const conditionName = await checkbox.inputValue();
+
     await checkbox.scrollIntoViewIfNeeded();
     await checkbox.dispatchEvent("click");
+
+    // Conditionally handle the reassignment modal if we randomly picked an assigned condition
+    try {
+      const yesButton = page.getByRole("button", {
+        name: "Yes, add condition",
+      });
+      await yesButton.waitFor({ state: "visible", timeout: 1500 });
+      await yesButton.click();
+    } catch (e) {
+      // Modal didn't appear, move on!
+    }
+
     const programName = `Program ${conditionName}`;
 
     await page.getByLabel("Program area name").fill(programName);
@@ -87,8 +102,14 @@ test.describe("program management page", () => {
     await page.getByPlaceholder("Search condition or category").fill("i");
     await expect(page.getByText("277 results")).toBeVisible();
     await expect(page.getByText(`Condition in ${programName}`)).toBeVisible();
-    await checkbox.scrollIntoViewIfNeeded();
-    await checkbox.dispatchEvent("click");
+
+    // Re-grab the checkbox dynamically. The old 'checkbox' variable is stale!
+    await expect(page.getByRole("checkbox").first()).toBeAttached();
+    const checkboxAgain = page.getByRole("checkbox").nth(index);
+
+    await checkboxAgain.scrollIntoViewIfNeeded();
+    await checkboxAgain.dispatchEvent("click");
+
     await expect(page.getByText("Are you sure you want to add")).toBeVisible();
 
     // this is flaky on webkit, so adding more retrying

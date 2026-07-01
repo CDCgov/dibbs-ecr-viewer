@@ -7,6 +7,7 @@ import {
   azureBlobContainerClient,
   azureBlobStorageHealthCheck,
   deleteFromAzure,
+  existsInAzure,
   saveToAzure,
 } from "@/app/data/blobStorage/azureClient";
 import { AZURE_SOURCE, S3_SOURCE } from "@/app/data/blobStorage/utils";
@@ -114,6 +115,54 @@ describe("azure blob container", () => {
 
       const result = await azureBlobStorageHealthCheck();
       expect(result).toEqual("DOWN");
+    });
+  });
+
+  describe("check exists", () => {
+    it("should return true when the blob exists", async () => {
+      process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
+      process.env.AZURE_CONTAINER_NAME = "container";
+      const mockBlobExists = jest.fn().mockResolvedValue(true);
+      const mockBlockBlobClient = jest
+        .fn()
+        .mockReturnValue({ exists: mockBlobExists });
+      (BlobServiceClient.fromConnectionString as jest.Mock).mockReturnValue({
+        getContainerClient: jest
+          .fn()
+          .mockReturnValue({ getBlockBlobClient: mockBlockBlobClient }),
+      });
+
+      const result = await existsInAzure(fileName);
+
+      expect(result).toBe(true);
+      expect(mockBlockBlobClient).toHaveBeenCalledExactlyOnceWith(fileName);
+      expect(mockBlobExists).toHaveBeenCalledOnce();
+    });
+
+    it("should return false when the blob does not exist", async () => {
+      process.env.AZURE_STORAGE_CONNECTION_STRING = "connection";
+      process.env.AZURE_CONTAINER_NAME = "container";
+      const mockBlobExists = jest.fn().mockResolvedValue(false);
+      const mockBlockBlobClient = jest
+        .fn()
+        .mockReturnValue({ exists: mockBlobExists });
+      (BlobServiceClient.fromConnectionString as jest.Mock).mockReturnValue({
+        getContainerClient: jest
+          .fn()
+          .mockReturnValue({ getBlockBlobClient: mockBlockBlobClient }),
+      });
+
+      const result = await existsInAzure(fileName);
+
+      expect(result).toBe(false);
+    });
+
+    it("should throw when the container client is not configured", async () => {
+      delete process.env.AZURE_STORAGE_CONNECTION_STRING;
+
+      await expect(existsInAzure(fileName)).rejects.toThrow(
+        "Azure storage client is not configured",
+      );
     });
   });
 

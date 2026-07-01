@@ -14,21 +14,21 @@ import SocialHistory from "@/app/view-data/components/SocialHistory";
 import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
 import { evaluateEcrMetadata } from "@/app/view-data/services/ecrMetadataService";
 import {
-  evaluateDemographicsData,
-  evaluateSocialData,
   evaluateEncounterData,
   evaluateProviderData,
   evaluateFacilityData,
   evaluateHospitalEncounterData,
-  evaluatePregnancyData,
 } from "@/app/view-data/services/evaluateFhirDataService";
+import { evaluateSocialData } from "@/app/view-data/services/socialHistoryService";
+import { evaluateDemographicsData } from "@/app/view-data/services/demographicsService";
+import { evaluatePregnancyData } from "@/app/view-data/services/pregnancyInfoService";
 import { evaluateLabInfoData } from "@/app/view-data/services/labsService";
 import {
   FhirIndex,
   getResourcesByType,
 } from "@/app/view-data/services/fhirResourcesIndexService";
 
-import { evaluateClinicalData } from "./clinical-data";
+import { evaluateClinicalData } from "@/app/view-data/services/clinicalInfoService";
 
 export type EcrDocumentNavConfig = {
   title: string;
@@ -52,7 +52,7 @@ export const getEcrDocumentAccordionItems = (
 } => {
   const demographicsData = evaluateDemographicsData(fhirBundle, fhirIndex);
   const socialData = evaluateSocialData(fhirBundle, fhirIndex);
-  const pregnancyData = evaluatePregnancyData(fhirBundle);
+  const pregnancyData = evaluatePregnancyData(fhirBundle, fhirIndex);
   const hospitalEncounterData = evaluateHospitalEncounterData(fhirBundle);
   const encounterData = evaluateEncounterData(fhirBundle);
   const providerData = evaluateProviderData(fhirBundle);

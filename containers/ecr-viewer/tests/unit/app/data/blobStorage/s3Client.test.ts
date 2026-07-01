@@ -6,6 +6,7 @@ import {
   s3Client,
   saveToS3,
   deleteFromS3,
+  existsInS3,
 } from "@/app/data/blobStorage/s3Client";
 
 jest.mock("@aws-sdk/client-s3", () => ({
@@ -13,6 +14,7 @@ jest.mock("@aws-sdk/client-s3", () => ({
     send: jest.fn(),
   })),
   HeadBucketCommand: jest.fn(),
+  HeadObjectCommand: jest.fn().mockImplementation((input) => ({ input })),
   PutObjectCommand: jest.fn().mockImplementation((input) => ({
     input,
   })),
@@ -100,6 +102,42 @@ describe("s3 client", () => {
         message: "Failed to save FHIR bundle.",
         status: 500,
       });
+    });
+  });
+
+  describe("check exists", () => {
+    it("should return true when the object exists", async () => {
+      process.env.ECR_BUCKET_NAME = "bucket";
+      mockSend.mockResolvedValue({ $metadata: { httpStatusCode: 200 } });
+
+      const result = await existsInS3(fileName);
+
+      expect(result).toBe(true);
+      expect(s3Client.send).toHaveBeenCalledOnce();
+    });
+
+    it("should return false when the object does not exist", async () => {
+      process.env.ECR_BUCKET_NAME = "bucket";
+      mockSend.mockRejectedValue(
+        Object.assign(new Error("NotFound"), {
+          $metadata: { httpStatusCode: 404 },
+        }),
+      );
+
+      const result = await existsInS3(fileName);
+
+      expect(result).toBe(false);
+    });
+
+    it("should rethrow non-404 errors", async () => {
+      process.env.ECR_BUCKET_NAME = "bucket";
+      mockSend.mockRejectedValue(
+        Object.assign(new Error("AccessDenied"), {
+          $metadata: { httpStatusCode: 403 },
+        }),
+      );
+
+      await expect(existsInS3(fileName)).rejects.toThrow("AccessDenied");
     });
   });
 
