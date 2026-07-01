@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`evaluateFhirDataService tests Evaluate Encounter Info: Encounter Details Evaluate Encounter Care Team should return the correct Encounter care team 1`] = `
+exports[`Encounter Info service tests Evaluate Encounter Info: Encounter Details Evaluate Encounter Care Team should return the correct Encounter care team 1`] = `
 <JsonTable
   className="caption-data-title margin-y-0"
   jsonTableData={
@@ -34,9 +34,9 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Encounter Detail
 />
 `;
 
-exports[`evaluateFhirDataService tests Evaluate Encounter Info: Encounter Details Evaluate Encounter Diagnoses should return the correct diagnoses given an Encounter 1`] = `"OTHER MUSCLE SPASM"`;
+exports[`Encounter Info service tests Evaluate Encounter Info: Encounter Details Evaluate Encounter Diagnoses should return the correct diagnoses given an Encounter 1`] = `"OTHER MUSCLE SPASM"`;
 
-exports[`evaluateFhirDataService tests Evaluate Encounter Info: Facility Details should return the correct Facility data 1`] = `
+exports[`Encounter Info service tests Evaluate Encounter Info: Facility Details should return the correct Facility data 1`] = `
 {
   "availableData": [
     {
@@ -74,7 +74,7 @@ US",
 }
 `;
 
-exports[`evaluateFhirDataService tests Evaluate Encounter Info: Hospital Encounter Details A bundle with only Discharge Diagnosis returns that data and matches snapshot 1`] = `
+exports[`Encounter Info service tests Evaluate Encounter Info: Hospital Encounter Details A bundle with only Discharge Diagnosis returns that data and matches snapshot 1`] = `
 {
   "availableData": [
     {
@@ -163,7 +163,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Hospital Encount
 }
 `;
 
-exports[`evaluateFhirDataService tests Evaluate Encounter Info: Hospital Encounter Details should return Admission Medication data when present and match snapshot 1`] = `
+exports[`Encounter Info service tests Evaluate Encounter Info: Hospital Encounter Details should return Admission Medication data when present and match snapshot 1`] = `
 {
   "availableData": [
     {
@@ -410,7 +410,7 @@ exports[`evaluateFhirDataService tests Evaluate Encounter Info: Hospital Encount
 }
 `;
 
-exports[`evaluateFhirDataService tests Evaluate Encounter Info: Hospital Encounter Details should return Hospital Encounter Data for Admission and Discharge Diagnosis when present and match snapshot 1`] = `
+exports[`Encounter Info service tests Evaluate Encounter Info: Hospital Encounter Details should return Hospital Encounter Data for Admission and Discharge Diagnosis when present and match snapshot 1`] = `
 {
   "availableData": [
     {
