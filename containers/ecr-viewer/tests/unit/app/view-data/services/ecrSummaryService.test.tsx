@@ -10,9 +10,9 @@ import _BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
 import _BundlePatient from "../../../../../../../test-data/fhir/BundlePatient.json";
 import _BundleRRConditionValueString from "../../../../../../../test-data/fhir/BundleRRConditionValueString.json";
 import {
-  evaluateEcrSummaryConditionSummary,
-  evaluateEcrSummaryEncounterDetails,
-  evaluateEcrSummaryPatientDetails,
+  evaluateEcrSummaryPatient,
+  evaluateEcrSummaryEncounter,
+  evaluateEcrSummaryCondition,
   evaluateEcrSummaryRelevantClinicalDetails,
   evaluateEcrSummaryRelevantLabResults,
 } from "@/app/view-data/services/ecrSummaryService";
@@ -140,9 +140,9 @@ describe("ecrSummaryService Tests", () => {
 
   describe("Evaluate eCR Summary Condition Summary", () => {
     it("should return titles based on snomed code, and return human-readable name if available", () => {
-      const actual = evaluateEcrSummaryConditionSummary(
+      const actual = evaluateEcrSummaryCondition(
         BundleEcrSummary,
-        fhirIndexBundleEcrSummary,
+        fhirIndexBundleEcrSummary
       );
 
       expect(actual[0].title).toEqual("Hepatitis C");
@@ -151,17 +151,17 @@ describe("ecrSummaryService Tests", () => {
       );
     });
     it("should return human-readable name if available", () => {
-      const actual = evaluateEcrSummaryConditionSummary(
+      const actual = evaluateEcrSummaryCondition(
         BundleRRConditionValueString,
-        fhirIndexBundleRRConditionValueString,
+        fhirIndexBundleRRConditionValueString
       );
 
       expect(actual[0].title).toEqual("COVID");
     });
     it("should return summaries based on snomed code", () => {
-      const actual = evaluateEcrSummaryConditionSummary(
+      const actual = evaluateEcrSummaryCondition(
         BundleEcrSummary,
-        fhirIndexBundleEcrSummary,
+        fhirIndexBundleEcrSummary
       );
       render(
         actual[1].conditionDetails.map((detail, i) => (
@@ -184,9 +184,9 @@ describe("ecrSummaryService Tests", () => {
       ).toBeInTheDocument();
     });
     it("should return clinical details based on snomed code", () => {
-      const actual = evaluateEcrSummaryConditionSummary(
+      const actual = evaluateEcrSummaryCondition(
         BundleEcrSummary,
-        fhirIndexBundleEcrSummary,
+        fhirIndexBundleEcrSummary
       );
 
       render(
@@ -198,9 +198,9 @@ describe("ecrSummaryService Tests", () => {
       expect(screen.getByText("COVID toes")).toBeInTheDocument();
     });
     it("should return lab details based on snomed code", () => {
-      const actual = evaluateEcrSummaryConditionSummary(
+      const actual = evaluateEcrSummaryCondition(
         BundleEcrSummary,
-        fhirIndexBundleEcrSummary,
+        fhirIndexBundleEcrSummary
       );
 
       render(
@@ -215,9 +215,9 @@ describe("ecrSummaryService Tests", () => {
       expect(screen.getByText("SARS-CoV-2 PCR")).toBeInTheDocument();
     });
     it("should return immunization details based on snomed code", () => {
-      const actual = evaluateEcrSummaryConditionSummary(
+      const actual = evaluateEcrSummaryCondition(
         BundleEcrSummary,
-        fhirIndexBundleEcrSummary,
+        fhirIndexBundleEcrSummary
       );
       render(
         actual[1].immunizationDetails.map((detail) => (
@@ -263,9 +263,9 @@ describe("ecrSummaryService Tests", () => {
       const fhirIndexBundleNonRelatedImmuns = getFhirIndex(
         BundleNonRelatedImmuns,
       );
-      const actual = evaluateEcrSummaryConditionSummary(
+      const actual = evaluateEcrSummaryCondition(
         BundleNonRelatedImmuns,
-        fhirIndexBundleNonRelatedImmuns,
+        fhirIndexBundleNonRelatedImmuns
       );
       render(
         actual[1].immunizationDetails.map((detail) => (
@@ -277,27 +277,24 @@ describe("ecrSummaryService Tests", () => {
       expect(screen.queryByText("anthrax")).not.toBeInTheDocument();
     });
     it("should return empty array if none found", () => {
-      const actual = evaluateEcrSummaryConditionSummary(
-        {} as Bundle,
-        {} as FhirIndex,
-      );
+      const actual = evaluateEcrSummaryCondition({} as Bundle, {} as FhirIndex);
 
       expect(actual).toBeEmpty();
     });
     it("should return the the requested snomed first", () => {
-      const verifyNotFirst = evaluateEcrSummaryConditionSummary(
+      const verifyNotFirst = evaluateEcrSummaryCondition(
         BundleEcrSummary,
-        fhirIndexBundleEcrSummary,
+        fhirIndexBundleEcrSummary
       );
 
       expect(verifyNotFirst[0].title).not.toEqual(
         "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
       );
 
-      const actual = evaluateEcrSummaryConditionSummary(
+      const actual = evaluateEcrSummaryCondition(
         BundleEcrSummary,
         fhirIndexBundleEcrSummary,
-        "840539006",
+        "840539006"
       );
       expect(actual[0].title).toEqual(
         "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
@@ -307,18 +304,18 @@ describe("ecrSummaryService Tests", () => {
 
   describe("Evaluate eCR Summary Patient Details", () => {
     it("should get all relevant patient details", () => {
-      const actual = evaluateEcrSummaryPatientDetails(
+      const actual = evaluateEcrSummaryPatient(
         BundlePatient,
-        fhirIndexBundlePatient,
+        fhirIndexBundlePatient
       );
 
       expect(evaluateData(actual).unavailableData).toBeEmpty();
     });
 
     it("should not show parent/guardian info if adult", () => {
-      const actual = evaluateEcrSummaryPatientDetails(
+      const actual = evaluateEcrSummaryPatient(
         BundlePatient,
-        fhirIndexBundlePatient,
+        fhirIndexBundlePatient
       );
 
       const guardian = actual.find((d) => d.title === "Parent/Guardian");
@@ -342,7 +339,7 @@ describe("ecrSummaryService Tests", () => {
         ],
       } as unknown as Bundle;
       const fhirIndexBundle = getFhirIndex(bundle);
-      const actual = evaluateEcrSummaryPatientDetails(bundle, fhirIndexBundle);
+      const actual = evaluateEcrSummaryPatient(bundle, fhirIndexBundle);
 
       const guardian = actual.find((d) => d.title === "Parent/Guardian");
 
@@ -378,9 +375,9 @@ describe("ecrSummaryService Tests", () => {
         ],
       } as unknown as Bundle;
       const fhirIndexPatientEmpty = getFhirIndex(BundlePatientEmpty);
-      const actual = evaluateEcrSummaryPatientDetails(
+      const actual = evaluateEcrSummaryPatient(
         BundlePatientEmpty,
-        fhirIndexPatientEmpty,
+        fhirIndexPatientEmpty
       );
       actual.forEach((a) => {
         expect(a.value).toEqual(noDataSummary);
@@ -390,7 +387,7 @@ describe("ecrSummaryService Tests", () => {
 
   describe("Evaluate eCR Summary Encounter Details", () => {
     it("should get all relevant encounter details", () => {
-      const actual = evaluateEcrSummaryEncounterDetails(BundleEcrMetadata);
+      const actual = evaluateEcrSummaryEncounter(BundleEcrMetadata);
       expect(evaluateData(actual).unavailableData).toBeEmpty();
     });
 
@@ -420,7 +417,7 @@ describe("ecrSummaryService Tests", () => {
           },
         ],
       } as unknown as Bundle;
-      const actual = evaluateEcrSummaryEncounterDetails(BundleEncounterEmpty);
+      const actual = evaluateEcrSummaryEncounter(BundleEncounterEmpty);
       actual.forEach((a) => {
         expect(a.value).toEqual(noDataSummary);
       });

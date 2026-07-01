@@ -7,7 +7,7 @@ import EcrSummary, {
 
 describe("EcrSummary tests", () => {
   describe("EcrSummary", () => {
-    const patientDetails = [
+    const patientSummary = [
       {
         title: "Patient Name",
         value: "Han Solo",
@@ -37,7 +37,7 @@ describe("EcrSummary tests", () => {
         value: "Home 555-555-55555\nHANSOLOFAKEEMAIL@EXAMPLE.COM",
       },
     ];
-    const encounterDetails = [
+    const encounterSummary = [
       {
         title: "Facility Name",
         value: "Millennium Falcon Med Bay",
@@ -116,10 +116,10 @@ describe("EcrSummary tests", () => {
     it("should match snapshot", () => {
       const { container } = render(
         <EcrSummary
-          patientDetails={patientDetails}
-          encounterDetails={encounterDetails}
+          patientSummary={patientSummary}
+          encounterSummary={encounterSummary}
           conditionSummary={covidConditionDetails}
-        />,
+        />
       );
 
       expect(container).toMatchSnapshot();
@@ -127,10 +127,10 @@ describe("EcrSummary tests", () => {
     it("should pass accessibility test", async () => {
       const { container } = render(
         <EcrSummary
-          patientDetails={patientDetails}
-          encounterDetails={encounterDetails}
+          patientSummary={patientSummary}
+          encounterSummary={encounterSummary}
           conditionSummary={covidConditionDetails}
-        />,
+        />
       );
 
       expect(await axe(container)).toHaveNoViolations();
@@ -138,10 +138,10 @@ describe("EcrSummary tests", () => {
     it("should open the condition details when there is one", () => {
       render(
         <EcrSummary
-          patientDetails={patientDetails}
-          encounterDetails={encounterDetails}
+          patientSummary={patientSummary}
+          encounterSummary={encounterSummary}
           conditionSummary={covidConditionDetails}
-        />,
+        />
       );
 
       expect(screen.getByText("covid summary")).toBeVisible();
@@ -149,11 +149,11 @@ describe("EcrSummary tests", () => {
     it("should open the condition when the snomed matches", () => {
       render(
         <EcrSummary
-          patientDetails={patientDetails}
-          encounterDetails={encounterDetails}
+          patientSummary={patientSummary}
+          encounterSummary={encounterSummary}
           conditionSummary={[...covidConditionDetails, ...hepConditionDetails]}
           snomed="test-snomed-456"
-        />,
+        />
       );
 
       expect(screen.getByText("hep c summary")).toBeVisible();
@@ -161,10 +161,10 @@ describe("EcrSummary tests", () => {
     it("should open no condition details when there is many and no match", () => {
       render(
         <EcrSummary
-          patientDetails={patientDetails}
-          encounterDetails={encounterDetails}
+          patientSummary={patientSummary}
+          encounterSummary={encounterSummary}
           conditionSummary={[...covidConditionDetails, ...hepConditionDetails]}
-        />,
+        />
       );
 
       expect(screen.getByText("hep c summary")).not.toBeVisible();
@@ -173,10 +173,10 @@ describe("EcrSummary tests", () => {
     it("should show 0 reportable conditions tag", () => {
       render(
         <EcrSummary
-          patientDetails={patientDetails}
-          encounterDetails={encounterDetails}
+          patientSummary={patientSummary}
+          encounterSummary={encounterSummary}
           conditionSummary={[]}
-        />,
+        />
       );
 
       expect(screen.getByText("0 CONDITIONS FOUND"));
@@ -184,10 +184,10 @@ describe("EcrSummary tests", () => {
     it("should show 1 reportable condition tag", () => {
       render(
         <EcrSummary
-          patientDetails={patientDetails}
-          encounterDetails={encounterDetails}
+          patientSummary={patientSummary}
+          encounterSummary={encounterSummary}
           conditionSummary={covidConditionDetails}
-        />,
+        />
       );
 
       expect(screen.getByText("1 CONDITION FOUND"));
@@ -195,10 +195,10 @@ describe("EcrSummary tests", () => {
     it("should show 2 reportable conditions tag", () => {
       render(
         <EcrSummary
-          patientDetails={patientDetails}
-          encounterDetails={encounterDetails}
+          patientSummary={patientSummary}
+          encounterSummary={encounterSummary}
           conditionSummary={[...covidConditionDetails, ...hepConditionDetails]}
-        />,
+        />
       );
 
       expect(screen.getByText("2 CONDITIONS FOUND"));
