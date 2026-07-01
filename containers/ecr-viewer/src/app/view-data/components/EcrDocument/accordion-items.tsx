@@ -14,13 +14,13 @@ import SocialHistory from "@/app/view-data/components/SocialHistory";
 import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
 import { evaluateEcrMetadata } from "@/app/view-data/services/ecrMetadataService";
 import {
-  evaluateSocialData,
   evaluateEncounterData,
   evaluateProviderData,
   evaluateFacilityData,
   evaluateHospitalEncounterData,
   evaluatePregnancyData,
 } from "@/app/view-data/services/evaluateFhirDataService";
+import { evaluateSocialData } from "@/app/view-data/services/socialHistoryService";
 import { evaluateDemographicsData } from "@/app/view-data/services/demographicsService";
 import { evaluateLabInfoData } from "@/app/view-data/services/labsService";
 import {
