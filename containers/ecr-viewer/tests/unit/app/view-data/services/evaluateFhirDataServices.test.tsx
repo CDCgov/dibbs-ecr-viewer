@@ -11,11 +11,9 @@ import {
 } from "fhir/r4";
 
 import * as _BundleAdmissionMedications from "@/../../../test-data/fhir/BundleAdmissionMedications.json";
-import BundleEcrMetadata from "@/../../../test-data/fhir/BundleEcrMetadata.json";
-import * as _BundleWithPatient from "@/../../../test-data/fhir/BundlePatient.json";
-import * as _BundlePatientMultiple from "@/../../../test-data/fhir/BundlePatientMultiple.json";
+import * as _BundleEcrMetadata from "@/../../../test-data/fhir/BundleEcrMetadata.json";
 import * as _BundlePatientWithCovid from "@/../../../test-data/fhir/BundlePatientWithCovid.json";
-import BundlePractitionerRole from "@/../../../test-data/fhir/BundlePractitionerRole.json";
+import * as _BundlePractitionerRole from "@/../../../test-data/fhir/BundlePractitionerRole.json";
 import {
   evaluatePractitionerRoleReference,
   evaluateEncounterCareTeamTable,
@@ -25,23 +23,17 @@ import {
   evaluateEncounterDiagnosis,
   evaluateFacilityData,
 } from "@/app/view-data/services/evaluateFhirDataService";
-import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
-const BundleWithPatient = _BundleWithPatient as Bundle;
-const fhirIndexBundleWithPatient = getFhirIndex(BundleWithPatient);
-
-const BundlePatientMultiple = _BundlePatientMultiple as unknown as Bundle;
-
+const BundleEcrMetadata = _BundleEcrMetadata as Bundle;
 const BundleWithAdmissionMedications = _BundleAdmissionMedications as Bundle;
 const BundlePatientWithCovid = _BundlePatientWithCovid as Bundle;
+const BundlePractitionerRole = _BundlePractitionerRole as Bundle;
 
 describe("evaluateFhirDataService tests", () => {
   describe("Evaluate Encounter Info: Encounter Details", () => {
     describe("Evaluate Encounter Care Team", () => {
       it("should return the correct Encounter care team", () => {
-        const actual = evaluateEncounterCareTeamTable(
-          BundleEcrMetadata as unknown as Bundle,
-        );
+        const actual = evaluateEncounterCareTeamTable(BundleEcrMetadata);
 
         expect(actual).toMatchSnapshot();
       });
@@ -52,11 +44,8 @@ describe("evaluateFhirDataService tests", () => {
         const encounter = {
           resourceType: "Encounter",
           id: "3a1cb409-6f94-0231-86d6-FAKE1ecc5fda",
-        };
-        const actual = evaluateEncounterDiagnosis(
-          BundleEcrMetadata as unknown as Bundle,
-          encounter as unknown as Encounter,
-        );
+        } as unknown as Encounter;
+        const actual = evaluateEncounterDiagnosis(BundleEcrMetadata, encounter);
         expect(actual).toMatchSnapshot();
       });
     });
@@ -553,7 +542,7 @@ describe("evaluateFhirDataService tests", () => {
     describe("Evaluate PractitionerRoleReference", () => {
       it("should return the organization and practitioner when practitioner role is found ", () => {
         const actual = evaluatePractitionerRoleReference(
-          BundlePractitionerRole as unknown as Bundle,
+          BundlePractitionerRole,
           "PractitionerRole/b18c20c1-123b-fd12-71cf-9dd0abae8ced",
         );
 
@@ -575,7 +564,7 @@ describe("evaluateFhirDataService tests", () => {
       });
       it("should return undefined organization and practitioner when practitioner role is not found", () => {
         const actual = evaluatePractitionerRoleReference(
-          BundlePractitionerRole as unknown as Bundle,
+          BundlePractitionerRole,
           "unknown",
         );
 
