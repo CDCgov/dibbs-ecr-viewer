@@ -12,7 +12,6 @@ import {
   PractitionerRole,
 } from "fhir/r4";
 
-import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
 import {
   formatDateTime,
   formatStartEndDate,

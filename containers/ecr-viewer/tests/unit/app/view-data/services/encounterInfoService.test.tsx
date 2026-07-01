@@ -22,14 +22,14 @@ import {
   getLocationName,
   evaluateEncounterDiagnosis,
   evaluateFacilityData,
-} from "@/app/view-data/services/evaluateFhirDataService";
+} from "@/app/view-data/services/encounterInfoService";
 
 const BundleEcrMetadata = _BundleEcrMetadata as Bundle;
 const BundleWithAdmissionMedications = _BundleAdmissionMedications as Bundle;
 const BundlePatientWithCovid = _BundlePatientWithCovid as Bundle;
 const BundlePractitionerRole = _BundlePractitionerRole as Bundle;
 
-describe("evaluateFhirDataService tests", () => {
+describe("Encounter Info service tests", () => {
   describe("Evaluate Encounter Info: Encounter Details", () => {
     describe("Evaluate Encounter Care Team", () => {
       it("should return the correct Encounter care team", () => {
