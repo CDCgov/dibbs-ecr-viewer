@@ -3,39 +3,15 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Tooltip } from "@trussworks/react-uswds";
-import { Bundle } from "fhir/r4";
 
-import BundleNoActiveProblems from "@/../../../test-data/fhir/BundleNoActiveProblems.json";
-import { evaluateAll } from "@/app/utils/evaluate";
-import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DataDisplay } from "@/app/view-data/components/DataDisplay";
 import { FieldValue } from "@/app/view-data/components/FieldValue";
 import {
   TooltipDiv,
   ToolTipElement,
 } from "@/app/view-data/components/ToolTipElement";
-import { returnProblemsTable } from "@/app/view-data/components/common";
-import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
 describe("Utils", () => {
-  describe("Render Active Problem table", () => {
-    it("should return empty if active problem name is undefined", () => {
-      const fhirIndex = getFhirIndex(
-        BundleNoActiveProblems as unknown as Bundle,
-      );
-      const actual = returnProblemsTable(
-        BundleNoActiveProblems as unknown as Bundle,
-        fhirIndex,
-        evaluateAll(
-          BundleNoActiveProblems as unknown as Bundle,
-          fhirPathMappings.activeProblems,
-        ),
-      );
-
-      expect(actual).toBeUndefined();
-    });
-  });
-
   describe("FieldValue", () => {
     describe("string value", () => {
       it("should display text up to 500 characters", () => {

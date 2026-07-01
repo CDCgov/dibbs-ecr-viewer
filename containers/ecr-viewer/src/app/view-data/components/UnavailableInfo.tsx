@@ -95,7 +95,7 @@ const UnavailableInfo: React.FC<UnavailableInfoProps> = ({
         data={symptomsProblemsUnavailableData}
       />
       <UnavailableSection
-        title="Diagnostics and  Vital Signs"
+        title="Diagnostics and Vital Signs"
         data={vitalUnavailableData}
       />
       <UnavailableSection

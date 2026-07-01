@@ -1,5 +1,238 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`Snapshot tests Snapshot test for Active Problems Table should match snapshot 1`] = `
+<div>
+  <table
+    class="usa-table usa-table--borderless width-full table-caption-margin margin-y-0 border-top border-left border-right"
+    data-testid="table"
+  >
+    <caption>
+      Problems List
+    </caption>
+    <thead>
+      <tr>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Active Problem
+        </th>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Status
+        </th>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Onset Date/Time
+        </th>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Onset Age
+        </th>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Comments
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Malignant neoplasm of lower-inner quadrant of left breast in female, estrogen receptor positive
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Active
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          12/14/2022
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          123 years
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <button
+            aria-controls="hidden-comment-r:id"
+            aria-expanded="false"
+            class="usa-button usa-button--unstyled"
+            data-test-id="comment-button"
+            data-testid="button"
+            type="button"
+          >
+            View
+             
+            comment
+          </button>
+        </td>
+      </tr>
+      <tr
+        hidden=""
+        id="hidden-comment-r:id"
+      >
+        <td
+          class="p-list"
+          colspan="5"
+        >
+          <div
+            class="border-top border-base-lighter margin-top-neg-105 margin-bottom-1"
+          />
+          Test note
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Headache
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Active
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          152 years
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Backache
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Active
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          08/19/2018 1:00 PM
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          141 years
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Headache
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Active
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          1 year
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Backache
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Active
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          06/28/1877
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          1 month, 3 days
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
 exports[`Snapshot tests Snapshot test for History of Present Illness should match snapshot for non table notes 1`] = `
 <div>
   <div
@@ -220,6 +453,373 @@ exports[`Snapshot tests Snapshot test for History of Present Illness should matc
       </div>
     </div>
   </div>
+</div>
+`;
+
+exports[`Snapshot tests Snapshot test for Immunizations Table should match snapshot 1`] = `
+<div>
+  <table
+    class="usa-table usa-table--borderless width-full _fixed_1khz6_1 table-caption-margin margin-y-0 border-top border-left border-right"
+    data-testid="table"
+  >
+    <caption>
+      Immunization History
+    </caption>
+    <thead>
+      <tr>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Name
+        </th>
+        <th
+          class="table-header minw-10"
+          scope="col"
+        >
+          Effective Date/Time
+        </th>
+        <th
+          class="table-header minw-15"
+          scope="col"
+        >
+          Status
+        </th>
+        <th
+          class="table-header minw-15"
+          scope="col"
+        >
+          Status Reason
+        </th>
+        <th
+          class="table-header minw-10"
+          scope="col"
+        >
+          Dose Number
+        </th>
+        <th
+          class="table-header minw-18"
+          scope="col"
+        >
+          Manufacturer
+        </th>
+        <th
+          class="table-header minw-15"
+          scope="col"
+        >
+          Lot Number
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          MENINGOCOCCAL CONJUGATE,MENACTRA                                        (PED/ADOL/ADULT)
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          11/16/2020
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          completed
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          TDAP, (ADOL/ADULT)
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          11/10/2020 6:20 AM EST
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          completed
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          1
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          369258741
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          influenza, intradermal, quadrivalent
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          01/15/2015
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          not-done
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          patient objection
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          HEP A (ADULT) 2 DOSE
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          11/11/2011
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          completed
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          DTAP-HIB-IPV (PENTACEL)
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          04/16/2010
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          completed
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          HEP B (PED,ADOLESCENT) 3 DOSE
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          03/21/1974
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          completed
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 `;
 
