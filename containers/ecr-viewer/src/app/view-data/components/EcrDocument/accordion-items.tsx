@@ -18,10 +18,10 @@ import {
   evaluateProviderData,
   evaluateFacilityData,
   evaluateHospitalEncounterData,
-  evaluatePregnancyData,
 } from "@/app/view-data/services/evaluateFhirDataService";
 import { evaluateSocialData } from "@/app/view-data/services/socialHistoryService";
 import { evaluateDemographicsData } from "@/app/view-data/services/demographicsService";
+import { evaluatePregnancyData } from "@/app/view-data/services/pregnancyInfoService";
 import { evaluateLabInfoData } from "@/app/view-data/services/labsService";
 import {
   FhirIndex,
