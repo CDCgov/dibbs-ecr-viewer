@@ -19,7 +19,7 @@ import { getEcrDocumentAccordionItems } from "@/app/view-data/components/EcrDocu
 import {
   evaluateClinicalData,
   returnCareTeamTable,
-} from "@/app/view-data/components/EcrDocument/clinical-data";
+} from "@/app/view-data/services/clinicalInfoService";
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
 const BundleAdmissionMedications = _BundleAdmissionMedications as Bundle;

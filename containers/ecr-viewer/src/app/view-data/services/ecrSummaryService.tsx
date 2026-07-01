@@ -36,7 +36,7 @@ import { LabAccordion } from "@/app/view-data/components/LabAccordion";
 import {
   returnImmunizations,
   returnProblemsTable,
-} from "@/app/view-data/components/common";
+} from "@/app/view-data/services/clinicalInfoService";
 
 import {
   evaluateEncounterDiagnosis,
