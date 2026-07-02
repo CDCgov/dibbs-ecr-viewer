@@ -1,7 +1,7 @@
 import {
   AccordionSection,
   AccordionSubSection,
-} from "@/app/view-data//utils/component-utils";
+} from "@/app/view-data/utils/component-utils";
 
 import { DataDisplay, DisplayDataProps } from "./DataDisplay";
 
@@ -11,8 +11,9 @@ interface PregnancyInfoProps {
 
 /**
  * PregnancyInfo component displays pregnancy-related information.
- * @param root0 - The props object.
- * @param root0.pregnancyData - The pregnancy data to be displayed.
+ * @
+ * @param props - The props object.
+ * @param props.pregnancyData - The pregnancy data to be displayed.
  * @returns The rendered component.
  */
 const PregnancyInfo: React.FC<PregnancyInfoProps> = ({ pregnancyData }) => {
