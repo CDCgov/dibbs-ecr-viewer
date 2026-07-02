@@ -91,7 +91,7 @@ const ECRViewerPage = async ({
           conditionSummary={evaluateEcrSummaryCondition(
             fhirBundle,
             fhirIndex,
-            snomedCode
+            snomedCode,
           )}
           snomed={snomedCode}
         />

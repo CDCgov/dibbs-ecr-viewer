@@ -142,7 +142,7 @@ describe("ecrSummaryService Tests", () => {
     it("should return titles based on snomed code, and return human-readable name if available", () => {
       const actual = evaluateEcrSummaryCondition(
         BundleEcrSummary,
-        fhirIndexBundleEcrSummary
+        fhirIndexBundleEcrSummary,
       );
 
       expect(actual[0].title).toEqual("Hepatitis C");
@@ -153,7 +153,7 @@ describe("ecrSummaryService Tests", () => {
     it("should return human-readable name if available", () => {
       const actual = evaluateEcrSummaryCondition(
         BundleRRConditionValueString,
-        fhirIndexBundleRRConditionValueString
+        fhirIndexBundleRRConditionValueString,
       );
 
       expect(actual[0].title).toEqual("COVID");
@@ -161,7 +161,7 @@ describe("ecrSummaryService Tests", () => {
     it("should return summaries based on snomed code", () => {
       const actual = evaluateEcrSummaryCondition(
         BundleEcrSummary,
-        fhirIndexBundleEcrSummary
+        fhirIndexBundleEcrSummary,
       );
       render(
         actual[1].conditionDetails.map((detail, i) => (
@@ -186,7 +186,7 @@ describe("ecrSummaryService Tests", () => {
     it("should return clinical details based on snomed code", () => {
       const actual = evaluateEcrSummaryCondition(
         BundleEcrSummary,
-        fhirIndexBundleEcrSummary
+        fhirIndexBundleEcrSummary,
       );
 
       render(
@@ -200,7 +200,7 @@ describe("ecrSummaryService Tests", () => {
     it("should return lab details based on snomed code", () => {
       const actual = evaluateEcrSummaryCondition(
         BundleEcrSummary,
-        fhirIndexBundleEcrSummary
+        fhirIndexBundleEcrSummary,
       );
 
       render(
@@ -217,7 +217,7 @@ describe("ecrSummaryService Tests", () => {
     it("should return immunization details based on snomed code", () => {
       const actual = evaluateEcrSummaryCondition(
         BundleEcrSummary,
-        fhirIndexBundleEcrSummary
+        fhirIndexBundleEcrSummary,
       );
       render(
         actual[1].immunizationDetails.map((detail) => (
@@ -265,7 +265,7 @@ describe("ecrSummaryService Tests", () => {
       );
       const actual = evaluateEcrSummaryCondition(
         BundleNonRelatedImmuns,
-        fhirIndexBundleNonRelatedImmuns
+        fhirIndexBundleNonRelatedImmuns,
       );
       render(
         actual[1].immunizationDetails.map((detail) => (
@@ -284,7 +284,7 @@ describe("ecrSummaryService Tests", () => {
     it("should return the the requested snomed first", () => {
       const verifyNotFirst = evaluateEcrSummaryCondition(
         BundleEcrSummary,
-        fhirIndexBundleEcrSummary
+        fhirIndexBundleEcrSummary,
       );
 
       expect(verifyNotFirst[0].title).not.toEqual(
@@ -294,7 +294,7 @@ describe("ecrSummaryService Tests", () => {
       const actual = evaluateEcrSummaryCondition(
         BundleEcrSummary,
         fhirIndexBundleEcrSummary,
-        "840539006"
+        "840539006",
       );
       expect(actual[0].title).toEqual(
         "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
@@ -306,7 +306,7 @@ describe("ecrSummaryService Tests", () => {
     it("should get all relevant patient details", () => {
       const actual = evaluateEcrSummaryPatient(
         BundlePatient,
-        fhirIndexBundlePatient
+        fhirIndexBundlePatient,
       );
 
       expect(evaluateData(actual).unavailableData).toBeEmpty();
@@ -315,7 +315,7 @@ describe("ecrSummaryService Tests", () => {
     it("should not show parent/guardian info if adult", () => {
       const actual = evaluateEcrSummaryPatient(
         BundlePatient,
-        fhirIndexBundlePatient
+        fhirIndexBundlePatient,
       );
 
       const guardian = actual.find((d) => d.title === "Parent/Guardian");
@@ -377,7 +377,7 @@ describe("ecrSummaryService Tests", () => {
       const fhirIndexPatientEmpty = getFhirIndex(BundlePatientEmpty);
       const actual = evaluateEcrSummaryPatient(
         BundlePatientEmpty,
-        fhirIndexPatientEmpty
+        fhirIndexPatientEmpty,
       );
       actual.forEach((a) => {
         expect(a.value).toEqual(noDataSummary);

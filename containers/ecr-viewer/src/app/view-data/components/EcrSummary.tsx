@@ -98,7 +98,7 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
           </>
         ),
       };
-    }
+    },
   );
   return (
     <div

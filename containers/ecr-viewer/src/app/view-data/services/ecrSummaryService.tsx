@@ -59,12 +59,12 @@ import { FhirIndex, getResourcesByType } from "./fhirResourcesIndexService";
  */
 export const evaluateEcrSummaryPatient = (
   fhirBundle: Bundle,
-  fhirIndex: FhirIndex
+  fhirIndex: FhirIndex,
 ) => {
   const patient = getPatient(fhirIndex);
 
   const patientSex = toTitleCase(
-    evaluateOne(patient, fhirPathMappings.patientGender)
+    evaluateOne(patient, fhirPathMappings.patientGender),
   );
   const age = calculatePatientAge(patient);
   const parentGuardian =
@@ -74,7 +74,7 @@ export const evaluateEcrSummaryPatient = (
             title: "Parent/Guardian",
             value:
               formatPatientContactList(
-                evaluateAll(fhirBundle, fhirPathMappings.patientGuardian)
+                evaluateAll(fhirBundle, fhirPathMappings.patientGuardian),
               ) || noDataSummary,
           },
         ]
@@ -106,14 +106,14 @@ export const evaluateEcrSummaryPatient = (
       title: "Patient Address",
       value:
         formatCurrentAddress(
-          evaluateAll(patient, fhirPathMappings.patientAddressList)
+          evaluateAll(patient, fhirPathMappings.patientAddressList),
         ) || noDataSummary,
     },
     {
       title: "Patient Contact",
       value:
         formatContactPoint(
-          evaluateAll(patient, fhirPathMappings.patientTelecom)
+          evaluateAll(patient, fhirPathMappings.patientTelecom),
         ) || noDataSummary,
     },
     ...parentGuardian,
@@ -128,7 +128,7 @@ export const evaluateEcrSummaryPatient = (
 export const evaluateEcrSummaryEncounter = (fhirBundle: Bundle) => {
   const encounter = evaluateOneReference<Encounter>(
     fhirBundle,
-    fhirPathMappings.compositionEncounterRef
+    fhirPathMappings.compositionEncounterRef,
   );
 
   const orgRef = evaluateOne(encounter, fhirPathMappings.facilityOrgRef);
@@ -168,7 +168,7 @@ export const evaluateEcrSummaryEncounter = (fhirBundle: Bundle) => {
 export const evaluateEcrSummaryCondition = (
   fhirBundle: Bundle,
   fhirIndex: FhirIndex,
-  snomedCode?: string
+  snomedCode?: string,
 ): ConditionSummary[] => {
   const rrConditions = evaluateAll(fhirBundle, fhirPathMappings.rrConditions);
   const conditionsList: {
@@ -176,7 +176,7 @@ export const evaluateEcrSummaryCondition = (
   } = {};
   for (const observation of rrConditions) {
     const coding = observation?.valueCodeableConcept?.coding?.find(
-      (coding) => coding.system === "http://snomed.info/sct"
+      (coding) => coding.system === "http://snomed.info/sct",
     );
 
     const displayText =
@@ -195,12 +195,12 @@ export const evaluateEcrSummaryCondition = (
     observation?.hasMember?.forEach((ref) => {
       const rrInfoObs: Observation | undefined = evaluateReference(
         fhirBundle,
-        ref.reference
+        ref.reference,
       );
       const { rules } = getReportabilityRulesReasons(rrInfoObs);
 
       rules.forEach((rule: string) =>
-        conditionsList[conditionListKey].ruleSummaries.add(rule)
+        conditionsList[conditionListKey].ruleSummaries.add(rule),
       );
     });
   }
@@ -220,7 +220,7 @@ export const evaluateEcrSummaryCondition = (
               {[...conditionsList[conditionsListKey].ruleSummaries].map(
                 (summary) => (
                   <p key={summary}>{summary}</p>
-                )
+                ),
               )}
             </div>
           ),
@@ -228,18 +228,18 @@ export const evaluateEcrSummaryCondition = (
       ],
       immunizationDetails: evaluateEcrSummaryRelevantImmunizations(
         fhirBundle,
-        conditionsListKey
+        conditionsListKey,
       ),
       clinicalDetails: evaluateEcrSummaryRelevantClinicalDetails(
         fhirBundle,
         fhirIndex,
-        conditionsListKey
+        conditionsListKey,
       ),
       labDetails: evaluateEcrSummaryRelevantLabResults(
         fhirBundle,
         fhirIndex,
         conditionsListKey,
-        false
+        false,
       ),
     };
 
