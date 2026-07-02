@@ -30,7 +30,6 @@ export const SessionExpiryModal = ({
 }: SessionExpiryModalProps) => (
   <Modal
     ref={ref}
-    zIndex={999999}
     id={id}
     aria-labelledby={`${id}-heading`}
     aria-describedby={`${id}-description`}
