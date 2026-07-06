@@ -6,15 +6,15 @@ Run each service in the eCR Viewer stack as a standalone container using `docker
 
 ## Service overview
 
-| Service | Container name | Host port | Container port | Image | Env vars |
-|---|---|---|---|---|---|
-| ecr-viewer | dibbs-ecr-viewer | 3000 | 3000 | `ecr-viewer` | BaseRequired |
-| ingestion | dibbs-ingestion | - | 8080 | `ingestion` | none |
-| fhir-converter-proxy | dibbs-fhir-converter-proxy | - | 8080 | `fhir-converter-proxy` | proxy variables |
-| fhir-converter | dibbs-fhir-converter | - | 8080 | `fhir-converter` | none |
-| message-parser | dibbs-message-parser | - | 8080 | `message-parser` | none |
-| trigger-code-reference | dibbs-trigger-code-reference | - | 8080 | `trigger-code-reference` | none |
-| orchestration | dibbs-orchestration | - | 8080 | `orchestration` | URL variables |
+| Service                | Container name               | Host port | Container port | Image                    | Env vars        |
+| ---------------------- | ---------------------------- | --------- | -------------- | ------------------------ | --------------- |
+| ecr-viewer             | dibbs-ecr-viewer             | 3000      | 3000           | `ecr-viewer`             | BaseRequired    |
+| ingestion              | dibbs-ingestion              | -         | 8080           | `ingestion`              | none            |
+| fhir-converter-proxy   | dibbs-fhir-converter-proxy   | -         | 8080           | `fhir-converter-proxy`   | proxy variables |
+| fhir-converter         | dibbs-fhir-converter         | -         | 8080           | `fhir-converter`         | none            |
+| message-parser         | dibbs-message-parser         | -         | 8080           | `message-parser`         | none            |
+| trigger-code-reference | dibbs-trigger-code-reference | -         | 8080           | `trigger-code-reference` | none            |
+| orchestration          | dibbs-orchestration          | -         | 8080           | `orchestration`          | URL variables   |
 
 Images live at `ghcr.io/cdcgov/dibbs-ecr-viewer/`. Internal service ports are 8080 for backend services and 3000 for the viewer.
 
@@ -22,30 +22,30 @@ Images live at `ghcr.io/cdcgov/dibbs-ecr-viewer/`. Internal service ports are 80
 
 The ecr-viewer container requires these variables for all deployments, as defined in the [BaseRequired interface](https://cdcgov.github.io/dibbs-ecr-viewer/interfaces/environment.EnvironmentVariables.BaseRequired.html):
 
-| Variable | Description | Example |
-|---|---|---|
-| `CONFIG_NAME` | Determines storage provider, database type, and authentication profile | `AWS_INTEGRATED`, `AZURE_PG_NON_INTEGRATED` |
-| `ECR_BUCKET_NAME` | Name of the container storage holding eCR documents | `ecr-documents-bucket` |
-| `NEXTAUTH_SECRET` | Random key for session encryption, generated with `openssl rand -base64 32` | *(generated value)* |
-| `ORCHESTRATION_URL` | Full URL of the orchestration service | `http://dibbs-orchestration:8080` |
+| Variable            | Description                                                                 | Example                                     |
+| ------------------- | --------------------------------------------------------------------------- | ------------------------------------------- |
+| `CONFIG_NAME`       | Determines storage provider, database type, and authentication profile      | `AWS_INTEGRATED`, `AZURE_PG_NON_INTEGRATED` |
+| `ECR_BUCKET_NAME`   | Name of the container storage holding eCR documents                         | `ecr-documents-bucket`                      |
+| `NEXTAUTH_SECRET`   | Random key for session encryption, generated with `openssl rand -base64 32` | _(generated value)_                         |
+| `ORCHESTRATION_URL` | Full URL of the orchestration service                                       | `http://dibbs-orchestration:8080`           |
 
 The fhir-converter proxy requires these variables, [additional docs for this service here](https://github.com/CDCgov/dibbs-ecr-viewer/blob/main/containers/fhir-converter-proxy/README.md#setup):
 
-| Variable | Description | Example |
-|---|---|---|
-| `FHIR_CONVERTER_HOST` | Hostname of the fhir-converter service (overrides default `fhir-converter-service`) | `dibbs-fhir-converter` |
-| `FHIR_CONVERTER_PROXY_PORT` | Port the proxy listens on | `8080` |
-| `ENVIRONMENT` | Deployment environment | `local` |
-| `FHIR_CONVERTER_ECS_NAMESPACE` | ECS namespace for the converter service | `dibbs` |
-| `FHIR_CONVERTER_PORT` | Port the converter service runs on | `8080` |
+| Variable                       | Description                                                                         | Example                |
+| ------------------------------ | ----------------------------------------------------------------------------------- | ---------------------- |
+| `FHIR_CONVERTER_HOST`          | Hostname of the fhir-converter service (overrides default `fhir-converter-service`) | `dibbs-fhir-converter` |
+| `FHIR_CONVERTER_PROXY_PORT`    | Port the proxy listens on                                                           | `8080`                 |
+| `ENVIRONMENT`                  | Deployment environment                                                              | `local`                |
+| `FHIR_CONVERTER_ECS_NAMESPACE` | ECS namespace for the converter service                                             | `dibbs`                |
+| `FHIR_CONVERTER_PORT`          | Port the converter service runs on                                                  | `8080`                 |
 
 Orchestration requires these variables:
 
-| Variable | Description | Example |
-|---|---|---|
-| `FHIR_CONVERTER_URL` | URL to the fhir-converter proxy service | `http://dibbs-fhir-converter-proxy:8080` |
-| `INGESTION_URL` | URL to the ingestion service | `http://dibbs-ingestion:8080` |
-| `MESSAGE_PARSER_URL` | URL to the message-parser service | `http://dibbs-message-parser:8080` |
+| Variable                     | Description                               | Example                                    |
+| ---------------------------- | ----------------------------------------- | ------------------------------------------ |
+| `FHIR_CONVERTER_URL`         | URL to the fhir-converter proxy service   | `http://dibbs-fhir-converter-proxy:8080`   |
+| `INGESTION_URL`              | URL to the ingestion service              | `http://dibbs-ingestion:8080`              |
+| `MESSAGE_PARSER_URL`         | URL to the message-parser service         | `http://dibbs-message-parser:8080`         |
 | `TRIGGER_CODE_REFERENCE_URL` | URL to the trigger-code-reference service | `http://dibbs-trigger-code-reference:8080` |
 
 Other environment variables exist for authentication, cloud storage, and database configuration, grouped under the Authentication, eCR Storage, and eCR Library Metadata categories in the environment type definitions.
