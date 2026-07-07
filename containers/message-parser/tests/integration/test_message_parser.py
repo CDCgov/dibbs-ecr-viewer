@@ -4,17 +4,21 @@ import pytest
 PARSER_URL = "http://0.0.0.0:8080"
 PARSE_MESSAGE = PARSER_URL + "/parse_message"
 
+
 @pytest.fixture
 def fhir_bundle(read_json_from_test_assets):
     return read_json_from_test_assets("sample_fhir_bundle_eve_everywoman.json")
+
 
 @pytest.fixture
 def test_core_schema(read_schema_from_default_schemas):
     return read_schema_from_default_schemas("core.json")
 
+
 @pytest.fixture
 def test_extended_schema(read_schema_from_default_schemas):
     return read_schema_from_default_schemas("extended.json")
+
 
 @pytest.mark.integration
 def test_health_check(setup):
@@ -31,38 +35,36 @@ def test_openapi():
 @pytest.mark.integration
 def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundle):
     expected_core_response = {
-        'message': 'Parsing succeeded!', 
-        'parsed_values': {
-            'ecr_id': 'db734647-fc99-424c-a864-7e3cda82e704', 
-            'set_id': '31', 
-            'eicr_version_number': '2', 
-            'last_name': 'Everywoman', 
-            'first_name': 'Eve', 
-            'birth_date': '1974-11-24', 
-            'encounter_start_date': '2020-11-07T08:44:21-05:00', 
-            'rr': [
+        "message": "Parsing succeeded!",
+        "parsed_values": {
+            "ecr_id": "db734647-fc99-424c-a864-7e3cda82e704",
+            "set_id": "31",
+            "eicr_version_number": "2",
+            "last_name": "Everywoman",
+            "first_name": "Eve",
+            "birth_date": "1974-11-24",
+            "encounter_start_date": "2020-11-07T08:44:21-05:00",
+            "rr": [
                 {
-                    'uuid': 'a66d09ae-2b5a-4170-af3f-4ca4df7a02a6', 
-                    'condition': 'COVID-19', 
-                    'condition_code': '840539006', 
-                    'rule_summaries': [
+                    "uuid": "a66d09ae-2b5a-4170-af3f-4ca4df7a02a6",
+                    "condition": "COVID-19",
+                    "condition_code": "840539006",
+                    "rule_summaries": [
                         {
-                            'rule_summary': 'Detection of SARS-CoV-2 antibody in a clinical specimen by any method'
+                            "rule_summary": "Detection of SARS-CoV-2 antibody in a clinical specimen by any method"
                         }
-                    ]
-                }, 
+                    ],
+                },
                 {
-                    'uuid': '10bd27fb-e882-4acb-8efb-ed2051b86691', 
-                    'condition': 'Plague', 
-                    'condition_code': '58750007', 
-                    'rule_summaries': [
-                        {
-                            'rule_summary': 'Plague (as a diagnosis or active problem)'
-                        }
-                    ]
-                }
-            ]
-        }
+                    "uuid": "10bd27fb-e882-4acb-8efb-ed2051b86691",
+                    "condition": "Plague",
+                    "condition_code": "58750007",
+                    "rule_summaries": [
+                        {"rule_summary": "Plague (as a diagnosis or active problem)"}
+                    ],
+                },
+            ],
+        },
     }
     expected_extended_response = {
         "message": "Parsing succeeded!",
@@ -213,8 +215,7 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
                     ),
                     "test_type_code": "local_code_pertussis,548-8",
                     "test_type_system": (
-                        "urn:oid:2.16.840.1.113883.1.2.3.665,"
-                        "http://loinc.org"
+                        "urn:oid:2.16.840.1.113883.1.2.3.665,http://loinc.org"
                     ),
                     "test_result_qualitative": None,
                     "test_result_quantitative": None,
@@ -240,27 +241,19 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
             "birth_sex": "F",
             "gender_identity": "Female-to-male transsexual",
             "homelessness_status": "Homeless",
-            "disabilities": (
-                "Are you deaf, or do you have serious difficulty hearing"
-            ),
-            "tribal_affiliation": (
-                "Fort Mojave Indian Tribe of Arizona, California"
-            ),
+            "disabilities": ("Are you deaf, or do you have serious difficulty hearing"),
+            "tribal_affiliation": ("Fort Mojave Indian Tribe of Arizona, California"),
             "tribal_enrollment_status": "True",
             "current_job_title": (
                 "Nursing, psychiatric, and home health aides,"
                 "Certified Nursing Assistant (CNA) [Nursing Assistants]"
             ),
-            "current_job_industry": (
-                "Nursing care facilities,Home nursing services"
-            ),
+            "current_job_industry": ("Nursing care facilities,Home nursing services"),
             "usual_occupation": (
                 "Nursing, psychiatric, and home health aides,"
                 "Certified Nursing Assistant (CNA) [Nursing Assistants]"
             ),
-            "usual_industry": (
-                "Nursing care facilities,Home nursing services"
-            ),
+            "usual_industry": ("Nursing care facilities,Home nursing services"),
             "preferred_language": "English",
             "pregnancy_status": "Pregnancy",
             "ecr_id": "db734647-fc99-424c-a864-7e3cda82e704",
@@ -286,11 +279,7 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
                     "condition": "Plague",
                     "condition_code": "58750007",
                     "rule_summaries": [
-                        {
-                            "rule_summary": (
-                                "Plague (as a diagnosis or active problem)"
-                            )
-                        }
+                        {"rule_summary": ("Plague (as a diagnosis or active problem)")}
                     ],
                 },
             ],
