@@ -3,8 +3,6 @@ import os
 from pathlib import Path
 from unittest.mock import MagicMock, Mock
 
-from lxml import etree
-
 from app.handlers.request_builders.fhir_converter import build_fhir_converter_request
 from app.handlers.request_builders.ingestion import (
     build_geocoding_request,
