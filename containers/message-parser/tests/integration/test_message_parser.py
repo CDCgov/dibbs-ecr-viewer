@@ -1,6 +1,5 @@
 import httpx
 import pytest
-from lxml import etree as ET
 
 PARSER_URL = "http://0.0.0.0:8080"
 PARSE_MESSAGE = PARSER_URL + "/parse_message"
@@ -318,4 +317,3 @@ def test_parse_message(setup, test_schema, fhir_bundle):
 
     assert parsing_response.status_code == 200
     assert parsing_response.json() == expected_reference_response
-
