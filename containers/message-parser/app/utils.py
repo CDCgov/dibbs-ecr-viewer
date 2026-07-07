@@ -1,19 +1,16 @@
-import dataclasses
 import datetime
 import json
 import pathlib
 import re
-import uuid
 from collections import defaultdict
 from functools import cache
 from pathlib import Path
-from typing import Literal, Union
+from typing import Literal
 
 import fhirpathpy
 import requests
 from fastapi import status
 from frozendict import frozendict
-from lxml import etree as ET
 
 from app.cloud.azure import AzureCredentialManager
 from app.cloud.core import BaseCredentialManager
@@ -734,4 +731,3 @@ class FhirParser:
         # Cache the final reference for this message object and reference chain.
         self.reference_lookup_cache[reference_parser_cache_key] = reference
         return reference
-
