@@ -5,9 +5,6 @@ from pydantic import BaseModel, Field, model_validator
 PARSING_SCHEMA_DATA_TYPES = Literal[
     "string", "integer", "float", "boolean", "date", "datetime", "array", "struct"
 ]
-PHDC_REPORT_TYPES = Literal[
-    "case_report", "contact_record", "lab_report", "morbidity_report"
-]
 
 
 def validate_secondary_reference_fields(values):
@@ -185,33 +182,6 @@ class ParseMessageResponse(BaseModel):
         "message."
     )
 
-
-class FhirToPhdcInput(BaseModel):
-    """
-    The schema for requests to the /fhir-to-phdc endpoint.
-    """
-
-    phdc_report_type: PHDC_REPORT_TYPES = Field(
-        description="The type of PHDC document the user wants returned to them."
-        " The choice of report type should reflect the type of the incoming data"
-        " and determines which PHDC schema is used when extracting."
-    )
-    message: dict = Field(description="The FHIR bundle to extract from.")
-
-
-class FhirToPhdcResponse(BaseModel):
-    """
-    The schema for responses from the /fhir-to-phdc endpoint.
-    """
-
-    message: str = Field(
-        description="A message describing the result of a request to "
-        "the /parse_message endpoint."
-    )
-    parsed_values: dict = Field(
-        description="A set of key:value pairs containing the values extracted from the "
-        "message."
-    )
 
 
 class ListSchemasResponse(BaseModel):
