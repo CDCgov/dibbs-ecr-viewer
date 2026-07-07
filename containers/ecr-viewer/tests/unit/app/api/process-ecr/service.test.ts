@@ -795,19 +795,27 @@ describe("orchestrationRequest", () => {
 
     describe("getEcrIdFromXml", () => {
       const xmlString = `
-    <ClinicalDocument>
-      <id root="1234-uuid" extension="bananas" />
-    </ClinicalDocument>
-  `;
+        <ClinicalDocument>
+          <id root="1234-uuid" extension="bananas" />
+        </ClinicalDocument>
+      `;
 
       it("extracts ID when ecr is a string", async () => {
         const result = await getEcrIdFromXml({ ecr: xmlString } as any);
         expect(result).toBe("1234-uuid^bananas");
       });
 
-      it("extracts ID when ecr is an XML file", async () => {
+      it("extracts ID when ecr is an XML file with application/xml type", async () => {
         const xmlFile = new File([xmlString], "test.xml", {
           type: "application/xml",
+        });
+        const result = await getEcrIdFromXml({ ecr: xmlFile } as any);
+        expect(result).toBe("1234-uuid^bananas");
+      });
+
+      it("extracts ID when ecr is an XML file with text/xml type", async () => {
+        const xmlFile = new File([xmlString], "test.xml", {
+          type: "text/xml",
         });
         const result = await getEcrIdFromXml({ ecr: xmlFile } as any);
         expect(result).toBe("1234-uuid^bananas");
@@ -826,6 +834,52 @@ describe("orchestrationRequest", () => {
         expect(result).toBe("1234-uuid^bananas");
       });
 
+      it("extracts ID when ecr is a zipped XML file as octet stream", async () => {
+        const zip = new JSZip();
+        zip.file("whatever.xml", xmlString);
+        const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
+
+        const zipFile = new File([zipBuffer as BlobPart], "test.zip", {
+          type: "application/octet-stream",
+        });
+
+        const result = await getEcrIdFromXml({ ecr: zipFile } as any);
+        expect(result).toBe("1234-uuid^bananas");
+      });
+
+      it("extracts ID when ecr only contains ID root", async () => {
+        const xmlStringOnlyRoot = `
+          <ClinicalDocument>
+            <id root="1234-uuid" />
+          </ClinicalDocument>
+        `;
+        const result = await getEcrIdFromXml({ ecr: xmlStringOnlyRoot } as any);
+        expect(result).toBe("1234-uuid");
+      });
+
+      it("extracts ID when ecr only contains ID extension", async () => {
+        const xmlStringOnlyExtension = `
+          <ClinicalDocument>
+            <id extension="bananas" />
+          </ClinicalDocument>
+        `;
+        const result = await getEcrIdFromXml({ ecr: xmlStringOnlyExtension } as any);
+        expect(result).toBe("bananas");
+      });
+
+      it("extracts ID when nested IDs come first", async () => {
+        const xmlStringNestedId = `
+          <ClinicalDocument>
+            <entry>
+              <id root="wrong-id" />
+            </entry>
+            <id root="right-id" />
+          </ClinicalDocument>
+        `;
+        const result = await getEcrIdFromXml({ ecr: xmlStringNestedId } as any);
+        expect(result).toBe("right-id");
+      });
+
       it("throws for unsupported upload types", async () => {
         const invalidFile = new File(["data"], "test.txt", {
           type: "text/plain",
@@ -836,6 +890,18 @@ describe("orchestrationRequest", () => {
           "Unsupported upload type. eCRs must be an XML string, XML file, or zipped XML file",
         );
       });
+
+      it("throws for malformed XML", async () => {
+        const badXml = `
+          <openTag>
+        `;
+
+        await expect(
+          getEcrIdFromXml({ ecr: badXml } as any),
+        ).rejects.toThrow(
+          "3:8: unclosed tag: openTag",
+        );
+      })
     });
   });
 });
