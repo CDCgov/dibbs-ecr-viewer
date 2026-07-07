@@ -14,7 +14,6 @@ from app.handlers.request_builders.ingestion import (
 )
 from app.handlers.request_builders.message_parser import (
     build_message_parser_message_request,
-    build_message_parser_phdc_request,
 )
 from app.handlers.request_builders.trigger_code_reference import (
     build_stamp_condition_extensions_request,
@@ -24,7 +23,6 @@ from app.handlers.response_builders.ingestion import (
     unpack_ingestion_standardization,
 )
 from app.handlers.response_builders.message_parser import (
-    unpack_fhir_to_phdc_response,
     unpack_parsed_message_response,
 )
 from app.handlers.response_builders.trigger_code_reference import (
@@ -97,27 +95,6 @@ def test_build_message_parser_message_request():
     assert result["credential_manager"] == "azure"
 
 
-def test_build_message_parser_phdc_request():
-    # Test for /fhir_to_phdc endpoint
-    sample_xml = etree.parse(
-        open(
-            Path(__file__).parent.parent.parent
-            / "message-parser"
-            / "assets"
-            / "demo_phdc.xml"
-        )
-    )
-    orchestration_request = {
-        "message": sample_xml,
-    }
-    workflow_params = {"phdc_report_type": "case_report"}
-    result = build_message_parser_phdc_request(
-        sample_xml, orchestration_request, workflow_params
-    )
-    assert result["message"] == sample_xml
-    assert result["phdc_report_type"] == "case_report"
-
-
 def test_unpack_parsed_message_response():
     sample_json = json.load(
         open(
@@ -144,38 +121,6 @@ def test_unpack_parsed_message_response():
     response.status_code = 400
     response.json.return_value = error_message
     result = unpack_parsed_message_response(response)
-    assert result.status_code == 400
-    assert "Message Parser request failed" in result.msg_content
-    assert not result.should_continue
-
-
-def test_unpack_fhir_to_phdc_response():
-    # Mock an XML response
-    sample_xml = etree.parse(
-        open(
-            Path(__file__).parent.parent.parent
-            / "message-parser"
-            / "assets"
-            / "demo_phdc.xml"
-        )
-    )
-    response = MagicMock()
-    response.status_code = 200
-    response.content = etree.tostring(sample_xml)
-    result = unpack_fhir_to_phdc_response(response)
-    assert result.status_code == 200
-    assert result.msg_content == etree.tostring(sample_xml)
-    assert result.should_continue
-
-    # Test failure case
-    response_content = {
-        "response": {"status_code": 400, "text": "Message Parser request failed"}
-    }
-    response = MagicMock()
-    response.status_code = 400
-    response.json.return_value = response_content
-    response.text = "Message Parser request failed"
-    result = unpack_fhir_to_phdc_response(response)
     assert result.status_code == 400
     assert "Message Parser request failed" in result.msg_content
     assert not result.should_continue
