@@ -34,4 +34,3 @@ def unpack_parsed_message_response(
                 f"Message Parser request failed: {response.text}",
                 False,
             )
-

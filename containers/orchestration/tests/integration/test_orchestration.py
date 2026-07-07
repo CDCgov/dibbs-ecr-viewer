@@ -1,11 +1,9 @@
 import json
 import os
 from pathlib import Path
-from unittest.mock import patch
 
 import httpx
 import pytest
-from lxml import etree
 
 ORCHESTRATION_URL = "http://localhost:8080"
 PROCESS_ZIP_ENDPOINT = ORCHESTRATION_URL + "/process-zip"
@@ -210,4 +208,3 @@ def test_process_message_fhir(setup):
         f"Expected status code 200, but got {orchestration_response.status_code}. Response content is {orchestration_response.content}"
     )
     assert orchestration_response.json()["message"] == "Processing succeeded!"
-

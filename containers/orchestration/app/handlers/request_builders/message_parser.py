@@ -32,4 +32,3 @@ def build_message_parser_message_request(
         "parsing_schema_name": workflow_params.get("parsing_schema_name"),
         "credential_manager": workflow_params.get("credential_manager"),
     }
-
