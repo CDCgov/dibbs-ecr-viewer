@@ -3,7 +3,7 @@
   "description": "The DIBBs eCR Viewer app offers a REST API for processing FHIR messages into an HTML page with key insights.",
   "private": true,
   "engines": {
-    "node": "^24",
+    "node": "^26",
     "npm": "^11"
   },
   "scripts": {
@@ -72,7 +72,7 @@
     "sharp": "^0.34.3",
     "tarn": "^3.0.2",
     "tedious": "^18.6.1",
-    "undici": "^7.24.0",
+    "undici": "^7.28.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {
@@ -96,7 +96,7 @@
     "@types/js-cookie": "^3.0.6",
     "@types/luxon": "^3.7.1",
     "@types/mssql": "^9.1.5",
-    "@types/node": "^24",
+    "@types/node": "^26",
     "@types/pg": "^8.11.11",
     "@types/react": "^19.1.9",
     "@types/react-dom": "^19.1.7",
@@ -133,6 +133,9 @@
     "typescript": "^5.8.3"
   },
   "overrides": {
+    "@lavamoat/allow-scripts": {
+      "yargs": "^18"
+    },
     "@trussworks/react-uswds": {
       "focus-trap-react": "$focus-trap-react"
     },

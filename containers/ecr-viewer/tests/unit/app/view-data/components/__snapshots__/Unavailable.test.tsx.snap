@@ -600,7 +600,7 @@ exports[`UnavailableInfo should match snapshot 1`] = `
             class="usa-summary-box__heading padding-y-105"
             id="unavailable-diagnostics-and-vital-signs"
           >
-            Diagnostics and  Vital Signs
+            Diagnostics and Vital Signs
           </h4>
           <div
             class="usa-summary-box__text"
