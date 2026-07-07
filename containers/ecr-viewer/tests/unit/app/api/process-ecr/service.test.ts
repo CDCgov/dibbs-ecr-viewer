@@ -863,7 +863,9 @@ describe("orchestrationRequest", () => {
             <id extension="bananas" />
           </ClinicalDocument>
         `;
-        const result = await getEcrIdFromXml({ ecr: xmlStringOnlyExtension } as any);
+        const result = await getEcrIdFromXml({
+          ecr: xmlStringOnlyExtension,
+        } as any);
         expect(result).toBe("bananas");
       });
 
@@ -896,12 +898,10 @@ describe("orchestrationRequest", () => {
           <openTag>
         `;
 
-        await expect(
-          getEcrIdFromXml({ ecr: badXml } as any),
-        ).rejects.toThrow(
+        await expect(getEcrIdFromXml({ ecr: badXml } as any)).rejects.toThrow(
           "3:8: unclosed tag: openTag",
         );
-      })
+      });
     });
   });
 });
