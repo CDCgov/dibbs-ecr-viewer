@@ -275,3 +275,27 @@ Once initialized, your IDP handles authentication. The user with the email provi
 ## [Optional] FHIR Converter Proxy Setup
 
 To setup or customize the FHIR Converter Proxy please follow the [setup instructions here](https://github.com/CDCgov/dibbs-ecr-viewer/blob/main/containers/fhir-converter-proxy/README.md).
+
+## ECR Size Limits
+
+The following table contains the maximum size at which the ECR Viewer can handle an ECR at a time. This information can be used to plan your infrastructure setup depending on the ECR load you are expecting. Any ECRs larger than these sizes will most likely result in errors during processing.
+
+Default AWS Container size:
+
+- CPU: 512
+- Memory: 1024
+
+Default Azure Container Size:
+
+- CPU: 0.5
+- Memory: 1Gi
+
+| Cloud Provider | Mode         | Maximum ECR Size | FHIR Converter Container Size        |
+| -------------- | ------------ | ---------------- | ------------------------------------ |
+| AWS            | `DUAL`       | 41 MB            | CPU: 2048, Memory: 4096              |
+| AWS            | `INTEGRATED` | 41 MB            | CPU: 2048, Memory: 4096              |
+| Azure          | `DUAL`       | 16 MB            | CPU: 0.5, Memory: 1Gi (Default size) |
+| Azure          | `DUAL`       | 42 MB            | CPU: 2, Memory: 4.0Gi                |
+| Azure          | `INTEGRATED` | 42 MB            | CPU: 2, Memory: 4.0Gi                |
+
+**Note on Azure**: The current Azure infrastructure has a hard request timeout of 240 seconds when processing ECRs, this happens at the Azure Container Apps ingress layer as documented [here](https://learn.microsoft.com/en-us/azure/container-apps/ingress-overview#http). This timeout could happen during an instance cold-start with the sizes listed above, please retry the request if the timeout occurs (it will manifest as a 504 error with a `stream timeout` message).
