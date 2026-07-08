@@ -29,7 +29,6 @@
     "provider_id": "66666666666",
     "facility_id_number": "2.16.840.1.113883.4.6",
     "facility_name": "Sacramento Hospital",
-    "facility_type": "Hospital",
     "encounter_type": "inpatient encounter",
     "encounter_start_date": "2020-05-13",
     "encounter_end_date": "2020-05-13",

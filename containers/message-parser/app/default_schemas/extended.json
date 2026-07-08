@@ -153,15 +153,6 @@
     "nullable": true,
     "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
   },
-  "facility_type": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Location' and id = %ref).type.coding.display",
-    "data_type": "string",
-    "nullable": true,
-    "reference_lookup": [
-      "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference",
-      "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).location[0].location.reference"
-    ]
-  },
   "encounter_type": {
     "fhir_path": "Bundle.entry.resource.where(resourceType='Encounter' and id = %ref).class.where(system = 'http://terminology.hl7.org/CodeSystem/v3-ActCode').display",
     "data_type": "string",

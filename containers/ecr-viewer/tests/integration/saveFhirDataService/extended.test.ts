@@ -47,7 +47,6 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
   provider_id: "12345",
   facility_id: "12345",
   facility_name: "Hospital A",
-  facility_type: "Inpatient",
   encounter_type: "Inpatient",
   encounter_start_date: "2024-01-01",
   encounter_end_date: "2024-01-02",
