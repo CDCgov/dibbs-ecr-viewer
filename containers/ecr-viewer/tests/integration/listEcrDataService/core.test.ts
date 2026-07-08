@@ -403,6 +403,54 @@ describe("listEcrData - core", () => {
 
     await clearEcrCore();
   });
+
+  it("should return expected results when search term matches patient first, last, or full name", async () => {
+    await createCoreEcr(coreTemplate);
+
+    const startIndex = 0;
+    const itemsPerPage = 25;
+    const sortColumn = "date_created";
+    const sortDirection = "DESC";
+
+    // Test first name match
+    let actual = await listEcrData({
+      startIndex,
+      itemsPerPage,
+      sortColumn,
+      sortDirection,
+      filterDates,
+      searchTerm: "Billy",
+    });
+    expect(actual).toHaveLength(1);
+    expect(actual[0].patient_first_name).toEqual("Billy");
+
+    // Test last name match
+    actual = await listEcrData({
+      startIndex,
+      itemsPerPage,
+      sortColumn,
+      sortDirection,
+      filterDates,
+      searchTerm: "Bob",
+    });
+    expect(actual).toHaveLength(1);
+    expect(actual[0].patient_last_name).toEqual("Bob");
+
+    // Test full name match
+    actual = await listEcrData({
+      startIndex,
+      itemsPerPage,
+      sortColumn,
+      sortDirection,
+      filterDates,
+      searchTerm: "Billy Bob",
+    });
+    expect(actual).toHaveLength(1);
+    expect(actual[0].patient_first_name).toEqual("Billy");
+    expect(actual[0].patient_last_name).toEqual("Bob");
+
+    await clearEcrCore();
+  });
 });
 
 describe("get total core ecr count", () => {
@@ -442,14 +490,14 @@ describe("generate search statement", () => {
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
-        '("test_ev_schema"."ecr_data"."first_name" ilike $1 or "test_ev_schema"."ecr_data"."last_name" ilike $2)',
+        '("test_ev_schema"."ecr_data"."first_name" ilike $1 or "test_ev_schema"."ecr_data"."last_name" ilike $2 or CONCAT(ecr_data.first_name, \' \', ecr_data.last_name) ilike $3)',
       );
     } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
       expect(sql).toEqual(
-        '("test_ev_schema"."ecr_data"."first_name" like @1 or "test_ev_schema"."ecr_data"."last_name" like @2)',
+        '("test_ev_schema"."ecr_data"."first_name" like @1 or "test_ev_schema"."ecr_data"."last_name" like @2 or CONCAT(ecr_data.first_name, \' \', ecr_data.last_name) like @3)',
       );
     }
-    expect(params).toStrictEqual(["%Dan%", "%Dan%"]);
+    expect(params).toStrictEqual(["%Dan%", "%Dan%", "%Dan%"]);
   });
   it("should escape characters when an apostrophe is added", () => {
     const { sql, params } = getWhere((eb) =>
@@ -457,15 +505,15 @@ describe("generate search statement", () => {
     );
     if (process.env.METADATA_DATABASE_TYPE === "postgres") {
       expect(sql).toEqual(
-        '("test_ev_schema"."ecr_data"."first_name" ilike $1 or "test_ev_schema"."ecr_data"."last_name" ilike $2)',
+        '("test_ev_schema"."ecr_data"."first_name" ilike $1 or "test_ev_schema"."ecr_data"."last_name" ilike $2 or CONCAT(ecr_data.first_name, \' \', ecr_data.last_name) ilike $3)',
       );
     } else if (process.env.METADATA_DATABASE_TYPE === "sqlserver") {
       expect(sql).toEqual(
-        '("test_ev_schema"."ecr_data"."first_name" like @1 or "test_ev_schema"."ecr_data"."last_name" like @2)',
+        '("test_ev_schema"."ecr_data"."first_name" like @1 or "test_ev_schema"."ecr_data"."last_name" like @2 or CONCAT(ecr_data.first_name, \' \', ecr_data.last_name) like @3)',
       );
     }
 
-    expect(params).toStrictEqual(["%O'Riley%", "%O'Riley%"]);
+    expect(params).toStrictEqual(["%O'Riley%", "%O'Riley%", "%O'Riley%"]);
   });
   it("should only generate true statements when no search is provided", () => {
     const { sql, params } = getWhere((eb) => generateSearchStatement(eb, ""));
