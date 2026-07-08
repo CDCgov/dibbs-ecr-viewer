@@ -48,7 +48,7 @@ export const getLastAuditLog = async (): Promise<AuditLog> => {
   return await getDb<Core>()
     .selectFrom("audit_log")
     .selectAll()
-    .orderBy("date desc")
+    .orderBy("date", "desc")
     .fetch(1)
     .offset(0)
     .executeTakeFirstOrThrow();

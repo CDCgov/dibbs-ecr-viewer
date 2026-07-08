@@ -9,20 +9,20 @@
 #   ./ecrv-wizard.sh
 #
 # Functions:
-#   clear_dot_env          - Truncates the .wizard temp file
-#   display_intro          - Prints welcome banner and documentation link
-#   docker_compose_vars    - Prompts for ORCHESTRATION_URL and DIBBS_VERSION
-#   set_vars               - Presents 15 config profiles, calls provider functions
-#   confirm_dot_env_var    - Prompts for a variable value with .env default
-#   confirm_update         - Displays all settings, cleans empty vars via sed
-#   restart_docker_compose - Runs `docker compose down && docker compose up -d`
-#   add_env                - Writes quoted key-value to .wizard file
-#   check_var              - Reads existing .env value, prompts for confirmation
-#   pg, sqlserver, nbs     - Database config prompts (PostgreSQL, SQL Server, NBS)
-#   aws, azure, gcp        - Storage provider prompts (S3, Blob, GCS)
-#   auth, nextauth         - Authentication config prompts (AD/Keycloak, NextAuth)
-#   optional               - Optional config prompts (SAVE_XML, DISPLAY_FEEDBACK_LINKS)
-#   main                   - Orchestrates: clear → intro → compose vars → config → confirm → restart
+#   clear_dot_env            - Truncates the .wizard temp file
+#   display_intro            - Prints welcome banner and documentation link
+#   docker_compose_vars      - Prompts for ORCHESTRATION_URL and DIBBS_VERSION
+#   set_vars                 - Presents 15 config profiles, calls provider functions
+#   confirm_dot_env_var      - Prompts for a variable value with .env default
+#   confirm_update           - Displays all settings, cleans empty vars via sed
+#   restart_docker_compose   - Runs `docker compose down && docker compose up -d`
+#   add_env                  - Writes quoted key-value to .wizard file
+#   check_var                - Reads existing .env value, prompts for confirmation
+#   pg, sqlserver.           - Database config prompts (PostgreSQL, SQL Server)
+#   aws, azure, gcp          - Storage provider prompts (S3, Blob, GCS)
+#   auth, nextauth, jwt, nbs - Authentication config prompts (AD/Keycloak, NextAuth, JWT, NBS)
+#   optional                 - Optional config prompts (SAVE_XML, DISPLAY_FEEDBACK_LINKS)
+#   main                     - Orchestrates: clear → intro → compose vars → config → confirm → restart
 #
 # Variables:
 #   project_dir              - Base path (default: ~/dibbs-ecr-viewer-deployment)
@@ -111,6 +111,7 @@ set_vars() {
       aws
       pg
       nbs
+      jwt
       auth
       nextauth
       optional
@@ -132,6 +133,7 @@ set_vars() {
       aws
       sqlserver
       nbs
+      jwt
       auth
       nextauth
       optional
@@ -142,6 +144,7 @@ set_vars() {
       add_env "CONFIG_NAME" "$CONFIG_NAME"
       aws
       nbs
+      jwt
       nextauth
       optional
       break
@@ -162,6 +165,7 @@ set_vars() {
       azure
       pg
       nbs
+      jwt
       auth
       nextauth
       optional
@@ -183,6 +187,7 @@ set_vars() {
       azure
       sqlserver
       nbs
+      jwt
       auth
       nextauth
       optional
@@ -193,6 +198,7 @@ set_vars() {
       add_env "CONFIG_NAME" "$CONFIG_NAME"
       azure
       nbs
+      jwt
       nextauth
       optional
       break
@@ -213,6 +219,7 @@ set_vars() {
       gcp
       pg
       nbs
+      jwt
       auth
       nextauth
       optional
@@ -234,6 +241,7 @@ set_vars() {
       gcp
       sqlserver
       nbs
+      jwt
       auth
       nextauth
       optional
@@ -244,6 +252,7 @@ set_vars() {
       add_env "CONFIG_NAME" "$CONFIG_NAME"
       gcp
       nbs
+      jwt
       nextauth
       optional
       break
@@ -351,6 +360,11 @@ sqlserver() {
 nbs() {
   check_var NBS_API_PUB_KEY
   check_var NBS_PUB_KEY
+}
+
+jwt() {
+  check_var JWT_API_PUB_KEY
+  check_var JWT_PUB_KEY
 }
 
 auth() {

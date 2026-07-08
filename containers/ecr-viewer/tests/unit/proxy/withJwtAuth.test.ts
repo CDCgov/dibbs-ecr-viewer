@@ -355,5 +355,41 @@ describe("JWT Auth Proxy", () => {
       const resp = await proxy(req);
       expect(resp.status).toBe(401);
     });
+
+    it("should authorize /api/ routes with a valid page JWT cookie when no Bearer token is present", async () => {
+      (jwtVerify as jest.Mock).mockResolvedValue({ payload: {} });
+      const req = new NextRequest(
+        "https://www.example.com/ecr-viewer/api/view-xml?id=1234",
+      );
+      req.cookies.set("jwt-auth-token", "mytoken");
+
+      const resp = await middleware(req);
+      expect(jwtVerify).toHaveBeenCalled();
+      expect(importSPKI).toHaveBeenCalledWith("mock-api-pub-key", "RS256");
+      expect(resp.status).toBe(200);
+    });
+
+    it("should pass through (401) with a page JWT cookie when JWT_API_PUB_KEY is not set", async () => {
+      delete process.env.JWT_API_PUB_KEY;
+      const req = new NextRequest(
+        "https://www.example.com/ecr-viewer/api/view-xml?id=1234",
+      );
+      req.cookies.set("jwt-auth-token", "mytoken");
+
+      const resp = await middleware(req);
+      expect(jwtVerify).not.toHaveBeenCalled();
+      expect(resp.status).toBe(401);
+    });
+
+    it("should pass through (401) when page JWT cookie fails verification", async () => {
+      (jwtVerify as jest.Mock).mockRejectedValue(new Error("invalid"));
+      const req = new NextRequest(
+        "https://www.example.com/ecr-viewer/api/view-xml?id=1234",
+      );
+      req.cookies.set("jwt-auth-token", "badtoken");
+
+      const resp = await middleware(req);
+      expect(resp.status).toBe(401);
+    });
   });
 });

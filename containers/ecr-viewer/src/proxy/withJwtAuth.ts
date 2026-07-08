@@ -154,13 +154,24 @@ const handleApi = async (
   end: ChainableProxy,
 ): Promise<NextResponse> => {
   const apiPubKey = resolveKey("JWT_API_PUB_KEY", "NBS_API_PUB_KEY");
-  if (!apiPubKey) return next(request);
+  const bearerToken = getTokenFromHeaders(request);
 
-  const token = getTokenFromHeaders(request);
-  if (!token) return next(request);
+  if (apiPubKey && bearerToken) {
+    try {
+      await jwtVerify(bearerToken, await importSPKI(apiPubKey.trim(), "RS256"));
+      return end(request);
+    } catch {
+      return next(request);
+    }
+  }
+
+  // If no Bearer token try the JWT cookie for subsequent API calls
+  // (e.g. View XML button), verified against the same API key.
+  const cookieToken = request.cookies.get(JWT_AUTH_COOKIE)?.value;
+  if (!cookieToken || !apiPubKey) return next(request);
 
   try {
-    await jwtVerify(token, await importSPKI(apiPubKey.trim(), "RS256"));
+    await jwtVerify(cookieToken, await importSPKI(apiPubKey.trim(), "RS256"));
     return end(request);
   } catch {
     return next(request);
