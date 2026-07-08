@@ -5,8 +5,8 @@ import { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 import { chainProxy } from "@/proxy";
-import { withNextAuth } from "@/proxies/withNextAuth";
-import { withUnauthorized } from "@/proxies/withUnauthorized";
+import { withNextAuth } from "@/proxy/withNextAuth";
+import { withUnauthorized } from "@/proxy/withUnauthorized";
 
 // Mock next-auth/jwt getToken
 jest.mock("next-auth/jwt", () => ({

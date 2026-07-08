@@ -5,8 +5,8 @@ import { jwtVerify } from "jose";
 import { NextRequest } from "next/server";
 
 import { chainProxy } from "@/proxy";
-import { withApiTokenAuth } from "@/proxies/withApiTokenAuth";
-import { withUnauthorized } from "@/proxies/withUnauthorized";
+import { withApiTokenAuth } from "@/proxy/withApiTokenAuth";
+import { withUnauthorized } from "@/proxy/withUnauthorized";
 
 jest.mock("jose", () => ({
   importSPKI: jest.fn(() => true),

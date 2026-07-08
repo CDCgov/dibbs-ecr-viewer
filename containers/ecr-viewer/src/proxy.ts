@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { withApiTokenAuth } from "./proxies/withApiTokenAuth";
-import { withJwtAuth } from "./proxies/withJwtAuth";
-import { withNextAuth } from "./proxies/withNextAuth";
-import { withProcessZipRewrite } from "./proxies/withProcessZipRewrite";
-import { withUnauthorized } from "./proxies/withUnauthorized";
-import { withUrlParamChecks } from "./proxies/withUrlParamChecks";
+import { withApiTokenAuth } from "./proxy/withApiTokenAuth";
+import { withJwtAuth } from "./proxy/withJwtAuth";
+import { withNextAuth } from "./proxy/withNextAuth";
+import { withProcessZipRewrite } from "./proxy/withProcessZipRewrite";
+import { withUnauthorized } from "./proxy/withUnauthorized";
+import { withUrlParamChecks } from "./proxy/withUrlParamChecks";
 
 // https://reacthustle.com/blog/how-to-chain-multiple-middleware-functions-in-nextjs
 // https://github.com/jmarioste/next-middleware-guide/

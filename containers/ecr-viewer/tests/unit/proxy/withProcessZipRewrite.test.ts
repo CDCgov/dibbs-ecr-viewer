@@ -4,7 +4,7 @@
 import { NextRequest } from "next/server";
 
 import { chainProxy } from "@/proxy";
-import { withProcessZipRewrite } from "@/proxies/withProcessZipRewrite";
+import { withProcessZipRewrite } from "@/proxy/withProcessZipRewrite";
 
 const proxy = chainProxy([withProcessZipRewrite]);
 

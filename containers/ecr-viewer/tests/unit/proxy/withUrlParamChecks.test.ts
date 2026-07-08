@@ -4,7 +4,7 @@
 import { NextRequest } from "next/server";
 
 import { chainProxy } from "@/proxy";
-import { withUrlParamChecks } from "@/proxies/withUrlParamChecks";
+import { withUrlParamChecks } from "@/proxy/withUrlParamChecks";
 
 const proxy = chainProxy([withUrlParamChecks]);
 
