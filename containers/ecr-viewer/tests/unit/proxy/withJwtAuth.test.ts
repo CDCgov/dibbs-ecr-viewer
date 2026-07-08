@@ -363,7 +363,7 @@ describe("JWT Auth Proxy", () => {
       );
       req.cookies.set("jwt-auth-token", "mytoken");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(jwtVerify).toHaveBeenCalled();
       expect(importSPKI).toHaveBeenCalledWith("mock-api-pub-key", "RS256");
       expect(resp.status).toBe(200);
@@ -376,7 +376,7 @@ describe("JWT Auth Proxy", () => {
       );
       req.cookies.set("jwt-auth-token", "mytoken");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(jwtVerify).not.toHaveBeenCalled();
       expect(resp.status).toBe(401);
     });
@@ -388,7 +388,7 @@ describe("JWT Auth Proxy", () => {
       );
       req.cookies.set("jwt-auth-token", "badtoken");
 
-      const resp = await middleware(req);
+      const resp = await proxy(req);
       expect(resp.status).toBe(401);
     });
   });
