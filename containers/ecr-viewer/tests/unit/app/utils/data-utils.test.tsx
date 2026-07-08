@@ -30,9 +30,23 @@ describe("Utils", () => {
       const result = isDataAvailable(input);
       expect(result).toEqual(false);
     });
+    it("given an item whose parsed HTML value renders only an unavailable term, it should return false", () => {
+      const input: DisplayDataProps = {
+        value: safeParse("<paragraph>No information</paragraph>"),
+      };
+      const result = isDataAvailable(input);
+      expect(result).toEqual(false);
+    });
     it("given an item with available info, it should return true", () => {
       const input: DisplayDataProps = {
         value: "01/01/1970",
+      };
+      const result = isDataAvailable(input);
+      expect(result).toEqual(true);
+    });
+    it("given an item whose parsed HTML value renders real content, it should return true", () => {
+      const input: DisplayDataProps = {
+        value: safeParse("<paragraph>Patient reports chest pain</paragraph>"),
       };
       const result = isDataAvailable(input);
       expect(result).toEqual(true);

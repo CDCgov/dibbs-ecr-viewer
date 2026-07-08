@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 
 import parse from "html-react-parser";
 import sanitizeHtml from "sanitize-html";
@@ -59,8 +60,29 @@ export const isDataAvailable = (item: DisplayDataProps): Boolean => {
     "no information available",
     "no information",
   ];
-  const valStr = removeHtmlElements(`${item.value}`).trim().toLowerCase();
+  const valStr = removeHtmlElements(renderValueToString(item.value))
+    .trim()
+    .toLowerCase();
   return !unavailableTerms.some((t) => t === valStr);
+};
+
+/**
+ * Renders a display value to a plain string so its text can be inspected.
+ * `evaluateNotes` stores already-parsed React nodes as the value, so a bare
+ * template-string coercion yields "[object Object]" and hides the real text.
+ * Rendering the node first lets the unavailable-term check see through it.
+ * @param value - The DisplayDataProps value, which may be a string or React node.
+ * @returns - The value's text as a string.
+ */
+export const renderValueToString = (
+  value: DisplayDataProps["value"],
+): string => {
+  if (typeof value === "string") return value;
+  try {
+    return renderToStaticMarkup(value);
+  } catch {
+    return `${value}`;
+  }
 };
 
 /**
