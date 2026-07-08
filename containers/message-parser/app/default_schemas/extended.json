@@ -1,14 +1,4 @@
 {
-  "patient_id": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Patient').id",
-    "data_type": "string",
-    "nullable": false
-  },
-  "person_id": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Person').id",
-    "data_type": "string",
-    "nullable": false
-  },
   "gender": {
     "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').gender",
     "data_type": "string",

@@ -1,8 +1,6 @@
 {
   "message": "Parsing succeeded!",
   "parsed_values": {
-    "patient_id": "c800bcb0-642b-4ecc-8166-ca70b0c730c3",
-    "person_id": null,
     "last_name": "Patient",
     "first_name": "Joseph",
     "birth_date": "1989-07-30",

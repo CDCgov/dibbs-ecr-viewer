@@ -12,8 +12,6 @@ import { Extended } from "@/app/data/metadataDb/types/extended";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 const baseExtendedMetadata: BundleExtendedMetadata = {
-  patient_id: "12345",
-  person_id: "67890",
   gender: "Male",
   race: "White",
   ethnicity: "Non-Hispanic",

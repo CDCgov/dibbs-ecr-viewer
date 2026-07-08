@@ -64,8 +64,6 @@ export interface BundleMetadata {
 }
 
 export interface BundleExtendedMetadata extends BundleMetadata {
-  patient_id: string;
-  person_id: string;
   gender: string | undefined;
   race: string | undefined;
   ethnicity: string | undefined;
