@@ -83,7 +83,6 @@ export interface BundleExtendedMetadata extends BundleMetadata {
   provider_id: string | undefined;
   facility_id: string | undefined;
   facility_name: string | undefined;
-  facility_type: string | undefined;
   encounter_type: string | undefined;
   encounter_end_date: string | undefined;
   reason_for_visit: string | undefined;
