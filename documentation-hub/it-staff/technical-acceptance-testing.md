@@ -12,12 +12,12 @@ This document guides installers of the DIBBs eCR Viewer through testing needed t
 
 After you’ve installed DIBBs services in your jurisdiction, this guide walks you through the steps needed to verify the installation. This will ensure that the system has been properly installed in your environment and that it’s ready for your public health department to interact with.
 
-Please consult the [eCR Viewer Setup Guide](https://cdcgov.github.io/dibbs-ecr-viewer/documents/Setup_Guide.html) to verify that your environment variables and infrastructure have been configured correctly.
+Please consult the [eCR Viewer Setup Guide](./setup.md) to verify that your environment variables and infrastructure have been configured correctly.
 
 ## Prerequisites
 
 - You’ve installed DIBBs services using [DIBBs AWS Terraform,](https://github.com/CDCgov/dibbs-aws) [DIBBs Azure Terraform](https://github.com/CDCgov/dibbs-azure), [DIBBs VM](https://github.com/CDCgov/dibbs-vm), or a custom installation.
-- You’ve set the appropriate environment variables for your configuration based on the [setup guide](https://cdcgov.github.io/dibbs-ecr-viewer/documents/Setup_Guide.html#environment-variable-setup).
+- You’ve set the appropriate environment variables for your configuration based on the [setup guide](./setup.md#environment-variable-setup).
 - You have access to sample eCR/RR files.
 - You have [PuttyGen for Windows](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) or ssh-keygen for MacOS/Linux, and access to Node.js with JWT libraries for authentication testing.
 

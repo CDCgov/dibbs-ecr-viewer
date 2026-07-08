@@ -11,7 +11,7 @@ This guide explains how to deploy eCR Viewer on AWS using either:
 - Managed deployment: Terraform-managed infrastructure on AWS ECS
 - Linux Scripts: Ubuntu compatible scripts that configure a virtual machine to run the eCR Viewer containers
 
-Both approaches ultimately rely on the same eCR Viewer configuration model and environment variables. For details on environment variables and configuration options, refer to the [eCR Viewer Setup Guide](https://cdcgov.github.io/dibbs-ecr-viewer/documents/Setup_Guide.html#general-background) and [environment variable reference](https://cdcgov.github.io/dibbs-ecr-viewer/modules/environment.EnvironmentVariables.html).
+Both approaches ultimately rely on the same eCR Viewer configuration model and environment variables. For details on environment variables and configuration options, refer to the [eCR Viewer Setup Guide](./setup.md#general-background) and [environment variable reference](./environment-variables.md).
 
 ## Choose deployment approach
 
@@ -64,7 +64,7 @@ Doing this work will require staff who can:
 
 Be­fore you get start­ed, please make sure you have determined the eCR Viewer configuration your organization plans to use.
 
-View the [Setup Guide](https://cdcgov.github.io/dibbs-ecr-viewer/documents/Setup_Guide.html#general-background) and [Environment variable reference](https://cdcgov.github.io/dibbs-ecr-viewer/modules/environment.EnvironmentVariables.html) for information about the available configurations.
+View the [Setup Guide](./setup.md#general-background) and [Environment variable reference](./environment-variables.md) for information about the available configurations.
 
 #### Infrastructure prerequisites
 
@@ -107,7 +107,7 @@ The high-level workflow below is provided as a guide to help you understand the 
 
 Be­fore you get start­ed, please make sure you have determined the eCR Viewer configuration your organization plans to use.
 
-View the [Setup Guide](https://cdcgov.github.io/dibbs-ecr-viewer/documents/Setup_Guide.html#general-background) and [Environment variable reference](https://cdcgov.github.io/dibbs-ecr-viewer/modules/environment.EnvironmentVariables.html) for information about the available configurations.
+View the [Setup Guide](./setup.md#general-background) and [Environment variable reference](./environment-variables.md) for information about the available configurations.
 
 #### Infrastructure prerequisites
 
