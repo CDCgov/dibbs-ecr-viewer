@@ -101,7 +101,9 @@ test.describe("program management page", () => {
     // search for a condition again so checkbox is correct
     await page.getByPlaceholder("Search condition or category").fill("i");
     await expect(page.getByText("277 results")).toBeVisible();
-    await expect(page.getByText(`Condition in ${programName}`)).toBeVisible();
+    await expect(
+      page.getByText(/Condition in .*/).filter({ hasText: programName }),
+    ).toBeVisible();
 
     // Re-grab the checkbox dynamically. The old 'checkbox' variable is stale!
     await expect(page.getByRole("checkbox").first()).toBeAttached();

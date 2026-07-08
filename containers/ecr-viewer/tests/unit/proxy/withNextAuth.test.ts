@@ -4,9 +4,9 @@
 import { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-import { chainMiddleware } from "@/middleware";
-import { withNextAuth } from "@/middlewares/withNextAuth";
-import { withUnauthorized } from "@/middlewares/withUnauthorized";
+import { chainProxy } from "@/proxy";
+import { withNextAuth } from "@/proxy/withNextAuth";
+import { withUnauthorized } from "@/proxy/withUnauthorized";
 
 // Mock next-auth/jwt getToken
 jest.mock("next-auth/jwt", () => ({
@@ -15,9 +15,9 @@ jest.mock("next-auth/jwt", () => ({
 
 jest.mock("@/app/api/auth/auth");
 
-const middleware = chainMiddleware([withNextAuth, withUnauthorized]);
+const proxy = chainProxy([withNextAuth, withUnauthorized]);
 
-describe("Next Auth Middleware", () => {
+describe("Next Auth Proxy", () => {
   const ORIG_NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET;
   const ORIG_JWT_PUB_KEY = process.env.JWT_PUB_KEY;
   const ORIG_BASE_PATH = process.env.BASE_PATH;
@@ -40,7 +40,7 @@ describe("Next Auth Middleware", () => {
       "https://www.example.com/ecr-viewer/view-data?id=123",
     );
 
-    const resp = await middleware(req);
+    const resp = await proxy(req);
     expect(resp?.status).toBe(307);
     expect(resp?.headers.get("Location")).toBe(
       "https://www.example.com/signin?callbackUrl=%2Fecr-viewer%2Fview-data%3Fid%3D123",
@@ -53,7 +53,7 @@ describe("Next Auth Middleware", () => {
       { method: "post" },
     );
 
-    const resp = await middleware(req);
+    const resp = await proxy(req);
     expect(resp?.status).toBe(401);
   });
 
@@ -61,7 +61,7 @@ describe("Next Auth Middleware", () => {
     (getToken as jest.Mock).mockResolvedValue("123");
     const req = new NextRequest("https://www.example.com/ecr-viewer");
 
-    const resp = await middleware(req);
+    const resp = await proxy(req);
     expect(resp?.status).toBe(200);
     expect(getToken).toHaveBeenCalled();
   });
@@ -70,7 +70,7 @@ describe("Next Auth Middleware", () => {
     delete process.env.AUTH_PROVIDER;
     const req = new NextRequest("https://www.example.com/ecr-viewer/");
 
-    const resp = await middleware(req);
+    const resp = await proxy(req);
     expect(resp?.status).toBe(307);
     expect(getToken).not.toHaveBeenCalled();
     expect(resp?.headers.get("Location")).toBe(

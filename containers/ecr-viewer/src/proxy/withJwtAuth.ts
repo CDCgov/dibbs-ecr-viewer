@@ -1,7 +1,7 @@
 import { importSPKI, jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
 
-import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
+import { ChainableProxy, ProxyFactory } from "@/proxy";
 
 import { getTokenFromHeaders } from "./withApiTokenAuth";
 
@@ -35,11 +35,11 @@ const resolveKey = (
 };
 
 /**
- * Middleware for handling JWT-based authorization from integrated case management
+ * Proxy for handling JWT-based authorization from integrated case management
  * systems (NBS, EpiTrax, etc.).
  *
  * The external system generates a short-lived RS256 JWT and passes it as an
- * `?auth=` query parameter. This middleware:
+ * `?auth=` query parameter. This proxy:
  *   1. Moves the token from `?auth=` to an httpOnly cookie and redirects (so
  *      the token never persists in the browser history).
  *   2. On subsequent view-data requests, verifies the token against JWT_PUB_KEY.
@@ -61,9 +61,9 @@ const resolveKey = (
  * @param end Early exit the chain
  * @returns a NextResponse
  */
-export const withJwtAuth: MiddlewareFactory = (
-  next: ChainableMiddleware,
-  end: ChainableMiddleware,
+export const withJwtAuth: ProxyFactory = (
+  next: ChainableProxy,
+  end: ChainableProxy,
 ) => {
   return async function (request: NextRequest) {
     request.headers.delete(JWT_AUTH_HEADER);
@@ -90,8 +90,8 @@ export const withJwtAuth: MiddlewareFactory = (
 
 const handleViewData = async (
   request: NextRequest,
-  next: ChainableMiddleware,
-  end: ChainableMiddleware,
+  next: ChainableProxy,
+  end: ChainableProxy,
 ): Promise<NextResponse> => {
   const pubKey = resolveKey("JWT_PUB_KEY", "NBS_PUB_KEY");
   if (!pubKey) return next(request);
@@ -150,8 +150,8 @@ const handleViewData = async (
 
 const handleApi = async (
   request: NextRequest,
-  next: ChainableMiddleware,
-  end: ChainableMiddleware,
+  next: ChainableProxy,
+  end: ChainableProxy,
 ): Promise<NextResponse> => {
   const apiPubKey = resolveKey("JWT_API_PUB_KEY", "NBS_API_PUB_KEY");
   const bearerToken = getTokenFromHeaders(request);

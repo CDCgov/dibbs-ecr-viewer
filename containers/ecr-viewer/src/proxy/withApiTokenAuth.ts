@@ -2,7 +2,7 @@ import { createLocalJWKSet, createRemoteJWKSet, jwtVerify } from "jose";
 import { NextRequest } from "next/server";
 
 import { providerMap } from "@/app/api/auth/providers";
-import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
+import { ChainableProxy, ProxyFactory } from "@/proxy";
 
 const providerCache = { wellKnown: "", key: createLocalJWKSet({ keys: [] }) };
 
@@ -16,14 +16,14 @@ const updateProviderCache = async () => {
 };
 
 /**
- * Middleware for handling authorization of api routes via token
- * @param next Next middleware in the chain
+ * Proxy for handling authorization of api routes via token
+ * @param next Next proxy in the chain
  * @param end Early exit the chain
  * @returns a NextResponse
  */
-export const withApiTokenAuth: MiddlewareFactory = (
-  next: ChainableMiddleware,
-  end: ChainableMiddleware,
+export const withApiTokenAuth: ProxyFactory = (
+  next: ChainableProxy,
+  end: ChainableProxy,
 ) => {
   return async function (request: NextRequest) {
     // IDP Auth not actually set up, so bail out

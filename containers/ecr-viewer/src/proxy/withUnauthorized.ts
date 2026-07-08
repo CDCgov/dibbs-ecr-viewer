@@ -1,20 +1,20 @@
-// Adapted from 'next-auth' to work with chained middleware approach
+// Adapted from 'next-auth' to work with chained proxy approach
 
 import { NextRequest, NextResponse } from "next/server";
 
-import { ChainableMiddleware, MiddlewareFactory } from "@/middleware";
+import { ChainableProxy, ProxyFactory } from "@/proxy";
 
 import { JWT_AUTH_HEADER } from "./withJwtAuth";
 
 /**
- * Middleware for handling no prior auth succeeding
- * @param _next Next middleware in the chain
+ * Proxy for handling no prior auth succeeding
+ * @param _next Next proxy in the chain
  * @param end Early exit the chain
  * @returns a NextResponse
  */
-export const withUnauthorized: MiddlewareFactory = (
-  _next: ChainableMiddleware,
-  end: ChainableMiddleware,
+export const withUnauthorized: ProxyFactory = (
+  _next: ChainableProxy,
+  end: ChainableProxy,
 ) => {
   return async function (request: NextRequest) {
     // punching a hole through for orchestration for the moment

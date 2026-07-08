@@ -3,18 +3,18 @@
  */
 import { NextRequest } from "next/server";
 
-import { chainMiddleware } from "@/middleware";
-import { withUrlParamChecks } from "@/middlewares/withUrlParamChecks";
+import { chainProxy } from "@/proxy";
+import { withUrlParamChecks } from "@/proxy/withUrlParamChecks";
 
-const middleware = chainMiddleware([withUrlParamChecks]);
+const proxy = chainProxy([withUrlParamChecks]);
 
-describe("Param Check Middleware", () => {
+describe("Param Check Proxy", () => {
   it("should redirect to a url without a bad param", async () => {
     const req = new NextRequest(
       "https://www.example.com/ecr-viewer?page=-2&itemsPerPage=3",
     );
 
-    const resp = await middleware(req);
+    const resp = await proxy(req);
     expect(resp?.status).toBeGreaterThanOrEqual(300);
     expect(resp?.status).toBeLessThan(400);
     expect(resp?.headers.get("Location")).toBe(
@@ -27,7 +27,7 @@ describe("Param Check Middleware", () => {
       "https://www.example.com/ecr-viewer?page=2&itemsPerPage=4&page=3",
     );
 
-    const resp = await middleware(req);
+    const resp = await proxy(req);
     expect(resp?.status).toBeGreaterThanOrEqual(300);
     expect(resp?.status).toBeLessThan(400);
     expect(resp?.headers.get("Location")).toBe(
@@ -38,7 +38,7 @@ describe("Param Check Middleware", () => {
   it("should not redirect when params are good", async () => {
     const req = new NextRequest("https://www.example.com/ecr-viewer?page=3");
 
-    const resp = await middleware(req);
+    const resp = await proxy(req);
     expect(resp?.status).toBe(200);
   });
 });
