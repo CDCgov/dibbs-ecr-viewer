@@ -37,8 +37,6 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
   set_id: "1234",
   eicr_id: "eicr-12345",
   eicr_version_number: "1",
-  replaced_eicr_id: "23423",
-  replaced_eicr_version: "23432",
   authoring_date: "2024-01-01",
   ehr_manufacturer_model: "EHR Manufacturer Model",
   ehr_software: "EHR Software",

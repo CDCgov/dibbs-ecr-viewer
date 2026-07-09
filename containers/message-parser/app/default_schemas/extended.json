@@ -101,16 +101,6 @@
     "data_type": "string",
     "nullable": false
   },
-  "replaced_eicr_id": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType= 'Composition').relatesTo.where(code='replaces').targetReference.reference",
-    "data_type": "string",
-    "nullable": true
-  },
-  "replaced_eicr_version": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType= 'Composition').relatesTo.where(code='replaces').extension.where(url='http://hl7.org/fhir/StructureDefinition/composition-clinicaldocument-versionNumber').valueString",
-    "data_type": "string",
-    "nullable": true
-  },
   "authoring_date": {
     "fhir_path": "Bundle.timestamp",
     "data_type": "datetime",
