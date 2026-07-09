@@ -8,8 +8,8 @@ import { toKebabCase } from "@/app/utils/format-utils";
 import { DataDisplay, DataTableDisplay, DisplayDataProps } from "./DataDisplay";
 
 interface EcrSummaryProps {
-  patientDetails: DisplayDataProps[];
-  encounterDetails: DisplayDataProps[];
+  patientSummary: DisplayDataProps[];
+  encounterSummary: DisplayDataProps[];
   conditionSummary: ConditionSummary[];
   snomed?: string;
 }
@@ -19,22 +19,22 @@ export interface ConditionSummary {
   snomed: string;
   conditionDetails: DisplayDataProps[];
   clinicalDetails: DisplayDataProps[];
-  labDetails: DisplayDataProps[];
   immunizationDetails: DisplayDataProps[];
+  labDetails: DisplayDataProps[];
 }
 
 /**
  * Generates a JSX element to display eCR viewer summary
  * @param props - Properties for the eCR Viewer Summary section
- * @param props.patientDetails - Array of title and values to be displayed in patient details section
- * @param props.encounterDetails - Array of title and values to be displayed in encounter details section
+ * @param props.patientSummary - Array of title and values to be displayed in patient summary section
+ * @param props.encounterSummary - Array of title and values to be displayed in encounter summary section
  * @param props.conditionSummary - Array of condition details
  * @param props.snomed - SNOMED code being requested
  * @returns a react element for eCR Summary
  */
 const EcrSummary: React.FC<EcrSummaryProps> = ({
-  patientDetails,
-  encounterDetails,
+  patientSummary,
+  encounterSummary,
   conditionSummary,
   snomed,
 }) => {
@@ -113,7 +113,7 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
           Patient Summary
         </h3>
         <div className="usa-summary-box__text">
-          {patientDetails.map((item, i) => (
+          {patientSummary.map((item, i) => (
             <DataDisplay item={item} key={`pat-${i}`} themeColor="blue" />
           ))}
         </div>
@@ -126,7 +126,7 @@ const EcrSummary: React.FC<EcrSummaryProps> = ({
           Encounter Summary
         </h3>
         <div className="usa-summary-box__text">
-          {encounterDetails.map((item, i) => (
+          {encounterSummary.map((item, i) => (
             <DataDisplay item={item} key={`enc-${i}`} themeColor="blue" />
           ))}
         </div>

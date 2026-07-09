@@ -10,10 +10,7 @@ import {
   Organization,
 } from "fhir/r4";
 
-import {
-  formatDate,
-  formatStartEndDateTime,
-} from "@/app/services/formatDateService";
+import { formatStartEndDateTime } from "@/app/services/formatDateService";
 import {
   formatCodeableConcept,
   formatCoding,
@@ -41,7 +38,7 @@ import {
 import {
   evaluateEncounterDiagnosis,
   getLocationName,
-} from "./evaluateFhirDataService";
+} from "@/app/view-data/services/encounterInfoService";
 import {
   evaluatePatientName,
   evaluatePatientRace,
@@ -58,9 +55,9 @@ import { FhirIndex, getResourcesByType } from "./fhirResourcesIndexService";
 /**
  * Evaluates and retrieves patient details from the FHIR bundle using the provided path mappings.
  * @param fhirBundle - The FHIR bundle containing patient data.
- * @returns An array of patient details objects containing title and value pairs.
+ * @returns An array of patient summary objects containing title and value pairs.
  */
-export const evaluateEcrSummaryPatientDetails = (
+export const evaluateEcrSummaryPatient = (
   fhirBundle: Bundle,
   fhirIndex: FhirIndex,
 ) => {
@@ -126,9 +123,9 @@ export const evaluateEcrSummaryPatientDetails = (
 /**
  * Evaluates and retrieves encounter details from the FHIR bundle using the provided path mappings.
  * @param fhirBundle - The FHIR bundle containing patient data.
- * @returns An array of encounter details objects containing title and value pairs.
+ * @returns An array of encounter summary objects containing title and value pairs.
  */
-export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
+export const evaluateEcrSummaryEncounter = (fhirBundle: Bundle) => {
   const encounter = evaluateOneReference<Encounter>(
     fhirBundle,
     fhirPathMappings.compositionEncounterRef,
@@ -168,7 +165,7 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
  * @param snomedCode - (Optional) The SNOMED code identifying the main snomed code.
  * @returns An array of condition summary objects.
  */
-export const evaluateEcrSummaryConditionSummary = (
+export const evaluateEcrSummaryCondition = (
   fhirBundle: Bundle,
   fhirIndex: FhirIndex,
   snomedCode?: string,

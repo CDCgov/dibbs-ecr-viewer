@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Encounter should match snapshot 1`] = `
+exports[`Encounter Info section should match snapshot 1`] = `
 <div>
   <div
     class="margin-top-0"
