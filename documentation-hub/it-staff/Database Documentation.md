@@ -106,16 +106,16 @@ This table stores reference information for conditions.
 
 This table stores data related to usage of the eCR Viewer.
 
-| Column Name      | Data Type      | Nullability | Default Value     | Description                                    |
-| :--------------- | :------------- | :---------- | :---------------- | :--------------------------------------------- |
-| `uuid`           | `varchar(200)` | NOT NULL    |                   | Part of the composite primary key [date, uuid] |
-| `subject`        | `varchar(200)` | NOT NULL    |                   |  |
-| `action`         | `varchar(200)` | NOT NULL    |                   |  |
-| `actor`          | `varchar(max)` | NOT NULL    |                   |  |
-| `date`           | `datetime`     | NOT NULL    | Current timestamp | Part of the composite primary key [date, uuid] |
-| `parameter_json` | `varchar(max)` | NOT NULL    |                   |  |
-| `metadata_json`  | `varchar(max)` | NOT NULL    |                   |  |
-| `checksum`       | `varchar(max)` | NOT NULL    |                   |  |
+| Column Name      | Data Type      | Nullability | Default Value     | Description                                                                                                    |
+| :--------------- | :------------- | :---------- | :---------------- | :------------------------------------------------------------------------------------------------------------- |
+| `uuid`           | `varchar(200)` | NOT NULL    |                   | Unique record identifier, part of the composite primary key [date, uuid]                                       |
+| `subject`        | `varchar(200)` | NOT NULL    |                   | Subject of the action being audited (e.g. "user")                                                              |
+| `action`         | `varchar(200)` | NOT NULL    |                   | Action being done (e.g. "create")                                                                              |
+| `actor`          | `varchar(max)` | NOT NULL    |                   | Identifier of actor that performed the action                                                                  |
+| `date`           | `datetime`     | NOT NULL    | Current timestamp | The date and time of activity, part of the composite primary key [date, uuid]                                  |
+| `parameter_json` | `varchar(max)` | NOT NULL    |                   | Parameters passed to function being audited                                                                    |
+| `metadata_json`  | `varchar(max)` | NOT NULL    |                   | Other request metadata                                                                                         |
+| `checksum`       | `varchar(max)` | NOT NULL    |                   | Generated checksum that can be used to determine if there have been any changes to the written audit log data. |
 
 ## Extended Schema
 
