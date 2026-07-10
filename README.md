@@ -31,15 +31,15 @@ There are three eCR Viewer options:
 
 *Figure 1: Accessing integrated eCR Viewer from EpiTrax*
 
-![][image1]
+![Screenshot of Epitrax application with "View eCR Document" button highlighted](assets/images/epitrax.png)
 
 *Figure 2\. View of the eCR Library*
 
-![][image2]
+![Screenshot of eCR Viewer eCR Library](assets/images/ecr-library.png)
 
 *Figure 3\. View of an eCR in the eCR Viewer through integrated, library, or dual-boot option.*
 
-![][image3]
+![Screenshot of an eCR Summary in the eCR Viewer](assets/images/ecr-summary.png)
 
 # Problem Scope
 
