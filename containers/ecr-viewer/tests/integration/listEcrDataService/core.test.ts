@@ -403,6 +403,50 @@ describe("listEcrData - core", () => {
 
     await clearEcrCore();
   });
+
+  it("should order related_ecrs by version number descending regardless of date_created order", async () => {
+    // v3 is the max version but has the oldest date_created — this is the divergence the fix addresses
+    const v3 = {
+      ...coreTemplate,
+      eicr_id: "99003",
+      eicr_version_number: "3",
+      date_created: new Date("2024-12-01T10:00:00Z"),
+    };
+    const v2 = {
+      ...coreTemplate,
+      eicr_id: "99002",
+      eicr_version_number: "2",
+      date_created: new Date("2024-12-02T08:00:00Z"),
+    };
+    // v1 has the newest date_created but is the oldest version — ordering by date would put it first
+    const v1 = {
+      ...coreTemplate,
+      eicr_id: "99001",
+      eicr_version_number: "1",
+      date_created: new Date("2024-12-02T14:00:00Z"),
+    };
+
+    await createCoreEcr(v3);
+    await createCoreEcr(v2);
+    await createCoreEcr(v1);
+
+    const actual: EcrDisplay[] = await listEcrData({
+      startIndex: 0,
+      itemsPerPage: 25,
+      sortColumn: "date_created",
+      sortDirection: "DESC",
+      filterDates,
+    });
+
+    expect(actual).toHaveLength(1);
+    expect(actual[0].eicr_version_number).toEqual("3");
+    expect(actual[0].related_ecrs).toStrictEqual([
+      { eicr_id: "99002", eicr_version_number: "2", date_created: v2.date_created, set_id: "123" },
+      { eicr_id: "99001", eicr_version_number: "1", date_created: v1.date_created, set_id: "123" },
+    ]);
+
+    await clearEcrCore();
+  });
 });
 
 describe("get total core ecr count", () => {
