@@ -441,8 +441,18 @@ describe("listEcrData - core", () => {
     expect(actual).toHaveLength(1);
     expect(actual[0].eicr_version_number).toEqual("3");
     expect(actual[0].related_ecrs).toStrictEqual([
-      { eicr_id: "99002", eicr_version_number: "2", date_created: v2.date_created, set_id: "123" },
-      { eicr_id: "99001", eicr_version_number: "1", date_created: v1.date_created, set_id: "123" },
+      {
+        eicr_id: "99002",
+        eicr_version_number: "2",
+        date_created: v2.date_created,
+        set_id: "123",
+      },
+      {
+        eicr_id: "99001",
+        eicr_version_number: "1",
+        date_created: v1.date_created,
+        set_id: "123",
+      },
     ]);
 
     await clearEcrCore();
