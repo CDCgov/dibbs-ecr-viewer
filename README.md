@@ -1,6 +1,4 @@
-# eCR Viewer README \-
-
-# Data Ingestion Building Blocks (DIBBs) eCR Viewer
+# Data Ingestion Building Blocks (DIBBs) eCR Viewer README
 
 # Table of Contents
 
