@@ -25,7 +25,7 @@ Doing this work will require staff who can:
 
 Be­fore you get start­ed, please make sure you have determined the eCR Viewer configuration your organization plans to use.
 
-[View the Setup Guide](./setup.md#general-background) for information about the available configurations.
+[View the Setup Guide](./Setup%20Guide.md#general-background) for information about the available configurations.
 
 ### Infrastructure prerequisites
 
@@ -62,7 +62,7 @@ The high-level workflow below is provided as a guide to help you understand the 
 
 ## Configuration and environment variables
 
-For managed deployments, environment variables are set through the Terraform/ACA configuration. Use the [Setup Guide](./setup.md) and [Environment variable reference](./environment-variables.md) to determine:
+For managed deployments, environment variables are set through the Terraform/ACA configuration. Use the [Setup Guide](./Setup%20Guide.md) and [Environment variable reference](./Environment%20Variables.md) to determine:
 
 - Which configuration you are using
 - The required environment variables
