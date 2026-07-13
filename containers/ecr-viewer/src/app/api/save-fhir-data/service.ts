@@ -30,6 +30,7 @@ import { dbSchema } from "@/app/data/metadataDb/utils/db-config";
 import { createAuditRecord } from "@/app/services/auditLogService";
 
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
+import { LabAccordion } from "@/app/view-data/components/LabAccordion";
 
 interface SaveResponse {
   message: string;
@@ -300,15 +301,28 @@ const saveExtendedMetadata = async (
     }
   }
   if (metadata.labs) {
-    for (const lab of metadata.labs) {
-      await trx
-        .insertInto("ecr_labs")
-        .values({
-          ...lab,
+    let batchToInsert = [];
+
+    for (let i = 0; i < metadata.labs.length; i++) {
+      const record = {
+          ...metadata.labs[i],
           eicr_id: ecrId,
-          specimen_collection_date: asDate(lab.specimen_collection_date),
-        })
+          specimen_collection_date: asDate(metadata.labs[i].specimen_collection_date),
+      };
+
+      batchToInsert.push(record);
+      
+      const numColumns = Object.keys(record).length;
+      
+      // SQL Server allows a maximum of 4096 columns inserted at once which is the lower number of the two databases we support
+      if (batchToInsert.length == (4096 / numColumns) || i == metadata.labs.length - 1) {
+        await trx
+        .insertInto("ecr_labs")
+        .values(batchToInsert)
         .execute();
+
+        batchToInsert = [];
+      }
     }
   }
 
