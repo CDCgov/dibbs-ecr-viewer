@@ -3,9 +3,9 @@ import React from "react";
 import { render } from "@testing-library/react";
 import { axe } from "jest-axe";
 
-import EncounterDetails from "@/app/view-data/components/Encounter";
+import EncounterInfo from "@/app/view-data/components/EncounterInfo";
 
-describe("Encounter", () => {
+describe("Encounter Info section", () => {
   let container: HTMLElement;
   beforeAll(() => {
     const mockChildMethod = jest.fn();
@@ -128,7 +128,7 @@ describe("Encounter", () => {
       },
     ];
     container = render(
-      <EncounterDetails
+      <EncounterInfo
         encounterData={encounterData}
         hospitalEncounterData={hospitalEncounterData}
         facilityData={facilityData}

@@ -8,81 +8,40 @@ services:
       - "3000:3000"
     networks:
       - dibbs
-    healthcheck:
-      test:
-        ["CMD", "wget", "--spider", "http://127.0.0.1:3000/api/health-check"]
-      interval: 5s
-      timeout: 2s
-      retries: 5
-      start_period: 30s
 
   ingestion:
     image: ghcr.io/cdcgov/dibbs-ecr-viewer/ingestion:$DIBBS_VERSION
     container_name: dibbs-ingestion
     restart: always
-    ports:
-      - "8080:8080"
     networks:
       - dibbs
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "http://127.0.0.1:8080/"]
-      interval: 5s
-      timeout: 2s
-      retries: 5
-      start_period: 10s
 
   fhir-converter:
     image: ghcr.io/cdcgov/dibbs-ecr-viewer/fhir-converter:$DIBBS_VERSION
     container_name: dibbs-fhir-converter
     restart: always
-    ports:
-      - "8082:8080"
     networks:
       - dibbs
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "http://127.0.0.1:8080/"]
-      interval: 5s
-      timeout: 2s
-      retries: 5
-      start_period: 10s
 
   message-parser:
     image: ghcr.io/cdcgov/dibbs-ecr-viewer/message-parser:$DIBBS_VERSION
     container_name: dibbs-message-parser
     restart: always
-    ports:
-      - "8083:8080"
     networks:
       - dibbs
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "http://127.0.0.1:8080/"]
-      interval: 5s
-      timeout: 2s
-      retries: 5
-      start_period: 10s
 
   trigger-code-reference:
     image: ghcr.io/cdcgov/dibbs-ecr-viewer/trigger-code-reference:$DIBBS_VERSION
     container_name: dibbs-trigger-code-reference
     restart: always
-    ports:
-      - "8084:8080"
     networks:
       - dibbs
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "http://127.0.0.1:8080/"]
-      interval: 5s
-      timeout: 2s
-      retries: 5
-      start_period: 10s
 
   orchestration:
     image: ghcr.io/cdcgov/dibbs-ecr-viewer/orchestration:$DIBBS_VERSION
     container_name: dibbs-orchestration
     env_file: "dibbs-orchestration.env"
     restart: always
-    ports:
-      - "8085:8080"
     networks:
       - dibbs
     depends_on:
@@ -96,12 +55,6 @@ services:
         condition: service_healthy
       trigger-code-reference:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "http://127.0.0.1:8080/"]
-      interval: 5s
-      timeout: 2s
-      retries: 5
-      start_period: 10s
 
 networks:
   dibbs:

@@ -25,8 +25,11 @@ import {
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 
-import { evaluatePractitionerRoleReference } from "./evaluateFhirDataService";
-import { evaluateRRInfo, ReportableConditions } from "./reportabilityService";
+import { evaluatePractitionerRoleReference } from "@/app/view-data/services/encounterInfoService";
+import {
+  evaluateRRInfo,
+  ReportableConditions,
+} from "@/app/view-data/services/reportabilityService";
 
 interface EcrMetadata {
   eicrDetails: CompleteData;

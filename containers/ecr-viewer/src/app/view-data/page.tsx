@@ -21,10 +21,10 @@ import { getFhirData, isSuccessResponse } from "./services/fhirDataService";
 import { ecrXmlsExist } from "./services/xmlService";
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 import {
-  evaluateEcrSummaryConditionSummary,
-  evaluateEcrSummaryEncounterDetails,
-  evaluateEcrSummaryPatientDetails,
-} from "./services/ecrSummaryService";
+  evaluateEcrSummaryPatient,
+  evaluateEcrSummaryEncounter,
+  evaluateEcrSummaryCondition,
+} from "@/app/view-data/services/ecrSummaryService";
 
 /**
  * Functional component for rendering the eCR Viewer page.
@@ -86,12 +86,9 @@ const ECRViewerPage = async ({
         ecrId={xmlsExist ? fhirId : undefined}
       >
         <EcrSummary
-          patientDetails={evaluateEcrSummaryPatientDetails(
-            fhirBundle,
-            fhirIndex,
-          )}
-          encounterDetails={evaluateEcrSummaryEncounterDetails(fhirBundle)}
-          conditionSummary={evaluateEcrSummaryConditionSummary(
+          patientSummary={evaluateEcrSummaryPatient(fhirBundle, fhirIndex)}
+          encounterSummary={evaluateEcrSummaryEncounter(fhirBundle)}
+          conditionSummary={evaluateEcrSummaryCondition(
             fhirBundle,
             fhirIndex,
             snomedCode,
