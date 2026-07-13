@@ -106,16 +106,16 @@ This table stores reference information for conditions.
 
 This table stores data related to usage of the eCR Viewer.
 
-| Column Name      | Data Type      | Nullability | Default Value     | Description |
-| :--------------- | :------------- | :---------- | :---------------- | :---------- |
-| `uuid`           | `varchar(200)` | NOT NULL    |                   | Unique record identifier, part of the composite primary key [date, uuid] |
-| `subject`        | `varchar(200)` | NOT NULL    |                   | The type of record involved, such as `ecr`, `user`, or `program_area` |
-| `action`         | `varchar(200)` | NOT NULL    |                   | The action performed, such as `query`, `view`, `create`, `update`, `delete`, `signin`, or `signout` |
+| Column Name      | Data Type      | Nullability | Default Value     | Description                                                                                                       |
+| :--------------- | :------------- | :---------- | :---------------- | :---------------------------------------------------------------------------------------------------------------- |
+| `uuid`           | `varchar(200)` | NOT NULL    |                   | Unique record identifier, part of the composite primary key [date, uuid]                                          |
+| `subject`        | `varchar(200)` | NOT NULL    |                   | The type of record involved, such as `ecr`, `user`, or `program_area`                                             |
+| `action`         | `varchar(200)` | NOT NULL    |                   | The action performed, such as `query`, `view`, `create`, `update`, `delete`, `signin`, or `signout`               |
 | `actor`          | `varchar(max)` | NOT NULL    |                   | The user UUID associated with the request, or an available API/auth token identifier when a user is not available |
-| `date`           | `datetime`     | NOT NULL    | Current timestamp | The database-generated timestamp for the audit event, part of the composite primary key [date, uuid] |
-| `parameter_json` | `varchar(max)` | NOT NULL    |                   | The parameters passed to the audited workflow, such as an eICR ID, user UUID, or eCR search filters |
-| `metadata_json`  | `varchar(max)` | NOT NULL    |                   | Additional request metadata. The Viewer currently records the request `User-Agent` |
-| `checksum`       | `varchar(max)` | NOT NULL    |                   | A SHA-256 checksum generated from the audit record contents |
+| `date`           | `datetime`     | NOT NULL    | Current timestamp | The database-generated timestamp for the audit event, part of the composite primary key [date, uuid]              |
+| `parameter_json` | `varchar(max)` | NOT NULL    |                   | The parameters passed to the audited workflow, such as an eICR ID, user UUID, or eCR search filters               |
+| `metadata_json`  | `varchar(max)` | NOT NULL    |                   | Additional request metadata. The Viewer currently records the request `User-Agent`                                |
+| `checksum`       | `varchar(max)` | NOT NULL    |                   | A SHA-256 checksum generated from the audit record contents                                                       |
 
 ## Extended Schema
 
