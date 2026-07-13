@@ -262,9 +262,7 @@ def test_default_schemas_parse_nullable_facility_name(parsing_schema_name):
                 "resource": {
                     "resourceType": "Encounter",
                     "id": "encounter-1",
-                    "location": [
-                        {"location": {"display": "Sacramento Hospital"}}
-                    ],
+                    "location": [{"location": {"display": "Sacramento Hospital"}}],
                 }
             },
         ],
