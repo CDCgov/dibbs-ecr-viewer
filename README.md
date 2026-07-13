@@ -16,7 +16,7 @@
 
 This repository is a part of the CDC DIBBs project and contains the core software for the DIBBs eCR Viewer.
 
-The eCR Viewer is a tool that provides a human-readable view of eCRs, making it easier for public health staff to find relevant information in eCR documents. It combines both the electronic initial case report (eICR) and Reportability Response (RR) into a single view and highlights relevant lab or clinical information for conditions present in the eCR. It is designed for case investigators, eCR coordinators, and others who review eCRs.
+The eCR Viewer is a tool that provides a human-readable view of eCR (electronic case reporting) documents, making it easier for public health staff to find relevant information. It combines both the electronic initial case report (eICR) and Reportability Response (RR) into a single view and highlights relevant lab or clinical information for conditions present in the eCR. It is designed for case investigators, eCR coordinators, and others who review eCRs.
 
 There are three eCR Viewer options:
 
@@ -32,7 +32,7 @@ _Figure 2\. View of the eCR Library_
 
 ![Screenshot of eCR Viewer eCR Library](assets/images/ecr-library.png)
 
-_Figure 3\. View of an eCR in the eCR Viewer through integrated, library, or dual-boot option._
+_Figure 3\. View of an eCR in the eCR Viewer through integrated, library, or dual-boot option_
 
 ![Screenshot of an eCR Summary in the eCR Viewer](assets/images/ecr-summary.png)
 
