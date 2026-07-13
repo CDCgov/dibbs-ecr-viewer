@@ -21,23 +21,7 @@ The Viewer currently records audit events for:
 1. eCR creation after the eCR metadata and FHIR data have been saved successfully.
 1. eCR viewing by eICR ID.
 
-<<<<<<< HEAD
-Each audit event includes:
-
-| Field            | Description                                                                                                        |
-| :--------------- | :----------------------------------------------------------------------------------------------------------------- |
-| `subject`        | The type of record involved, such as `ecr`, `user`, or `program_area`.                                             |
-| `action`         | The action performed, such as `query`, `view`, `create`, `update`, `delete`, `signin`, or `signout`.               |
-| `actor`          | The user UUID associated with the request, or an available API/auth token identifier when a user is not available. |
-| `date`           | The database-generated timestamp for the audit event.                                                              |
-| `parameter_json` | The parameters passed to the audited workflow, such as an eICR ID, user UUID, or eCR search filters.               |
-| `metadata_json`  | Additional request metadata. The Viewer currently records the request `User-Agent`.                                |
-| `checksum`       | A SHA-256 checksum generated from the audit record contents.                                                       |
-
-=======
 The schema for the audit log table can be found in the [database documentation](./Database%20Documentation.md#audit_log-table).
-
-> > > > > > > e58eec9b (update audit log table in db documentation and link to it from audit log docs)
 
 The audit record is written in the same database transaction as the audited action whenever the action uses the standard audit wrapper. This keeps the application change and its audit event together: if the transaction rolls back, the audit record rolls back with it.
 
