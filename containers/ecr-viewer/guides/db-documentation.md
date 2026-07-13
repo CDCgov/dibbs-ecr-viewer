@@ -55,6 +55,68 @@ This table stores rule summaries related to eCR conditions.
 | `ecr_rr_conditions_id` | `varchar(200)` | NOT NULL    |               | Foreign key, references `ecr_rr_conditions.uuid`           |
 | `rule_summary`         | `varchar(max)` | NULL        |               | Summary of the rule applied                                |
 
+### `user` Table
+
+This table stores user information.
+
+| Column Name          | Data Type      | Nullability | Default Value     | Description                                                     |
+| :------------------- | :------------- | :---------- | :---------------- | :-------------------------------------------------------------- |
+| `uuid`               | `varchar(200)` | NOT NULL    |                   | Primary key, unique identifier for the user                     |
+| `email`              | `varchar(200)` | NOT NULL    |                   | User's email address, must be unique                            |
+| `name`               | `varchar(200)` | NULL        |                   | User's full name                                                |
+| `date_of_last_login` | `datetime`     | NULL        |                   | Date and time of user's last login                              |
+| `user_type`          | `varchar(12)`  | NOT NULL    |                   | Type of user (e.g., admin, standard)                            |
+| `status`             | `varchar(12)`  | NOT NULL    | active            | User's account status                                           |
+| `date_created`       | `datetime`     | NOT NULL    | Current timestamp | Date and time when the user record was created                  |
+| `author_uuid`        | `varchar(200)` | NOT NULL    |                   | Foreign key, references `user.uuid`, creator of the user record |
+
+### `program_area` Table
+
+This table stores information about program areas.
+
+| Column Name    | Data Type      | Nullability | Default Value     | Description                                                             |
+| :------------- | :------------- | :---------- | :---------------- | :---------------------------------------------------------------------- |
+| `uuid`         | `varchar(200)` | NOT NULL    |                   | Primary key, unique identifier for the program area                     |
+| `name`         | `varchar(200)` | NOT NULL    |                   | Name of the program area, must be unique                                |
+| `date_created` | `datetime`     | NOT NULL    | Current timestamp | Date and time when the program area record was created                  |
+| `author_uuid`  | `varchar(200)` | NOT NULL    |                   | Foreign key, references `user.uuid`, creator of the program area record |
+
+### `user_program_area` Table
+
+This table links users to program areas. Note that the primary key for this table is a compound primary key consisting of `user_uuid` and `program_area_uuid`.
+
+| Column Name         | Data Type      | Nullability | Default Value | Description                                                                                                   |
+| :------------------ | :------------- | :---------- | :------------ | :------------------------------------------------------------------------------------------------------------ |
+| `user_uuid`         | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [user_uuid, program_area_uuid], Foreign key, references `user.uuid`         |
+| `program_area_uuid` | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [user_uuid, program_area_uuid], Foreign key, references `program_area.uuid` |
+
+### `condition_reference` Table
+
+This table stores reference information for conditions.
+
+| Column Name          | Data Type      | Nullability | Default Value | Description                                 |
+| :------------------- | :------------- | :---------- | :------------ | :------------------------------------------ |
+| `code`               | `varchar(20)`  | NOT NULL    |               | Primary key, unique code for the condition  |
+| `concept_name`       | `varchar(200)` | NULL        |               | Name of the concept                         |
+| `condition_name`     | `varchar(200)` | NOT NULL    |               | Name of the condition                       |
+| `condition_category` | `varchar(200)` | NULL        |               | Category of the condition                   |
+| `program_area_uuid`  | `varchar(200)` | NULL        |               | Foreign key, references `program_area.uuid` |
+
+### `audit_log` Table
+
+This table stores data related to usage of the eCR Viewer.
+
+| Column Name      | Data Type      | Nullability | Default Value     | Description                                                                                                       |
+| :--------------- | :------------- | :---------- | :---------------- | :---------------------------------------------------------------------------------------------------------------- |
+| `uuid`           | `varchar(200)` | NOT NULL    |                   | Unique record identifier, part of the composite primary key [date, uuid]                                          |
+| `subject`        | `varchar(200)` | NOT NULL    |                   | The type of record involved, such as `ecr`, `user`, or `program_area`                                             |
+| `action`         | `varchar(200)` | NOT NULL    |                   | The action performed, such as `query`, `view`, `create`, `update`, `delete`, `signin`, or `signout`               |
+| `actor`          | `varchar(max)` | NOT NULL    |                   | The user UUID associated with the request, or an available API/auth token identifier when a user is not available |
+| `date`           | `datetime`     | NOT NULL    | Current timestamp | The database-generated timestamp for the audit event, part of the composite primary key [date, uuid]              |
+| `parameter_json` | `varchar(max)` | NOT NULL    |                   | The parameters passed to the audited workflow, such as an eICR ID, user UUID, or eCR search filters               |
+| `metadata_json`  | `varchar(max)` | NOT NULL    |                   | Additional request metadata. The Viewer currently records the request `User-Agent`                                |
+| `checksum`       | `varchar(max)` | NOT NULL    |                   | A SHA-256 checksum generated from the audit record contents                                                       |
+
 ## Extended Schema
 
 The extended schema builds upon the core schema by adding additional demographic, clinical, and administrative data points to the `ecr_data` table, and introduces new tables for laboratory results and patient addresses. This schema provides a more comprehensive view of the eCR data.
@@ -155,50 +217,3 @@ This table stores patient address information. Note that the primary key for thi
 | `period_start` | `datetime`     | NULL        |               | Start date of the address's validity period                                                   |
 | `period_end`   | `datetime`     | NULL        |               | End date of the address's validity period                                                     |
 | `eicr_id`      | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], Foreign key, references `ecr_data.eicr_id` |
-
-### `user` Table
-
-This table stores user information.
-
-| Column Name          | Data Type      | Nullability | Default Value     | Description                                                     |
-| :------------------- | :------------- | :---------- | :---------------- | :-------------------------------------------------------------- |
-| `uuid`               | `varchar(200)` | NOT NULL    |                   | Primary key, unique identifier for the user                     |
-| `email`              | `varchar(200)` | NOT NULL    |                   | User's email address, must be unique                            |
-| `name`               | `varchar(200)` | NULL        |                   | User's full name                                                |
-| `date_of_last_login` | `datetime`     | NULL        |                   | Date and time of user's last login                              |
-| `user_type`          | `varchar(12)`  | NOT NULL    |                   | Type of user (e.g., admin, standard)                            |
-| `status`             | `varchar(12)`  | NOT NULL    | active            | User's account status                                           |
-| `date_created`       | `datetime`     | NOT NULL    | Current timestamp | Date and time when the user record was created                  |
-| `author_uuid`        | `varchar(200)` | NOT NULL    |                   | Foreign key, references `user.uuid`, creator of the user record |
-
-### `program_area` Table
-
-This table stores information about program areas.
-
-| Column Name    | Data Type      | Nullability | Default Value     | Description                                                             |
-| :------------- | :------------- | :---------- | :---------------- | :---------------------------------------------------------------------- |
-| `uuid`         | `varchar(200)` | NOT NULL    |                   | Primary key, unique identifier for the program area                     |
-| `name`         | `varchar(200)` | NOT NULL    |                   | Name of the program area, must be unique                                |
-| `date_created` | `datetime`     | NOT NULL    | Current timestamp | Date and time when the program area record was created                  |
-| `author_uuid`  | `varchar(200)` | NOT NULL    |                   | Foreign key, references `user.uuid`, creator of the program area record |
-
-### `user_program_area` Table
-
-This table links users to program areas. Note that the primary key for this table is a compound primary key consisting of `user_uuid` and `program_area_uuid`.
-
-| Column Name         | Data Type      | Nullability | Default Value | Description                                                                                                   |
-| :------------------ | :------------- | :---------- | :------------ | :------------------------------------------------------------------------------------------------------------ |
-| `user_uuid`         | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [user_uuid, program_area_uuid], Foreign key, references `user.uuid`         |
-| `program_area_uuid` | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [user_uuid, program_area_uuid], Foreign key, references `program_area.uuid` |
-
-### `condition_reference` Table
-
-This table stores reference information for conditions.
-
-| Column Name          | Data Type      | Nullability | Default Value | Description                                 |
-| :------------------- | :------------- | :---------- | :------------ | :------------------------------------------ |
-| `code`               | `varchar(20)`  | NOT NULL    |               | Primary key, unique code for the condition  |
-| `concept_name`       | `varchar(200)` | NULL        |               | Name of the concept                         |
-| `condition_name`     | `varchar(200)` | NOT NULL    |               | Name of the condition                       |
-| `condition_category` | `varchar(200)` | NULL        |               | Category of the condition                   |
-| `program_area_uuid`  | `varchar(200)` | NULL        |               | Foreign key, references `program_area.uuid` |
