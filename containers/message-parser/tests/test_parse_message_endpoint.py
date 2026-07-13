@@ -246,6 +246,53 @@ def test_parse_message_success_internal_schema(fhir_bundle, fhir_bundle_w_float)
     assert actual_response2.json() == expected_successful_response_floats
 
 
+@pytest.mark.parametrize("parsing_schema_name", ["core.json", "extended.json"])
+def test_default_schemas_parse_nullable_facility_name(parsing_schema_name):
+    fhir_bundle = {
+        "resourceType": "Bundle",
+        "id": "core-facility-test",
+        "entry": [
+            {
+                "resource": {
+                    "resourceType": "Composition",
+                    "encounter": {"reference": "Encounter/encounter-1"},
+                }
+            },
+            {
+                "resource": {
+                    "resourceType": "Encounter",
+                    "id": "encounter-1",
+                    "location": [
+                        {"location": {"display": "Sacramento Hospital"}}
+                    ],
+                }
+            },
+        ],
+    }
+    request = {
+        "message_format": "fhir",
+        "parsing_schema_name": parsing_schema_name,
+        "message": fhir_bundle,
+    }
+
+    actual_response = client.post("/parse_message", json=request)
+
+    assert actual_response.status_code == 200
+    assert (
+        actual_response.json()["parsed_values"]["facility_name"]
+        == "Sacramento Hospital"
+    )
+
+    del fhir_bundle["entry"][1]["resource"]["location"][0]["location"]["display"]
+    actual_response_without_facility = client.post("/parse_message", json=request)
+
+    assert actual_response_without_facility.status_code == 200
+    assert (
+        actual_response_without_facility.json()["parsed_values"]["facility_name"]
+        is None
+    )
+
+
 def test_parse_message_success_internal_schema_with_metadata(
     fhir_bundle,
     fhir_bundle_w_float,
