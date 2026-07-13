@@ -16,6 +16,7 @@ export interface ecr_data {
   first_name: string;
   birth_date: ColumnType<Date, string>;
   encounter_start_date: Date | undefined;
+  facility_name: string | undefined;
 }
 
 export type CoreECR = Selectable<ecr_data>;
