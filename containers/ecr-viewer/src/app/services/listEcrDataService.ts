@@ -232,7 +232,10 @@ const getMetaModelData = async (
       "ecr_data.eicr_version_number",
       "ecr_data.date_created",
     ])
-    .orderBy("ecr_data.date_created", "desc")
+    .orderBy(
+      (eb) => eb.cast<number>("ecr_data.eicr_version_number", "integer"),
+      "desc",
+    )
     .where((eb) =>
       eb(
         "ecr_sets.max_version_number",
