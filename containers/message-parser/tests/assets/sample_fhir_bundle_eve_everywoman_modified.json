@@ -248,6 +248,10 @@
               {
                 "reference": "Observation/d9915885-4dd6-2c75-851c-419cf0438d37",
                 "display": "Bordetella pertussis [Presence] in Throat by Organism specific culture"
+              },
+              {
+                "reference": "Observation/7ea37105-1ac1-cd38-764b-2e39e6e68f69",
+                "display": "chlamydia, nucleic acid amplification test (NAAT) result, urethra culture"
               }
             ]
           },
@@ -312,6 +316,9 @@
               },
               {
                 "reference": "Observation/77b03ffc-7783-7bde-f561-bf334390643c"
+              },
+              {
+                "reference": "Immunization/984bc54d-e9f7-a697-aabf-cb350f64b0c1"
               }
             ]
           },
@@ -1300,6 +1307,12 @@
             "value": "urn:oid:2.16.840.1.113883.3.72.5.20"
           }
         ],
+        "manufacturer": "Epic - Version 10.5",
+        "version": [
+          {
+            "value": "Epic - Version 10.5"
+          }
+        ],
         "property": [
           {
             "type": {
@@ -1438,7 +1451,8 @@
             "postalCode": "99999",
             "district": "26001",
             "period": {
-              "start": "2000-07-20T08:45:00"
+              "start": "2000-07-20T08:45:00",
+              "end": "2000-07-20T08:55:00"
             }
           }
         ],
@@ -4783,6 +4797,52 @@
       }
     },
     {
+      "fullUrl": "urn:uuid:984bc54d-e9f7-a697-aabf-cb350f64b0c1",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "984bc54d-e9f7-a697-aabf-cb350f64b0c1",
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:e6f1ba43-c0ed-4b9b-9f12-f435d8ad8f92"
+          }
+        ],
+        "statusReason": {
+          "coding": [
+            {
+              "code": "PATOBJ",
+              "system": "urn:oid:2.16.840.1.113883.5.8",
+              "display": "patient objection"
+            }
+          ]
+        },
+        "occurrenceDateTime": "2015-11-15",
+        "vaccineCode": {
+          "coding": [
+            {
+              "code": "166",
+              "system": "urn:oid:2.16.840.1.113883.12.292",
+              "display": "influenza, intradermal, quadrivalent, preservative free, injectable"
+            }
+          ],
+          "text": "influenza, intradermal, quadrivalent"
+        },
+        "status": "not-done",
+        "primarySource": true,
+        "note": [
+          {
+            "text": "Patient objected to <content ID=\"ImmunizationProduct_1\" xmlns=\"urn:hl7-org:v3\">influenza, intradermal, quadrivalent</content> on 11/15/2015 "
+          }
+        ],
+        "patient": {
+          "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
+        },
+        "meta": {
+          "source": "ecr"
+        }
+      }
+    },
+    {
       "fullUrl": "urn:uuid:26d05bcc-1b0f-fc8a-a85e-4c6c6512478f",
       "resource": {
         "resourceType": "Observation",
@@ -4812,6 +4872,122 @@
         },
         "subject": {
           "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:67e2b289-1fab-a613-ddb9-45c38a666738",
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "67e2b289-1fab-a613-ddb9-45c38a666738",
+        "identifier": [
+          {
+            "system": "urn:oid:1.2.840.113619.21.1.139060385287897942.9",
+            "value": "Observation/1885543262278850",
+            "assigner": {
+              "display": "31913-41995-12761042 API Resource Identifier"
+            }
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "30954-2",
+              "system": "http://loinc.org",
+              "display": "Relevant diagnostic tests/laboratory data note"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
+        },
+        "result": [
+          {
+            "reference": "Observation/7ea37105-1ac1-cd38-764b-2e39e6e68f69"
+          }
+        ],
+        "meta": {
+          "source": "ecr"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:7ea37105-1ac1-cd38-764b-2e39e6e68f69",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "7ea37105-1ac1-cd38-764b-2e39e6e68f69",
+        "meta": {
+          "profile": [
+            "http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-lab-result-observation"
+          ],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:1.2.840.113619.21.1.139060385287897942.9",
+            "value": "Observation/1885543262278850",
+            "assigner": {
+              "display": "31913-41995-12761042 API Resource Identifier"
+            }
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "314330",
+              "system": "urn:oid:1.2.840.113619.21.100.12.1053.139060385287897942",
+              "display": "CHLAMURETHRA"
+            }
+          ],
+          "text": "chlamydia, nucleic acid amplification test (NAAT) result, urethra culture"
+        },
+        "effectiveDateTime": "2019-09-27T09:52:20-05:00",
+        "valueString": "NOT DETECTED",
+        "subject": {
+          "reference": "Patient/f238f1ae-2f55-cd21-5c90-5e68a10af8ce"
+        },
+        "performer": [
+          {
+            "display": "Fake City LABORATORY",
+            "reference": "Organization/2915790f-5f44-6fe0-d2a4-fb2c07ef20d5"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:2915790f-5f44-6fe0-d2a4-fb2c07ef20d5",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "2915790f-5f44-6fe0-d2a4-fb2c07ef20d5",
+        "name": "Fake City LABORATORY",
+        "address": [
+          {
+            "line": ["1 1002 Healthcare Drive Drive"],
+            "city": "Fake City",
+            "state": "ZZ",
+            "postalCode": "99999"
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+1-555-555-1234"
+          }
+        ],
+        "meta": {
+          "source": "ecr"
         }
       }
     }

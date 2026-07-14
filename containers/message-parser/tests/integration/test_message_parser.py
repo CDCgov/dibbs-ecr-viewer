@@ -7,7 +7,8 @@ PARSE_MESSAGE = PARSER_URL + "/parse_message"
 
 @pytest.fixture
 def fhir_bundle(read_json_from_test_assets):
-    return read_json_from_test_assets("sample_fhir_bundle_eve_everywoman.json")
+    # Note: Eve Everywoman FHIR bundle was synthetically modified to cover all fields in the extended schema.
+    return read_json_from_test_assets("sample_fhir_bundle_eve_everywoman_modified.json")
 
 
 @pytest.fixture
@@ -70,7 +71,7 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
         "message": "Parsing succeeded!",
         "parsed_values": {
             "patient_id": "f238f1ae-2f55-cd21-5c90-5e68a10af8ce",
-            "person_id": None,
+            "person_id": None, # Remove after merging #1600
             "gender": "female",
             "race": "White",
             "ethnicity": "Non Hispanic or Latino",
@@ -84,21 +85,21 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
                     "postal_code": "99999",
                     "country": "US",
                     "period_start": "2000-07-20T08:45:00",
-                    "period_end": None,
+                    "period_end": "2000-07-20T08:55:00", # Synthetic
                 }
             ],
-            "latitude": None,
-            "longitude": None,
-            "rr_id": None,
+            "latitude": None, # Remove after merging #1600
+            "longitude": None, # Remove after merging #1600
+            "rr_id": None, # Remove or fix after merging #1600
             "processing_status": "RRVS19",
             "set_id": "31",
             "eicr_id": "db734647-fc99-424c-a864-7e3cda82e704",
             "eicr_version_number": "2",
-            "replaced_eicr_id": "Composition/2.16.840.1.113883.9.9.9.9.9.2",
-            "replaced_eicr_version": "1",
+            "replaced_eicr_id": "Composition/2.16.840.1.113883.9.9.9.9.9.2", # Remove after merging #1600
+            "replaced_eicr_version": "1", # Remove after merging #1600
             "authoring_date": "2020-11-07T09:44:21-05:00",
-            "ehr_software": None,
-            "ehr_manufacturer_model": None,
+            "ehr_software": "Epic - Version 10.5", # Synthetic
+            "ehr_manufacturer_model": "Epic - Version 10.5", # Synthetic
             "provider_id": "6666666666666",
             "facility_id": "2.16.840.1.113883.4.6",
             "facility_name": "Good Health Hospital",
@@ -129,6 +130,13 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
                     "effective_date": "2020-11-07",
                     "status": "completed",
                     "status_reason": None,
+                },
+                # Synthetic
+                {
+                    "name": "influenza, intradermal, quadrivalent, preservative free, injectable,influenza, intradermal, quadrivalent", 
+                    "effective_date": "2015-11-15", 
+                    "status": "not-done", 
+                    "status_reason": "patient objection",
                 },
             ],
             "labs": [
@@ -237,11 +245,34 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
                     "performing_lab": None,
                     "specimen_collection_date": None,
                 },
+                # Synthetic
+                {
+                    "uuid": "7ea37105-1ac1-cd38-764b-2e39e6e68f69",
+                    "test_type": "CHLAMURETHRA",
+                    "test_type_code": "314330",
+                    "test_type_system": "urn:oid:1.2.840.113619.21.100.12.1053.139060385287897942",
+                    "test_result_qualitative": "NOT DETECTED",
+                    "test_result_quantitative": None,
+                    "test_result_units": None,
+                    "test_result_code": None,
+                    "test_result_code_display": None,
+                    "test_result_code_system": None,
+                    "test_result_interpretation": None,
+                    "test_result_interpretation_code": None,
+                    "test_result_interpretation_system": None,
+                    "test_result_reference_range_low_value": None,
+                    "test_result_reference_range_low_units": None,
+                    "test_result_reference_range_high_value": None,
+                    "test_result_reference_range_high_units": None,
+                    "specimen_type": None,
+                    "performing_lab": "Fake City LABORATORY",
+                    "specimen_collection_date": None
+                }
             ],
             "birth_sex": "F",
             "gender_identity": "Female-to-male transsexual",
             "homelessness_status": "Homeless",
-            "disabilities": ("Are you deaf, or do you have serious difficulty hearing"),
+            "disabilities": ("Are you deaf, or do you have serious difficulty hearing"), # Remove after merging #1600
             "tribal_affiliation": ("Fort Mojave Indian Tribe of Arizona, California"),
             "tribal_enrollment_status": "True",
             "current_job_title": (
