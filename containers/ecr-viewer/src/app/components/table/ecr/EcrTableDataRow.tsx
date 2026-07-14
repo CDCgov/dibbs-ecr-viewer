@@ -112,6 +112,9 @@ export const EcrTableDataRow = ({
         <motion.td layout="position" role="gridcell">
           {summariesList}
         </motion.td>
+        <motion.td layout="position" role="gridcell">
+          {item.facility_name || noData}
+        </motion.td>
       </motion.tr>
 
       {isExpanded && <RelatedRows item={item} patientName={patientName} />}

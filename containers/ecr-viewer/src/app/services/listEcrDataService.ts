@@ -30,6 +30,7 @@ export interface MetadataModel {
   last_name: string | undefined;
   birth_date: Date | undefined;
   encounter_start_date: Date | undefined;
+  facility_name: string | undefined;
 }
 
 /**
@@ -133,6 +134,7 @@ const executeSearchQuery = async (
         "ecr_data.first_name",
         "ecr_data.last_name",
         "ecr_data.birth_date",
+        "ecr_data.facility_name",
         "ecr_data.encounter_start_date",
         "ecr_data.date_created",
         "ecr_data.set_id",
@@ -281,6 +283,7 @@ export const processMetadata = (responseBody: MetadataModel[]) => {
       related_ecrs: object.related_ecrs || [],
       patient_first_name: object.first_name || "",
       patient_last_name: object.last_name || "",
+      facility_name: object.facility_name || "",
       patient_date_of_birth: object.birth_date
         ? formatDate(object.birth_date.toISOString())
         : "",
@@ -459,6 +462,7 @@ export const generateSortStatement = (
   // Valid columns and directions
   const validColumns: { [key: string]: string } = {
     patient: "patient",
+    organization: "facility_name",
     date_created: "date_created",
     encounter_date: "encounter_start_date",
   };

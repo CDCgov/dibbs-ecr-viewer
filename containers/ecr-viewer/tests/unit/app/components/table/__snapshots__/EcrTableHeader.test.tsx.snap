@@ -140,6 +140,42 @@ exports[`EcrTableHeader disabled should match snapshot 1`] = `
           RCKMS rule summary
         </div>
       </th>
+      <th
+        class="library-organization-column"
+        data-sortable="true"
+        id="organization-header"
+        role="columnheader"
+        scope="col"
+      >
+        <button
+          aria-description="Sort by Organization"
+          class="usa-button usa-button--unstyled sort-button usa-button"
+          data-testid="button"
+          disabled=""
+          id="organization-sort-button"
+          type="button"
+        >
+          <span
+            class="text-ink"
+          >
+            Organization
+          </span>
+          <svg
+            aria-hidden="true"
+            class="usa-icon square-3"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15.17 15 13 17.17V6.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 11 6.83v10.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+            />
+          </svg>
+        </button>
+      </th>
     </tr>
   </thead>
 </table>
@@ -281,6 +317,41 @@ exports[`EcrTableHeader enabled should match snapshot 1`] = `
         >
           RCKMS rule summary
         </div>
+      </th>
+      <th
+        class="library-organization-column"
+        data-sortable="true"
+        id="organization-header"
+        role="columnheader"
+        scope="col"
+      >
+        <button
+          aria-description="Sort by Organization"
+          class="usa-button usa-button--unstyled sort-button usa-button"
+          data-testid="button"
+          id="organization-sort-button"
+          type="button"
+        >
+          <span
+            class="text-ink"
+          >
+            Organization
+          </span>
+          <svg
+            aria-hidden="true"
+            class="usa-icon square-3"
+            focusable="false"
+            height="1em"
+            role="img"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15.17 15 13 17.17V6.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 11 6.83v10.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+            />
+          </svg>
+        </button>
       </th>
     </tr>
   </thead>

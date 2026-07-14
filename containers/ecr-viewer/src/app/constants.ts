@@ -36,6 +36,13 @@ export const INITIAL_HEADERS: TableHeader[] = [
     dataSortable: false,
     sortDirection: "",
   },
+  {
+    id: "organization",
+    value: "Organization",
+    className: "library-organization-column",
+    dataSortable: true,
+    sortDirection: "",
+  },
 ];
 
 export const PAGE_SIZES = [10, 25, 50, 75, 100];
