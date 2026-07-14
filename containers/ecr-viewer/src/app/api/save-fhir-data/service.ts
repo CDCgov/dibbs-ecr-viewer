@@ -305,21 +305,24 @@ const saveExtendedMetadata = async (
 
     for (let i = 0; i < metadata.labs.length; i++) {
       const record = {
-          ...metadata.labs[i],
-          eicr_id: ecrId,
-          specimen_collection_date: asDate(metadata.labs[i].specimen_collection_date),
+        ...metadata.labs[i],
+        eicr_id: ecrId,
+        specimen_collection_date: asDate(
+          metadata.labs[i].specimen_collection_date,
+        ),
       };
 
       batchToInsert.push(record);
-      
+
       const numColumns = Object.keys(record).length;
-      
+      const maxRowsPerBatch = Math.floor(4096 / numColumns);
+
       // SQL Server allows a maximum of 4096 columns inserted at once which is the lower number of the two databases we support
-      if (batchToInsert.length == (4096 / numColumns) || i == metadata.labs.length - 1) {
-        await trx
-        .insertInto("ecr_labs")
-        .values(batchToInsert)
-        .execute();
+      if (
+        batchToInsert.length === maxRowsPerBatch ||
+        i === metadata.labs.length - 1
+      ) {
+        await trx.insertInto("ecr_labs").values(batchToInsert).execute();
 
         batchToInsert = [];
       }
