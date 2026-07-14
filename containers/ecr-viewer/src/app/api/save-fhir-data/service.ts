@@ -30,7 +30,6 @@ import { dbSchema } from "@/app/data/metadataDb/utils/db-config";
 import { createAuditRecord } from "@/app/services/auditLogService";
 
 import { BundleExtendedMetadata, BundleMetadata } from "./types";
-import { LabAccordion } from "@/app/view-data/components/LabAccordion";
 
 interface SaveResponse {
   message: string;
