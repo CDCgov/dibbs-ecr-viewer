@@ -314,9 +314,10 @@ const saveExtendedMetadata = async (
       batchToInsert.push(record);
 
       const numColumns = Object.keys(record).length;
-      const maxRowsPerBatch = Math.floor(4096 / numColumns);
 
       // SQL Server allows a maximum of 4096 columns inserted at once which is the lower number of the two databases we support
+      const maxRowsPerBatch = Math.floor(4096 / numColumns);
+
       if (
         batchToInsert.length === maxRowsPerBatch ||
         i === metadata.labs.length - 1
