@@ -33,7 +33,7 @@ This table stores the primary eCR data.
 | `first_name`           | `varchar(255)` | NOT NULL    |                   | Patient's first name                         |
 | `birth_date`           | `date`         | NOT NULL    |                   | Patient's birth date                         |
 | `encounter_start_date` | `datetime`     | NULL        |                   | Start date and time of the patient encounter |
-| `facility_name`        | `varchar(255)` | NULL        |                   | Organization associated with the encounter  |
+| `facility_name`        | `varchar(255)` | NULL        |                   | Organization associated with the encounter   |
 | `date_created`         | `datetime`     | NOT NULL    | Current timestamp | Date and time when the record was created    |
 
 ### `ecr_rr_conditions` Table
