@@ -7,28 +7,28 @@ import { toKebabCase } from "@/app/utils/format-utils";
 import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
 import Demographics from "@/app/view-data/components/Demographics";
 import EcrMetadata from "@/app/view-data/components/EcrMetadata";
-import EncounterDetails from "@/app/view-data/components/Encounter";
+import EncounterInfo from "@/app/view-data/components/EncounterInfo";
 import LabInfo from "@/app/view-data/components/LabInfo";
 import PregnancyInfo from "@/app/view-data/components/PregnancyInfo";
 import SocialHistory from "@/app/view-data/components/SocialHistory";
 import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
 import { evaluateEcrMetadata } from "@/app/view-data/services/ecrMetadataService";
 import {
-  evaluateSocialData,
   evaluateEncounterData,
   evaluateProviderData,
   evaluateFacilityData,
   evaluateHospitalEncounterData,
-  evaluatePregnancyData,
-} from "@/app/view-data/services/evaluateFhirDataService";
+} from "@/app/view-data/services/encounterInfoService";
+import { evaluateSocialData } from "@/app/view-data/services/socialHistoryService";
 import { evaluateDemographicsData } from "@/app/view-data/services/demographicsService";
+import { evaluatePregnancyData } from "@/app/view-data/services/pregnancyInfoService";
 import { evaluateLabInfoData } from "@/app/view-data/services/labsService";
 import {
   FhirIndex,
   getResourcesByType,
 } from "@/app/view-data/services/fhirResourcesIndexService";
 
-import { evaluateClinicalData } from "./clinical-data";
+import { evaluateClinicalData } from "@/app/view-data/services/clinicalInfoService";
 
 export type EcrDocumentNavConfig = {
   title: string;
@@ -168,7 +168,7 @@ export const getEcrDocumentAccordionItems = (
           hospitalEncounterData.availableData.length > 0 ||
           facilityData.availableData.length > 0 ||
           providerData.availableData.length > 0 ? (
-            <EncounterDetails
+            <EncounterInfo
               encounterData={encounterData.availableData}
               hospitalEncounterData={hospitalEncounterData.availableData}
               facilityData={facilityData.availableData}

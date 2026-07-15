@@ -1,0 +1,41 @@
+// Adapted from 'next-auth' to work with chained proxy approach
+
+import { NextRequest, NextResponse } from "next/server";
+import withAuth, { NextRequestWithAuth } from "next-auth/middleware";
+
+import { ChainableProxy, ProxyFactory } from "@/proxy";
+
+/**
+ * Proxy for handling next authorization
+ * @param next Next proxy in the chain
+ * @param end Early exit the chain
+ * @returns a NextResponse
+ */
+export const withNextAuth: ProxyFactory = (
+  next: ChainableProxy,
+  end: ChainableProxy,
+) => {
+  return async function (request: NextRequest) {
+    // IDP Auth not actually set up, so bail out
+    if (!process.env.AUTH_PROVIDER) {
+      return next(request);
+    }
+
+    const response = await withAuth(request as NextRequestWithAuth, {
+      pages: {
+        signIn: "/signin",
+        error: "/error/auth",
+      },
+    });
+    if (response instanceof Response) {
+      // Redirect not helpful for api routes, pass on to unauthorized handler
+      if (request.nextUrl.pathname.includes(`/api/`)) {
+        return next(request);
+      }
+
+      return response as NextResponse;
+    } else {
+      return end(request);
+    }
+  };
+};

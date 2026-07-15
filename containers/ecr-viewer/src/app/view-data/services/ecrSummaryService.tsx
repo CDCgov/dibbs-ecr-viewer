@@ -10,10 +10,7 @@ import {
   Organization,
 } from "fhir/r4";
 
-import {
-  formatDate,
-  formatStartEndDateTime,
-} from "@/app/services/formatDateService";
+import { formatStartEndDateTime } from "@/app/services/formatDateService";
 import {
   formatCodeableConcept,
   formatCoding,
@@ -21,7 +18,7 @@ import {
   formatCurrentAddress,
   formatPatientContactList,
 } from "@/app/services/formatService";
-import { evaluateData } from "@/app/utils/data-utils";
+import { noDataSummary } from "@/app/utils/data-utils";
 import {
   evaluateAll,
   evaluateOne,
@@ -36,12 +33,12 @@ import { LabAccordion } from "@/app/view-data/components/LabAccordion";
 import {
   returnImmunizations,
   returnProblemsTable,
-} from "@/app/view-data/components/common";
+} from "@/app/view-data/services/clinicalInfoService";
 
 import {
   evaluateEncounterDiagnosis,
   getLocationName,
-} from "./evaluateFhirDataService";
+} from "@/app/view-data/services/encounterInfoService";
 import {
   evaluatePatientName,
   evaluatePatientRace,
@@ -58,9 +55,9 @@ import { FhirIndex, getResourcesByType } from "./fhirResourcesIndexService";
 /**
  * Evaluates and retrieves patient details from the FHIR bundle using the provided path mappings.
  * @param fhirBundle - The FHIR bundle containing patient data.
- * @returns An array of patient details objects containing title and value pairs.
+ * @returns An array of patient summary objects containing title and value pairs.
  */
-export const evaluateEcrSummaryPatientDetails = (
+export const evaluateEcrSummaryPatient = (
   fhirBundle: Bundle,
   fhirIndex: FhirIndex,
 ) => {
@@ -75,89 +72,90 @@ export const evaluateEcrSummaryPatientDetails = (
       ? [
           {
             title: "Parent/Guardian",
-            value: formatPatientContactList(
-              evaluateAll(fhirBundle, fhirPathMappings.patientGuardian),
-            ),
+            value:
+              formatPatientContactList(
+                evaluateAll(fhirBundle, fhirPathMappings.patientGuardian),
+              ) || noDataSummary,
           },
         ]
       : [];
 
-  return evaluateData([
+  return [
     {
       title: "Patient Name",
-      value: evaluatePatientName(patient, false),
+      value: evaluatePatientName(patient, false) || noDataSummary,
     },
     {
       title: "DOB",
-      value: evaluatePatientDOB(patient),
+      value: evaluatePatientDOB(patient) || noDataSummary,
     },
     {
       title: "Sex",
       // Unknown and Other sex options removed to be in compliance with Executive Order 14168
-      value: censorGender(patientSex),
+      value: censorGender(patientSex) || noDataSummary,
     },
     {
       title: "Race",
-      value: evaluatePatientRace(patient),
+      value: evaluatePatientRace(patient) || noDataSummary,
     },
     {
       title: "Ethnicity",
-      value: evaluatePatientEthnicity(patient),
+      value: evaluatePatientEthnicity(patient) || noDataSummary,
     },
     {
       title: "Patient Address",
-      value: formatCurrentAddress(
-        evaluateAll(patient, fhirPathMappings.patientAddressList),
-      ),
+      value:
+        formatCurrentAddress(
+          evaluateAll(patient, fhirPathMappings.patientAddressList),
+        ) || noDataSummary,
     },
     {
       title: "Patient Contact",
-      value: formatContactPoint(
-        evaluateAll(patient, fhirPathMappings.patientTelecom),
-      ),
+      value:
+        formatContactPoint(
+          evaluateAll(patient, fhirPathMappings.patientTelecom),
+        ) || noDataSummary,
     },
     ...parentGuardian,
-  ]);
+  ];
 };
 
 /**
  * Evaluates and retrieves encounter details from the FHIR bundle using the provided path mappings.
  * @param fhirBundle - The FHIR bundle containing patient data.
- * @returns An array of encounter details objects containing title and value pairs.
+ * @returns An array of encounter summary objects containing title and value pairs.
  */
-export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
+export const evaluateEcrSummaryEncounter = (fhirBundle: Bundle) => {
   const encounter = evaluateOneReference<Encounter>(
     fhirBundle,
     fhirPathMappings.compositionEncounterRef,
   );
 
-  return evaluateData([
+  const orgRef = evaluateOne(encounter, fhirPathMappings.facilityOrgRef);
+  const org = evaluateReference<Organization>(fhirBundle, orgRef);
+
+  return [
     {
       title: "Encounter Date/Time",
-      value: formatStartEndDateTime(encounter?.period),
+      value: formatStartEndDateTime(encounter?.period) || noDataSummary,
     },
     {
       title: "Encounter Type",
-      value: formatCoding(encounter?.class),
+      value: formatCoding(encounter?.class) || noDataSummary,
     },
     {
       title: "Encounter Diagnosis",
-      value: evaluateEncounterDiagnosis(fhirBundle, encounter),
+      value: evaluateEncounterDiagnosis(fhirBundle, encounter) || noDataSummary,
     },
     {
       title: "Facility Name",
-      value: getLocationName(fhirBundle, encounter),
+      value: getLocationName(fhirBundle, encounter) || noDataSummary,
     },
     {
       title: "Facility Contact",
-      value: formatContactPoint(
-        evaluateOneReference<Organization>(
-          encounter,
-          fhirPathMappings.facilityOrgRef,
-        )?.telecom,
-      ),
+      value: formatContactPoint(org?.telecom) || noDataSummary,
     },
-  ]);
+  ];
 };
 
 /**
@@ -167,7 +165,7 @@ export const evaluateEcrSummaryEncounterDetails = (fhirBundle: Bundle) => {
  * @param snomedCode - (Optional) The SNOMED code identifying the main snomed code.
  * @returns An array of condition summary objects.
  */
-export const evaluateEcrSummaryConditionSummary = (
+export const evaluateEcrSummaryCondition = (
   fhirBundle: Bundle,
   fhirIndex: FhirIndex,
   snomedCode?: string,

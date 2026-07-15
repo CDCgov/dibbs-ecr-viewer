@@ -4,6 +4,7 @@ import {
   OrderByExpression,
   SelectQueryBuilder,
   Transaction,
+  sql,
 } from "kysely";
 
 import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
@@ -231,7 +232,10 @@ const getMetaModelData = async (
       "ecr_data.eicr_version_number",
       "ecr_data.date_created",
     ])
-    .orderBy("ecr_data.date_created", "desc")
+    .orderBy(
+      (eb) => eb.cast<number>("ecr_data.eicr_version_number", "integer"),
+      "desc",
+    )
     .where((eb) =>
       eb(
         "ecr_sets.max_version_number",
@@ -360,6 +364,11 @@ export const generateSearchStatement = (
   return eb.or([
     eb("ecr_data.first_name", getSql("like"), `%${searchTerm}%`),
     eb("ecr_data.last_name", getSql("like"), `%${searchTerm}%`),
+    eb(
+      sql<string>`CONCAT(ecr_data.first_name, ' ', ecr_data.last_name)`,
+      getSql("like"),
+      `%${searchTerm}%`,
+    ),
   ]);
 };
 
