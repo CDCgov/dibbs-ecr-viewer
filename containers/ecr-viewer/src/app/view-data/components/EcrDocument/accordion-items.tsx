@@ -8,7 +8,11 @@ import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
 import Demographics from "@/app/view-data/components/Demographics";
 import EcrMetadata from "@/app/view-data/components/EcrMetadata";
 import EncounterInfo from "@/app/view-data/components/EncounterInfo";
-import { LabInfo, LabNavItem, createLabSectionId } from "@/app/view-data/components/LabInfo";
+import {
+  LabInfo,
+  LabNavItem,
+  createLabSectionId,
+} from "@/app/view-data/components/LabInfo";
 import PregnancyInfo from "@/app/view-data/components/PregnancyInfo";
 import SocialHistory from "@/app/view-data/components/SocialHistory";
 import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";

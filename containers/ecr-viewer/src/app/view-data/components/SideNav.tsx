@@ -16,13 +16,9 @@ export class SectionConfig {
   id: string;
   subNavItems?: SectionConfig[];
 
-  constructor(
-    title: string,
-    subNavItems?: SectionNavInput[],
-    id?: string,
-  ) {
+  constructor(title: string, subNavItems?: SectionNavInput[], id?: string) {
     this.title = title;
-    this.id = id ?? toKebabCase(title); 
+    this.id = id ?? toKebabCase(title);
 
     if (subNavItems) {
       this.subNavItems = subNavItems.map((item) => {
