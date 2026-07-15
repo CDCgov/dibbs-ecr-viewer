@@ -8,7 +8,7 @@ import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
 import Demographics from "@/app/view-data/components/Demographics";
 import EcrMetadata from "@/app/view-data/components/EcrMetadata";
 import EncounterInfo from "@/app/view-data/components/EncounterInfo";
-import LabInfo from "@/app/view-data/components/LabInfo";
+import { LabInfo, LabNavItem, createLabSectionId } from "@/app/view-data/components/LabInfo";
 import PregnancyInfo from "@/app/view-data/components/PregnancyInfo";
 import SocialHistory from "@/app/view-data/components/SocialHistory";
 import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
@@ -32,7 +32,7 @@ import { evaluateClinicalData } from "@/app/view-data/services/clinicalInfoServi
 
 export type EcrDocumentNavConfig = {
   title: string;
-  subNavItems: string[];
+  subNavItems: Array<string | LabNavItem>;
 };
 
 /**
@@ -128,13 +128,16 @@ export const getEcrDocumentAccordionItems = (
     ecrMetadata.ecrCustodianDetails.availableData.length > 0 &&
       "eICR Custodian Details",
   );
+  const usedLabSectionIds = new Set<string>();
   const subNavLabs = labInfoData.map((labResult) => {
-    const labName = `Lab Results from ${
-      labResult?.organizationDisplayDataProps?.[0]?.value ||
-      "Unknown Organization"
-    }`;
-    return labName;
-  }) as string[];
+    const organizationName =
+      (labResult.organizationDisplayDataProps[0].value as string) || undefined;
+    const labName = `Lab Results from ${organizationName || "Unknown Organization"}`;
+    return {
+      title: labName,
+      id: createLabSectionId(organizationName, usedLabSectionIds),
+    };
+  }) as LabNavItem[];
 
   const sections = [
     {
@@ -216,7 +219,10 @@ export const getEcrDocumentAccordionItems = (
       title: "Lab Info",
       content:
         labInfoData.length > 0 ? (
-          <LabInfo labResults={labInfoData} />
+          <LabInfo
+            labResults={labInfoData}
+            sectionIds={subNavLabs.map((lab) => lab.id)}
+          />
         ) : (
           <p className="text-italic padding-bottom-05">
             No lab information was found in this eCR.

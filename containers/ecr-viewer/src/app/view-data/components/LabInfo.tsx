@@ -8,9 +8,11 @@ import {
 } from "@/app/view-data/utils/component-utils";
 
 import { DataDisplay } from "./DataDisplay";
+import { toKebabCase } from "@/app/utils/format-utils";
 
 interface LabInfoProps {
   labResults: LabReportElementData[];
+  sectionIds: string[];
 }
 
 /**
@@ -19,11 +21,15 @@ interface LabInfoProps {
  * @param props.labResults - some props
  * @returns The JSX element representing the lab information.
  */
-export const LabInfo = ({ labResults }: LabInfoProps) => {
+export const LabInfo = ({ labResults, sectionIds = [] }: LabInfoProps) => {
   return (
     <AccordionSection>
       {labResults.map((res, i) => (
-        <LabResultDetail key={i} labResult={res} />
+        <LabResultDetail
+          key={i}
+          labResult={res}
+          sectionId={sectionIds[i]}
+        />
       ))}
     </AccordionSection>
   );
@@ -31,8 +37,10 @@ export const LabInfo = ({ labResults }: LabInfoProps) => {
 
 const LabResultDetail = ({
   labResult,
+  sectionId,
 }: {
   labResult: LabReportElementData;
+  sectionId: string;
 }) => {
   const labName = `Lab Results from ${
     labResult?.organizationDisplayDataProps?.[0]?.value ||
@@ -40,7 +48,7 @@ const LabResultDetail = ({
   }`;
 
   return (
-    <AccordionSubSection title={labName}>
+    <AccordionSubSection title={labName} id={sectionId}>
       {labResult?.organizationDisplayDataProps?.map((item, index) => {
         if (item.value) return <DataDisplay item={item} key={index} />;
       })}
@@ -51,6 +59,31 @@ const LabResultDetail = ({
       />
     </AccordionSubSection>
   );
+};
+
+export type LabNavItem = {
+  title: string;
+  id: string;
+};
+
+// TODO ANGELA: Add JSDoc
+// Creates unique lab section ID for SideNav (avoid duplicate IDs)
+export const createLabSectionId = (
+  organizationName: string | undefined,
+  usedIds: Set<string>,
+) => {
+  const baseName = (organizationName || "Unknown Organization").trim();
+  const baseId = `lab-results-from-${toKebabCase(baseName)}`;
+  let candidateId = baseId;
+  let suffix = 2;
+
+  while (usedIds.has(candidateId)) {
+    candidateId = `${baseId}-${suffix}`;
+    suffix += 1;
+  }
+
+  usedIds.add(candidateId);
+  return candidateId;
 };
 
 export default LabInfo;
