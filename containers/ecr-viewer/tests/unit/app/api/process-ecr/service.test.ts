@@ -36,7 +36,7 @@ describe("orchestrationRequest", () => {
     id: "123",
     identifier: { system: "hello", value: "world" },
   };
-  const mockMetadata = { facility_name: "Hospital A" };
+  const mockMetadata = { key: "value" };
 
   let mockPool: Interceptable;
 
