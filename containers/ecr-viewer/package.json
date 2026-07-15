@@ -151,7 +151,7 @@
       "@parcel/watcher#2.5.6": true,
       "eslint-config-next>eslint-import-resolver-typescript>unrs-resolver#1.11.1": true,
       "fhirpath#4.8.5": false,
-      "next>sharp#0.34.5": true
+      "sharp#0.34.5": true
     }
   }
 }
