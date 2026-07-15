@@ -39,13 +39,16 @@ export const EcrTableDataRow = ({
   const [isExpanded, setExpanded] = useState(false);
   const patientName = item.patient_first_name + " " + item.patient_last_name;
 
-  const conditionsList = (
-    <ul className="ecr-table-list">
-      {item.reportable_conditions.map((rc, index) => (
-        <li key={index}>{rc}</li>
-      ))}
-    </ul>
-  );
+  const conditionsList =
+    item.reportable_conditions.length === 0 ? (
+      noData
+    ) : (
+      <ul className="ecr-table-list">
+        {item.reportable_conditions.map((rc, index) => (
+          <li key={index}>{rc}</li>
+        ))}
+      </ul>
+    );
 
   const summariesList = (
     <ul className="ecr-table-list">

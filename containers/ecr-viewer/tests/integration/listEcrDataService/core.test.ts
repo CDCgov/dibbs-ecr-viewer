@@ -405,6 +405,64 @@ describe("listEcrData - core", () => {
   });
 });
 
+describe("listEcrData - multi-version condition aggregation", () => {
+  const startIndex = 0;
+  const itemsPerPage = 25;
+  const sortColumn = "date_created";
+  const sortDirection = "DESC";
+
+  beforeEach(async () => {
+    await createCoreEcr(coreTemplate); // v2
+    await createCoreEcr({ ...coreTemplate, ...relatedEcr }); // v1, same set_id
+    await createEcrCondition({
+      uuid: "cond-v2",
+      eicr_id: "12345",
+      condition: "Condition1",
+    });
+    await createEcrCondition({
+      uuid: "cond-v1",
+      eicr_id: "36545",
+      condition: "Condition2",
+    });
+  });
+
+  afterEach(async () => {
+    await clearEcrCore();
+  });
+
+  it("should show conditions from all versions when no filter is applied", async () => {
+    const actual = await listEcrData({
+      startIndex,
+      itemsPerPage,
+      sortColumn,
+      sortDirection,
+      filterDates,
+    });
+
+    expect(actual).toHaveLength(1);
+    expect(actual[0].eicr_version_number).toBe("2");
+    expect(actual[0].reportable_conditions).toEqual(
+      expect.arrayContaining(["Condition1", "Condition2"]),
+    );
+    expect(actual[0].reportable_conditions).toHaveLength(2);
+  });
+
+  it("should only show conditions from the matched version when a condition filter is applied", async () => {
+    const actual = await listEcrData({
+      startIndex,
+      itemsPerPage,
+      sortColumn,
+      sortDirection,
+      filterDates,
+      filterConditions: ["Condition2"],
+    });
+
+    expect(actual).toHaveLength(1);
+    expect(actual[0].eicr_version_number).toBe("1");
+    expect(actual[0].reportable_conditions).toEqual(["Condition2"]);
+  });
+});
+
 describe("get total core ecr count", () => {
   beforeAll(async () => {
     await createCoreEcr(coreTemplate);
