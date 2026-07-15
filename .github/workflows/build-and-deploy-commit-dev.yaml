@@ -89,7 +89,7 @@ jobs:
         container-to-build: ${{ fromJson(needs.list-containers.outputs.all-containers) }}
     steps:
       - name: Check Out Branch
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.branch }}
           fetch-depth: 0
