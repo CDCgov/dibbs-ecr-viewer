@@ -447,7 +447,7 @@ describe("listEcrData - multi-version condition aggregation", () => {
     expect(actual[0].reportable_conditions).toHaveLength(2);
   });
 
-  it("should only show conditions from the matched version when a condition filter is applied", async () => {
+  it("should not show conditions from later versions when a condition filter matches an earlier version", async () => {
     const actual = await listEcrData({
       startIndex,
       itemsPerPage,

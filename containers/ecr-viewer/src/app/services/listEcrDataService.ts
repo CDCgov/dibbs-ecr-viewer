@@ -148,11 +148,7 @@ const executeSearchQuery = async (
       .fetch(itemsPerPage),
   );
 
-  const hasConditionFilter = !!(filterConditions && filterConditions.length > 0);
-  return await getMetaModelData(
-    ecrQuery as unknown as Kysely<EcrsCte>,
-    hasConditionFilter,
-  );
+  return await getMetaModelData(ecrQuery as unknown as Kysely<EcrsCte>);
 };
 
 const limitEcrDataToUser = (
@@ -201,50 +197,48 @@ interface EcrsCte extends Core {
 // data returned)
 const getMetaModelData = async (
   mainQuery: Kysely<EcrsCte>,
-  hasConditionFilter: boolean = false,
 ): Promise<MetadataModel[]> => {
   const rawEcrs: Omit<
     MetadataModel,
     "conditions" | "rule_summaries" | "related_ecrs"
   >[] = await mainQuery.selectFrom("ecrs").selectAll().execute();
 
-    // When a condition filter is active, only pull conditions from the matched
-    // version. Without a filter, expand through all versions in the same set so
-    // differing conditions across versions are surfaced on the main row.
-    const conditions = hasConditionFilter
-      ? await mainQuery
-          .selectFrom("ecrs")
-          .innerJoin(
-            "ecr_rr_conditions",
-            "ecrs.eicr_id",
-            "ecr_rr_conditions.eicr_id",
-          )
-          .select(["ecrs.set_id", "ecr_rr_conditions.condition"])
-          .distinct()
-          .execute()
-      : await mainQuery
-          .selectFrom("ecrs")
-          .innerJoin("ecr_data", "ecrs.set_id", "ecr_data.set_id")
-          .innerJoin(
-            "ecr_rr_conditions",
-            "ecr_data.eicr_id",
-            "ecr_rr_conditions.eicr_id",
-          )
-          .select(["ecrs.set_id", "ecr_rr_conditions.condition"])
-          .distinct()
-          .execute();
+  // Expand through the returned version and all previous versions in the same
+  // set so conditions across earlier versions are returned on the main row.
+  // When a condition filter is set, conditions from later versions are excluded.
+  const conditions = await mainQuery
+    .selectFrom("ecrs")
+    .innerJoin("ecr_data", (join) =>
+      join
+        .onRef("ecr_data.set_id", "=", "ecrs.set_id")
+        .on((eb) =>
+          eb(
+            eb.cast<number>("ecr_data.eicr_version_number", "integer"),
+            "<=",
+            eb.cast<number>("ecrs.eicr_version_number", "integer"),
+          ),
+        ),
+    )
+    .innerJoin(
+      "ecr_rr_conditions",
+      "ecr_data.eicr_id",
+      "ecr_rr_conditions.eicr_id",
+    )
+    .select(["ecrs.set_id", "ecr_rr_conditions.condition"])
+    .distinct()
+    .execute();
 
-    const rule_summaries = await mainQuery
-      .selectFrom("ecrs")
-      .leftJoin("ecr_rr_conditions", "ecrs.eicr_id", "ecr_rr_conditions.eicr_id")
-      .leftJoin(
-        "ecr_rr_rule_summaries",
-        "ecr_rr_conditions.uuid",
-        "ecr_rr_rule_summaries.ecr_rr_conditions_id",
-      )
-      .select(["ecrs.eicr_id", "ecr_rr_rule_summaries.rule_summary"])
-      .distinct()
-      .execute();
+  const rule_summaries = await mainQuery
+    .selectFrom("ecrs")
+    .leftJoin("ecr_rr_conditions", "ecrs.eicr_id", "ecr_rr_conditions.eicr_id")
+    .leftJoin(
+      "ecr_rr_rule_summaries",
+      "ecr_rr_conditions.uuid",
+      "ecr_rr_rule_summaries.ecr_rr_conditions_id",
+    )
+    .select(["ecrs.eicr_id", "ecr_rr_rule_summaries.rule_summary"])
+    .distinct()
+    .execute();
 
   const related_ecrs = await mainQuery
     .selectFrom("ecr_sets")
@@ -265,14 +259,11 @@ const getMetaModelData = async (
     )
     .execute();
 
-
   const ecrs: MetadataModel[] = rawEcrs.map((ecr) => {
     return {
       ...ecr,
       conditions: conditions
-        .filter(
-          ({ set_id, condition }) => condition && set_id === ecr.set_id,
-        )
+        .filter(({ set_id, condition }) => condition && set_id === ecr.set_id)
         .map(({ condition }) => condition) as string[],
       rule_summaries: rule_summaries
         .filter(
