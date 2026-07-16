@@ -44,6 +44,7 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
             "last_name": "Everywoman",
             "first_name": "Eve",
             "birth_date": "1974-11-24",
+            "facility_name": "Good Health Hospital",
             "encounter_start_date": "2020-11-07T08:44:21-05:00",
             "rr": [
                 {
