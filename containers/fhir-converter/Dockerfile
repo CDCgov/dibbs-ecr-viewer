@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 # Download FHIR-Converter
 
-RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch 8.7.6 --depth 1 /App
+RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch victor/1079-convert-translation --depth 1 /App
 
 WORKDIR /App
 
