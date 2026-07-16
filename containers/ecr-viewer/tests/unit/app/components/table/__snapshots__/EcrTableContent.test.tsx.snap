@@ -73,6 +73,15 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        <span
+          class="text-italic text-base"
+        >
+          No data
+        </span>
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -97,15 +106,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-1
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        <span
-          class="text-italic text-base"
-        >
-          No data
-        </span>
       </td>
     </tr>
     <tr
@@ -178,6 +178,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-2
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -202,11 +207,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-2
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-2
       </td>
     </tr>
     <tr
@@ -279,6 +279,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-3
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -303,11 +308,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-3
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-3
       </td>
     </tr>
     <tr
@@ -380,6 +380,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-4
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -404,11 +409,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-4
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-4
       </td>
     </tr>
     <tr
@@ -481,6 +481,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-5
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -505,11 +510,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-5
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-5
       </td>
     </tr>
     <tr
@@ -582,6 +582,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-6
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -606,11 +611,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-6
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-6
       </td>
     </tr>
     <tr
@@ -683,6 +683,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-7
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -707,11 +712,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-7
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-7
       </td>
     </tr>
     <tr
@@ -784,6 +784,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-8
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -808,11 +813,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-8
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-8
       </td>
     </tr>
     <tr
@@ -885,6 +885,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-9
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -909,11 +914,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-9
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-9
       </td>
     </tr>
     <tr
@@ -986,6 +986,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-10
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1010,11 +1015,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-10
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-10
       </td>
     </tr>
     <tr
@@ -1087,6 +1087,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-11
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1111,11 +1116,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-11
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-11
       </td>
     </tr>
     <tr
@@ -1188,6 +1188,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-12
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1212,11 +1217,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-12
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-12
       </td>
     </tr>
     <tr
@@ -1289,6 +1289,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-13
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1313,11 +1318,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-13
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-13
       </td>
     </tr>
     <tr
@@ -1390,6 +1390,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-14
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1414,11 +1419,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-14
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-14
       </td>
     </tr>
     <tr
@@ -1491,6 +1491,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-15
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1515,11 +1520,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-15
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-15
       </td>
     </tr>
     <tr
@@ -1592,6 +1592,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-16
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1616,11 +1621,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-16
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-16
       </td>
     </tr>
     <tr
@@ -1693,6 +1693,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-17
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1717,11 +1722,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-17
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-17
       </td>
     </tr>
     <tr
@@ -1794,6 +1794,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-18
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1818,11 +1823,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-18
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-18
       </td>
     </tr>
     <tr
@@ -1895,6 +1895,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-19
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1919,11 +1924,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-19
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-19
       </td>
     </tr>
     <tr
@@ -1996,6 +1996,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-20
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -2020,11 +2025,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-20
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-20
       </td>
     </tr>
     <tr
@@ -2097,6 +2097,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-21
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -2121,11 +2126,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-21
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-21
       </td>
     </tr>
     <tr
@@ -2198,6 +2198,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-22
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -2222,11 +2227,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-22
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-22
       </td>
     </tr>
     <tr
@@ -2299,6 +2299,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-23
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -2323,11 +2328,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-23
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-23
       </td>
     </tr>
     <tr
@@ -2400,6 +2400,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-24
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -2424,11 +2429,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-24
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-24
       </td>
     </tr>
     <tr
@@ -2501,6 +2501,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-25
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -2525,11 +2530,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
             second-summary-25
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-25
       </td>
     </tr>
   </tbody>
@@ -2609,6 +2609,15 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        <span
+          class="text-italic text-base"
+        >
+          No data
+        </span>
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -2633,15 +2642,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-1
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        <span
-          class="text-italic text-base"
-        >
-          No data
-        </span>
       </td>
     </tr>
     <tr
@@ -2909,6 +2909,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-2
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -2933,11 +2938,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-2
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-2
       </td>
     </tr>
     <tr
@@ -3010,6 +3010,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-3
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -3034,11 +3039,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-3
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-3
       </td>
     </tr>
     <tr
@@ -3111,6 +3111,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-4
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -3135,11 +3140,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-4
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-4
       </td>
     </tr>
     <tr
@@ -3212,6 +3212,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-5
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -3236,11 +3241,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-5
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-5
       </td>
     </tr>
     <tr
@@ -3313,6 +3313,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-6
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -3337,11 +3342,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-6
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-6
       </td>
     </tr>
     <tr
@@ -3414,6 +3414,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-7
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -3438,11 +3443,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-7
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-7
       </td>
     </tr>
     <tr
@@ -3515,6 +3515,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-8
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -3539,11 +3544,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-8
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-8
       </td>
     </tr>
     <tr
@@ -3616,6 +3616,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-9
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -3640,11 +3645,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-9
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-9
       </td>
     </tr>
     <tr
@@ -3717,6 +3717,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-10
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -3741,11 +3746,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-10
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-10
       </td>
     </tr>
     <tr
@@ -3818,6 +3818,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-11
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -3842,11 +3847,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-11
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-11
       </td>
     </tr>
     <tr
@@ -3919,6 +3919,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-12
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -3943,11 +3948,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-12
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-12
       </td>
     </tr>
     <tr
@@ -4020,6 +4020,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-13
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -4044,11 +4049,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-13
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-13
       </td>
     </tr>
     <tr
@@ -4121,6 +4121,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-14
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -4145,11 +4150,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-14
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-14
       </td>
     </tr>
     <tr
@@ -4222,6 +4222,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-15
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -4246,11 +4251,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-15
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-15
       </td>
     </tr>
     <tr
@@ -4323,6 +4323,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-16
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -4347,11 +4352,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-16
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-16
       </td>
     </tr>
     <tr
@@ -4424,6 +4424,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-17
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -4448,11 +4453,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-17
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-17
       </td>
     </tr>
     <tr
@@ -4525,6 +4525,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-18
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -4549,11 +4554,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-18
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-18
       </td>
     </tr>
     <tr
@@ -4626,6 +4626,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-19
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -4650,11 +4655,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-19
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-19
       </td>
     </tr>
     <tr
@@ -4727,6 +4727,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-20
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -4751,11 +4756,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-20
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-20
       </td>
     </tr>
     <tr
@@ -4828,6 +4828,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-21
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -4852,11 +4857,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-21
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-21
       </td>
     </tr>
     <tr
@@ -4929,6 +4929,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-22
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -4953,11 +4958,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-22
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-22
       </td>
     </tr>
     <tr
@@ -5030,6 +5030,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-23
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -5054,11 +5059,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-23
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-23
       </td>
     </tr>
     <tr
@@ -5131,6 +5131,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-24
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -5155,11 +5160,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-24
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-24
       </td>
     </tr>
     <tr
@@ -5232,6 +5232,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-25
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -5256,11 +5261,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
             second-summary-25
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-25
       </td>
     </tr>
   </tbody>
@@ -5340,6 +5340,15 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        <span
+          class="text-italic text-base"
+        >
+          No data
+        </span>
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -5364,15 +5373,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-1
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        <span
-          class="text-italic text-base"
-        >
-          No data
-        </span>
       </td>
     </tr>
     <tr
@@ -5685,6 +5685,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-2
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -5709,11 +5714,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-2
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-2
       </td>
     </tr>
     <tr
@@ -5786,6 +5786,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-3
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -5810,11 +5815,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-3
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-3
       </td>
     </tr>
     <tr
@@ -5887,6 +5887,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-4
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -5911,11 +5916,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-4
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-4
       </td>
     </tr>
     <tr
@@ -5988,6 +5988,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-5
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -6012,11 +6017,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-5
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-5
       </td>
     </tr>
     <tr
@@ -6089,6 +6089,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-6
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -6113,11 +6118,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-6
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-6
       </td>
     </tr>
     <tr
@@ -6190,6 +6190,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-7
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -6214,11 +6219,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-7
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-7
       </td>
     </tr>
     <tr
@@ -6291,6 +6291,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-8
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -6315,11 +6320,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-8
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-8
       </td>
     </tr>
     <tr
@@ -6392,6 +6392,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-9
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -6416,11 +6421,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-9
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-9
       </td>
     </tr>
     <tr
@@ -6493,6 +6493,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-10
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -6517,11 +6522,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-10
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-10
       </td>
     </tr>
     <tr
@@ -6594,6 +6594,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-11
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -6618,11 +6623,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-11
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-11
       </td>
     </tr>
     <tr
@@ -6695,6 +6695,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-12
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -6719,11 +6724,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-12
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-12
       </td>
     </tr>
     <tr
@@ -6796,6 +6796,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-13
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -6820,11 +6825,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-13
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-13
       </td>
     </tr>
     <tr
@@ -6897,6 +6897,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-14
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -6921,11 +6926,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-14
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-14
       </td>
     </tr>
     <tr
@@ -6998,6 +6998,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-15
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -7022,11 +7027,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-15
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-15
       </td>
     </tr>
     <tr
@@ -7099,6 +7099,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-16
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -7123,11 +7128,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-16
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-16
       </td>
     </tr>
     <tr
@@ -7200,6 +7200,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-17
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -7224,11 +7229,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-17
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-17
       </td>
     </tr>
     <tr
@@ -7301,6 +7301,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-18
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -7325,11 +7330,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-18
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-18
       </td>
     </tr>
     <tr
@@ -7402,6 +7402,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-19
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -7426,11 +7431,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-19
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-19
       </td>
     </tr>
     <tr
@@ -7503,6 +7503,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-20
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -7527,11 +7532,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-20
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-20
       </td>
     </tr>
     <tr
@@ -7604,6 +7604,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-21
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -7628,11 +7633,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-21
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-21
       </td>
     </tr>
     <tr
@@ -7705,6 +7705,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-22
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -7729,11 +7734,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-22
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-22
       </td>
     </tr>
     <tr
@@ -7806,6 +7806,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-23
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -7830,11 +7835,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-23
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-23
       </td>
     </tr>
     <tr
@@ -7907,6 +7907,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-24
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -7931,11 +7936,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-24
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-24
       </td>
     </tr>
     <tr
@@ -8008,6 +8008,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-25
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -8032,11 +8037,6 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
             second-summary-25
           </li>
         </ul>
-      </td>
-      <td
-        role="gridcell"
-      >
-        Organization-25
       </td>
     </tr>
   </tbody>

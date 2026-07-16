@@ -107,13 +107,13 @@ export const EcrTableDataRow = ({
           {item.patient_report_date || noData}
         </motion.td>
         <motion.td layout="position" role="gridcell">
+          {item.facility_name || noData}
+        </motion.td>
+        <motion.td layout="position" role="gridcell">
           {conditionsList}
         </motion.td>
         <motion.td layout="position" role="gridcell">
           {summariesList}
-        </motion.td>
-        <motion.td layout="position" role="gridcell">
-          {item.facility_name || noData}
         </motion.td>
       </motion.tr>
 
