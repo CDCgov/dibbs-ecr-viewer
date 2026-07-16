@@ -299,8 +299,12 @@ const saveExtendedMetadata = async (
         .execute();
     }
   }
-  if (metadata.labs) {
+  if (metadata.labs && metadata.labs.length > 0) {
     let batchToInsert = [];
+    const numColumns = Object.keys(metadata.labs[0]).length;
+
+    // SQL Server allows a maximum of 4096 columns inserted at once which is the lower number of the two databases we support
+    const maxRowsPerBatch = Math.floor(4096 / numColumns);
 
     for (let i = 0; i < metadata.labs.length; i++) {
       const record = {
@@ -312,11 +316,6 @@ const saveExtendedMetadata = async (
       };
 
       batchToInsert.push(record);
-
-      const numColumns = Object.keys(record).length;
-
-      // SQL Server allows a maximum of 4096 columns inserted at once which is the lower number of the two databases we support
-      const maxRowsPerBatch = Math.floor(4096 / numColumns);
 
       if (
         batchToInsert.length === maxRowsPerBatch ||
