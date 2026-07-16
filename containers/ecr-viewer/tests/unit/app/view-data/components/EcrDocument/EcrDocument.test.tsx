@@ -118,10 +118,12 @@ describe("Tests for eCR Document", () => {
       },
       {
         title: "Lab Info",
-        subNavItems: [{
-          "id": "lab-results-from-unknown-organization",
-          "title": "Lab Results from Unknown Organization",
-        }],
+        subNavItems: [
+          {
+            id: "lab-results-from-unknown-organization",
+            title: "Lab Results from Unknown Organization",
+          },
+        ],
       },
       {
         title: "eCR Metadata",

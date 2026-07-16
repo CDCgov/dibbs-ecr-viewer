@@ -25,11 +25,7 @@ export const LabInfo = ({ labResults, sectionIds = [] }: LabInfoProps) => {
   return (
     <AccordionSection>
       {labResults.map((res, i) => (
-        <LabResultDetail
-          key={i}
-          labResult={res}
-          sectionId={sectionIds[i]}
-        />
+        <LabResultDetail key={i} labResult={res} sectionId={sectionIds[i]} />
       ))}
     </AccordionSection>
   );
