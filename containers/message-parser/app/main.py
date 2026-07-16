@@ -8,7 +8,6 @@ from fastapi import Body, Response, status
 from app.base_service import BaseService
 from app.config import get_settings
 from app.models import (
-    FhirToPhdcInput,
     GetSchemaResponse,
     ListSchemasResponse,
     ParseMessageInput,
@@ -16,7 +15,6 @@ from app.models import (
     ParsingSchemaModel,
     PutSchemaResponse,
 )
-from app.phdc.builder import PHDCBuilder
 from app.utils import (
     FhirParser,
     clean_schema,
@@ -27,7 +25,6 @@ from app.utils import (
     load_parsing_schema,
     read_json_from_assets,
     search_for_required_values,
-    transform_to_phdc_input_data,
 )
 
 # Read settings immediately to fail fast in case there are invalid values.
@@ -115,57 +112,6 @@ async def parse_message_endpoint(
     if input.include_metadata == "true":
         parsed_values = get_metadata(parsed_values, parsing_schema)
     return {"message": "Parsing succeeded!", "parsed_values": parsed_values}
-
-
-# /fhir_to_phdc endpoint #
-fhir_to_phdc_request_examples = read_json_from_assets(
-    "sample_fhir_to_phdc_requests.json"
-)
-raw_fhir_to_phdc_response_examples = read_json_from_assets(
-    "sample_fhir_to_phdc_response.json"
-)
-fhir_to_phdc_response_examples = {200: raw_fhir_to_phdc_response_examples}
-
-
-@app.post(
-    "/fhir_to_phdc",
-    status_code=200,
-    responses=fhir_to_phdc_response_examples,
-    summary="FHIR To PHDC Endpoint",
-)
-async def fhir_to_phdc_endpoint(
-    input: Annotated[FhirToPhdcInput, Body(examples=fhir_to_phdc_request_examples)],
-    response: Response,
-):
-    """
-    This endpoint converts a FHIR bundle to a Public Health Document Container
-    (PHDC).
-    """
-
-    # 1. Identify the parsing schema based on the supplied phdc type
-    match input.phdc_report_type:
-        case "case_report":
-            parsing_schema = load_parsing_schema("phdc_case_report_schema.json")
-        case "contact_record":
-            pass
-        case "lab_report":
-            pass
-        case "morbidity_report":
-            pass
-
-    # 2. Extract data from FHIR
-    parser = FhirParser(parsing_schema, input.message, response)
-    parsed_values = parser.parse()
-
-    # 3. Transform to PHDCbuilder data classes
-    input_data = transform_to_phdc_input_data(parsed_values)
-
-    # 4. Build PHDC
-    builder = PHDCBuilder()
-    builder.set_input_data(input_data)
-    phdc = builder.build()
-
-    return Response(content=phdc.to_xml_string(), media_type="application/xml")
 
 
 # /schemas endpoint #
