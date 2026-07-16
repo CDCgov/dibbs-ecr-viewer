@@ -1,6 +1,7 @@
 import React from "react";
 
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Bundle, Condition, Immunization } from "fhir/r4";
 import { axe } from "jest-axe";
 
@@ -1152,7 +1153,8 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
     expect(clinicalInfo.getAllByText("Recurrence")).toHaveLength(1);
   });
 
-  it("eCR Viewer renders vital signs given FHIR bundle with vital signs info", () => {
+  it("eCR Viewer renders vital signs collapsed by default and expands them", async () => {
+    const user = userEvent.setup();
     const clinicalInfo = render(
       <ClinicalInfo
         immunizationsDetails={[]}
@@ -1167,6 +1169,17 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
 
     const expectedVitalSignsElement = clinicalInfo.getByTestId("vital-signs");
     expect(expectedVitalSignsElement).toBeInTheDocument();
+    expect(expectedVitalSignsElement).not.toBeVisible();
+
+    const vitalSignsButton = clinicalInfo.getByRole("button", {
+      name: "Vital Signs",
+    });
+    expect(vitalSignsButton).toHaveAttribute("aria-expanded", "false");
+
+    await user.click(vitalSignsButton);
+
+    expect(vitalSignsButton).toHaveAttribute("aria-expanded", "true");
+    expect(expectedVitalSignsElement).toBeVisible();
 
     // Ensure only one table (Vital Signs) is rendering
     const expectedTable = clinicalInfo.getAllByTestId("table");
