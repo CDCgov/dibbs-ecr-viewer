@@ -1,6 +1,6 @@
 import sqlite3
 
-from app.utils import format_icd9_crosswalks, get_clean_snomed_code
+from app.utils import format_icd9_crosswalks, get_clean_snomed_code, get_codings
 
 _TES_DB_URL = "./data/tes.db"
 
@@ -104,17 +104,24 @@ def add_human_readable_reportable_condition_name_tes(resource: dict) -> dict:
     # Check if there's a SNOMED "Condition" coding in resource["code"]["coding"]
     has_condition = any(
         x.get("system") == "http://snomed.info/sct" and x.get("code") == "64572001"
-        for x in resource["code"].get("coding", [])
+        for x in get_codings(resource.get("code"))
     )
     if not has_condition:
         return resource
 
     # Get the first SNOMED coding from resource["valueCodeableConcept"]["coding"], if any
-    if "valueCodeableConcept" in resource:
+    value_codeable_concept = resource.get("valueCodeableConcept")
+    if isinstance(value_codeable_concept, list):
+        value_codeable_concept = next(
+            (x for x in value_codeable_concept if isinstance(x, dict)),
+            None,
+        )
+
+    if isinstance(value_codeable_concept, dict):
         condition_code = next(
             (
                 x
-                for x in resource["valueCodeableConcept"].get("coding", [])
+                for x in get_codings(resource.get("valueCodeableConcept"))
                 if x.get("system", "") == "http://snomed.info/sct"
             ),
             None,
@@ -126,21 +133,21 @@ def add_human_readable_reportable_condition_name_tes(resource: dict) -> dict:
             )
 
             if human_readable_condition_name:
-                resource["valueCodeableConcept"]["text"] = human_readable_condition_name
+                value_codeable_concept["text"] = human_readable_condition_name
             elif "display" in condition_code:
-                resource["valueCodeableConcept"]["text"] = condition_code["display"]
+                value_codeable_concept["text"] = condition_code["display"]
         else:
             # Fallback to the first available display text if condition_code is absent
             fallback_display = next(
                 (
                     x["display"]
-                    for x in resource["valueCodeableConcept"].get("coding", [])
+                    for x in get_codings(resource.get("valueCodeableConcept"))
                     if "display" in x
                 ),
                 None,
             )
             if fallback_display:
-                resource["valueCodeableConcept"]["text"] = fallback_display
+                value_codeable_concept["text"] = fallback_display
 
     return resource
 

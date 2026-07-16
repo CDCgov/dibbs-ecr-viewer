@@ -300,6 +300,7 @@ const saveExtendedMetadata = async (
     }
   }
   if (metadata.labs) {
+    let time = new Date();
     for (const lab of metadata.labs) {
       await trx
         .insertInto("ecr_labs")
@@ -310,6 +311,8 @@ const saveExtendedMetadata = async (
         })
         .execute();
     }
+    let time2 = new Date();
+    console.log(Math.abs(time2.getTime() - time.getTime()));
   }
 
   if (metadata.immunizations) {

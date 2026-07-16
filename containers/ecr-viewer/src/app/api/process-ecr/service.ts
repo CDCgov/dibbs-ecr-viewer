@@ -36,6 +36,8 @@ interface BundleInfo {
   metadata: BundleMetadata | BundleExtendedMetadata | undefined;
 }
 
+type FhirBundleInput = Bundle | Record<string, unknown>;
+
 /**
  * Determines the orchestration config to use based on set env variables
  * @returns name of the orchestration config
@@ -53,12 +55,48 @@ const getOrchestrationConfigName = () => {
 };
 
 interface RequestBody {
-  ecr: File | string;
+  ecr: File | string | FhirBundleInput;
   rr?: File | string;
 }
 
-const asString = async (v: string | File | undefined) =>
+const asString = async (v: string | File | FhirBundleInput | undefined) =>
   v instanceof File ? await v.text() : v;
+
+const isFhirBundle = (value: unknown): value is FhirBundleInput =>
+  typeof value === "object" &&
+  value !== null &&
+  "resourceType" in value &&
+  value.resourceType === "Bundle";
+
+const parseFhirBundle = (value: string): FhirBundleInput | undefined => {
+  try {
+    const parsed = JSON.parse(value);
+    return isFhirBundle(parsed) ? parsed : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+const asFhirBundle = async (
+  value: File | string | FhirBundleInput,
+): Promise<FhirBundleInput | undefined> => {
+  if (isFhirBundle(value)) {
+    return value;
+  }
+
+  if (typeof value === "string") {
+    return parseFhirBundle(value);
+  }
+
+  if (
+    value.type === "application/json" ||
+    value.name.toLowerCase().endsWith(".json")
+  ) {
+    return parseFhirBundle(await value.text());
+  }
+
+  return undefined;
+};
 
 /**
  * Make a request to orchestration /process-zip endpoint
@@ -72,7 +110,7 @@ export const getOrchestrationResponse = async (
   { ecr, rr }: RequestBody,
   fetchAgent: Agent,
 ): Promise<BundleInfo> => {
-  const bodyObj: Record<string, string | File | undefined> = {
+  const bodyObj: Record<string, string | File | FhirBundleInput | undefined> = {
     message_type: "ecr",
     include_error_types: "[errors]",
     config_file_name: getOrchestrationConfigName(),
@@ -83,9 +121,16 @@ export const getOrchestrationResponse = async (
     bodyObj.data_type = "zip";
     bodyObj.upload_file = ecr;
   } else {
-    bodyObj.data_type = "ecr";
-    bodyObj.message = await asString(ecr);
-    bodyObj.rr_data = await asString(rr);
+    const fhirBundle = await asFhirBundle(ecr);
+    if (fhirBundle) {
+      bodyObj.message_type = "fhir";
+      bodyObj.data_type = "fhir";
+      bodyObj.message = fhirBundle;
+    } else {
+      bodyObj.data_type = "ecr";
+      bodyObj.message = await asString(ecr);
+      bodyObj.rr_data = await asString(rr);
+    }
   }
 
   let body: string | FormData;
@@ -93,7 +138,9 @@ export const getOrchestrationResponse = async (
   if (endpoint === "process-zip") {
     const formData = new FormData();
     for (const [k, v] of Object.entries(bodyObj)) {
-      !!v && formData.append(k, v);
+      if (typeof v === "string" || v instanceof File) {
+        formData.append(k, v);
+      }
     }
     body = formData;
   } else {
@@ -185,18 +232,18 @@ export const orchestrationRequest = async (
   fetchAgent = createOrchestrationAgent(),
   shouldSaveXml: boolean = false,
 ) => {
-  const ecrId = await getEcrIdFromXml(body);
+  // const ecrId = await getEcrIdFromXml(body);
 
-  if (dbDialect()) {
-    const existing = await getDb<Core>()
-      .selectFrom("ecr_data")
-      .select((eb) => eb.fn.countAll().as("num_ecr"))
-      .where("ecr_data.eicr_id", "=", ecrId)
-      .executeTakeFirst();
-    if (existing && Number(existing.num_ecr) > 0) {
-      return { message: `eCR already loaded: ${ecrId}`, status: 409 };
-    }
-  }
+  // if (dbDialect()) {
+  //   const existing = await getDb<Core>()
+  //     .selectFrom("ecr_data")
+  //     .select((eb) => eb.fn.countAll().as("num_ecr"))
+  //     .where("ecr_data.eicr_id", "=", ecrId)
+  //     .executeTakeFirst();
+  //   if (existing && Number(existing.num_ecr) > 0) {
+  //     return { message: `eCR already loaded: ${ecrId}`, status: 409 };
+  //   }
+  // }
 
   const promises: [
     Promise<{ message: string; status: number; bundle?: Bundle }>,
@@ -227,9 +274,9 @@ export const orchestrationRequest = async (
     })(),
   ];
 
-  if (shouldSaveXml) {
-    promises.push(zipAndSaveXml(body, ecrId));
-  }
+  // if (shouldSaveXml) {
+  //   promises.push(zipAndSaveXml(body, ecrId));
+  // }
 
   const [orchestrationResult, saveResult] = await Promise.allSettled(promises);
 
@@ -237,9 +284,9 @@ export const orchestrationRequest = async (
     orchestrationResult.status === "rejected" ||
     orchestrationResult.value.status >= 500
   ) {
-    if (shouldSaveXml && saveResult?.status === "fulfilled") {
-      await deleteFromStorage(ecrId, process.env.SOURCE, "xml");
-    }
+    // if (shouldSaveXml && saveResult?.status === "fulfilled") {
+    //   await deleteFromStorage(ecrId, process.env.SOURCE, "xml");
+    // }
 
     const errMsg =
       orchestrationResult.status === "rejected"

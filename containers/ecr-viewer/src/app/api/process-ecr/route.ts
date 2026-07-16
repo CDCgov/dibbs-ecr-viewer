@@ -6,7 +6,7 @@ import { orchestrationRequest } from "./service";
 
 interface ProcessEcrResponse {
   message: string;
-  erorors?: string[];
+  errors?: unknown[];
   bundle?: Bundle<FhirResource>;
 }
 
@@ -18,8 +18,14 @@ const returnBundle = {
     .transform((v) => v?.toLowerCase()),
 };
 
+const fhirBundleSchema = z
+  .object({
+    resourceType: z.literal("Bundle"),
+  })
+  .passthrough();
+
 const schema = z.object({
-  ecr: z.union([z.string(), z.instanceof(File)]),
+  ecr: z.union([z.string(), z.instanceof(File), fhirBundleSchema]),
   rr: z.union([z.string(), z.instanceof(File)]).optional(),
   ...returnBundle,
 });

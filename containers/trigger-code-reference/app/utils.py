@@ -110,6 +110,32 @@ def get_concepts_dict(
     return concept_dict
 
 
+def get_codings(codeable_concept: dict | list | None) -> list[dict]:
+    """
+    Extract coding dictionaries from a FHIR CodeableConcept-like value.
+
+    FHIR R4 normally represents fields like `code` as a single object, but
+    some upstream bundles arrive with an array of CodeableConcept-like objects.
+    """
+    if isinstance(codeable_concept, dict):
+        codings = codeable_concept.get("coding", [])
+        if isinstance(codings, list):
+            return [coding for coding in codings if isinstance(coding, dict)]
+        if isinstance(codings, dict):
+            return [codings]
+        if "code" in codeable_concept or "system" in codeable_concept:
+            return [codeable_concept]
+        return []
+
+    if isinstance(codeable_concept, list):
+        codings = []
+        for item in codeable_concept:
+            codings.extend(get_codings(item))
+        return codings
+
+    return []
+
+
 def find_codes_by_resource_type(resource: dict) -> list[str]:
     """
     For a given resource, extracts the chief clinical codes within the
@@ -128,16 +154,16 @@ def find_codes_by_resource_type(resource: dict) -> list[str]:
 
     # Grab coding schemes based on resource type
     if rtype in ["Observation", "Condition", "DiagnosticReport"]:
-        codings = resource.get("code", {}).get("coding", [])
+        codings = get_codings(resource.get("code"))
     elif rtype == "Immunization":
-        codings = resource.get("vaccineCode", {}).get("coding", [])
+        codings = get_codings(resource.get("vaccineCode"))
 
     # Then, isolate for the actual clinical codes
     codes = [x.get("code", "") for x in codings]
 
     # Also need to add valueCodeableConcepts to obs resources
     if rtype == "Observation":
-        vccs = resource.get("valueCodeableConcept", {}).get("coding", [])
+        vccs = get_codings(resource.get("valueCodeableConcept"))
         codes += [x.get("code", "") for x in vccs]
 
     return [x for x in codes if x != ""]
