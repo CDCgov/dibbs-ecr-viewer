@@ -4,6 +4,7 @@ import {
   OrderByExpression,
   SelectQueryBuilder,
   Transaction,
+  sql,
 } from "kysely";
 
 import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
@@ -366,6 +367,11 @@ export const generateSearchStatement = (
   return eb.or([
     eb("ecr_data.first_name", getSql("like"), `%${searchTerm}%`),
     eb("ecr_data.last_name", getSql("like"), `%${searchTerm}%`),
+    eb(
+      sql<string>`CONCAT(ecr_data.first_name, ' ', ecr_data.last_name)`,
+      getSql("like"),
+      `%${searchTerm}%`,
+    ),
   ]);
 };
 
