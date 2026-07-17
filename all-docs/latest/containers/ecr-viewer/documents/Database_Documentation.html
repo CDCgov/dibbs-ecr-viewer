@@ -158,6 +158,270 @@
 </tr>
 </tbody>
 </table>
+<h3 id="table-3" class="tsd-anchor-link"><code>user</code> Table<a href="#table-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>This table stores user information.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Column Name</th>
+<th style="text-align:left">Data Type</th>
+<th style="text-align:left">Nullability</th>
+<th style="text-align:left">Default Value</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Primary key, unique identifier for the user</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>email</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">User's email address, must be unique</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>name</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">User's full name</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>date_of_last_login</code></td>
+<td style="text-align:left"><code>datetime</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Date and time of user's last login</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>user_type</code></td>
+<td style="text-align:left"><code>varchar(12)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Type of user (e.g., admin, standard)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>status</code></td>
+<td style="text-align:left"><code>varchar(12)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left">active</td>
+<td style="text-align:left">User's account status</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>date_created</code></td>
+<td style="text-align:left"><code>datetime</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left">Current timestamp</td>
+<td style="text-align:left">Date and time when the user record was created</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>author_uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Foreign key, references <code>user.uuid</code>, creator of the user record</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-4" class="tsd-anchor-link"><code>program_area</code> Table<a href="#table-4" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>This table stores information about program areas.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Column Name</th>
+<th style="text-align:left">Data Type</th>
+<th style="text-align:left">Nullability</th>
+<th style="text-align:left">Default Value</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Primary key, unique identifier for the program area</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>name</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Name of the program area, must be unique</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>date_created</code></td>
+<td style="text-align:left"><code>datetime</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left">Current timestamp</td>
+<td style="text-align:left">Date and time when the program area record was created</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>author_uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Foreign key, references <code>user.uuid</code>, creator of the program area record</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-5" class="tsd-anchor-link"><code>user_program_area</code> Table<a href="#table-5" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>This table links users to program areas. Note that the primary key for this table is a compound primary key consisting of <code>user_uuid</code> and <code>program_area_uuid</code>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Column Name</th>
+<th style="text-align:left">Data Type</th>
+<th style="text-align:left">Nullability</th>
+<th style="text-align:left">Default Value</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>user_uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Part of the composite primary key [user_uuid, program_area_uuid], Foreign key, references <code>user.uuid</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>program_area_uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Part of the composite primary key [user_uuid, program_area_uuid], Foreign key, references <code>program_area.uuid</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-6" class="tsd-anchor-link"><code>condition_reference</code> Table<a href="#table-6" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>This table stores reference information for conditions.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Column Name</th>
+<th style="text-align:left">Data Type</th>
+<th style="text-align:left">Nullability</th>
+<th style="text-align:left">Default Value</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>code</code></td>
+<td style="text-align:left"><code>varchar(20)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Primary key, unique code for the condition</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>concept_name</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Name of the concept</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>condition_name</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Name of the condition</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>condition_category</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Category of the condition</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>program_area_uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Foreign key, references <code>program_area.uuid</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-7" class="tsd-anchor-link"><code>audit_log</code> Table<a href="#table-7" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>This table stores data related to usage of the eCR Viewer.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Column Name</th>
+<th style="text-align:left">Data Type</th>
+<th style="text-align:left">Nullability</th>
+<th style="text-align:left">Default Value</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>uuid</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Unique record identifier, part of the composite primary key [date, uuid]</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>subject</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">The type of record involved, such as <code>ecr</code>, <code>user</code>, or <code>program_area</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>action</code></td>
+<td style="text-align:left"><code>varchar(200)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">The action performed, such as <code>query</code>, <code>view</code>, <code>create</code>, <code>update</code>, <code>delete</code>, <code>signin</code>, or <code>signout</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>actor</code></td>
+<td style="text-align:left"><code>varchar(max)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">The user UUID associated with the request, or an available API/auth token identifier when a user is not available</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>date</code></td>
+<td style="text-align:left"><code>datetime</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left">Current timestamp</td>
+<td style="text-align:left">The database-generated timestamp for the audit event, part of the composite primary key [date, uuid]</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>parameter_json</code></td>
+<td style="text-align:left"><code>varchar(max)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">The parameters passed to the audited workflow, such as an eICR ID, user UUID, or eCR search filters</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>metadata_json</code></td>
+<td style="text-align:left"><code>varchar(max)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Additional request metadata. The Viewer currently records the request <code>User-Agent</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>checksum</code></td>
+<td style="text-align:left"><code>varchar(max)</code></td>
+<td style="text-align:left">NOT NULL</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">A SHA-256 checksum generated from the audit record contents</td>
+</tr>
+</tbody>
+</table>
 <h2 id="extended-schema" class="tsd-anchor-link">Extended Schema<a href="#extended-schema" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>The extended schema builds upon the core schema by adding additional demographic, clinical, and administrative data points to the <code>ecr_data</code> table, and introduces new tables for laboratory results and patient addresses. This schema provides a more comprehensive view of the eCR data.</p>
 <h3 id="alterations-to-table" class="tsd-anchor-link">Alterations to <code>ecr_data</code> Table<a href="#alterations-to-table" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
@@ -378,7 +642,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="table-3" class="tsd-anchor-link"><code>ecr_labs</code> Table<a href="#table-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<h3 id="table-8" class="tsd-anchor-link"><code>ecr_labs</code> Table<a href="#table-8" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>This table stores laboratory results associated with eCRs. Note that the primary key for this table is a compound primary key consisting of <code>uuid</code> and <code>eicr_id</code>.</p>
 <table>
 <thead>
@@ -540,7 +804,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="table-4" class="tsd-anchor-link"><code>ecr_immunizations</code> Table<a href="#table-4" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<h3 id="table-9" class="tsd-anchor-link"><code>ecr_immunizations</code> Table<a href="#table-9" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>This table stores immunization records associated with eCRs.</p>
 <table>
 <thead>
@@ -597,7 +861,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="table-5" class="tsd-anchor-link"><code>patient_address</code> Table<a href="#table-5" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<h3 id="table-10" class="tsd-anchor-link"><code>patient_address</code> Table<a href="#table-10" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <p>This table stores patient address information. Note that the primary key for this table is a compound primary key consisting of <code>uuid</code> and <code>eicr_id</code>.</p>
 <table>
 <thead>
@@ -703,197 +967,4 @@
 </tr>
 </tbody>
 </table>
-<h3 id="table-6" class="tsd-anchor-link"><code>user</code> Table<a href="#table-6" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p>This table stores user information.</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">Column Name</th>
-<th style="text-align:left">Data Type</th>
-<th style="text-align:left">Nullability</th>
-<th style="text-align:left">Default Value</th>
-<th style="text-align:left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left"><code>uuid</code></td>
-<td style="text-align:left"><code>varchar(200)</code></td>
-<td style="text-align:left">NOT NULL</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">Primary key, unique identifier for the user</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>email</code></td>
-<td style="text-align:left"><code>varchar(200)</code></td>
-<td style="text-align:left">NOT NULL</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">User's email address, must be unique</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>name</code></td>
-<td style="text-align:left"><code>varchar(200)</code></td>
-<td style="text-align:left">NULL</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">User's full name</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>date_of_last_login</code></td>
-<td style="text-align:left"><code>datetime</code></td>
-<td style="text-align:left">NULL</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">Date and time of user's last login</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>user_type</code></td>
-<td style="text-align:left"><code>varchar(12)</code></td>
-<td style="text-align:left">NOT NULL</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">Type of user (e.g., admin, standard)</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>status</code></td>
-<td style="text-align:left"><code>varchar(12)</code></td>
-<td style="text-align:left">NOT NULL</td>
-<td style="text-align:left">active</td>
-<td style="text-align:left">User's account status</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>date_created</code></td>
-<td style="text-align:left"><code>datetime</code></td>
-<td style="text-align:left">NOT NULL</td>
-<td style="text-align:left">Current timestamp</td>
-<td style="text-align:left">Date and time when the user record was created</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>author_uuid</code></td>
-<td style="text-align:left"><code>varchar(200)</code></td>
-<td style="text-align:left">NOT NULL</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">Foreign key, references <code>user.uuid</code>, creator of the user record</td>
-</tr>
-</tbody>
-</table>
-<h3 id="table-7" class="tsd-anchor-link"><code>program_area</code> Table<a href="#table-7" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p>This table stores information about program areas.</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">Column Name</th>
-<th style="text-align:left">Data Type</th>
-<th style="text-align:left">Nullability</th>
-<th style="text-align:left">Default Value</th>
-<th style="text-align:left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left"><code>uuid</code></td>
-<td style="text-align:left"><code>varchar(200)</code></td>
-<td style="text-align:left">NOT NULL</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">Primary key, unique identifier for the program area</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>name</code></td>
-<td style="text-align:left"><code>varchar(200)</code></td>
-<td style="text-align:left">NOT NULL</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">Name of the program area, must be unique</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>date_created</code></td>
-<td style="text-align:left"><code>datetime</code></td>
-<td style="text-align:left">NOT NULL</td>
-<td style="text-align:left">Current timestamp</td>
-<td style="text-align:left">Date and time when the program area record was created</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>author_uuid</code></td>
-<td style="text-align:left"><code>varchar(200)</code></td>
-<td style="text-align:left">NOT NULL</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">Foreign key, references <code>user.uuid</code>, creator of the program area record</td>
-</tr>
-</tbody>
-</table>
-<h3 id="table-8" class="tsd-anchor-link"><code>user_program_area</code> Table<a href="#table-8" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p>This table links users to program areas. Note that the primary key for this table is a compound primary key consisting of <code>user_uuid</code> and <code>program_area_uuid</code>.</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">Column Name</th>
-<th style="text-align:left">Data Type</th>
-<th style="text-align:left">Nullability</th>
-<th style="text-align:left">Default Value</th>
-<th style="text-align:left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left"><code>user_uuid</code></td>
-<td style="text-align:left"><code>varchar(200)</code></td>
-<td style="text-align:left">NOT NULL</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">Part of the composite primary key [user_uuid, program_area_uuid], Foreign key, references <code>user.uuid</code></td>
-</tr>
-<tr>
-<td style="text-align:left"><code>program_area_uuid</code></td>
-<td style="text-align:left"><code>varchar(200)</code></td>
-<td style="text-align:left">NOT NULL</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">Part of the composite primary key [user_uuid, program_area_uuid], Foreign key, references <code>program_area.uuid</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="table-9" class="tsd-anchor-link"><code>condition_reference</code> Table<a href="#table-9" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p>This table stores reference information for conditions.</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">Column Name</th>
-<th style="text-align:left">Data Type</th>
-<th style="text-align:left">Nullability</th>
-<th style="text-align:left">Default Value</th>
-<th style="text-align:left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left"><code>code</code></td>
-<td style="text-align:left"><code>varchar(20)</code></td>
-<td style="text-align:left">NOT NULL</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">Primary key, unique code for the condition</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>concept_name</code></td>
-<td style="text-align:left"><code>varchar(200)</code></td>
-<td style="text-align:left">NULL</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">Name of the concept</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>condition_name</code></td>
-<td style="text-align:left"><code>varchar(200)</code></td>
-<td style="text-align:left">NOT NULL</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">Name of the condition</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>condition_category</code></td>
-<td style="text-align:left"><code>varchar(200)</code></td>
-<td style="text-align:left">NULL</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">Category of the condition</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>program_area_uuid</code></td>
-<td style="text-align:left"><code>varchar(200)</code></td>
-<td style="text-align:left">NULL</td>
-<td style="text-align:left"></td>
-<td style="text-align:left">Foreign key, references <code>program_area.uuid</code></td>
-</tr>
-</tbody>
-</table>
-</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#database-documentation"><span>Database <wbr/>Documentation</span></a><ul><li><a href="#supported-database-types"><span>Supported <wbr/>Database <wbr/>Types</span></a></li><li><a href="#core-schema"><span>Core <wbr/>Schema</span></a></li><li><ul><li><a href="#table"><span> <wbr/>Table</span></a></li><li><a href="#table-1"><span> <wbr/>Table</span></a></li><li><a href="#table-2"><span> <wbr/>Table</span></a></li></ul></li><li><a href="#extended-schema"><span>Extended <wbr/>Schema</span></a></li><li><ul><li><a href="#alterations-to-table"><span>Alterations to  <wbr/>Table</span></a></li><li><a href="#table-3"><span> <wbr/>Table</span></a></li><li><a href="#table-4"><span> <wbr/>Table</span></a></li><li><a href="#table-5"><span> <wbr/>Table</span></a></li><li><a href="#table-6"><span> <wbr/>Table</span></a></li><li><a href="#table-7"><span> <wbr/>Table</span></a></li><li><a href="#table-8"><span> <wbr/>Table</span></a></li><li><a href="#table-9"><span> <wbr/>Table</span></a></li></ul></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="../modules.html">eCR Viewer</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#database-documentation"><span>Database <wbr/>Documentation</span></a><ul><li><a href="#supported-database-types"><span>Supported <wbr/>Database <wbr/>Types</span></a></li><li><a href="#core-schema"><span>Core <wbr/>Schema</span></a></li><li><ul><li><a href="#table"><span> <wbr/>Table</span></a></li><li><a href="#table-1"><span> <wbr/>Table</span></a></li><li><a href="#table-2"><span> <wbr/>Table</span></a></li><li><a href="#table-3"><span> <wbr/>Table</span></a></li><li><a href="#table-4"><span> <wbr/>Table</span></a></li><li><a href="#table-5"><span> <wbr/>Table</span></a></li><li><a href="#table-6"><span> <wbr/>Table</span></a></li><li><a href="#table-7"><span> <wbr/>Table</span></a></li></ul></li><li><a href="#extended-schema"><span>Extended <wbr/>Schema</span></a></li><li><ul><li><a href="#alterations-to-table"><span>Alterations to  <wbr/>Table</span></a></li><li><a href="#table-8"><span> <wbr/>Table</span></a></li><li><a href="#table-9"><span> <wbr/>Table</span></a></li><li><a href="#table-10"><span> <wbr/>Table</span></a></li></ul></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="../modules.html">eCR Viewer</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>
