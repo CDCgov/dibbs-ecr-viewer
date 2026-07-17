@@ -1167,9 +1167,11 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
       />,
     );
 
-    const expectedVitalSignsElement = clinicalInfo.getByTestId("vital-signs");
-    expect(expectedVitalSignsElement).toBeInTheDocument();
-    expect(expectedVitalSignsElement).not.toBeVisible();
+    const vitalSignsContent = clinicalInfo.getByTestId(
+      "accordionItem_vital-signs-content",
+    );
+    expect(vitalSignsContent).toBeInTheDocument();
+    expect(vitalSignsContent).not.toBeVisible();
 
     const vitalSignsButton = clinicalInfo.getByRole("button", {
       name: "Vital Signs",
@@ -1179,12 +1181,18 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
     await user.click(vitalSignsButton);
 
     expect(vitalSignsButton).toHaveAttribute("aria-expanded", "true");
-    expect(expectedVitalSignsElement).toBeVisible();
+    expect(vitalSignsContent).toBeVisible();
 
     // Ensure only one table (Vital Signs) is rendering
     const expectedTable = clinicalInfo.getAllByTestId("table");
     expect(expectedTable.length).toEqual(1);
     expect(expectedTable[0]).toBeInTheDocument();
+    expect(expectedTable[0].parentElement).toBe(vitalSignsContent);
+    expect(expectedTable[0]).not.toHaveClass(
+      "border-top",
+      "border-left",
+      "border-right",
+    );
 
     // Check Vital Signs table contents
     const expectedValues = [
@@ -1295,8 +1303,9 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
     expect(expectedTable[0]).toBeInTheDocument();
     expect(expectedTable.length).toEqual(6);
 
-    const expectedVitalSignsElement = clinicalInfo.getByTestId("vital-signs");
-    expect(expectedVitalSignsElement).toBeInTheDocument();
+    expect(
+      clinicalInfo.getByTestId("accordionItem_vital-signs-content"),
+    ).toBeInTheDocument();
 
     const expectedReasonForVisitElement =
       clinicalInfo.getByTestId("reason-for-visit");

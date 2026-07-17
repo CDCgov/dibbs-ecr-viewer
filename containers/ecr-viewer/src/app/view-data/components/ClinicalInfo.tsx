@@ -128,15 +128,13 @@ const VitalDetails = ({ details }: { details: DisplayDataProps[] }) => {
     return (
       <AccordionSubSection title="Diagnostics and Vital Signs">
         <Accordion
-          className="accordion-rr margin-top-0"
+          className="accordion-rr vital-signs-accordion margin-top-0"
           items={[
             {
               title: "Vital Signs",
-              content: (
-                <div data-testid="vital-signs">
-                  <TableDetails details={details} />
-                </div>
-              ),
+              content: details.map((item, index) => (
+                <React.Fragment key={index}>{item.value}</React.Fragment>
+              )),
               expanded: false,
               headingLevel: "h5",
               id: "vital-signs-content",

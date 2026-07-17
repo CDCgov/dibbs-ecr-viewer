@@ -1024,6 +1024,7 @@ export const returnVitalsTable = (fhirBundle: Bundle) => {
       columns={columns}
       className="margin-y-0"
       fixed={false}
+      outerBorder={false}
     />
   );
 };
