@@ -298,4 +298,4 @@ Default Azure Container Size:
 | Azure          | `DUAL`       | 42 MB            | CPU: 2, Memory: 4.0Gi                |
 | Azure          | `INTEGRATED` | 42 MB            | CPU: 2, Memory: 4.0Gi                |
 
-**Note on Azure**: The current Azure infrastructure has a hard request timeout of 240 seconds when processing eCRs, this happens at the Azure Container Apps ingress layer as documented [here](https://learn.microsoft.com/en-us/azure/container-apps/ingress-overview#http). This timeout could happen during an instance cold-start with the sizes listed above, please retry the request if the timeout occurs (it will manifest as a 504 error with a `stream timeout` message).
+**Note on Azure**: The current Azure infrastructure has a hard request timeout of 240 seconds when processing eCRs, which happens at the Azure Container Apps ingress layer as documented [here](https://learn.microsoft.com/en-us/azure/container-apps/ingress-overview#http). This timeout could happen during an instance cold-start with the sizes listed above. Please retry the request if the timeout occurs (it will manifest as a 504 error with a `stream timeout` message).

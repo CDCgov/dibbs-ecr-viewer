@@ -73,6 +73,15 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        <span
+          class="text-italic text-base"
+        >
+          No data
+        </span>
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -165,6 +174,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
       >
         2021-01-02
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-2
       </td>
       <td
         role="gridcell"
@@ -265,6 +279,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-3
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -357,6 +376,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
       >
         2021-01-04
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-4
       </td>
       <td
         role="gridcell"
@@ -457,6 +481,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-5
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -549,6 +578,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
       >
         2021-01-06
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-6
       </td>
       <td
         role="gridcell"
@@ -649,6 +683,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-7
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -741,6 +780,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
       >
         2021-01-08
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-8
       </td>
       <td
         role="gridcell"
@@ -841,6 +885,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-9
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -933,6 +982,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
       >
         2021-01-01
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-10
       </td>
       <td
         role="gridcell"
@@ -1033,6 +1087,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-11
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1125,6 +1184,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
       >
         2021-01-03
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-12
       </td>
       <td
         role="gridcell"
@@ -1225,6 +1289,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-13
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1317,6 +1386,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
       >
         2021-01-05
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-14
       </td>
       <td
         role="gridcell"
@@ -1417,6 +1491,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-15
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1509,6 +1588,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
       >
         2021-01-07
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-16
       </td>
       <td
         role="gridcell"
@@ -1609,6 +1693,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-17
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1701,6 +1790,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
       >
         2021-01-09
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-18
       </td>
       <td
         role="gridcell"
@@ -1801,6 +1895,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-19
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -1893,6 +1992,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
       >
         2021-01-02
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-20
       </td>
       <td
         role="gridcell"
@@ -1993,6 +2097,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-21
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -2085,6 +2194,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
       >
         2021-01-04
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-22
       </td>
       <td
         role="gridcell"
@@ -2185,6 +2299,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-23
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -2277,6 +2396,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
       >
         2021-01-06
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-24
       </td>
       <td
         role="gridcell"
@@ -2377,6 +2501,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
+        Organization-25
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -2467,6 +2596,15 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
       >
         2021-01-01
+      </td>
+      <td
+        role="gridcell"
+      >
+        <span
+          class="text-italic text-base"
+        >
+          No data
+        </span>
       </td>
       <td
         role="gridcell"
@@ -2771,6 +2909,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-2
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -2863,6 +3006,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
       >
         2021-01-03
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-3
       </td>
       <td
         role="gridcell"
@@ -2963,6 +3111,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-4
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -3055,6 +3208,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
       >
         2021-01-05
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-5
       </td>
       <td
         role="gridcell"
@@ -3155,6 +3313,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-6
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -3247,6 +3410,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
       >
         2021-01-07
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-7
       </td>
       <td
         role="gridcell"
@@ -3347,6 +3515,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-8
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -3439,6 +3612,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
       >
         2021-01-09
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-9
       </td>
       <td
         role="gridcell"
@@ -3539,6 +3717,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-10
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -3631,6 +3814,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
       >
         2021-01-02
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-11
       </td>
       <td
         role="gridcell"
@@ -3731,6 +3919,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-12
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -3823,6 +4016,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
       >
         2021-01-04
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-13
       </td>
       <td
         role="gridcell"
@@ -3923,6 +4121,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-14
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -4015,6 +4218,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
       >
         2021-01-06
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-15
       </td>
       <td
         role="gridcell"
@@ -4115,6 +4323,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-16
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -4207,6 +4420,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
       >
         2021-01-08
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-17
       </td>
       <td
         role="gridcell"
@@ -4307,6 +4525,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-18
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -4399,6 +4622,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
       >
         2021-01-01
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-19
       </td>
       <td
         role="gridcell"
@@ -4499,6 +4727,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-20
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -4591,6 +4824,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
       >
         2021-01-03
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-21
       </td>
       <td
         role="gridcell"
@@ -4691,6 +4929,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-22
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -4783,6 +5026,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
       >
         2021-01-05
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-23
       </td>
       <td
         role="gridcell"
@@ -4883,6 +5131,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-24
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -4979,6 +5232,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
+        Organization-25
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -5069,6 +5327,15 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         2021-01-01
+      </td>
+      <td
+        role="gridcell"
+      >
+        <span
+          class="text-italic text-base"
+        >
+          No data
+        </span>
       </td>
       <td
         role="gridcell"
@@ -5418,6 +5685,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-2
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -5510,6 +5782,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         2021-01-03
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-3
       </td>
       <td
         role="gridcell"
@@ -5610,6 +5887,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-4
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -5702,6 +5984,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         2021-01-05
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-5
       </td>
       <td
         role="gridcell"
@@ -5802,6 +6089,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-6
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -5894,6 +6186,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         2021-01-07
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-7
       </td>
       <td
         role="gridcell"
@@ -5994,6 +6291,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-8
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -6086,6 +6388,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         2021-01-09
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-9
       </td>
       <td
         role="gridcell"
@@ -6186,6 +6493,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-10
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -6278,6 +6590,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         2021-01-02
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-11
       </td>
       <td
         role="gridcell"
@@ -6378,6 +6695,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-12
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -6470,6 +6792,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         2021-01-04
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-13
       </td>
       <td
         role="gridcell"
@@ -6570,6 +6897,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-14
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -6662,6 +6994,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         2021-01-06
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-15
       </td>
       <td
         role="gridcell"
@@ -6762,6 +7099,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-16
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -6854,6 +7196,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         2021-01-08
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-17
       </td>
       <td
         role="gridcell"
@@ -6954,6 +7301,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-18
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -7046,6 +7398,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         2021-01-01
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-19
       </td>
       <td
         role="gridcell"
@@ -7146,6 +7503,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-20
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -7238,6 +7600,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         2021-01-03
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-21
       </td>
       <td
         role="gridcell"
@@ -7338,6 +7705,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-22
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -7430,6 +7802,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         2021-01-05
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-23
       </td>
       <td
         role="gridcell"
@@ -7530,6 +7907,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
+        Organization-24
+      </td>
+      <td
+        role="gridcell"
+      >
         <ul
           class="ecr-table-list"
         >
@@ -7622,6 +8004,11 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
       >
         2021-01-07
+      </td>
+      <td
+        role="gridcell"
+      >
+        Organization-25
       </td>
       <td
         role="gridcell"

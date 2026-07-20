@@ -50,6 +50,9 @@ const BlobRow = ({ themeColor }: { themeColor: string }) => {
       <td>
         <Blob themeColor={themeColor} />
       </td>
+      <td>
+        <Blob themeColor={themeColor} />
+      </td>
     </tr>
   );
 };
