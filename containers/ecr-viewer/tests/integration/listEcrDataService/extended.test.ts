@@ -171,6 +171,7 @@ describe("listEcrData - extended", () => {
       {
         date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
         ecrId: "12345",
+        facility_name: "Jedi Temple",
         patient_date_of_birth: "12/31/2024",
         patient_first_name: "Obi-Wan",
         patient_last_name: "Kenobi",
@@ -271,6 +272,7 @@ describe("listEcrData - extended", () => {
       {
         date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
         ecrId: "12345",
+        facility_name: "Jedi Temple",
         patient_date_of_birth: "12/31/2024",
         patient_first_name: "Obi-Wan",
         patient_last_name: "Kenobi",

@@ -24,6 +24,7 @@ import {
   MetadataModel,
   generateFilterConditionsStatement,
   generateSearchStatement,
+  generateSortStatement,
   generateWhereStatement,
   getTotalEcrCount,
   processMetadata,
@@ -48,6 +49,7 @@ const coreTemplate: NewCoreECR = {
   birth_date: "2024-12-01",
   date_created: new Date("2024-12-02T12:00:00Z"),
   encounter_start_date: new Date("2024-12-02T12:00:00Z"),
+  facility_name: "Hospital A",
 };
 
 // prior version of ecr
@@ -115,6 +117,7 @@ describe("process Metadata", () => {
         last_name: "Person",
         birth_date: date2,
         encounter_start_date: date3,
+        facility_name: "Hospital A",
         conditions: ["Long"],
         rule_summaries: ["Longer"],
         set_id: "123",
@@ -128,6 +131,7 @@ describe("process Metadata", () => {
         last_name: "Test",
         birth_date: date2,
         encounter_start_date: date3,
+        facility_name: undefined,
         conditions: ["Stuff"],
         rule_summaries: ["Other stuff", "Even more stuff"],
         set_id: "124",
@@ -139,6 +143,7 @@ describe("process Metadata", () => {
     const expected: EcrDisplay[] = [
       {
         ecrId: "ecr1",
+        facility_name: "Hospital A",
         date_created: formatDateTime(date1.toISOString()),
         patient_first_name: "Test",
         patient_last_name: "Person",
@@ -152,6 +157,7 @@ describe("process Metadata", () => {
       },
       {
         ecrId: "ecr2",
+        facility_name: "",
         date_created: formatDateTime(date1.toISOString()),
         patient_first_name: "Another",
         patient_last_name: "Test",
@@ -169,6 +175,17 @@ describe("process Metadata", () => {
     ];
     const result = processMetadata(responseBody);
     expect(result).toEqual(expected);
+  });
+});
+
+describe("generate sort statement", () => {
+  it.each([
+    ["ASC", "asc"],
+    ["DESC", "desc"],
+  ])("should sort Organization %s", (direction, expectedDirection) => {
+    expect(generateSortStatement("organization", direction)).toStrictEqual([
+      { column: "facility_name", direction: expectedDirection },
+    ]);
   });
 });
 
@@ -244,6 +261,7 @@ describe("listEcrData - core", () => {
       {
         date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
         ecrId: "12345",
+        facility_name: "Hospital A",
         patient_date_of_birth: "12/01/2024",
         patient_first_name: "Billy",
         patient_last_name: "Bob",
@@ -345,6 +363,7 @@ describe("listEcrData - core", () => {
       {
         date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
         ecrId: "12345",
+        facility_name: "Hospital A",
         patient_date_of_birth: "12/01/2024",
         patient_first_name: "Billy",
         patient_last_name: "Bob",

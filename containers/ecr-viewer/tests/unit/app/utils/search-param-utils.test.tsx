@@ -34,11 +34,14 @@ describe("search param utils", () => {
 
   describe("columnId", () => {
     const { validator } = LIBRARY_SEARCH_PARAMS.columnId;
-    it("accepts sortable headers", () => {
-      const params = new URLSearchParams("columnId=date_created");
-      validator!(params);
-      expect(params.toString()).toBe("columnId=date_created");
-    });
+    it.each(["date_created", "organization"])(
+      "accepts the sortable %s header",
+      (columnId) => {
+        const params = new URLSearchParams(`columnId=${columnId}`);
+        validator!(params);
+        expect(params.toString()).toBe(`columnId=${columnId}`);
+      },
+    );
     it("rejects non-sortable headers", () => {
       const params = new URLSearchParams("columnId=rule_summary&direction=ASC");
       validator!(params);

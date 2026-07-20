@@ -23,6 +23,13 @@ export const INITIAL_HEADERS: TableHeader[] = [
     sortDirection: "",
   },
   {
+    id: "organization",
+    value: "Organization",
+    className: "library-organization-column",
+    dataSortable: true,
+    sortDirection: "",
+  },
+  {
     id: "reportable_condition",
     value: "Reportable condition",
     className: "library-condition-column",
