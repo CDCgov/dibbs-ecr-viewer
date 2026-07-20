@@ -90,6 +90,7 @@ const coreMetadata: BundleMetadata = {
   set_id: undefined,
   eicr_version_number: "1",
   encounter_start_date: "2026-07-14",
+  facility_name: "Facility",
   rr: [
     {
       condition: "Pertussis",
@@ -215,6 +216,7 @@ describe("saveFhirMetadata", () => {
       birth_date: "1970-01-01",
       encounter_start_date: new Date("2026-07-14"),
       eicr_version_number: "1",
+      facility_name: "Facility",
     });
     expect(
       inserts.find((insert) => insert.table === "ecr_rr_conditions")?.values,
