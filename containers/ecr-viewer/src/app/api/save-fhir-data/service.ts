@@ -368,6 +368,7 @@ const saveCoreMetadata = async (
       birth_date: metadata.birth_date,
       encounter_start_date: asDate(metadata.encounter_start_date),
       eicr_version_number: metadata.eicr_version_number,
+      facility_name: metadata.facility_name,
     })
     .execute();
 };

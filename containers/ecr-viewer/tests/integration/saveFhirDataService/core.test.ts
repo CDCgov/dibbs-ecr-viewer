@@ -19,6 +19,7 @@ const baseCoreMetadata: BundleMetadata = {
   eicr_version_number: "1",
   rr: [],
   encounter_start_date: "12/20/2024",
+  facility_name: "Hospital A",
 };
 
 const makePromiseResolveWithStatus = (status: number): Promise<BlobResponse> =>
@@ -66,6 +67,13 @@ describe("saveFhirData - core", () => {
     expect(resp.status).toEqual(200);
     expect(rolledBack).toBeFalse();
 
+    const savedEcr = await getDb<Core>()
+      .selectFrom("ecr_data")
+      .select("facility_name")
+      .where("eicr_id", "=", "1-2-3-4")
+      .executeTakeFirst();
+    expect(savedEcr?.facility_name).toEqual("Hospital A");
+
     // check audit log
     const log = await getLastAuditLog();
     expect(log.actor).toEqual("unknown");
@@ -74,6 +82,25 @@ describe("saveFhirData - core", () => {
     expect(JSON.parse(log.parameter_json)).toStrictEqual({
       eicr_id: "1-2-3-4",
     });
+  });
+
+  it("should save without a facility name", async () => {
+    const resp = await saveFhirMetadata(
+      "1-2-3-4",
+      "core",
+      { ...baseCoreMetadata, facility_name: undefined },
+      makePromiseResolveWithStatus(200),
+      () => makePromiseResolveWithStatus(200),
+    );
+
+    expect(resp.status).toEqual(200);
+
+    const savedEcr = await getDb<Core>()
+      .selectFrom("ecr_data")
+      .select("facility_name")
+      .where("eicr_id", "=", "1-2-3-4")
+      .executeTakeFirst();
+    expect(savedEcr?.facility_name).toBeNull();
   });
 
   it("should save with rr without rule summaries", async () => {

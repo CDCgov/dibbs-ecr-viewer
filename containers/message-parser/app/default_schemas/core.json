@@ -38,6 +38,12 @@
       "category": "Personal info"
     }
   },
+  "facility_name": {
+    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).location[0].location.display",
+    "data_type": "string",
+    "nullable": true,
+    "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
+  },
   "encounter_start_date": {
     "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).period.start",
     "data_type": "date",
