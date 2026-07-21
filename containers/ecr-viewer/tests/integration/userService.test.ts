@@ -63,6 +63,7 @@ const baseCoreMetadata: BundleMetadata = {
     },
   ],
   encounter_start_date: "12/20/2024",
+  facility_name: undefined,
 };
 
 const UUID_REGEX =

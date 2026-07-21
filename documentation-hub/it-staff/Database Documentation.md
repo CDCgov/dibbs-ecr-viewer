@@ -33,6 +33,7 @@ This table stores the primary eCR data.
 | `first_name`           | `varchar(255)` | NOT NULL    |                   | Patient's first name                         |
 | `birth_date`           | `date`         | NOT NULL    |                   | Patient's birth date                         |
 | `encounter_start_date` | `datetime`     | NULL        |                   | Start date and time of the patient encounter |
+| `facility_name`        | `varchar(255)` | NULL        |                   | Organization associated with the encounter   |
 | `date_created`         | `datetime`     | NOT NULL    | Current timestamp | Date and time when the record was created    |
 
 ### `ecr_rr_conditions` Table
@@ -151,7 +152,6 @@ The following columns are added to the `ecr_data` table in the extended schema:
 | `ehr_software`             | `varchar(255)` | NULL        |               | EHR software                                                                             |
 | `provider_id`              | `varchar(255)` | NULL        |               | Provider ID                                                                              |
 | `facility_id`              | `varchar(255)` | NULL        |               | Facility ID                                                                              |
-| `facility_name`            | `varchar(255)` | NULL        |               | Facility name                                                                            |
 | `encounter_type`           | `varchar(255)` | NULL        |               | Type of encounter                                                                        |
 | `encounter_end_date`       | `datetime`     | NULL        |               | End date and time of the patient encounter                                               |
 | `reason_for_visit`         | `varchar(max)` | NULL        |               | Reason for visit (Multiple values are concatenated into a single comma-separated string) |
