@@ -3,7 +3,7 @@ import "server-only"; // FHIR evaluation should be done server side
 import { Bundle, Encounter, Patient, RelatedPerson } from "fhir/r4";
 import { DateTime } from "luxon";
 
-import { formatDate } from "@/app/services/formatDateService";
+import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import {
   formatAddressList,
   formatContactPoint,
@@ -219,14 +219,15 @@ export const evaluatePatientVitalStatus = (patient: Patient | undefined) => {
 };
 
 /***
- * A patient is deceased if `patient.deceasedBoolean` is true or if there is a date of death. If both are `undefined`
- * return `undefined`.
+ * A patient is deceased if `patient.deceasedBoolean` is true or if there is a date of death. Returns `undefined` if
+ * no patient resource exists. Defaults to `false` (alive) when the patient exists but has no deceased fields.
  */
 const isPatientDeceased = (patient: Patient | undefined) => {
+  if (!patient) return undefined;
   const vitalStatus = evaluateOne(patient, fhirPathMappings.patientVitalStatus);
   const dod = evaluateOne(patient, fhirPathMappings.patientDOD);
 
-  return dod ? true : vitalStatus;
+  return dod ? true : (vitalStatus ?? false);
 };
 
 /**
@@ -360,7 +361,7 @@ export const evaluateDemographicsData = (
     },
     {
       title: "Date of Death",
-      value: evaluateOne(patient, fhirPathMappings.patientDOD),
+      value: formatDateTime(evaluateOne(patient, fhirPathMappings.patientDOD)),
     },
     {
       title: "Sex",
