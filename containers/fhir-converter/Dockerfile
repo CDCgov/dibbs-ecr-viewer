@@ -14,13 +14,7 @@ RUN dotnet publish \
   --self-contained true \
   -o output
 
-RUN apt-get update && apt-get install -y curl jq
-
-# Get an up to date copy of active rxnorm codes and names
-RUN rm output/rxnorm.csv
-RUN curl 'https://rxnav.nlm.nih.gov/REST/allstatus.json?status=active' \
-  | jq --raw-output '[["code", "name"]] + [.minConceptGroup.minConcept[] | [.rxcui, .name]] | .[] | @csv' \
-  > output/rxnorm.csv
+RUN apt-get update && apt-get install -y curl
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /App
