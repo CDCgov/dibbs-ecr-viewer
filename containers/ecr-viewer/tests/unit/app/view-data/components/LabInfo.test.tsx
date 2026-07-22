@@ -6,11 +6,7 @@ import { Bundle, DiagnosticReport } from "fhir/r4";
 
 import _BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
 import _BundleLabNoLabIds from "../../../../../../../test-data/fhir/BundleLabNoLabIds.json";
-import {
-  LabInfo,
-  createLabSectionId,
-  LabNavItem,
-} from "@/app/view-data/components/LabInfo";
+import { LabInfo, LabNavItem } from "@/app/view-data/components/LabInfo";
 import {
   evaluateLabInfoData,
   LabReportElementData,
@@ -41,15 +37,10 @@ describe("LabInfo", () => {
       // Empty out one of the lab names for testing
       labInfoOrg[0].organizationDisplayDataProps[0].value = "";
 
-      const usedLabSectionIds = new Set<string>();
-      const subNavLabs = labInfoOrg.map((labResult) => {
-        const organizationName =
-          (labResult.organizationDisplayDataProps[0].value as string) ||
-          undefined;
-        const labName = `Lab Results from ${organizationName || "Unknown Organization"}`;
+      const subNavLabs = labInfoOrg.map(({subNavMetadata}) => {
         return {
-          title: labName,
-          id: createLabSectionId(organizationName, usedLabSectionIds),
+          title: subNavMetadata.title,
+          id: subNavMetadata.id,
         };
       }) as LabNavItem[];
 
@@ -144,17 +135,12 @@ describe("LabInfo", () => {
         diagnosticReports,
       );
 
-      const usedLabSectionIds = new Set<string>();
-      subNavLabs = labInfo.map((labResult) => {
-        const organizationName =
-          (labResult.organizationDisplayDataProps[0].value as string) ||
-          undefined;
-        const labName = `Lab Results from ${organizationName || "Unknown Organization"}`;
+      subNavLabs = labInfo.map(({ subNavMetadata }) => {
         return {
-          title: labName,
-          id: createLabSectionId(organizationName, usedLabSectionIds),
+          title: subNavMetadata.title,
+          id: subNavMetadata.id,
         };
-      });
+      }) as LabNavItem[];
     });
     it("should be collapsed by default", () => {
       render(
@@ -192,17 +178,4 @@ describe("LabInfo", () => {
     });
   });
 
-  describe("Lab Side Nav", () => {
-    it("should produce unique IDs for side nav", () => {
-      const usedLabSectionIds = new Set<string>();
-      const labNames = ["Org A", "Org A"];
-      const expected = ["lab-results-from-org-a", "lab-results-from-org-a-2"];
-
-      const actual = labNames.map((labName) =>
-        createLabSectionId(labName, usedLabSectionIds),
-      );
-
-      expect(actual).toEqual(expected);
-    });
-  });
 });

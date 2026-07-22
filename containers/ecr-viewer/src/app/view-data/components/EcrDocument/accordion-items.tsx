@@ -8,11 +8,7 @@ import ClinicalInfo from "@/app/view-data/components/ClinicalInfo";
 import Demographics from "@/app/view-data/components/Demographics";
 import EcrMetadata from "@/app/view-data/components/EcrMetadata";
 import EncounterInfo from "@/app/view-data/components/EncounterInfo";
-import {
-  LabInfo,
-  LabNavItem,
-  createLabSectionId,
-} from "@/app/view-data/components/LabInfo";
+import { LabInfo, LabNavItem } from "@/app/view-data/components/LabInfo";
 import PregnancyInfo from "@/app/view-data/components/PregnancyInfo";
 import SocialHistory from "@/app/view-data/components/SocialHistory";
 import UnavailableInfo from "@/app/view-data/components/UnavailableInfo";
@@ -132,14 +128,10 @@ export const getEcrDocumentAccordionItems = (
     ecrMetadata.ecrCustodianDetails.availableData.length > 0 &&
       "eICR Custodian Details",
   );
-  const usedLabSectionIds = new Set<string>();
-  const subNavLabs = labInfoData.map((labResult) => {
-    const organizationName =
-      (labResult.organizationDisplayDataProps[0].value as string) || undefined;
-    const labName = `Lab Results from ${organizationName || "Unknown Organization"}`;
+  const subNavLabs = labInfoData.map(({subNavMetadata}) => {
     return {
-      title: labName,
-      id: createLabSectionId(organizationName, usedLabSectionIds),
+      title: subNavMetadata.title,
+      id: subNavMetadata.id
     };
   }) as LabNavItem[];
 

@@ -406,9 +406,9 @@ exports[`LabInfo when labResults is LabReportElementData[] should match snapshot
         >
           <h4
             class="usa-summary-box__heading padding-y-105"
-            id="lab-results-from-unknown-organization"
+            id="lab-results-from-tatooine-hospital-14394818-a1e9-4882-ca8b-FAKE793bb5cc"
           >
-            Lab Results from Unknown Organization
+            Lab Results from Tatooine Hospital
           </h4>
           <div
             class="usa-summary-box__text"
@@ -1291,7 +1291,7 @@ Mos Eisley, CO 00055
         >
           <h4
             class="usa-summary-box__heading padding-y-105"
-            id="lab-results-from-coruscant-medical"
+            id="lab-results-from-coruscant-medical-3a1cb409-6f94-0231-86d6-FAKE1ecc5fda"
           >
             Lab Results from Coruscant Medical
           </h4>
