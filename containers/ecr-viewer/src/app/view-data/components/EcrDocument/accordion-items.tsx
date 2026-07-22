@@ -185,7 +185,7 @@ export const getEcrDocumentAccordionItems = (
     {
       title: "Clinical Info",
       content: Object.values(clinicalData).some(
-        (section) => section.availableData.length > 0,
+        (section) => section.availableData.length > 0
       ) ? (
         <ClinicalInfo
           historyOfPresentIllness={
@@ -215,10 +215,7 @@ export const getEcrDocumentAccordionItems = (
       title: "Lab Info",
       content:
         labInfoData.length > 0 ? (
-          <LabInfo
-            labResults={labInfoData}
-            sectionIds={subNavLabs.map((lab) => lab.id)}
-          />
+          <LabInfo labResults={labInfoData} />
         ) : (
           <p className="text-italic padding-bottom-05">
             No lab information was found in this eCR.
@@ -234,7 +231,7 @@ export const getEcrDocumentAccordionItems = (
           ecrMetadata.eRSDProcessingInfo ||
           ecrMetadata.eicrDetails.availableData.length > 0 ||
           ecrMetadata.eicrAuthorDetails.find(
-            (authorDetails) => authorDetails.availableData.length > 0,
+            (authorDetails) => authorDetails.availableData.length > 0
           ) ||
           ecrMetadata.ecrCustodianDetails.availableData.length > 0 ? (
             <EcrMetadata
@@ -295,7 +292,7 @@ export const getEcrDocumentAccordionItems = (
                 ...ecrMetadata.ecrCustodianDetails.unavailableData,
               ]}
               eicrAuthorUnavailableData={ecrMetadata.eicrAuthorDetails.map(
-                (authorDetails) => authorDetails.unavailableData,
+                (authorDetails) => authorDetails.unavailableData
               )}
             />
           ) : (

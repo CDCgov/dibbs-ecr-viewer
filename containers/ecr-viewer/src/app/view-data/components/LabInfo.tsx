@@ -11,7 +11,6 @@ import { DataDisplay } from "./DataDisplay";
 
 interface LabInfoProps {
   labResults: LabReportElementData[];
-  sectionIds: string[];
 }
 
 /**
@@ -20,11 +19,11 @@ interface LabInfoProps {
  * @param props.labResults - some props
  * @returns The JSX element representing the lab information.
  */
-export const LabInfo = ({ labResults, sectionIds = [] }: LabInfoProps) => {
+export const LabInfo = ({ labResults}: LabInfoProps) => {
   return (
     <AccordionSection>
       {labResults.map((res, i) => (
-        <LabResultDetail key={i} labResult={res} sectionId={sectionIds[i]} />
+        <LabResultDetail key={i} labResult={res} sectionId={res.subNavMetadata.id} />
       ))}
     </AccordionSection>
   );

@@ -44,12 +44,7 @@ describe("LabInfo", () => {
         };
       }) as LabNavItem[];
 
-      labInfoJsx = (
-        <LabInfo
-          labResults={labInfoOrg}
-          sectionIds={subNavLabs.map((lab) => lab.id)}
-        />
-      );
+      labInfoJsx = <LabInfo labResults={labInfoOrg} />;
     });
     it("all should be collapsed by default", () => {
       render(labInfoJsx);
@@ -143,12 +138,7 @@ describe("LabInfo", () => {
       }) as LabNavItem[];
     });
     it("should be collapsed by default", () => {
-      render(
-        <LabInfo
-          labResults={labInfo}
-          sectionIds={subNavLabs.map((lab) => lab.id)}
-        />,
-      );
+      render(<LabInfo labResults={labInfo} />);
       screen
         .getAllByTestId("accordionButton", { exact: false })
         .forEach((button) => {
@@ -162,18 +152,13 @@ describe("LabInfo", () => {
     });
 
     it("should not render any results if no table data is present", () => {
-      render(<LabInfo labResults={[]} sectionIds={[]} />);
+      render(<LabInfo labResults={[]}/>);
       expect(screen.queryByText("Lab Results")).not.toBeInTheDocument();
       expect(screen.queryByTestId("table")).not.toBeInTheDocument();
     });
 
     it("should match snapshot test", () => {
-      const { container } = render(
-        <LabInfo
-          labResults={labInfo}
-          sectionIds={subNavLabs.map((lab) => lab.id)}
-        />,
-      );
+      const { container } = render(<LabInfo labResults={labInfo} />);
       expect(container).toMatchSnapshot();
     });
   });
