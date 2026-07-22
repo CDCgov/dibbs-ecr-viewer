@@ -6,4 +6,5 @@ export default {
   "20250522120000_condition_fk.ts": require("./20250522120000_condition_fk"),
   "20250708095700_audit_log.ts": require("./20250708095700_audit_log"),
   "20250818153300_name_unicode.ts": require("./20250818153300_name_unicode"),
+  "20260713144305_facility_name.ts": require("./20260713144305_facility_name"),
 };

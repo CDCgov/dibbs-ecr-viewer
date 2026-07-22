@@ -16,6 +16,7 @@ export interface EcrDisplay {
   patient_date_of_birth: string | undefined;
   reportable_conditions: string[];
   rule_summaries: string[];
+  facility_name: string;
   patient_report_date: string;
   date_created: string;
   eicr_set_id: string | undefined;

@@ -175,7 +175,6 @@ subgraph requests["Requests"]
 
     subgraph POST["fas:fa-upload <code>POST</code>"]
         parseMessage["<code>/parse_message</code>\n(Parse HL7v2, eICR, FHIR)"]
-        fhirToPhdc["<code>/fhir_to_phdc</code>\n(FHIR To PHDC)"]
     end
 
     subgraph PUT["fas:fa-upload <code>PUT</code>"]
@@ -196,7 +195,6 @@ subgraph response["Responses"]
         rsp-schemas["fa:fa-file-code Schema List"]
         rsp-specificSchema["fa:fa-file-code Specific Schema"]
         rsp-parseMessage["fa:fa-file-code Parsed Message"]
-        rsp-fhirToPhdc["fa:fa-file-code PHDC Document"]
         rsp-uploadSchema["fa:fa-file-code Schema Upload Status"]
     end
 end
@@ -205,6 +203,5 @@ hc -.-> parser -.-> rsp-hc
 schemas -.-> parser -.-> rsp-schemas
 specificSchema -.-> parser -.-> rsp-specificSchema
 parseMessage ==> parser ==> rsp-parseMessage
-fhirToPhdc ==> parser ==> rsp-fhirToPhdc
 uploadSchema --> parser --> rsp-uploadSchema```
 ````
