@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Accordion } from "@trussworks/react-uswds";
 import classNames from "classnames";
 
 import {
@@ -126,9 +127,20 @@ const VitalDetails = ({ details }: { details: DisplayDataProps[] }) => {
   if (details.length > 0) {
     return (
       <AccordionSubSection title="Diagnostics and Vital Signs">
-        <div data-testid="vital-signs">
-          <TableDetails details={details} />
-        </div>
+        <Accordion
+          className="accordion-rr vital-signs-accordion margin-top-0"
+          items={[
+            {
+              title: "Vital Signs",
+              content: details.map((item, index) => (
+                <React.Fragment key={index}>{item.value}</React.Fragment>
+              )),
+              expanded: false,
+              headingLevel: "h5",
+              id: "vital-signs-content",
+            },
+          ]}
+        />
       </AccordionSubSection>
     );
   }

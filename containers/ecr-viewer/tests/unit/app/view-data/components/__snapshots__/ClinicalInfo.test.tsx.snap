@@ -2107,135 +2107,142 @@ Result: 2 m
             class="usa-summary-box__text"
           >
             <div
-              data-testid="vital-signs"
+              class="usa-accordion accordion-rr vital-signs-accordion margin-top-0"
+              data-testid="accordion"
             >
-              <div>
-                <div>
-                  <div
-                    class="grid-col-auto text-pre-line"
-                  >
-                    <table
-                      class="usa-table usa-table--borderless width-full table-caption-margin margin-y-0 border-top border-left border-right"
-                      data-testid="table"
-                    >
-                      <caption>
-                        Vital Signs
-                      </caption>
-                      <thead>
-                        <tr>
-                          <th
-                            class="table-header"
-                            scope="col"
-                          >
-                            Vital Reading
-                          </th>
-                          <th
-                            class="table-header"
-                            scope="col"
-                          >
-                            Result
-                          </th>
-                          <th
-                            class="table-header"
-                            scope="col"
-                          >
-                            Date/Time
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td
-                            class="text-top text-pre-line"
-                          >
-                            Weight
-                          </td>
-                          <td
-                            class="text-top text-pre-line"
-                          >
-                            140 lb
-                          </td>
-                          <td
-                            class="text-top text-pre-line"
-                          >
-                            02/04/2025 12:48 PM EST
-                          </td>
-                        </tr>
-                        <tr>
-                          <td
-                            class="text-top text-pre-line"
-                          >
-                            Weight
-                          </td>
-                          <td
-                            class="text-top text-pre-line"
-                          >
-                            63.5 kg
-                          </td>
-                          <td
-                            class="text-top text-pre-line"
-                          >
-                            02/04/2025 12:48 PM EST
-                          </td>
-                        </tr>
-                        <tr>
-                          <td
-                            class="text-top text-pre-line"
-                          >
-                            Bmi (body mass index)
-                          </td>
-                          <td
-                            class="text-top text-pre-line"
-                          >
-                            20 kg/m2
-                          </td>
-                          <td
-                            class="text-top text-pre-line"
-                          >
-                            02/04/2025 12:48 PM EST
-                          </td>
-                        </tr>
-                        <tr>
-                          <td
-                            class="text-top text-pre-line"
-                          >
-                            Height
-                          </td>
-                          <td
-                            class="text-top text-pre-line"
-                          >
-                            60 in
-                          </td>
-                          <td
-                            class="text-top text-pre-line"
-                          >
-                            02/04/2025 12:48 PM EST
-                          </td>
-                        </tr>
-                        <tr>
-                          <td
-                            class="text-top text-pre-line"
-                          >
-                            Height
-                          </td>
-                          <td
-                            class="text-top text-pre-line"
-                          >
-                            152.4 cm
-                          </td>
-                          <td
-                            class="text-top text-pre-line"
-                          >
-                            02/04/2025 12:48 PM EST
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
+              <h5
+                class="usa-accordion__heading"
+              >
+                <button
+                  aria-controls="vital-signs-content"
+                  aria-expanded="false"
+                  class="usa-accordion__button"
+                  data-testid="accordionButton_vital-signs-content"
+                  type="button"
+                >
+                  Vital Signs
+                </button>
+              </h5>
+              <div
+                class="usa-accordion__content usa-prose"
+                data-testid="accordionItem_vital-signs-content"
+                hidden=""
+                id="vital-signs-content"
+              >
+                <table
+                  class="usa-table usa-table--borderless width-full table-caption-margin margin-y-0"
+                  data-testid="table"
+                >
+                  <thead>
+                    <tr>
+                      <th
+                        class="table-header"
+                        scope="col"
+                      >
+                        Vital Reading
+                      </th>
+                      <th
+                        class="table-header"
+                        scope="col"
+                      >
+                        Result
+                      </th>
+                      <th
+                        class="table-header"
+                        scope="col"
+                      >
+                        Date/Time
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        Weight
+                      </td>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        140 lb
+                      </td>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        02/04/2025 12:48 PM EST
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        Weight
+                      </td>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        63.5 kg
+                      </td>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        02/04/2025 12:48 PM EST
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        Bmi (body mass index)
+                      </td>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        20 kg/m2
+                      </td>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        02/04/2025 12:48 PM EST
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        Height
+                      </td>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        60 in
+                      </td>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        02/04/2025 12:48 PM EST
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        Height
+                      </td>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        152.4 cm
+                      </td>
+                      <td
+                        class="text-top text-pre-line"
+                      >
+                        02/04/2025 12:48 PM EST
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
