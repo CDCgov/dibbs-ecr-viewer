@@ -186,6 +186,14 @@
             }
           ]
         },
+        "note": [
+          {
+            "text": "SFH: single viable intrauterine gestation estimated age 11 weeks 5 days, FHR 171 BPM - MS"
+          },
+          {
+            "text": "Flinn Anatomy: AC 28%, EFW 31% (542g), placenta anterior/high, normal anatomy - SL"
+          }
+        ],
         "component": [
           {
             "extension": [

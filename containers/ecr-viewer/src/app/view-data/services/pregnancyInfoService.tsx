@@ -305,6 +305,14 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
       });
     });
 
+    const notes = evaluateAll(ob, fhirPathMappings.noteText);
+    if (notes.length > 0) {
+      data.push({
+        title: "Comments",
+        value: notes.join("\n"),
+      });
+    }
+
     return {
       type: "Pregnancy Status",
       tag: status,
