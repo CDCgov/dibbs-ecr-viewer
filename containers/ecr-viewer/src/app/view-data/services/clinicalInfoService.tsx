@@ -1022,9 +1022,9 @@ export const returnVitalsTable = (fhirBundle: Bundle) => {
     <EvaluateTable
       resources={vitals}
       columns={columns}
-      caption="Vital Signs"
       className="margin-y-0"
       fixed={false}
+      outerBorder={false}
     />
   );
 };
