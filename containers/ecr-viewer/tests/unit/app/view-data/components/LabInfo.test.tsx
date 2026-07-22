@@ -152,7 +152,7 @@ describe("LabInfo", () => {
     });
 
     it("should not render any results if no table data is present", () => {
-      render(<LabInfo labResults={[]}/>);
+      render(<LabInfo labResults={[]} />);
       expect(screen.queryByText("Lab Results")).not.toBeInTheDocument();
       expect(screen.queryByTestId("table")).not.toBeInTheDocument();
     });
