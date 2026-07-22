@@ -128,10 +128,10 @@ export const getEcrDocumentAccordionItems = (
     ecrMetadata.ecrCustodianDetails.availableData.length > 0 &&
       "eICR Custodian Details",
   );
-  const subNavLabs = labInfoData.map(({subNavMetadata}) => {
+  const subNavLabs = labInfoData.map(({ subNavMetadata }) => {
     return {
       title: subNavMetadata.title,
-      id: subNavMetadata.id
+      id: subNavMetadata.id,
     };
   }) as LabNavItem[];
 

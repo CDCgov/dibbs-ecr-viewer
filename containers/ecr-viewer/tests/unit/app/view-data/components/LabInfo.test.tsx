@@ -37,7 +37,7 @@ describe("LabInfo", () => {
       // Empty out one of the lab names for testing
       labInfoOrg[0].organizationDisplayDataProps[0].value = "";
 
-      const subNavLabs = labInfoOrg.map(({subNavMetadata}) => {
+      const subNavLabs = labInfoOrg.map(({ subNavMetadata }) => {
         return {
           title: subNavMetadata.title,
           id: subNavMetadata.id,
@@ -177,5 +177,4 @@ describe("LabInfo", () => {
       expect(container).toMatchSnapshot();
     });
   });
-
 });

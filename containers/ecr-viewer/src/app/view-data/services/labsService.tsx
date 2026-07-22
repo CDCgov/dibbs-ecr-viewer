@@ -69,9 +69,9 @@ export interface LabReportElementData {
   diagnosticReportDataItems: AccordionItem[];
   organizationDisplayDataProps: DisplayDataProps[];
   subNavMetadata: {
-    title: string,
-    id: string,
-  }
+    title: string;
+    id: string;
+  };
 }
 
 const ABNORMAL_OBSERVATION_INTERPRETATIONS: Record<string, string> = {
@@ -588,13 +588,14 @@ export const combineOrgAndReportData = (
       fhirIndex,
       organizationItems[key].length,
     );
-    
+
     // Create unique IDs for Side Nav
     const orgName = (orgData[0].value as string) || undefined;
     const displayOrg = (orgName || "Unknown Organization").trim();
     const subNavTitle = `Lab Results from ${displayOrg}`;
     const subNavId = `${toKebabCase(subNavTitle)}${
-      organizationId ? `-${organizationId}` : ""}`;
+      organizationId ? `-${organizationId}` : ""
+    }`;
 
     return {
       organizationId,
