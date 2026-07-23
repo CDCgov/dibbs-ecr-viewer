@@ -315,8 +315,8 @@ const saveExtendedMetadata = async (
 
       const numColumns = Object.keys(record).length;
 
-      // SQL Server allows a maximum of 4096 columns inserted at once which is the lower number of the two databases we support
-      const maxRowsPerBatch = Math.floor(4096 / numColumns);
+      // SQL Server has a limit of 2100 parameters per query which is the lower number of the two databases we support
+      const maxRowsPerBatch = Math.floor(2099 / numColumns);
 
       if (
         batchToInsert.length === maxRowsPerBatch ||

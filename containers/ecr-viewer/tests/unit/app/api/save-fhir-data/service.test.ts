@@ -312,7 +312,7 @@ describe("saveFhirMetadata", () => {
       eicr_id: ecrId,
       specimen_collection_date: new Date(firstLab.specimen_collection_date),
     }).length;
-    const maxLabBatchSize = Math.floor(4096 / labColumnCount);
+    const maxLabBatchSize = Math.floor(2099 / labColumnCount);
     const labs = Array.from({ length: maxLabBatchSize + 1 }, (_, index) =>
       makeLabMetadata(index),
     );
