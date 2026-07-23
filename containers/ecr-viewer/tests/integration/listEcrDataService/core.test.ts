@@ -134,7 +134,10 @@ describe("process Metadata", () => {
         facility_name: undefined,
         conditions: ["Stuff"],
         rule_summaries: [
-          { condition: "Stuff", rule_summaries: ["Other stuff", "Even more stuff"] },
+          {
+            condition: "Stuff",
+            rule_summaries: ["Other stuff", "Even more stuff"],
+          },
         ],
         set_id: "124",
         eicr_version_number: "1",
@@ -171,7 +174,10 @@ describe("process Metadata", () => {
         rule_summaries: expect.arrayContaining([
           {
             condition: "Stuff",
-            rule_summaries: expect.arrayContaining(["Other stuff", "Even more stuff"]),
+            rule_summaries: expect.arrayContaining([
+              "Other stuff",
+              "Even more stuff",
+            ]),
           },
         ]),
         eicr_set_id: "124",
