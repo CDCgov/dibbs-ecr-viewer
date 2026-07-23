@@ -61,6 +61,7 @@ export interface BundleMetadata {
   eicr_version_number: string | undefined;
   rr: RR[] | undefined;
   encounter_start_date: string | undefined;
+  facility_name: string | undefined;
 }
 
 export interface BundleExtendedMetadata extends BundleMetadata {
@@ -78,7 +79,6 @@ export interface BundleExtendedMetadata extends BundleMetadata {
   ehr_manufacturer_model: string | undefined;
   provider_id: string | undefined;
   facility_id: string | undefined;
-  facility_name: string | undefined;
   encounter_type: string | undefined;
   encounter_end_date: string | undefined;
   reason_for_visit: string | undefined;

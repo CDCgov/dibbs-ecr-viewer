@@ -131,6 +131,13 @@ describe("saveFhirData - extended", () => {
     expect(resp.message).toEqual("Success. Saved metadata to database.");
     expect(resp.status).toEqual(200);
 
+    const savedEcr = await getDb<Extended>()
+      .selectFrom("ecr_data")
+      .select("facility_name")
+      .where("eicr_id", "=", "1-2-3-4")
+      .executeTakeFirst();
+    expect(savedEcr?.facility_name).toEqual("Hospital A");
+
     // check audit log
     const log = await getLastAuditLog();
     expect(log.actor).toEqual("unknown");

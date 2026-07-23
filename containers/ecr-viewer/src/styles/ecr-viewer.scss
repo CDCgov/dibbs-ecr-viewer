@@ -304,6 +304,18 @@ main {
   }
 }
 
+.vital-signs-accordion {
+  > .usa-accordion__content {
+    overflow: hidden;
+    padding-bottom: 0;
+  }
+
+  .usa-prose > table {
+    border-bottom: 0;
+    margin-bottom: 0;
+  }
+}
+
 .table-clinical-problems {
   tbody td:nth-child(2) {
     min-width: 130px;

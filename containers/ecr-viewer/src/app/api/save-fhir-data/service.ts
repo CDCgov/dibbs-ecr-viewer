@@ -300,15 +300,32 @@ const saveExtendedMetadata = async (
     }
   }
   if (metadata.labs) {
-    for (const lab of metadata.labs) {
-      await trx
-        .insertInto("ecr_labs")
-        .values({
-          ...lab,
-          eicr_id: ecrId,
-          specimen_collection_date: asDate(lab.specimen_collection_date),
-        })
-        .execute();
+    let batchToInsert = [];
+
+    for (let i = 0; i < metadata.labs.length; i++) {
+      const record = {
+        ...metadata.labs[i],
+        eicr_id: ecrId,
+        specimen_collection_date: asDate(
+          metadata.labs[i].specimen_collection_date,
+        ),
+      };
+
+      batchToInsert.push(record);
+
+      const numColumns = Object.keys(record).length;
+
+      // SQL Server allows a maximum of 4096 columns inserted at once which is the lower number of the two databases we support
+      const maxRowsPerBatch = Math.floor(4096 / numColumns);
+
+      if (
+        batchToInsert.length === maxRowsPerBatch ||
+        i === metadata.labs.length - 1
+      ) {
+        await trx.insertInto("ecr_labs").values(batchToInsert).execute();
+
+        batchToInsert = [];
+      }
     }
   }
 
@@ -351,6 +368,7 @@ const saveCoreMetadata = async (
       birth_date: metadata.birth_date,
       encounter_start_date: asDate(metadata.encounter_start_date),
       eicr_version_number: metadata.eicr_version_number,
+      facility_name: metadata.facility_name,
     })
     .execute();
 };

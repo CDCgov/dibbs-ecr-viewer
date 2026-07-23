@@ -33,6 +33,23 @@ def test_get_specific_config():
     }
 
 
+def test_core_metadata_config_uses_core_parsing_schema():
+    config_path = (
+        Path(__file__).parent.parent
+        / "app"
+        / "default_configs"
+        / "bundle-metadata-core.json"
+    )
+    with open(config_path) as file:
+        config = json.load(file)
+
+    parser_step = next(
+        step for step in config["workflow"] if step["service"] == "message_parser"
+    )
+
+    assert parser_step["params"]["parsing_schema_name"] == "core.json"
+
+
 def test_config_not_found():
     response = client.get("/configs/some-config-that-does-not-exist.json")
     assert response.status_code == 400

@@ -18,6 +18,7 @@ on:
         options:
           - aws
           - azure
+          - gcp
         description: "The service provider to deploy to."
         required: true
       event_type:

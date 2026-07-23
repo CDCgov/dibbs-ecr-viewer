@@ -1,0 +1,146 @@
+name: Build a commit from a given branch and deploy to Dev
+run-name: "Build ${{ inputs.commit }} from ${{ inputs.branch }} and deploy to ${{ inputs.environment }} dev by @${{ github.actor }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        type: string
+        description: "The branch that contains the commit to build. IMPORTANT: Please be careful when not using main!"
+        required: true
+        default: main
+      commit:
+        type: string
+        description: "The commit hash to build and use as the container image tag."
+        required: true
+      acknowledge_db_migration_risk:
+        type: boolean
+        description: "Required when deploying a non-main branch: I have confirmed DB migrations are safe."
+        required: false
+        default: false
+      environment:
+        type: choice
+        options:
+          - aws
+          - azure
+          - gcp
+        description: "The dev service provider to deploy to."
+        required: true
+      tf_branch:
+        type: string
+        description: "The branch for Terraform checkout. Default is main."
+        required: false
+        default: main
+      event_type:
+        type: choice
+        options:
+          - plans
+          - deploys
+        description: "The dev workflow event type to trigger."
+        required: true
+        default: deploys
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  deployment-warning:
+    name: Deployment preflight
+    runs-on: ubuntu-latest
+    steps:
+      - name: Warn about non-main branch deployments
+        if: ${{ inputs.branch != 'main' }}
+        env:
+          BRANCH: ${{ inputs.branch }}
+          COMMIT: ${{ inputs.commit }}
+          ENVIRONMENT: ${{ inputs.environment }}
+        run: |
+          echo "::warning title=Non-main branch deployment::Deploying branch $BRANCH to $ENVIRONMENT dev."
+          {
+            echo "## Non-main branch deployment warning"
+            echo ""
+            echo "Branch \`$BRANCH\` is being deployed to \`$ENVIRONMENT\` dev."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Require DB migration risk acknowledgment
+        if: ${{ inputs.branch != 'main' && inputs.acknowledge_db_migration_risk != true }}
+        env:
+          BRANCH: ${{ inputs.branch }}
+        run: |
+          echo "::error title=DB migration acknowledgment required::Branch $BRANCH is not main. Re-run this workflow with acknowledge_db_migration_risk checked after confirming DB migrations are safe."
+          exit 1
+
+      - name: Note DB migration risk acknowledgment
+        if: ${{ inputs.branch != 'main' && inputs.acknowledge_db_migration_risk == true }}
+        run: echo "DB migration risk acknowledged for non-main branch deployment."
+
+  list-containers:
+    uses: ./.github/workflows/list-containers.yaml
+
+  build-containers:
+    name: Build containers
+    needs:
+      - deployment-warning
+      - list-containers
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        container-to-build: ${{ fromJson(needs.list-containers.outputs.all-containers) }}
+    steps:
+      - name: Check Out Branch
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.branch }}
+          fetch-depth: 0
+
+      - name: Check Out Commit
+        env:
+          COMMIT: ${{ inputs.commit }}
+        run: |
+          set -euo pipefail
+          git checkout --detach "$COMMIT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ghcr.io/${{ github.repository }}/${{ matrix.container-to-build }}
+          tags: |
+            type=raw,value=${{ inputs.commit }}
+          flavor: |
+            latest=false
+
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          context: ./containers/${{ matrix.container-to-build }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            APP_VERSION=${{ inputs.commit }}
+
+  deploy-container-to-dev:
+    name: Deploy to ${{ inputs.environment }} dev
+    needs:
+      - build-containers
+    uses: ./.github/workflows/trigger-dev-workflow.yaml
+    with:
+      container_tag: ${{ inputs.commit }}
+      tf_branch: ${{ inputs.tf_branch }}
+      environment: ${{ inputs.environment }}
+      event_type: ${{ inputs.event_type }}
+    secrets: inherit

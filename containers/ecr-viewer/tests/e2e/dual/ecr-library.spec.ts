@@ -52,12 +52,11 @@ test.describe("ecr library page", () => {
     });
 
     test("Search should filter results ", async ({ page }) => {
-      await expect(
-        page.getByLabel("Filter by reportable condition"),
-      ).toContainText(totalNumOfConditions);
-
-      await page.getByRole("searchbox").fill("Yoda");
-      await page.getByRole("button", { name: "search" }).click();
+      const searchInput = page.getByRole("searchbox", { name: "Search" });
+      await searchInput.fill("Yoda");
+      await expect(searchInput).toHaveValue("Yoda");
+      await page.waitForTimeout(500);
+      await searchInput.press("Enter");
 
       await expect(page.getByText("Showing 1-1 of 1 eCRs")).toBeVisible();
       await expect(

@@ -1,20 +1,24 @@
 import httpx
 import pytest
-from lxml import etree as ET
 
 PARSER_URL = "http://0.0.0.0:8080"
 PARSE_MESSAGE = PARSER_URL + "/parse_message"
-FHIR_TO_PHDC = PARSER_URL + "/fhir_to_phdc"
 
 
 @pytest.fixture
 def fhir_bundle(read_json_from_test_assets):
-    return read_json_from_test_assets("sample_fhir_bundle_for_phdc_conversion.json")
+    # Note: Eve Everywoman FHIR bundle was synthetically modified to cover all fields in the extended schema.
+    return read_json_from_test_assets("sample_fhir_bundle_eve_everywoman_modified.json")
 
 
 @pytest.fixture
-def test_schema(read_schema_from_default_schemas):
-    return read_schema_from_default_schemas("phdc_case_report_schema.json")
+def test_core_schema(read_schema_from_default_schemas):
+    return read_schema_from_default_schemas("core.json")
+
+
+@pytest.fixture
+def test_extended_schema(read_schema_from_default_schemas):
+    return read_schema_from_default_schemas("extended.json")
 
 
 @pytest.mark.integration
@@ -30,314 +34,312 @@ def test_openapi():
 
 
 @pytest.mark.integration
-def test_parse_message(setup, test_schema, fhir_bundle):
-    expected_reference_response = {
+def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundle):
+    expected_core_response = {
         "message": "Parsing succeeded!",
         "parsed_values": {
-            "patient_address": [
+            "ecr_id": "db734647-fc99-424c-a864-7e3cda82e704",
+            "set_id": "31",
+            "eicr_version_number": "2",
+            "last_name": "Everywoman",
+            "first_name": "Eve",
+            "birth_date": "1974-11-24",
+            "facility_name": "Good Health Hospital",
+            "encounter_start_date": "2020-11-07T08:44:21-05:00",
+            "rr": [
                 {
-                    "street_address_line_1": "6 Watery Lighthouse Trailer Park Way",
-                    "street_address_line_2": "Unit #2",
-                    "city": "Watery",
-                    "state": "WA",
-                    "postal_code": "98440",
-                    "county": None,
-                    "country": "United States",
-                    "type": "home",
-                    "useable_period_low": None,
-                    "useable_period_high": None,
-                }
-            ],
-            "patient_name": [
-                {
-                    "prefix": "Ms.",
-                    "first": "Saga",
-                    "middle": None,
-                    "family": "Anderson",
-                    "suffix": None,
-                    "type": "official",
-                    "valid_time_low": None,
-                    "valid_time_high": None,
-                }
-            ],
-            "patient_administrative_gender_code": "female",
-            "patient_race_display": "Black or African American",
-            "patient_race_code": "2054-5",
-            "patient_ethnic_group_display": "Not Hispanic or Latino",
-            "patient_ethnic_group_code": "2186-5",
-            "patient_birth_time": "1987-11-11",
-            "patient_telecom": [
-                {
-                    "value": "206-555-0123",
-                    "type": "home",
-                    "useable_period_low": None,
-                    "useable_period_high": None,
-                }
-            ],
-            "author_time": "2024-02-07",
-            "author_assigned_person": [
-                {
-                    "prefix": "Dr.",
-                    "first": "Emma",
-                    "middle": None,
-                    "family": "Nelson",
-                    "suffix": None,
-                }
-            ],
-            "custodian_represented_custodian_organization": [
-                {
-                    "name": "Nelson Family Practice",
-                    "phone": "206-555-0199",
-                    "street_address_line_1": "123 Harbor St",
-                    "street_address_line_2": None,
-                    "city": "Bright Falls",
-                    "state": "WA",
-                    "postal_code": "98440",
-                    "county": None,
-                    "country": "United States",
-                }
-            ],
-            "observations": [
-                {
-                    "obs_type": None,
-                    "code_code": "INV163",
-                    "code_code_system": "2.16.840.1.114222.4.5.232",
-                    "code_code_display": "Case Status",
-                    "value_quantitative_value": None,
-                    "value_quant_code_system": None,
-                    "value_quantitative_code": None,
-                    "value_qualitative_value": "Confirmed",
-                    "value_qualitative_code_system": "2.16.840.1.113883.6.96",
-                    "value_qualitative_code": "410605003",
-                    "text": None,
-                    "components": [],
-                },
-                {
-                    "obs_type": None,
-                    "code_code": "INV169",
-                    "code_code_system": "2.16.840.1.114222.4.5.232",
-                    "code_code_display": "Condition",
-                    "value_quantitative_value": None,
-                    "value_quant_code_system": None,
-                    "value_quantitative_code": None,
-                    "value_qualitative_value": "Hepatitis A, acute",
-                    "value_qualitative_code_system": "2.16.840.1.114222.4.5.277",
-                    "value_qualitative_code": "10110",
-                    "text": None,
-                    "components": [],
-                },
-                {
-                    "obs_type": "social-history",
-                    "code_code": "DEM127",
-                    "code_code_system": "2.16.840.1.114222.4.5.232",
-                    "code_code_display": "Is this person deceased?",
-                    "value_quantitative_value": None,
-                    "value_quant_code_system": None,
-                    "value_quantitative_code": None,
-                    "value_qualitative_value": "No",
-                    "value_qualitative_code_system": "2.16.840.1.113883.12.136",
-                    "value_qualitative_code": "N",
-                    "text": None,
-                    "components": [],
-                },
-                {
-                    "obs_type": "social-history",
-                    "code_code": "NBS104",
-                    "code_code_system": "2.16.840.1.114222.4.5.1",
-                    "code_code_display": "Information As of Date",
-                    "value_quantitative_value": None,
-                    "value_quant_code_system": None,
-                    "value_quantitative_code": None,
-                    "value_qualitative_value": "2024-01-24",
-                    "value_qualitative_code_system": None,
-                    "value_qualitative_code": None,
-                    "text": None,
-                    "components": [],
-                },
-                {
-                    "obs_type": "social-history",
-                    "code_code": "INV2001",
-                    "code_code_system": "2.16.840.1.114222.4.5.232",
-                    "code_code_display": "Reported Age",
-                    "value_quantitative_value": None,
-                    "value_quant_code_system": None,
-                    "value_quantitative_code": None,
-                    "value_qualitative_value": "36",
-                    "value_qualitative_code_system": None,
-                    "value_qualitative_code": None,
-                    "text": None,
-                    "components": [],
-                },
-                {
-                    "obs_type": "social-history",
-                    "code_code": "INV2002",
-                    "code_code_system": "2.16.840.1.114222.4.5.232",
-                    "code_code_display": "Reported Age Units",
-                    "value_quantitative_value": None,
-                    "value_quant_code_system": None,
-                    "value_quantitative_code": None,
-                    "value_qualitative_value": "year [time]",
-                    "value_qualitative_code_system": "2.16.840.1.113883.6.8",
-                    "value_qualitative_code": "a",
-                    "text": None,
-                    "components": [],
-                },
-                {
-                    "obs_type": None,
-                    "code_code": "INV163",
-                    "code_code_system": "2.16.840.1.114222.4.5.232",
-                    "code_code_display": "Case Status",
-                    "value_quantitative_value": None,
-                    "value_quant_code_system": None,
-                    "value_quantitative_code": None,
-                    "value_qualitative_value": "Confirmed",
-                    "value_qualitative_code_system": "2.16.840.1.113883.6.96",
-                    "value_qualitative_code": "410605003",
-                    "text": None,
-                    "components": [],
-                },
-                {
-                    "obs_type": None,
-                    "code_code": "INV169",
-                    "code_code_system": "2.16.840.1.114222.4.5.232",
-                    "code_code_display": "Condition",
-                    "value_quantitative_value": None,
-                    "value_quant_code_system": None,
-                    "value_quantitative_code": None,
-                    "value_qualitative_value": "Hepatitis A, acute",
-                    "value_qualitative_code_system": "2.16.840.1.114222.4.5.277",
-                    "value_qualitative_code": "10110",
-                    "text": None,
-                    "components": [],
-                },
-                {
-                    "obs_type": None,
-                    "code_code": "NBS055",
-                    "code_code_system": "2.16.840.1.114222.4.5.1",
-                    "code_code_display": "Contact Investigation Priority",
-                    "value_quantitative_value": None,
-                    "value_quant_code_system": None,
-                    "value_quantitative_code": None,
-                    "value_qualitative_value": "Low",
-                    "value_qualitative_code_system": "L",
-                    "value_qualitative_code": "LOW",
-                    "text": None,
-                    "components": [],
-                },
-                {
-                    "obs_type": None,
-                    "code_code": "NBS058",
-                    "code_code_system": "2.16.840.1.114222.4.5.1",
-                    "code_code_display": "Contact Investigation Status",
-                    "value_quantitative_value": None,
-                    "value_quant_code_system": None,
-                    "value_quantitative_code": None,
-                    "value_qualitative_value": "In progress",
-                    "value_qualitative_code_system": "2.16.840.1.113883.6.96",
-                    "value_qualitative_code": "385651009",
-                    "text": None,
-                    "components": [],
-                },
-                {
-                    "obs_type": None,
-                    "code_code": "INV148",
-                    "code_code_system": "2.16.840.1.114222.4.5.232",
-                    "code_code_display": "Is this person associated "
-                    + "with a day care facility?",
-                    "value_quantitative_value": None,
-                    "value_quant_code_system": None,
-                    "value_quantitative_code": None,
-                    "value_qualitative_value": "Yes",
-                    "value_qualitative_code_system": "2.16.840.1.113883.12.136",
-                    "value_qualitative_code": "Y",
-                    "text": None,
-                    "components": [],
-                },
-                {
-                    "obs_type": "EXPOS",
-                    "code_code": "69730-0",
-                    "code_code_system": "http://loinc.org",
-                    "code_code_display": "Questionnaire Document",
-                    "value_quantitative_value": None,
-                    "value_quant_code_system": None,
-                    "value_quantitative_code": None,
-                    "value_qualitative_value": None,
-                    "value_qualitative_code_system": None,
-                    "value_qualitative_code": None,
-                    "text": None,
-                    "components": [
+                    "uuid": "a66d09ae-2b5a-4170-af3f-4ca4df7a02a6",
+                    "condition": "COVID-19",
+                    "condition_code": "840539006",
+                    "rule_summaries": [
                         {
-                            "code_code": "INV502",
-                            "code_code_system": "2.16.840.1.113883.6.1",
-                            "code_code_display": "Country of Exposure",
-                            "value_quantitative_value": None,
-                            "value_quant_code_system": None,
-                            "value_quantitative_code": None,
-                            "value_qualitative_value": "UNITED STATES",
-                            "value_qualitative_code_system": "1.0.3166.1",
-                            "value_qualitative_code": "USA",
-                            "text": None,
-                        },
+                            "rule_summary": "Detection of SARS-CoV-2 antibody in a clinical specimen by any method"
+                        }
+                    ],
+                },
+                {
+                    "uuid": "10bd27fb-e882-4acb-8efb-ed2051b86691",
+                    "condition": "Plague",
+                    "condition_code": "58750007",
+                    "rule_summaries": [
+                        {"rule_summary": "Plague (as a diagnosis or active problem)"}
+                    ],
+                },
+            ],
+        },
+    }
+    expected_extended_response = {
+        "message": "Parsing succeeded!",
+        "parsed_values": {
+            "patient_id": "f238f1ae-2f55-cd21-5c90-5e68a10af8ce",
+            "person_id": None,  # Remove after merging #1600
+            "gender": "female",
+            "race": "White",
+            "ethnicity": "Non Hispanic or Latino",
+            "patient_addresses": [
+                {
+                    "use": "home",
+                    "line": "2222 Home Street",
+                    "city": "Ann Arbor",
+                    "district": "26001",
+                    "state": "MI",
+                    "postal_code": "99999",
+                    "country": "US",
+                    "period_start": "2000-07-20T08:45:00",
+                    "period_end": "2000-07-20T08:55:00",  # Synthetic
+                }
+            ],
+            "latitude": None,  # Remove after merging #1600
+            "longitude": None,  # Remove after merging #1600
+            "rr_id": None,  # Remove or fix after merging #1600
+            "processing_status": "RRVS19",
+            "set_id": "31",
+            "eicr_id": "db734647-fc99-424c-a864-7e3cda82e704",
+            "eicr_version_number": "2",
+            "replaced_eicr_id": "Composition/2.16.840.1.113883.9.9.9.9.9.2",  # Remove after merging #1600
+            "replaced_eicr_version": "1",  # Remove after merging #1600
+            "authoring_date": "2020-11-07T09:44:21-05:00",
+            "ehr_software": "Epic - Version 10.5",  # Synthetic
+            "ehr_manufacturer_model": "Epic - Version 10.5",  # Synthetic
+            "provider_id": "6666666666666",
+            "facility_id": "2.16.840.1.113883.4.6",
+            "facility_name": "Good Health Hospital",
+            "facility_type": "Outpatient facility",
+            "encounter_type": "Ambulatory",
+            "encounter_start_date": "2020-11-07T08:44:21-05:00",
+            "encounter_end_date": "2020-11-08T11:21:03-05:00",
+            "reason_for_visit": (
+                '<div xmlns="http://www.w3.org/1999/xhtml">'
+                "<p>Reason for Visit (as documented by provider): "
+                "Headache, rash, and fever</p></div>"
+            ),
+            "active_problems": (
+                "Dark stools,Paroxysmal cough,Pertussis,Diagnosis interpretation"
+            ),
+            "immunizations": [
+                {
+                    "name": (
+                        "diphtheria, tetanus toxoids and acellular pertussis vaccine, "
+                        "5 pertussis antigens"
+                    ),
+                    "effective_date": "2020-11-07",
+                    "status": "completed",
+                    "status_reason": None,
+                },
+                {
+                    "name": "anthrax vaccine",
+                    "effective_date": "2020-11-07",
+                    "status": "completed",
+                    "status_reason": None,
+                },
+                # Synthetic
+                {
+                    "name": "influenza, intradermal, quadrivalent, preservative free, injectable,influenza, intradermal, quadrivalent",
+                    "effective_date": "2015-11-15",
+                    "status": "not-done",
+                    "status_reason": "patient objection",
+                },
+            ],
+            "labs": [
+                {
+                    "uuid": "e333acb8-01e7-e1ea-e9bc-b87c9e8bfd7c",
+                    "test_type": "Hematocrit Calc (Bld) [Volume fraction]",
+                    "test_type_code": "20570-8",
+                    "test_type_system": "http://loinc.org",
+                    "test_result_qualitative": None,
+                    "test_result_quantitative": "35.3",
+                    "test_result_units": "%",
+                    "test_result_code": None,
+                    "test_result_code_display": None,
+                    "test_result_code_system": None,
+                    "test_result_interpretation": "Low",
+                    "test_result_interpretation_code": "L",
+                    "test_result_interpretation_system": (
+                        "http://terminology.hl7.org/CodeSystem/"
+                        "v3-ObservationInterpretation"
+                    ),
+                    "test_result_reference_range_low_value": "34.9",
+                    "test_result_reference_range_low_units": "%",
+                    "test_result_reference_range_high_value": "44.5",
+                    "test_result_reference_range_high_units": "%",
+                    "specimen_type": "Blood specimen",
+                    "performing_lab": None,
+                    "specimen_collection_date": "2020-03-09",
+                },
+                {
+                    "uuid": "1415c94e-c259-b369-9425-ee176172d48d",
+                    "test_type": "Lymphocytes Auto (Bld) [#/Vol]",
+                    "test_type_code": "731-0",
+                    "test_type_system": "http://loinc.org",
+                    "test_result_qualitative": None,
+                    "test_result_quantitative": "5.2",
+                    "test_result_units": "10*3/uL",
+                    "test_result_code": None,
+                    "test_result_code_display": None,
+                    "test_result_code_system": None,
+                    "test_result_interpretation": "High",
+                    "test_result_interpretation_code": "H",
+                    "test_result_interpretation_system": (
+                        "http://terminology.hl7.org/CodeSystem/"
+                        "v3-ObservationInterpretation"
+                    ),
+                    "test_result_reference_range_low_value": "1",
+                    "test_result_reference_range_low_units": "10*3/uL",
+                    "test_result_reference_range_high_value": "4.8",
+                    "test_result_reference_range_high_units": "10*3/uL",
+                    "specimen_type": "Blood specimen",
+                    "performing_lab": None,
+                    "specimen_collection_date": "2020-03-09",
+                },
+                {
+                    "uuid": "9066312e-2cd6-fc9d-223e-090aa5e566d8",
+                    "test_type": "B. pertussis Ab Qn (S)",
+                    "test_type_code": "11585-7",
+                    "test_type_system": "http://loinc.org",
+                    "test_result_qualitative": None,
+                    "test_result_quantitative": "100",
+                    "test_result_units": "[iU]/mL",
+                    "test_result_code": None,
+                    "test_result_code_display": None,
+                    "test_result_code_system": None,
+                    "test_result_interpretation": "High",
+                    "test_result_interpretation_code": "H",
+                    "test_result_interpretation_system": (
+                        "http://terminology.hl7.org/CodeSystem/"
+                        "v3-ObservationInterpretation"
+                    ),
+                    "test_result_reference_range_low_value": None,
+                    "test_result_reference_range_low_units": None,
+                    "test_result_reference_range_high_value": "45",
+                    "test_result_reference_range_high_units": "[iU]/mL",
+                    "specimen_type": None,
+                    "performing_lab": None,
+                    "specimen_collection_date": None,
+                },
+                {
+                    "uuid": "d9915885-4dd6-2c75-851c-419cf0438d37",
+                    "test_type": (
+                        "Bordetella pertussis in Throat by Organism specific culture,"
+                        "B. pertussis Org specific cx Ql (Throat)"
+                    ),
+                    "test_type_code": "local_code_pertussis,548-8",
+                    "test_type_system": (
+                        "urn:oid:2.16.840.1.113883.1.2.3.665,http://loinc.org"
+                    ),
+                    "test_result_qualitative": None,
+                    "test_result_quantitative": None,
+                    "test_result_units": None,
+                    "test_result_code": "5247005",
+                    "test_result_code_display": "Bordetella pertussis",
+                    "test_result_code_system": "http://snomed.info/sct",
+                    "test_result_interpretation": "Abnormal",
+                    "test_result_interpretation_code": "A",
+                    "test_result_interpretation_system": (
+                        "http://terminology.hl7.org/CodeSystem/"
+                        "v3-ObservationInterpretation"
+                    ),
+                    "test_result_reference_range_low_value": None,
+                    "test_result_reference_range_low_units": None,
+                    "test_result_reference_range_high_value": None,
+                    "test_result_reference_range_high_units": None,
+                    "specimen_type": None,
+                    "performing_lab": None,
+                    "specimen_collection_date": None,
+                },
+                # Synthetic
+                {
+                    "uuid": "7ea37105-1ac1-cd38-764b-2e39e6e68f69",
+                    "test_type": "CHLAMURETHRA",
+                    "test_type_code": "314330",
+                    "test_type_system": "urn:oid:1.2.840.113619.21.100.12.1053.139060385287897942",
+                    "test_result_qualitative": "NOT DETECTED",
+                    "test_result_quantitative": None,
+                    "test_result_units": None,
+                    "test_result_code": None,
+                    "test_result_code_display": None,
+                    "test_result_code_system": None,
+                    "test_result_interpretation": None,
+                    "test_result_interpretation_code": None,
+                    "test_result_interpretation_system": None,
+                    "test_result_reference_range_low_value": None,
+                    "test_result_reference_range_low_units": None,
+                    "test_result_reference_range_high_value": None,
+                    "test_result_reference_range_high_units": None,
+                    "specimen_type": None,
+                    "performing_lab": "Fake City LABORATORY",
+                    "specimen_collection_date": None,
+                },
+            ],
+            "birth_sex": "F",
+            "gender_identity": "Female-to-male transsexual",
+            "homelessness_status": "Homeless",
+            "disabilities": (
+                "Are you deaf, or do you have serious difficulty hearing"
+            ),  # Remove after merging #1600
+            "tribal_affiliation": ("Fort Mojave Indian Tribe of Arizona, California"),
+            "tribal_enrollment_status": "True",
+            "current_job_title": (
+                "Nursing, psychiatric, and home health aides,"
+                "Certified Nursing Assistant (CNA) [Nursing Assistants]"
+            ),
+            "current_job_industry": ("Nursing care facilities,Home nursing services"),
+            "usual_occupation": (
+                "Nursing, psychiatric, and home health aides,"
+                "Certified Nursing Assistant (CNA) [Nursing Assistants]"
+            ),
+            "usual_industry": ("Nursing care facilities,Home nursing services"),
+            "preferred_language": "English",
+            "pregnancy_status": "Pregnancy",
+            "ecr_id": "db734647-fc99-424c-a864-7e3cda82e704",
+            "last_name": "Everywoman",
+            "first_name": "Eve",
+            "birth_date": "1974-11-24",
+            "rr": [
+                {
+                    "uuid": "a66d09ae-2b5a-4170-af3f-4ca4df7a02a6",
+                    "condition": "COVID-19",
+                    "condition_code": "840539006",
+                    "rule_summaries": [
                         {
-                            "code_code": "INV503",
-                            "code_code_system": "2.16.840.1.113883.6.1",
-                            "code_code_display": "State or Province of Exposure",
-                            "value_quantitative_value": None,
-                            "value_quant_code_system": None,
-                            "value_quantitative_code": None,
-                            "value_qualitative_value": "Washington",
-                            "value_qualitative_code_system": "2.16.840.1.113883.6.92",
-                            "value_qualitative_code": "53",
-                            "text": None,
-                        },
-                        {
-                            "code_code": "INV504",
-                            "code_code_system": "2.16.840.1.113883.6.1",
-                            "code_code_display": "City of Exposure",
-                            "value_quantitative_value": None,
-                            "value_quant_code_system": None,
-                            "value_quantitative_code": None,
-                            "value_qualitative_value": "Bright Falls",
-                            "value_qualitative_code_system": None,
-                            "value_qualitative_code": None,
-                            "text": None,
-                        },
-                        {
-                            "code_code": "INV505",
-                            "code_code_system": "2.16.840.1.113883.6.1",
-                            "code_code_display": "County of Exposure",
-                            "value_quantitative_value": None,
-                            "value_quant_code_system": None,
-                            "value_quantitative_code": None,
-                            "value_qualitative_value": "Pierce County",
-                            "value_qualitative_code_system": "2.16.840.1.113883.6.93",
-                            "value_qualitative_code": "053",
-                            "text": None,
-                        },
+                            "rule_summary": (
+                                "Detection of SARS-CoV-2 antibody in a clinical "
+                                "specimen by any method"
+                            )
+                        }
+                    ],
+                },
+                {
+                    "uuid": "10bd27fb-e882-4acb-8efb-ed2051b86691",
+                    "condition": "Plague",
+                    "condition_code": "58750007",
+                    "rule_summaries": [
+                        {"rule_summary": ("Plague (as a diagnosis or active problem)")}
                     ],
                 },
             ],
         },
     }
 
-    request = {
+    # Core schema
+    request_core = {
         "message_format": "fhir",
-        "parsing_schema": test_schema,
+        "parsing_schema": test_core_schema,
         "message": fhir_bundle,
     }
-    parsing_response = httpx.post(PARSE_MESSAGE, json=request)
+    parsing_response_core = httpx.post(PARSE_MESSAGE, json=request_core)
 
-    assert parsing_response.status_code == 200
-    assert parsing_response.json() == expected_reference_response
+    assert parsing_response_core.status_code == 200
+    assert parsing_response_core.json() == expected_core_response
 
+    # Extended schema
+    request_extended = {
+        "message_format": "fhir",
+        "parsing_schema": test_extended_schema,
+        "message": fhir_bundle,
+    }
+    parsing_response_extended = httpx.post(PARSE_MESSAGE, json=request_extended)
 
-@pytest.mark.integration
-def test_fhir_to_phdc(setup, fhir_bundle, validate_xml):
-    request = {"phdc_report_type": "case_report", "message": fhir_bundle}
+    print(parsing_response_extended.json())
 
-    parsing_response = httpx.post(FHIR_TO_PHDC, json=request)
-
-    assert parsing_response.status_code == 200
-
-    parsed_output = ET.fromstring(parsing_response.text.encode())
-    assert validate_xml(parsed_output)
+    assert parsing_response_extended.status_code == 200
+    assert parsing_response_extended.json() == expected_extended_response

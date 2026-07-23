@@ -38,6 +38,7 @@ Expected environment variables:
 - **FHIR_CONVERTER_PROXY_PORT** - The port used by the proxy to bind to listen to requests. Usually set to: `8080`.
 - **ENVIRONMENT** - Used to determine if the proxy is running in a local environment or not. Set to `local` for local environments, otherwise it can be left unset.
 - **FHIR_CONVERTER_ECS_NAMESPACE** - Used to assemble the host URL for AWS ECS instances using the DNS resolver, can be left unset for local environments. This should be the AWS CloudMap namespace name used by ECS. This environment variable is set in the TF module along with the definition of the `fhir-converter-dns` resource used for the resolver host.
+- **FHIR_CONVERTER_HOST** - The FHIR Coverter host to route requests to when `ENVIRONMENT` is set to `local` for local environments. Defaults to `fhir-converter-service`. If using Docker run or Docker Compose, the value will be the name of the FHIR Converter container.
 - **FHIR_CONVERTER_PORT** - The FHIR Converter service port to route requests to. Usually set to: `8080`. Only the port is needed because the host is derived from the environment (for local) or the `FHIR_CONVERTER_ECS_NAMESPACE` for AWS.
 
 Optional environment variables:

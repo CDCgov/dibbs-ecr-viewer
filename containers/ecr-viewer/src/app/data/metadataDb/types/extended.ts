@@ -29,7 +29,6 @@ export interface extended_ecr_data extends ecr_data {
   ehr_manufacturer_model: string | undefined;
   provider_id: string | undefined;
   facility_id: string | undefined;
-  facility_name: string | undefined;
   encounter_type: string | undefined;
   encounter_end_date: Date | undefined;
   reason_for_visit: string | undefined;

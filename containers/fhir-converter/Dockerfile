@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 # Download FHIR-Converter
 
-RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch 8.7.6 --depth 1 /App
+RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch 8.7.8 --depth 1 /App
 
 WORKDIR /App
 
@@ -30,4 +30,6 @@ COPY --from=build /App/data/Templates ./templates
 EXPOSE 8080
 
 ENV TEMPLATES_PATH=./templates/eCR
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD curl -f http://localhost:8080/ || exit 1
 ENTRYPOINT ["dotnet", "Dibbs.FhirConverterApi.dll"]

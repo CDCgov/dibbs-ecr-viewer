@@ -1,6 +1,6 @@
 asyncio
 psycopg2-binary>=2.9.12
-pytest>=9.0.3
+pytest>=9.1.1
 pytest-asyncio>=1.4.0
 pytest-env
 pytest-mock

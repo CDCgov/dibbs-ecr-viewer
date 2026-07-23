@@ -58,6 +58,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
+# Install curl for health check (must be before USER nextjs since apk requires root)
+RUN apk add --no-cache curl
+
 USER nextjs
 
 EXPOSE 3000
@@ -68,4 +71,6 @@ ENV HOSTNAME "0.0.0.0"
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD curl -f http://localhost:3000/ecr-viewer/api/health-check || exit 1
 CMD ["node", "server.js"]
