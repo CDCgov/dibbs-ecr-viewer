@@ -119,7 +119,7 @@ describe("process Metadata", () => {
         encounter_start_date: date3,
         facility_name: "Hospital A",
         conditions: ["Long"],
-        rule_summaries: ["Longer"],
+        rule_summaries: [{ condition: "Long", rule_summaries: ["Longer"] }],
         set_id: "123",
         eicr_version_number: "1",
         related_ecrs: [],
@@ -133,7 +133,9 @@ describe("process Metadata", () => {
         encounter_start_date: date3,
         facility_name: undefined,
         conditions: ["Stuff"],
-        rule_summaries: ["Other stuff", "Even more stuff"],
+        rule_summaries: [
+          { condition: "Stuff", rule_summaries: ["Other stuff", "Even more stuff"] },
+        ],
         set_id: "124",
         eicr_version_number: "1",
         related_ecrs: [],
@@ -150,7 +152,9 @@ describe("process Metadata", () => {
         patient_date_of_birth: formatDate(date2.toISOString()),
         patient_report_date: formatDateTime(date3.toISOString()),
         reportable_conditions: expect.arrayContaining(["Long"]),
-        rule_summaries: expect.arrayContaining(["Longer"]),
+        rule_summaries: expect.arrayContaining([
+          { condition: "Long", rule_summaries: ["Longer"] },
+        ]),
         eicr_set_id: "123",
         eicr_version_number: "1",
         related_ecrs: [],
@@ -165,8 +169,10 @@ describe("process Metadata", () => {
         patient_report_date: formatDateTime(date3.toISOString()),
         reportable_conditions: expect.arrayContaining(["Stuff"]),
         rule_summaries: expect.arrayContaining([
-          "Other stuff",
-          "Even more stuff",
+          {
+            condition: "Stuff",
+            rule_summaries: expect.arrayContaining(["Other stuff", "Even more stuff"]),
+          },
         ]),
         eicr_set_id: "124",
         eicr_version_number: "1",
