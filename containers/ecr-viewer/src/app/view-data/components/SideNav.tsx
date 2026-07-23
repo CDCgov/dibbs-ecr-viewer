@@ -9,22 +9,30 @@ import { toKebabCase } from "@/app/utils/format-utils";
 import { SideNavLoadingSkeleton } from "./LoadingComponent";
 import { EcrDocumentNavConfig } from "./EcrDocument/accordion-items";
 
+type SectionNavInput = string | SectionConfig | { title: string; id?: string };
+
 export class SectionConfig {
   title: string;
   id: string;
   subNavItems?: SectionConfig[];
 
-  constructor(title: string, subNavItems?: string[] | SectionConfig[]) {
+  constructor(title: string, subNavItems?: SectionNavInput[], id?: string) {
     this.title = title;
-    this.id = toKebabCase(title);
+    this.id = id ?? toKebabCase(title);
 
     if (subNavItems) {
       this.subNavItems = subNavItems.map((item) => {
         if (typeof item === "string") {
-          return new SectionConfig(item);
-        } else {
+          return new SectionConfig(item, undefined, toKebabCase(item));
+        } else if (item instanceof SectionConfig) {
           return item;
         }
+
+        return new SectionConfig(
+          item.title,
+          undefined,
+          item.id ?? toKebabCase(item.title),
+        );
       });
     }
   }
@@ -295,8 +303,9 @@ const SideNav: React.FC<{
       ) as HTMLElement[];
 
       headingElements.forEach((heading) => {
+        const idAttribute = heading.getAttribute("id");
         const text = heading.textContent;
-        const sectionId = text ? toKebabCase(text) : null;
+        const sectionId = idAttribute || (text ? toKebabCase(text) : null);
 
         if (sectionId && validIds.has(sectionId)) {
           heading.setAttribute("data-sectionid", sectionId);

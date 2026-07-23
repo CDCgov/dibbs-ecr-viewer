@@ -23,7 +23,11 @@ export const LabInfo = ({ labResults }: LabInfoProps) => {
   return (
     <AccordionSection>
       {labResults.map((res, i) => (
-        <LabResultDetail key={i} labResult={res} />
+        <LabResultDetail
+          key={i}
+          labResult={res}
+          sectionId={res.subNavMetadata.id}
+        />
       ))}
     </AccordionSection>
   );
@@ -31,16 +35,13 @@ export const LabInfo = ({ labResults }: LabInfoProps) => {
 
 const LabResultDetail = ({
   labResult,
+  sectionId,
 }: {
   labResult: LabReportElementData;
+  sectionId: string;
 }) => {
-  const labName = `Lab Results from ${
-    labResult?.organizationDisplayDataProps?.[0]?.value ||
-    "Unknown Organization"
-  }`;
-
   return (
-    <AccordionSubSection title={labName}>
+    <AccordionSubSection title={labResult.subNavMetadata.title} id={sectionId}>
       {labResult?.organizationDisplayDataProps?.map((item, index) => {
         if (item.value) return <DataDisplay item={item} key={index} />;
       })}
@@ -53,4 +54,7 @@ const LabResultDetail = ({
   );
 };
 
-export default LabInfo;
+export type LabNavItem = {
+  title: string;
+  id: string;
+};
