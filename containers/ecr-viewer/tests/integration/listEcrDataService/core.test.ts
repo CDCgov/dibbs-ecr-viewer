@@ -279,7 +279,9 @@ describe("listEcrData - core", () => {
         patient_last_name: "Bob",
         patient_report_date: "12/02/2024 7:00\u00A0AM\u00A0EST",
         reportable_conditions: ["Condition1"],
-        rule_summaries: [{ condition: "Condition1", rule_summaries: ["Rule1"] }],
+        rule_summaries: [
+          { condition: "Condition1", rule_summaries: ["Rule1"] },
+        ],
         eicr_set_id: "123",
         eicr_version_number: "2",
         related_ecrs: [
@@ -381,7 +383,9 @@ describe("listEcrData - core", () => {
         patient_last_name: "Bob",
         patient_report_date: "12/02/2024 7:00\u00A0AM\u00A0EST",
         reportable_conditions: ["Condition1"],
-        rule_summaries: [{ condition: "Condition1", rule_summaries: ["Rule1"] }],
+        rule_summaries: [
+          { condition: "Condition1", rule_summaries: ["Rule1"] },
+        ],
         eicr_set_id: "123",
         eicr_version_number: "2",
         related_ecrs: [
