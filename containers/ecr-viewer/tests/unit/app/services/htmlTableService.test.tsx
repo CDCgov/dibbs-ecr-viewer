@@ -133,30 +133,30 @@ describe("htmlTableService tests", () => {
       });
 
       it("<table><li></li></table>", () => {
-        // Should process table. Should not hit <li> case since 
+        // Should process table. Should not hit <li> case since
         // list items are in table, NOT that each table is a list item.
         const htmlString =
           "<table><tr><th>Header</th></tr><tr><td><li>Nested list item</li></td></tr></table>";
         const expectedResult: HtmlTableJson[] = [
           {
-            "resultId": undefined,
-            "resultName": "",
-            "tables": [
+            resultId: undefined,
+            resultName: "",
+            tables: [
               [
                 {
-                  "Header": {
-                    "metadata": {},
-                    "value": <li>Nested list item</li>
-                  }
-                }
-              ]
-            ]
-          }
-        ]
+                  Header: {
+                    metadata: {},
+                    value: <li>Nested list item</li>,
+                  },
+                },
+              ],
+            ],
+          },
+        ];
         const result = formatTablesToJSON(htmlString);
         console.log(result);
         expect(result).toEqual(expectedResult);
-      })
+      });
 
       it("<item data-id><table /></item>", () => {
         const htmlString =
@@ -412,7 +412,6 @@ describe("htmlTableService tests", () => {
         expect(result).toEqual(expectedResult);
       });
     });
-
 
     it("should return an empty array when HTML string input has no tables", () => {
       const htmlString =
