@@ -1,14 +1,4 @@
 {
-  "patient_id": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Patient').id",
-    "data_type": "string",
-    "nullable": false
-  },
-  "person_id": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Person').id",
-    "data_type": "string",
-    "nullable": false
-  },
   "gender": {
     "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').gender",
     "data_type": "string",
@@ -76,21 +66,6 @@
       }
     }
   },
-  "latitude": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').address.extension.where(url='http://hl7.org/fhir/StructureDefinition/geolocation').extension.where(url='latitude').valueDecimal",
-    "data_type": "float",
-    "nullable": true
-  },
-  "longitude": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').address.extension.where(url='http://hl7.org/fhir/StructureDefinition/geolocation').extension.where(url='longitude').valueDecimal",
-    "data_type": "float",
-    "nullable": true
-  },
-  "rr_id": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Composition').section.where(title = 'Reportability Response Information Section').extension.where(url='http://hl7.org/fhir/us/ecr/StructureDefinition/rr-composition').valueIdentifier.where(use='official' and type.coding.code='88085-6').value",
-    "data_type": "string",
-    "nullable": true
-  },
   "processing_status": {
     "fhir_path": "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-observation').code.coding.where(system='urn:oid:2.16.840.1.114222.4.5.274').code",
     "data_type": "string",
@@ -110,16 +85,6 @@
     "fhir_path": "Bundle.entry.resource.where(resourceType= 'Composition' ).extension.where(url='http://hl7.org/fhir/StructureDefinition/composition-clinicaldocument-versionNumber').valueString",
     "data_type": "string",
     "nullable": false
-  },
-  "replaced_eicr_id": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType= 'Composition').relatesTo.where(code='replaces').targetReference.reference",
-    "data_type": "string",
-    "nullable": true
-  },
-  "replaced_eicr_version": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType= 'Composition').relatesTo.where(code='replaces').extension.where(url='http://hl7.org/fhir/StructureDefinition/composition-clinicaldocument-versionNumber').valueString",
-    "data_type": "string",
-    "nullable": true
   },
   "authoring_date": {
     "fhir_path": "Bundle.timestamp",
@@ -152,15 +117,6 @@
     "data_type": "string",
     "nullable": true,
     "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
-  },
-  "facility_type": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Location' and id = %ref).type.coding.display",
-    "data_type": "string",
-    "nullable": true,
-    "reference_lookup": [
-      "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference",
-      "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).location[0].location.reference"
-    ]
   },
   "encounter_type": {
     "fhir_path": "Bundle.entry.resource.where(resourceType='Encounter' and id = %ref).class.where(system = 'http://terminology.hl7.org/CodeSystem/v3-ActCode').display",
@@ -344,11 +300,6 @@
   },
   "homelessness_status": {
     "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(code.coding.code='75274-1').where(category.coding.code='social-history').valueCodeableConcept.coding.display",
-    "data_type": "string",
-    "nullable": true
-  },
-  "disabilities": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile='http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-disability-status').where(category.coding.code='social-history').where(valueBoolean).code.coding.display",
     "data_type": "string",
     "nullable": true
   },
