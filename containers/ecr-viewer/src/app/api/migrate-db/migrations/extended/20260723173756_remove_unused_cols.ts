@@ -1,12 +1,9 @@
 import { Kysely } from "kysely";
 import { dbNamespace, dbSchema } from "@/app/data/metadataDb/utils/db-config";
 
-
 export async function up(db: Kysely<unknown>): Promise<void> {
   if (dbSchema() !== "extended") {
-    console.log(
-      `${dbSchema()} schema detected. Skipping extended migration.`
-    );
+    console.log(`${dbSchema()} schema detected. Skipping extended migration.`);
     return;
   }
 
@@ -17,7 +14,6 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .dropColumn("latitude")
     .dropColumn("longitude")
     .execute();
-
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
@@ -33,5 +29,4 @@ export async function down(db: Kysely<unknown>): Promise<void> {
     .addColumn("latitude", "numeric")
     .addColumn("longitude", "numeric")
     .execute();
-
 }
