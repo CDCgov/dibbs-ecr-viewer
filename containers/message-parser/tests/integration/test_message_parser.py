@@ -72,7 +72,6 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
         "message": "Parsing succeeded!",
         "parsed_values": {
             "patient_id": "f238f1ae-2f55-cd21-5c90-5e68a10af8ce",
-            "person_id": None,  # Remove after merging #1600
             "gender": "female",
             "race": "White",
             "ethnicity": "Non Hispanic or Latino",
@@ -89,15 +88,11 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
                     "period_end": "2000-07-20T08:55:00",  # Synthetic
                 }
             ],
-            "latitude": None,  # Remove after merging #1600
-            "longitude": None,  # Remove after merging #1600
-            "rr_id": None,  # Remove or fix after merging #1600
+            "rr_id": None,  # Remove after merging #1600
             "processing_status": "RRVS19",
             "set_id": "31",
             "eicr_id": "db734647-fc99-424c-a864-7e3cda82e704",
             "eicr_version_number": "2",
-            "replaced_eicr_id": "Composition/2.16.840.1.113883.9.9.9.9.9.2",  # Remove after merging #1600
-            "replaced_eicr_version": "1",  # Remove after merging #1600
             "authoring_date": "2020-11-07T09:44:21-05:00",
             "ehr_software": "Epic - Version 10.5",  # Synthetic
             "ehr_manufacturer_model": "Epic - Version 10.5",  # Synthetic

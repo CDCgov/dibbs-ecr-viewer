@@ -35,8 +35,6 @@ const extendedTemplate: NewExtendedECR = {
   gender_identity: "Based",
   race: "Star Guy",
   ethnicity: "Star Guy",
-  latitude: "0.0",
-  longitude: "0.0",
   homelessness_status: "Homeless",
   disabilities: "None",
   tribal_affiliation: "None",
