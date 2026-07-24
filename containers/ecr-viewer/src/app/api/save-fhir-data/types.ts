@@ -69,8 +69,6 @@ export interface BundleExtendedMetadata extends BundleMetadata {
   race: string | undefined;
   ethnicity: string | undefined;
   patient_addresses: Address[] | undefined;
-  latitude: string | undefined;
-  longitude: string | undefined;
   rr_id: string | undefined;
   processing_status: string | undefined;
   eicr_id: string;

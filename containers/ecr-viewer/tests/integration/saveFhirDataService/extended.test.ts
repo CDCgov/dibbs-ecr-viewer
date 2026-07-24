@@ -30,8 +30,6 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
       period_end: "2024-01-01",
     },
   ],
-  latitude: "53040",
-  longitude: "-120.1234",
   rr_id: "rr-12345",
   processing_status: "Processed",
   set_id: "1234",

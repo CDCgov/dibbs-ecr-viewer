@@ -255,8 +255,6 @@ const saveExtendedMetadata = async (
       gender_identity: metadata.gender_identity,
       race: metadata.race,
       ethnicity: metadata.ethnicity,
-      latitude: metadata.latitude,
-      longitude: metadata.longitude,
       homelessness_status: metadata.homelessness_status,
       disabilities: metadata.disabilities,
       tribal_affiliation: metadata.tribal_affiliation,

@@ -8,8 +8,6 @@ export interface extended_ecr_data extends ecr_data {
   gender_identity: string | undefined;
   race: string | undefined;
   ethnicity: string | undefined;
-  latitude: ColumnType<number, string> | undefined;
-  longitude: ColumnType<number, string> | undefined;
   homelessness_status: string | undefined;
   disabilities: string | undefined;
   tribal_affiliation: string | undefined;

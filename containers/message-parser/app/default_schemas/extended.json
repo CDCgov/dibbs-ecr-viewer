@@ -66,16 +66,6 @@
       }
     }
   },
-  "latitude": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').address.extension.where(url='http://hl7.org/fhir/StructureDefinition/geolocation').extension.where(url='latitude').valueDecimal",
-    "data_type": "float",
-    "nullable": true
-  },
-  "longitude": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').address.extension.where(url='http://hl7.org/fhir/StructureDefinition/geolocation').extension.where(url='longitude').valueDecimal",
-    "data_type": "float",
-    "nullable": true
-  },
   "rr_id": {
     "fhir_path": "Bundle.entry.resource.where(resourceType='Composition').section.where(title = 'Reportability Response Information Section').extension.where(url='http://hl7.org/fhir/us/ecr/StructureDefinition/rr-composition').valueIdentifier.where(use='official' and type.coding.code='88085-6').value",
     "data_type": "string",

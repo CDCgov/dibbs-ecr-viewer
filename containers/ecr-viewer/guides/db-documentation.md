@@ -132,8 +132,6 @@ The following columns are added to the `ecr_data` table in the extended schema:
 | `birth_sex`                | `varchar(255)` | NULL        |               | Patient's birth sex                                                                      |
 | `race`                     | `varchar(255)` | NULL        |               | Patient's race                                                                           |
 | `ethnicity`                | `varchar(255)` | NULL        |               | Patient's ethnicity                                                                      |
-| `latitude`                 | `numeric`      | NULL        |               | Latitude of patient's location                                                           |
-| `longitude`                | `numeric`      | NULL        |               | Longitude of patient's location                                                          |
 | `homelessness_status`      | `varchar(255)` | NULL        |               | Patient's homelessness status                                                            |
 | `disabilities`             | `varchar(255)` | NULL        |               | Patient's disabilities                                                                   |
 | `tribal_affiliation`       | `varchar(255)` | NULL        |               | Patient's tribal affiliation                                                             |
