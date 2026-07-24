@@ -133,7 +133,6 @@ The following columns are added to the `ecr_data` table in the extended schema:
 | `race`                     | `varchar(255)` | NULL        |               | Patient's race                                                                           |
 | `ethnicity`                | `varchar(255)` | NULL        |               | Patient's ethnicity                                                                      |
 | `homelessness_status`      | `varchar(255)` | NULL        |               | Patient's homelessness status                                                            |
-| `disabilities`             | `varchar(255)` | NULL        |               | Patient's disabilities                                                                   |
 | `tribal_affiliation`       | `varchar(255)` | NULL        |               | Patient's tribal affiliation                                                             |
 | `tribal_enrollment_status` | `varchar(255)` | NULL        |               | Patient's tribal enrollment status                                                       |
 | `current_job_title`        | `varchar(255)` | NULL        |               | Patient's current job title                                                              |
@@ -142,7 +141,6 @@ The following columns are added to the `ecr_data` table in the extended schema:
 | `usual_industry`           | `varchar(255)` | NULL        |               | Patient's usual industry                                                                 |
 | `preferred_language`       | `varchar(255)` | NULL        |               | Patient's preferred language                                                             |
 | `pregnancy_status`         | `varchar(255)` | NULL        |               | Patient's pregnancy status                                                               |
-| `rr_id`                    | `varchar(255)` | NULL        |               | Response Report ID                                                                       |
 | `processing_status`        | `varchar(255)` | NULL        |               | Processing status of the eCR                                                             |
 | `authoring_date`           | `datetime`     | NULL        |               | Date of authoring                                                                        |
 | `authoring_provider`       | `varchar(255)` | NULL        |               | Authoring provider                                                                       |

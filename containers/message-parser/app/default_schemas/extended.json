@@ -66,11 +66,6 @@
       }
     }
   },
-  "rr_id": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Composition').section.where(title = 'Reportability Response Information Section').extension.where(url='http://hl7.org/fhir/us/ecr/StructureDefinition/rr-composition').valueIdentifier.where(use='official' and type.coding.code='88085-6').value",
-    "data_type": "string",
-    "nullable": true
-  },
   "processing_status": {
     "fhir_path": "Bundle.entry.resource.where(resourceType = 'Observation').where(meta.profile = 'http://hl7.org/fhir/us/ecr/StructureDefinition/rr-eicr-processing-status-observation').code.coding.where(system='urn:oid:2.16.840.1.114222.4.5.274').code",
     "data_type": "string",
@@ -305,11 +300,6 @@
   },
   "homelessness_status": {
     "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(code.coding.code='75274-1').where(category.coding.code='social-history').valueCodeableConcept.coding.display",
-    "data_type": "string",
-    "nullable": true
-  },
-  "disabilities": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Observation').where(meta.profile='http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-disability-status').where(category.coding.code='social-history').where(valueBoolean).code.coding.display",
     "data_type": "string",
     "nullable": true
   },

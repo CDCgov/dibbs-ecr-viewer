@@ -9,7 +9,6 @@ export interface extended_ecr_data extends ecr_data {
   race: string | undefined;
   ethnicity: string | undefined;
   homelessness_status: string | undefined;
-  disabilities: string | undefined;
   tribal_affiliation: string | undefined;
   tribal_enrollment_status: string | undefined;
   current_job_title: string | undefined;
@@ -18,7 +17,6 @@ export interface extended_ecr_data extends ecr_data {
   usual_industry: string | undefined;
   preferred_language: string | undefined;
   pregnancy_status: string | undefined;
-  rr_id: string | undefined;
   processing_status: string | undefined;
   eicr_version_number: string | undefined;
   authoring_date: Date | undefined;

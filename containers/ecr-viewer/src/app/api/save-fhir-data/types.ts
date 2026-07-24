@@ -69,7 +69,6 @@ export interface BundleExtendedMetadata extends BundleMetadata {
   race: string | undefined;
   ethnicity: string | undefined;
   patient_addresses: Address[] | undefined;
-  rr_id: string | undefined;
   processing_status: string | undefined;
   eicr_id: string;
   authoring_date: string | undefined;
@@ -86,7 +85,6 @@ export interface BundleExtendedMetadata extends BundleMetadata {
   birth_sex: string | undefined;
   gender_identity: string | undefined;
   homelessness_status: string | undefined;
-  disabilities: string | undefined;
   tribal_affiliation: string | undefined;
   tribal_enrollment_status: string | undefined;
   current_job_title: string | undefined;

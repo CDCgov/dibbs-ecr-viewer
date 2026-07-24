@@ -87,7 +87,6 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
                     "period_end": "2000-07-20T08:55:00",  # Synthetic
                 }
             ],
-            "rr_id": None,  # Remove after merging #1600
             "processing_status": "RRVS19",
             "set_id": "31",
             "eicr_id": "db734647-fc99-424c-a864-7e3cda82e704",
@@ -266,9 +265,6 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
             "birth_sex": "F",
             "gender_identity": "Female-to-male transsexual",
             "homelessness_status": "Homeless",
-            "disabilities": (
-                "Are you deaf, or do you have serious difficulty hearing"
-            ),  # Remove after merging #1600
             "tribal_affiliation": ("Fort Mojave Indian Tribe of Arizona, California"),
             "tribal_enrollment_status": "True",
             "current_job_title": (
