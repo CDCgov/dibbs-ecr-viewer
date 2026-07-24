@@ -825,7 +825,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "TimeX",
     path: "effective",
   },
-  noteText: { type: "string", path: "note.text" },
+  noteText: { type: "string", path: "note.text.join('<br />')" },
   valueX: {
     type: "ValueX",
     path: "value",
