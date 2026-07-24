@@ -16,6 +16,12 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .dropColumn("rr_id")
     .dropColumn("disabilities")
     .execute();
+
+  await _db.schema
+    .alterTable("patient_address")
+    .dropColumn("type")
+    .dropColumn("text")
+    .execute();
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
@@ -32,5 +38,11 @@ export async function down(db: Kysely<unknown>): Promise<void> {
     .addColumn("longitude", "numeric")
     .addColumn("rr_id", "varchar(255)")
     .addColumn("disabilities", "varchar(255)")
+    .execute();
+
+  await _db.schema
+    .alterTable("patient_address")
+    .addColumn("type", "varchar(50)")
+    .addColumn("text", "varchar(255)")
     .execute();
 }

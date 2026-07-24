@@ -34,8 +34,6 @@ export interface extended_ecr_data extends ecr_data {
 export interface patient_address {
   uuid: Generated<string>;
   use: string | undefined;
-  type: string | undefined;
-  text: string | undefined;
   line: string | undefined;
   city: string | undefined;
   district: string | undefined;

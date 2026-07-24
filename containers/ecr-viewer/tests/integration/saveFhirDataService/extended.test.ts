@@ -18,8 +18,6 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
   patient_addresses: [
     {
       use: "home",
-      type: "postal",
-      text: "123 Main St, Anytown, USA",
       line: "123 Main St",
       city: "Anytown",
       district: "District 1",

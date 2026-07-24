@@ -202,8 +202,6 @@ This table stores patient address information. Note that the primary key for thi
 | :------------- | :------------- | :---------- | :------------ | :-------------------------------------------------------------------------------------------- |
 | `uuid`         | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], unique identifier for the address record   |
 | `use`          | `varchar(50)`  | NULL        |               | Purpose of the address (e.g., "home", "work")                                                 |
-| `type`         | `varchar(50)`  | NULL        |               | Type of address (e.g., "physical", "postal")                                                  |
-| `text`         | `varchar(255)` | NULL        |               | Full text representation of the address                                                       |
 | `line`         | `varchar(255)` | NULL        |               | Street address line                                                                           |
 | `city`         | `varchar(100)` | NULL        |               | City                                                                                          |
 | `district`     | `varchar(100)` | NULL        |               | District                                                                                      |

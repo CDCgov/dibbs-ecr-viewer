@@ -1,7 +1,5 @@
 interface Address {
   use: "home" | "work" | "temp" | "old" | "billing" | undefined;
-  type: "postal" | "physical" | "both" | undefined;
-  text: string | undefined;
   line: string | undefined;
   city: string | undefined;
   district: string | undefined;
