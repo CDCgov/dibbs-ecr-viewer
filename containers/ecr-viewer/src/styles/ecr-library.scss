@@ -86,15 +86,15 @@
       &.main-row {
         z-index: 2;
 
-        &:nth-child(odd) td {
+        &.main-row--odd td {
           background-color: white;
         }
 
-        &:nth-child(even) td {
+        &.main-row--even td {
           background-color: color("gray-cool-3");
         }
 
-        td:first-child {
+        &:not(.condition-group-row) td:first-child {
           padding-left: 0.25rem;
         }
       }

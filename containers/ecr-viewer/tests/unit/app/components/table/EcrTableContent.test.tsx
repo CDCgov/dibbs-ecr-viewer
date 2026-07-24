@@ -35,7 +35,12 @@ describe("EcrTableContent", () => {
       `reportable-condition-${i + 1}`,
       `second-condition-${i + 1}`,
     ],
-    rule_summaries: [`rule-summary-${i + 1}`, `second-summary-${i + 1}`],
+    rule_summaries: [
+      {
+        condition: `reportable-condition-${i + 1}`,
+        rule_summaries: [`rule-summary-${i + 1}`, `second-summary-${i + 1}`],
+      },
+    ],
     patient_report_date: i === 0 ? "" : `2021-01-0${(i % 9) + 1}`,
     date_created: `2021-01-0${(i % 9) + 1}`,
     eicr_set_id: `123${i}`,
