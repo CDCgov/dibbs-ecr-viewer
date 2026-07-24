@@ -119,7 +119,7 @@ describe("process Metadata", () => {
         encounter_start_date: date3,
         facility_name: "Hospital A",
         conditions: ["Long"],
-        rule_summaries: ["Longer"],
+        rule_summaries: [{ condition: "Long", rule_summaries: ["Longer"] }],
         set_id: "123",
         eicr_version_number: "1",
         related_ecrs: [],
@@ -133,7 +133,12 @@ describe("process Metadata", () => {
         encounter_start_date: date3,
         facility_name: undefined,
         conditions: ["Stuff"],
-        rule_summaries: ["Other stuff", "Even more stuff"],
+        rule_summaries: [
+          {
+            condition: "Stuff",
+            rule_summaries: ["Other stuff", "Even more stuff"],
+          },
+        ],
         set_id: "124",
         eicr_version_number: "1",
         related_ecrs: [],
@@ -150,7 +155,9 @@ describe("process Metadata", () => {
         patient_date_of_birth: formatDate(date2.toISOString()),
         patient_report_date: formatDateTime(date3.toISOString()),
         reportable_conditions: expect.arrayContaining(["Long"]),
-        rule_summaries: expect.arrayContaining(["Longer"]),
+        rule_summaries: expect.arrayContaining([
+          { condition: "Long", rule_summaries: ["Longer"] },
+        ]),
         eicr_set_id: "123",
         eicr_version_number: "1",
         related_ecrs: [],
@@ -165,8 +172,13 @@ describe("process Metadata", () => {
         patient_report_date: formatDateTime(date3.toISOString()),
         reportable_conditions: expect.arrayContaining(["Stuff"]),
         rule_summaries: expect.arrayContaining([
-          "Other stuff",
-          "Even more stuff",
+          {
+            condition: "Stuff",
+            rule_summaries: expect.arrayContaining([
+              "Other stuff",
+              "Even more stuff",
+            ]),
+          },
         ]),
         eicr_set_id: "124",
         eicr_version_number: "1",
@@ -267,7 +279,9 @@ describe("listEcrData - core", () => {
         patient_last_name: "Bob",
         patient_report_date: "12/02/2024 7:00\u00A0AM\u00A0EST",
         reportable_conditions: ["Condition1"],
-        rule_summaries: ["Rule1"],
+        rule_summaries: [
+          { condition: "Condition1", rule_summaries: ["Rule1"] },
+        ],
         eicr_set_id: "123",
         eicr_version_number: "2",
         related_ecrs: [
@@ -369,7 +383,9 @@ describe("listEcrData - core", () => {
         patient_last_name: "Bob",
         patient_report_date: "12/02/2024 7:00\u00A0AM\u00A0EST",
         reportable_conditions: ["Condition1"],
-        rule_summaries: ["Rule1"],
+        rule_summaries: [
+          { condition: "Condition1", rule_summaries: ["Rule1"] },
+        ],
         eicr_set_id: "123",
         eicr_version_number: "2",
         related_ecrs: [
@@ -523,6 +539,64 @@ describe("listEcrData - core", () => {
     expect(actual[0].patient_last_name).toEqual("Bob");
 
     await clearEcrCore();
+  });
+});
+
+describe("listEcrData - multi-version condition aggregation", () => {
+  const startIndex = 0;
+  const itemsPerPage = 25;
+  const sortColumn = "date_created";
+  const sortDirection = "DESC";
+
+  beforeEach(async () => {
+    await createCoreEcr(coreTemplate); // v2
+    await createCoreEcr({ ...coreTemplate, ...relatedEcr }); // v1, same set_id
+    await createEcrCondition({
+      uuid: "cond-v2",
+      eicr_id: "12345",
+      condition: "Condition1",
+    });
+    await createEcrCondition({
+      uuid: "cond-v1",
+      eicr_id: "36545",
+      condition: "Condition2",
+    });
+  });
+
+  afterEach(async () => {
+    await clearEcrCore();
+  });
+
+  it("should show conditions from all versions when no filter is applied", async () => {
+    const actual = await listEcrData({
+      startIndex,
+      itemsPerPage,
+      sortColumn,
+      sortDirection,
+      filterDates,
+    });
+
+    expect(actual).toHaveLength(1);
+    expect(actual[0].eicr_version_number).toBe("2");
+    expect(actual[0].reportable_conditions).toEqual(
+      expect.arrayContaining(["Condition1", "Condition2"]),
+    );
+    expect(actual[0].reportable_conditions).toHaveLength(2);
+  });
+
+  it("should not show conditions from later versions when a condition filter matches an earlier version", async () => {
+    const actual = await listEcrData({
+      startIndex,
+      itemsPerPage,
+      sortColumn,
+      sortDirection,
+      filterDates,
+      filterConditions: ["Condition2"],
+    });
+
+    expect(actual).toHaveLength(1);
+    expect(actual[0].eicr_version_number).toBe("1");
+    expect(actual[0].reportable_conditions).toEqual(["Condition2"]);
   });
 });
 

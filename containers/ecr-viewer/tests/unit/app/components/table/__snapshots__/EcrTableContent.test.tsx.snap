@@ -10,11 +10,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="1"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -58,11 +59,23 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-01
       </td>
       <td
         role="gridcell"
+        rowspan="1"
+      >
+        <span
+          class="text-italic text-base"
+        >
+          No data
+        </span>
+      </td>
+      <td
+        role="gridcell"
+        rowspan="1"
       >
         <span
           class="text-italic text-base"
@@ -73,25 +86,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       <td
         role="gridcell"
       >
-        <span
-          class="text-italic text-base"
-        >
-          No data
-        </span>
-      </td>
-      <td
-        role="gridcell"
-      >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-1
-          </li>
-          <li>
-            second-condition-1
-          </li>
-        </ul>
+        reportable-condition-1
       </td>
       <td
         role="gridcell"
@@ -113,11 +108,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="2"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -167,32 +163,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-02
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-02
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-2
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-2
-          </li>
-          <li>
-            second-condition-2
-          </li>
-        </ul>
+        reportable-condition-2
       </td>
       <td
         role="gridcell"
@@ -214,11 +204,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="3"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -268,32 +259,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-03
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-03
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-3
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-3
-          </li>
-          <li>
-            second-condition-3
-          </li>
-        </ul>
+        reportable-condition-3
       </td>
       <td
         role="gridcell"
@@ -315,11 +300,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="4"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -369,32 +355,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-04
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-04
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-4
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-4
-          </li>
-          <li>
-            second-condition-4
-          </li>
-        </ul>
+        reportable-condition-4
       </td>
       <td
         role="gridcell"
@@ -416,11 +396,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="5"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -470,32 +451,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-05
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-05
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-5
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-5
-          </li>
-          <li>
-            second-condition-5
-          </li>
-        </ul>
+        reportable-condition-5
       </td>
       <td
         role="gridcell"
@@ -517,11 +492,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="6"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -571,32 +547,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-06
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-06
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-6
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-6
-          </li>
-          <li>
-            second-condition-6
-          </li>
-        </ul>
+        reportable-condition-6
       </td>
       <td
         role="gridcell"
@@ -618,11 +588,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="7"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -672,32 +643,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-07
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-07
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-7
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-7
-          </li>
-          <li>
-            second-condition-7
-          </li>
-        </ul>
+        reportable-condition-7
       </td>
       <td
         role="gridcell"
@@ -719,11 +684,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="8"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -773,32 +739,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-08
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-08
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-8
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-8
-          </li>
-          <li>
-            second-condition-8
-          </li>
-        </ul>
+        reportable-condition-8
       </td>
       <td
         role="gridcell"
@@ -820,11 +780,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="9"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -874,32 +835,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-09
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-09
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-9
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-9
-          </li>
-          <li>
-            second-condition-9
-          </li>
-        </ul>
+        reportable-condition-9
       </td>
       <td
         role="gridcell"
@@ -921,11 +876,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="10"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -975,32 +931,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-01
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-01
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-10
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-10
-          </li>
-          <li>
-            second-condition-10
-          </li>
-        </ul>
+        reportable-condition-10
       </td>
       <td
         role="gridcell"
@@ -1022,11 +972,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="11"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -1076,32 +1027,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-02
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-02
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-11
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-11
-          </li>
-          <li>
-            second-condition-11
-          </li>
-        </ul>
+        reportable-condition-11
       </td>
       <td
         role="gridcell"
@@ -1123,11 +1068,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="12"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -1177,32 +1123,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-03
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-03
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-12
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-12
-          </li>
-          <li>
-            second-condition-12
-          </li>
-        </ul>
+        reportable-condition-12
       </td>
       <td
         role="gridcell"
@@ -1224,11 +1164,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="13"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -1278,32 +1219,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-04
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-04
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-13
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-13
-          </li>
-          <li>
-            second-condition-13
-          </li>
-        </ul>
+        reportable-condition-13
       </td>
       <td
         role="gridcell"
@@ -1325,11 +1260,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="14"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -1379,32 +1315,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-05
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-05
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-14
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-14
-          </li>
-          <li>
-            second-condition-14
-          </li>
-        </ul>
+        reportable-condition-14
       </td>
       <td
         role="gridcell"
@@ -1426,11 +1356,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="15"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -1480,32 +1411,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-06
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-06
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-15
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-15
-          </li>
-          <li>
-            second-condition-15
-          </li>
-        </ul>
+        reportable-condition-15
       </td>
       <td
         role="gridcell"
@@ -1527,11 +1452,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="16"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -1581,32 +1507,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-07
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-07
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-16
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-16
-          </li>
-          <li>
-            second-condition-16
-          </li>
-        </ul>
+        reportable-condition-16
       </td>
       <td
         role="gridcell"
@@ -1628,11 +1548,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="17"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -1682,32 +1603,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-08
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-08
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-17
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-17
-          </li>
-          <li>
-            second-condition-17
-          </li>
-        </ul>
+        reportable-condition-17
       </td>
       <td
         role="gridcell"
@@ -1729,11 +1644,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="18"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -1783,32 +1699,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-09
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-09
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-18
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-18
-          </li>
-          <li>
-            second-condition-18
-          </li>
-        </ul>
+        reportable-condition-18
       </td>
       <td
         role="gridcell"
@@ -1830,11 +1740,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="19"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -1884,32 +1795,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-01
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-01
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-19
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-19
-          </li>
-          <li>
-            second-condition-19
-          </li>
-        </ul>
+        reportable-condition-19
       </td>
       <td
         role="gridcell"
@@ -1931,11 +1836,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="20"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -1985,32 +1891,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-02
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-02
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-20
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-20
-          </li>
-          <li>
-            second-condition-20
-          </li>
-        </ul>
+        reportable-condition-20
       </td>
       <td
         role="gridcell"
@@ -2032,11 +1932,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="21"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -2086,32 +1987,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-03
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-03
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-21
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-21
-          </li>
-          <li>
-            second-condition-21
-          </li>
-        </ul>
+        reportable-condition-21
       </td>
       <td
         role="gridcell"
@@ -2133,11 +2028,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="22"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -2187,32 +2083,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-04
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-04
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-22
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-22
-          </li>
-          <li>
-            second-condition-22
-          </li>
-        </ul>
+        reportable-condition-22
       </td>
       <td
         role="gridcell"
@@ -2234,11 +2124,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="23"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -2288,32 +2179,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-05
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-05
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-23
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-23
-          </li>
-          <li>
-            second-condition-23
-          </li>
-        </ul>
+        reportable-condition-23
       </td>
       <td
         role="gridcell"
@@ -2335,11 +2220,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="24"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -2389,32 +2275,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-06
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-06
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-24
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-24
-          </li>
-          <li>
-            second-condition-24
-          </li>
-        </ul>
+        reportable-condition-24
       </td>
       <td
         role="gridcell"
@@ -2436,11 +2316,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       aria-level="1"
       aria-posinset="25"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -2490,32 +2371,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-07
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-07
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-25
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-25
-          </li>
-          <li>
-            second-condition-25
-          </li>
-        </ul>
+        reportable-condition-25
       </td>
       <td
         role="gridcell"
@@ -2546,11 +2421,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="1"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -2594,11 +2470,23 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-01
       </td>
       <td
         role="gridcell"
+        rowspan="1"
+      >
+        <span
+          class="text-italic text-base"
+        >
+          No data
+        </span>
+      </td>
+      <td
+        role="gridcell"
+        rowspan="1"
       >
         <span
           class="text-italic text-base"
@@ -2609,25 +2497,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       <td
         role="gridcell"
       >
-        <span
-          class="text-italic text-base"
-        >
-          No data
-        </span>
-      </td>
-      <td
-        role="gridcell"
-      >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-1
-          </li>
-          <li>
-            second-condition-1
-          </li>
-        </ul>
+        reportable-condition-1
       </td>
       <td
         role="gridcell"
@@ -2844,11 +2714,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="2"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -2898,32 +2769,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-02
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-02
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-2
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-2
-          </li>
-          <li>
-            second-condition-2
-          </li>
-        </ul>
+        reportable-condition-2
       </td>
       <td
         role="gridcell"
@@ -2945,11 +2810,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="3"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -2999,32 +2865,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-03
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-03
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-3
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-3
-          </li>
-          <li>
-            second-condition-3
-          </li>
-        </ul>
+        reportable-condition-3
       </td>
       <td
         role="gridcell"
@@ -3046,11 +2906,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="4"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -3100,32 +2961,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-04
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-04
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-4
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-4
-          </li>
-          <li>
-            second-condition-4
-          </li>
-        </ul>
+        reportable-condition-4
       </td>
       <td
         role="gridcell"
@@ -3147,11 +3002,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="5"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -3201,32 +3057,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-05
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-05
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-5
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-5
-          </li>
-          <li>
-            second-condition-5
-          </li>
-        </ul>
+        reportable-condition-5
       </td>
       <td
         role="gridcell"
@@ -3248,11 +3098,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="6"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -3302,32 +3153,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-06
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-06
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-6
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-6
-          </li>
-          <li>
-            second-condition-6
-          </li>
-        </ul>
+        reportable-condition-6
       </td>
       <td
         role="gridcell"
@@ -3349,11 +3194,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="7"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -3403,32 +3249,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-07
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-07
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-7
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-7
-          </li>
-          <li>
-            second-condition-7
-          </li>
-        </ul>
+        reportable-condition-7
       </td>
       <td
         role="gridcell"
@@ -3450,11 +3290,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="8"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -3504,32 +3345,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-08
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-08
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-8
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-8
-          </li>
-          <li>
-            second-condition-8
-          </li>
-        </ul>
+        reportable-condition-8
       </td>
       <td
         role="gridcell"
@@ -3551,11 +3386,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="9"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -3605,32 +3441,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-09
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-09
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-9
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-9
-          </li>
-          <li>
-            second-condition-9
-          </li>
-        </ul>
+        reportable-condition-9
       </td>
       <td
         role="gridcell"
@@ -3652,11 +3482,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="10"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -3706,32 +3537,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-01
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-01
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-10
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-10
-          </li>
-          <li>
-            second-condition-10
-          </li>
-        </ul>
+        reportable-condition-10
       </td>
       <td
         role="gridcell"
@@ -3753,11 +3578,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="11"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -3807,32 +3633,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-02
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-02
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-11
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-11
-          </li>
-          <li>
-            second-condition-11
-          </li>
-        </ul>
+        reportable-condition-11
       </td>
       <td
         role="gridcell"
@@ -3854,11 +3674,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="12"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -3908,32 +3729,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-03
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-03
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-12
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-12
-          </li>
-          <li>
-            second-condition-12
-          </li>
-        </ul>
+        reportable-condition-12
       </td>
       <td
         role="gridcell"
@@ -3955,11 +3770,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="13"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -4009,32 +3825,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-04
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-04
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-13
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-13
-          </li>
-          <li>
-            second-condition-13
-          </li>
-        </ul>
+        reportable-condition-13
       </td>
       <td
         role="gridcell"
@@ -4056,11 +3866,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="14"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -4110,32 +3921,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-05
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-05
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-14
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-14
-          </li>
-          <li>
-            second-condition-14
-          </li>
-        </ul>
+        reportable-condition-14
       </td>
       <td
         role="gridcell"
@@ -4157,11 +3962,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="15"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -4211,32 +4017,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-06
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-06
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-15
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-15
-          </li>
-          <li>
-            second-condition-15
-          </li>
-        </ul>
+        reportable-condition-15
       </td>
       <td
         role="gridcell"
@@ -4258,11 +4058,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="16"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -4312,32 +4113,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-07
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-07
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-16
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-16
-          </li>
-          <li>
-            second-condition-16
-          </li>
-        </ul>
+        reportable-condition-16
       </td>
       <td
         role="gridcell"
@@ -4359,11 +4154,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="17"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -4413,32 +4209,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-08
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-08
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-17
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-17
-          </li>
-          <li>
-            second-condition-17
-          </li>
-        </ul>
+        reportable-condition-17
       </td>
       <td
         role="gridcell"
@@ -4460,11 +4250,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="18"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -4514,32 +4305,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-09
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-09
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-18
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-18
-          </li>
-          <li>
-            second-condition-18
-          </li>
-        </ul>
+        reportable-condition-18
       </td>
       <td
         role="gridcell"
@@ -4561,11 +4346,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="19"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -4615,32 +4401,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-01
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-01
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-19
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-19
-          </li>
-          <li>
-            second-condition-19
-          </li>
-        </ul>
+        reportable-condition-19
       </td>
       <td
         role="gridcell"
@@ -4662,11 +4442,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="20"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -4716,32 +4497,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-02
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-02
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-20
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-20
-          </li>
-          <li>
-            second-condition-20
-          </li>
-        </ul>
+        reportable-condition-20
       </td>
       <td
         role="gridcell"
@@ -4763,11 +4538,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="21"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -4817,32 +4593,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-03
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-03
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-21
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-21
-          </li>
-          <li>
-            second-condition-21
-          </li>
-        </ul>
+        reportable-condition-21
       </td>
       <td
         role="gridcell"
@@ -4864,11 +4634,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="22"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -4918,32 +4689,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-04
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-04
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-22
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-22
-          </li>
-          <li>
-            second-condition-22
-          </li>
-        </ul>
+        reportable-condition-22
       </td>
       <td
         role="gridcell"
@@ -4965,11 +4730,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="23"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -5019,32 +4785,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-05
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-05
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-23
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-23
-          </li>
-          <li>
-            second-condition-23
-          </li>
-        </ul>
+        reportable-condition-23
       </td>
       <td
         role="gridcell"
@@ -5066,11 +4826,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="24"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -5120,32 +4881,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-06
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-06
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-24
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-24
-          </li>
-          <li>
-            second-condition-24
-          </li>
-        </ul>
+        reportable-condition-24
       </td>
       <td
         role="gridcell"
@@ -5167,11 +4922,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       aria-level="1"
       aria-posinset="25"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -5221,32 +4977,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-07
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-07
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-25
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-25
-          </li>
-          <li>
-            second-condition-25
-          </li>
-        </ul>
+        reportable-condition-25
       </td>
       <td
         role="gridcell"
@@ -5277,11 +5027,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="1"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -5325,11 +5076,23 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-01
       </td>
       <td
         role="gridcell"
+        rowspan="1"
+      >
+        <span
+          class="text-italic text-base"
+        >
+          No data
+        </span>
+      </td>
+      <td
+        role="gridcell"
+        rowspan="1"
       >
         <span
           class="text-italic text-base"
@@ -5340,25 +5103,7 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       <td
         role="gridcell"
       >
-        <span
-          class="text-italic text-base"
-        >
-          No data
-        </span>
-      </td>
-      <td
-        role="gridcell"
-      >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-1
-          </li>
-          <li>
-            second-condition-1
-          </li>
-        </ul>
+        reportable-condition-1
       </td>
       <td
         role="gridcell"
@@ -5620,11 +5365,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="2"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -5674,32 +5420,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-02
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-02
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-2
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-2
-          </li>
-          <li>
-            second-condition-2
-          </li>
-        </ul>
+        reportable-condition-2
       </td>
       <td
         role="gridcell"
@@ -5721,11 +5461,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="3"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -5775,32 +5516,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-03
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-03
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-3
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-3
-          </li>
-          <li>
-            second-condition-3
-          </li>
-        </ul>
+        reportable-condition-3
       </td>
       <td
         role="gridcell"
@@ -5822,11 +5557,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="4"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -5876,32 +5612,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-04
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-04
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-4
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-4
-          </li>
-          <li>
-            second-condition-4
-          </li>
-        </ul>
+        reportable-condition-4
       </td>
       <td
         role="gridcell"
@@ -5923,11 +5653,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="5"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -5977,32 +5708,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-05
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-05
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-5
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-5
-          </li>
-          <li>
-            second-condition-5
-          </li>
-        </ul>
+        reportable-condition-5
       </td>
       <td
         role="gridcell"
@@ -6024,11 +5749,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="6"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -6078,32 +5804,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-06
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-06
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-6
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-6
-          </li>
-          <li>
-            second-condition-6
-          </li>
-        </ul>
+        reportable-condition-6
       </td>
       <td
         role="gridcell"
@@ -6125,11 +5845,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="7"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -6179,32 +5900,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-07
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-07
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-7
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-7
-          </li>
-          <li>
-            second-condition-7
-          </li>
-        </ul>
+        reportable-condition-7
       </td>
       <td
         role="gridcell"
@@ -6226,11 +5941,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="8"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -6280,32 +5996,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-08
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-08
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-8
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-8
-          </li>
-          <li>
-            second-condition-8
-          </li>
-        </ul>
+        reportable-condition-8
       </td>
       <td
         role="gridcell"
@@ -6327,11 +6037,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="9"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -6381,32 +6092,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-09
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-09
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-9
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-9
-          </li>
-          <li>
-            second-condition-9
-          </li>
-        </ul>
+        reportable-condition-9
       </td>
       <td
         role="gridcell"
@@ -6428,11 +6133,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="10"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -6482,32 +6188,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-01
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-01
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-10
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-10
-          </li>
-          <li>
-            second-condition-10
-          </li>
-        </ul>
+        reportable-condition-10
       </td>
       <td
         role="gridcell"
@@ -6529,11 +6229,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="11"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -6583,32 +6284,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-02
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-02
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-11
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-11
-          </li>
-          <li>
-            second-condition-11
-          </li>
-        </ul>
+        reportable-condition-11
       </td>
       <td
         role="gridcell"
@@ -6630,11 +6325,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="12"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -6684,32 +6380,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-03
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-03
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-12
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-12
-          </li>
-          <li>
-            second-condition-12
-          </li>
-        </ul>
+        reportable-condition-12
       </td>
       <td
         role="gridcell"
@@ -6731,11 +6421,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="13"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -6785,32 +6476,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-04
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-04
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-13
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-13
-          </li>
-          <li>
-            second-condition-13
-          </li>
-        </ul>
+        reportable-condition-13
       </td>
       <td
         role="gridcell"
@@ -6832,11 +6517,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="14"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -6886,32 +6572,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-05
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-05
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-14
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-14
-          </li>
-          <li>
-            second-condition-14
-          </li>
-        </ul>
+        reportable-condition-14
       </td>
       <td
         role="gridcell"
@@ -6933,11 +6613,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="15"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -6987,32 +6668,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-06
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-06
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-15
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-15
-          </li>
-          <li>
-            second-condition-15
-          </li>
-        </ul>
+        reportable-condition-15
       </td>
       <td
         role="gridcell"
@@ -7034,11 +6709,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="16"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -7088,32 +6764,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-07
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-07
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-16
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-16
-          </li>
-          <li>
-            second-condition-16
-          </li>
-        </ul>
+        reportable-condition-16
       </td>
       <td
         role="gridcell"
@@ -7135,11 +6805,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="17"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -7189,32 +6860,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-08
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-08
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-17
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-17
-          </li>
-          <li>
-            second-condition-17
-          </li>
-        </ul>
+        reportable-condition-17
       </td>
       <td
         role="gridcell"
@@ -7236,11 +6901,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="18"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -7290,32 +6956,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-09
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-09
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-18
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-18
-          </li>
-          <li>
-            second-condition-18
-          </li>
-        </ul>
+        reportable-condition-18
       </td>
       <td
         role="gridcell"
@@ -7337,11 +6997,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="19"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -7391,32 +7052,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-01
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-01
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-19
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-19
-          </li>
-          <li>
-            second-condition-19
-          </li>
-        </ul>
+        reportable-condition-19
       </td>
       <td
         role="gridcell"
@@ -7438,11 +7093,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="20"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -7492,32 +7148,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-02
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-02
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-20
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-20
-          </li>
-          <li>
-            second-condition-20
-          </li>
-        </ul>
+        reportable-condition-20
       </td>
       <td
         role="gridcell"
@@ -7539,11 +7189,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="21"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -7593,32 +7244,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-03
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-03
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-21
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-21
-          </li>
-          <li>
-            second-condition-21
-          </li>
-        </ul>
+        reportable-condition-21
       </td>
       <td
         role="gridcell"
@@ -7640,11 +7285,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="22"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -7694,32 +7340,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-04
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-04
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-22
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-22
-          </li>
-          <li>
-            second-condition-22
-          </li>
-        </ul>
+        reportable-condition-22
       </td>
       <td
         role="gridcell"
@@ -7741,11 +7381,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="23"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -7795,32 +7436,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-05
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-05
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-23
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-23
-          </li>
-          <li>
-            second-condition-23
-          </li>
-        </ul>
+        reportable-condition-23
       </td>
       <td
         role="gridcell"
@@ -7842,11 +7477,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="24"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--even"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -7896,32 +7532,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-06
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-06
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-24
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-24
-          </li>
-          <li>
-            second-condition-24
-          </li>
-        </ul>
+        reportable-condition-24
       </td>
       <td
         role="gridcell"
@@ -7943,11 +7573,12 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       aria-level="1"
       aria-posinset="25"
       aria-setsize="25"
-      class="main-row"
+      class="main-row main-row--odd"
       role="row"
     >
       <td
         role="gridcell"
+        rowspan="1"
       >
         <div
           class="patient-name-cell"
@@ -7997,32 +7628,26 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-07
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         2021-01-07
       </td>
       <td
         role="gridcell"
+        rowspan="1"
       >
         Organization-25
       </td>
       <td
         role="gridcell"
       >
-        <ul
-          class="ecr-table-list"
-        >
-          <li>
-            reportable-condition-25
-          </li>
-          <li>
-            second-condition-25
-          </li>
-        </ul>
+        reportable-condition-25
       </td>
       <td
         role="gridcell"

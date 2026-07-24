@@ -1,7 +1,5 @@
 interface Address {
   use: "home" | "work" | "temp" | "old" | "billing" | undefined;
-  type: "postal" | "physical" | "both" | undefined;
-  text: string | undefined;
   line: string | undefined;
   city: string | undefined;
   district: string | undefined;
@@ -65,25 +63,17 @@ export interface BundleMetadata {
 }
 
 export interface BundleExtendedMetadata extends BundleMetadata {
-  patient_id: string;
-  person_id: string;
   gender: string | undefined;
   race: string | undefined;
   ethnicity: string | undefined;
   patient_addresses: Address[] | undefined;
-  latitude: string | undefined;
-  longitude: string | undefined;
-  rr_id: string | undefined;
   processing_status: string | undefined;
   eicr_id: string;
-  replaced_eicr_id: string | undefined;
-  replaced_eicr_version: string | undefined;
   authoring_date: string | undefined;
   ehr_software: string | undefined;
   ehr_manufacturer_model: string | undefined;
   provider_id: string | undefined;
   facility_id: string | undefined;
-  facility_type: string | undefined;
   encounter_type: string | undefined;
   encounter_end_date: string | undefined;
   reason_for_visit: string | undefined;
@@ -93,7 +83,6 @@ export interface BundleExtendedMetadata extends BundleMetadata {
   birth_sex: string | undefined;
   gender_identity: string | undefined;
   homelessness_status: string | undefined;
-  disabilities: string | undefined;
   tribal_affiliation: string | undefined;
   tribal_enrollment_status: string | undefined;
   current_job_title: string | undefined;

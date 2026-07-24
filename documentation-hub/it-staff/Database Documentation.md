@@ -132,10 +132,7 @@ The following columns are added to the `ecr_data` table in the extended schema:
 | `birth_sex`                | `varchar(255)` | NULL        |               | Patient's birth sex                                                                      |
 | `race`                     | `varchar(255)` | NULL        |               | Patient's race                                                                           |
 | `ethnicity`                | `varchar(255)` | NULL        |               | Patient's ethnicity                                                                      |
-| `latitude`                 | `numeric`      | NULL        |               | Latitude of patient's location                                                           |
-| `longitude`                | `numeric`      | NULL        |               | Longitude of patient's location                                                          |
 | `homelessness_status`      | `varchar(255)` | NULL        |               | Patient's homelessness status                                                            |
-| `disabilities`             | `varchar(255)` | NULL        |               | Patient's disabilities                                                                   |
 | `tribal_affiliation`       | `varchar(255)` | NULL        |               | Patient's tribal affiliation                                                             |
 | `tribal_enrollment_status` | `varchar(255)` | NULL        |               | Patient's tribal enrollment status                                                       |
 | `current_job_title`        | `varchar(255)` | NULL        |               | Patient's current job title                                                              |
@@ -144,7 +141,6 @@ The following columns are added to the `ecr_data` table in the extended schema:
 | `usual_industry`           | `varchar(255)` | NULL        |               | Patient's usual industry                                                                 |
 | `preferred_language`       | `varchar(255)` | NULL        |               | Patient's preferred language                                                             |
 | `pregnancy_status`         | `varchar(255)` | NULL        |               | Patient's pregnancy status                                                               |
-| `rr_id`                    | `varchar(255)` | NULL        |               | Response Report ID                                                                       |
 | `processing_status`        | `varchar(255)` | NULL        |               | Processing status of the eCR                                                             |
 | `authoring_date`           | `datetime`     | NULL        |               | Date of authoring                                                                        |
 | `authoring_provider`       | `varchar(255)` | NULL        |               | Authoring provider                                                                       |
@@ -206,8 +202,6 @@ This table stores patient address information. Note that the primary key for thi
 | :------------- | :------------- | :---------- | :------------ | :-------------------------------------------------------------------------------------------- |
 | `uuid`         | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], unique identifier for the address record   |
 | `use`          | `varchar(50)`  | NULL        |               | Purpose of the address (e.g., "home", "work")                                                 |
-| `type`         | `varchar(50)`  | NULL        |               | Type of address (e.g., "physical", "postal")                                                  |
-| `text`         | `varchar(255)` | NULL        |               | Full text representation of the address                                                       |
 | `line`         | `varchar(255)` | NULL        |               | Street address line                                                                           |
 | `city`         | `varchar(100)` | NULL        |               | City                                                                                          |
 | `district`     | `varchar(100)` | NULL        |               | District                                                                                      |

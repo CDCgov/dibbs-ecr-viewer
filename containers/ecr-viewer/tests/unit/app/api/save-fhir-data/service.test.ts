@@ -131,26 +131,18 @@ const makeExtendedMetadata = (
 ): BundleExtendedMetadata => ({
   ...coreMetadata,
   rr: undefined,
-  patient_id: "patient-1",
-  person_id: "person-1",
   gender: "female",
   race: "race",
   ethnicity: "ethnicity",
   patient_addresses: undefined,
-  latitude: "1",
-  longitude: "-1",
-  rr_id: "rr-1",
   processing_status: "new",
   eicr_id: "metadata-ecr-id",
-  replaced_eicr_id: undefined,
-  replaced_eicr_version: undefined,
   authoring_date: "2026-07-14",
   ehr_software: "EHR",
   ehr_manufacturer_model: "EHR Model",
   provider_id: "provider-1",
   facility_id: "facility-1",
   facility_name: "Facility",
-  facility_type: "clinic",
   encounter_type: "ambulatory",
   encounter_end_date: "2026-07-14",
   reason_for_visit: "Cough",
@@ -160,7 +152,6 @@ const makeExtendedMetadata = (
   birth_sex: "female",
   gender_identity: "female",
   homelessness_status: undefined,
-  disabilities: undefined,
   tribal_affiliation: undefined,
   tribal_enrollment_status: undefined,
   current_job_title: undefined,
@@ -312,7 +303,7 @@ describe("saveFhirMetadata", () => {
       eicr_id: ecrId,
       specimen_collection_date: new Date(firstLab.specimen_collection_date),
     }).length;
-    const maxLabBatchSize = Math.floor(4096 / labColumnCount);
+    const maxLabBatchSize = Math.floor(2099 / labColumnCount);
     const labs = Array.from({ length: maxLabBatchSize + 1 }, (_, index) =>
       makeLabMetadata(index),
     );

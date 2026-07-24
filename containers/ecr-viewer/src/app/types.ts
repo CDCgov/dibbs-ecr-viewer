@@ -9,13 +9,18 @@ export interface RelatedEcr {
   set_id: string;
 }
 
+export interface ConditionSummaries {
+  condition: string;
+  rule_summaries: string[];
+}
+
 export interface EcrDisplay {
   ecrId: string;
   patient_first_name: string;
   patient_last_name: string;
   patient_date_of_birth: string | undefined;
   reportable_conditions: string[];
-  rule_summaries: string[];
+  rule_summaries: ConditionSummaries[];
   facility_name: string;
   patient_report_date: string;
   date_created: string;

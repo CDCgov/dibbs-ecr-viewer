@@ -255,10 +255,7 @@ const saveExtendedMetadata = async (
       gender_identity: metadata.gender_identity,
       race: metadata.race,
       ethnicity: metadata.ethnicity,
-      latitude: metadata.latitude,
-      longitude: metadata.longitude,
       homelessness_status: metadata.homelessness_status,
-      disabilities: metadata.disabilities,
       tribal_affiliation: metadata.tribal_affiliation,
       tribal_enrollment_status: metadata.tribal_enrollment_status,
       current_job_title: metadata.current_job_title,
@@ -267,7 +264,6 @@ const saveExtendedMetadata = async (
       usual_industry: metadata.usual_industry,
       preferred_language: metadata.preferred_language,
       pregnancy_status: metadata.pregnancy_status,
-      rr_id: metadata.rr_id,
       processing_status: metadata.processing_status,
       eicr_version_number: metadata.eicr_version_number,
       authoring_date: asDate(metadata.authoring_date),
@@ -315,8 +311,8 @@ const saveExtendedMetadata = async (
 
       const numColumns = Object.keys(record).length;
 
-      // SQL Server allows a maximum of 4096 columns inserted at once which is the lower number of the two databases we support
-      const maxRowsPerBatch = Math.floor(4096 / numColumns);
+      // SQL Server has a limit of 2100 parameters per query which is the lower number of the two databases we support
+      const maxRowsPerBatch = Math.floor(2099 / numColumns);
 
       if (
         batchToInsert.length === maxRowsPerBatch ||

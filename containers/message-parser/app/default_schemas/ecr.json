@@ -1,14 +1,4 @@
 {
-  "patient_id": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Patient').id",
-    "data_type": "string",
-    "nullable": false
-  },
-  "person_id": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType='Person').id",
-    "data_type": "string",
-    "nullable": false
-  },
   "last_name": {
     "fhir_path": "Bundle.entry.resource.where(resourceType = 'Patient').name.first().family",
     "data_type": "string",
@@ -99,16 +89,6 @@
     "data_type": "string",
     "nullable": false
   },
-  "replaced_eicr_id": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType= 'Composition').relatesTo.where(code='replaces').targetReference.reference",
-    "data_type": "string",
-    "nullable": true
-  },
-  "replaced_eicr_version": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType= 'Composition').relatesTo.where(code='replaces').extension.where(url='http://hl7.org/fhir/StructureDefinition/composition-clinicaldocument-versionNumber').valueString",
-    "data_type": "string",
-    "nullable": true
-  },
   "authoring_datetime": {
     "fhir_path": "Bundle.timestamp",
     "data_type": "datetime",
@@ -137,12 +117,6 @@
   },
   "facility_name": {
     "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).location[0].location.display",
-    "data_type": "string",
-    "nullable": true,
-    "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"
-  },
-  "facility_type": {
-    "fhir_path": "Bundle.entry.resource.where(resourceType = 'Encounter' and id = %ref).location[0].extension.where(url = 'http://build.fhir.org/ig/HL7/case-reporting/StructureDefinition-us-ph-location-definitions.html#Location.type').valueCodeableConcept.coding[0].display",
     "data_type": "string",
     "nullable": true,
     "reference_lookup": "Bundle.entry.resource.where(resourceType = 'Composition').encounter.reference"

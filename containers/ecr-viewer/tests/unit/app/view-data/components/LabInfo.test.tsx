@@ -6,7 +6,7 @@ import { Bundle, DiagnosticReport } from "fhir/r4";
 
 import _BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
 import _BundleLabNoLabIds from "../../../../../../../test-data/fhir/BundleLabNoLabIds.json";
-import LabInfo from "@/app/view-data/components/LabInfo";
+import { LabInfo, LabNavItem } from "@/app/view-data/components/LabInfo";
 import {
   evaluateLabInfoData,
   LabReportElementData,
@@ -36,6 +36,13 @@ describe("LabInfo", () => {
 
       // Empty out one of the lab names for testing
       labInfoOrg[0].organizationDisplayDataProps[0].value = "";
+
+      const subNavLabs = labInfoOrg.map(({ subNavMetadata }) => {
+        return {
+          title: subNavMetadata.title,
+          id: subNavMetadata.id,
+        };
+      }) as LabNavItem[];
 
       labInfoJsx = <LabInfo labResults={labInfoOrg} />;
     });
@@ -112,6 +119,7 @@ describe("LabInfo", () => {
 
   describe("when labResults is DisplayDataProps[]", () => {
     let labInfo: LabReportElementData[];
+    let subNavLabs: LabNavItem[];
     beforeAll(() => {
       const diagnosticReports = getResourcesByType<DiagnosticReport>(
         fhirIndexBundleLabNoLabIds,
@@ -121,6 +129,13 @@ describe("LabInfo", () => {
         fhirIndexBundleLabNoLabIds,
         diagnosticReports,
       );
+
+      subNavLabs = labInfo.map(({ subNavMetadata }) => {
+        return {
+          title: subNavMetadata.title,
+          id: subNavMetadata.id,
+        };
+      }) as LabNavItem[];
     });
     it("should be collapsed by default", () => {
       render(<LabInfo labResults={labInfo} />);
