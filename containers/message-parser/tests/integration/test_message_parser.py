@@ -71,7 +71,6 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
     expected_extended_response = {
         "message": "Parsing succeeded!",
         "parsed_values": {
-            "patient_id": "f238f1ae-2f55-cd21-5c90-5e68a10af8ce",
             "gender": "female",
             "race": "White",
             "ethnicity": "Non Hispanic or Latino",
@@ -99,7 +98,6 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
             "provider_id": "6666666666666",
             "facility_id": "2.16.840.1.113883.4.6",
             "facility_name": "Good Health Hospital",
-            "facility_type": "Outpatient facility",
             "encounter_type": "Ambulatory",
             "encounter_start_date": "2020-11-07T08:44:21-05:00",
             "encounter_end_date": "2020-11-08T11:21:03-05:00",
