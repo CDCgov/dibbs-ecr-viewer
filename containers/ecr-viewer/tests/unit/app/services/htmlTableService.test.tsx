@@ -4,6 +4,7 @@ import {
   formatTablesToJSON,
   getDataId,
   getFirstNonCommentChild,
+  HtmlTableJson,
 } from "@/app/services/htmlTableService";
 
 describe("htmlTableService tests", () => {
@@ -130,6 +131,32 @@ describe("htmlTableService tests", () => {
 
         expect(result).toEqual(expectedResult);
       });
+
+      it("<table><li></li></table>", () => {
+        // Should process table. Should not hit <li> case since 
+        // list items are in table, NOT that each table is a list item.
+        const htmlString =
+          "<table><tr><th>Header</th></tr><tr><td><li>Nested list item</li></td></tr></table>";
+        const expectedResult: HtmlTableJson[] = [
+          {
+            "resultId": undefined,
+            "resultName": "",
+            "tables": [
+              [
+                {
+                  "Header": {
+                    "metadata": {},
+                    "value": <li>Nested list item</li>
+                  }
+                }
+              ]
+            ]
+          }
+        ]
+        const result = formatTablesToJSON(htmlString);
+        console.log(result);
+        expect(result).toEqual(expectedResult);
+      })
 
       it("<item data-id><table /></item>", () => {
         const htmlString =
@@ -288,103 +315,104 @@ describe("htmlTableService tests", () => {
 
         expect(result).toEqual(expectedResult);
       });
-    });
 
-    it("<content>{name}</content><br/><table/>", () => {
-      const tableString =
-        '<content>Empty Header</content><br /><content>Future Tests</content><br /><table><thead><tr><th>Name</th></tr></thead><tbody><tr data-id=\'procedure9\'><td>test1</td></tr></tbody></table><content>Pending Tests</content><br /><table><thead><tr><th>Name</th></tr></thead><tbody><tr data-id=\'procedure9\'><td>test2</td></tr></tbody></table>< /br><content>Text Header</content><br/>No table here<content styleCode="Bold" xmlns="urn:hl7-org:v3">Patient Instructions</content><br xmlns="urn:hl7-org:v3" /><table xmlns="urn:hl7-org:v3"><tbody><tr><td ID="potpatinstr-1">instruction</td></tr></tbody></table>';
-      const expectedResult = [
-        {
-          resultName: "Future Tests",
-          tables: [[{ Name: { metadata: {}, value: "test1" } }]],
-        },
-        {
-          resultName: "Pending Tests",
-          tables: [[{ Name: { metadata: {}, value: "test2" } }]],
-        },
-        {
-          resultName: "Patient Instructions",
-          tables: [
-            [
-              {
-                "Unknown Header": {
-                  metadata: { id: "potpatinstr-1" },
-                  value: "instruction",
+      it("<content>{name}</content><br/><table/>", () => {
+        const tableString =
+          '<content>Empty Header</content><br /><content>Future Tests</content><br /><table><thead><tr><th>Name</th></tr></thead><tbody><tr data-id=\'procedure9\'><td>test1</td></tr></tbody></table><content>Pending Tests</content><br /><table><thead><tr><th>Name</th></tr></thead><tbody><tr data-id=\'procedure9\'><td>test2</td></tr></tbody></table>< /br><content>Text Header</content><br/>No table here<content styleCode="Bold" xmlns="urn:hl7-org:v3">Patient Instructions</content><br xmlns="urn:hl7-org:v3" /><table xmlns="urn:hl7-org:v3"><tbody><tr><td ID="potpatinstr-1">instruction</td></tr></tbody></table>';
+        const expectedResult = [
+          {
+            resultName: "Future Tests",
+            tables: [[{ Name: { metadata: {}, value: "test1" } }]],
+          },
+          {
+            resultName: "Pending Tests",
+            tables: [[{ Name: { metadata: {}, value: "test2" } }]],
+          },
+          {
+            resultName: "Patient Instructions",
+            tables: [
+              [
+                {
+                  "Unknown Header": {
+                    metadata: { id: "potpatinstr-1" },
+                    value: "instruction",
+                  },
                 },
-              },
+              ],
             ],
-          ],
-        },
-      ];
-      const result = formatTablesToJSON(tableString);
+          },
+        ];
+        const result = formatTablesToJSON(tableString);
 
-      expect(result).toEqual(expectedResult);
-    });
+        expect(result).toEqual(expectedResult);
+      });
 
-    it("<content>{name}</content><br/><table/>", () => {
-      const tableString =
-        '<content>Empty Header</content><br /><content>Future Tests</content><br /><table><thead><tr><th>Name</th></tr></thead><tbody><tr data-id=\'procedure9\'><td>test1</td></tr></tbody></table><content>Pending Tests</content><br /><table><thead><tr><th>Name</th></tr></thead><tbody><tr data-id=\'procedure9\'><td>test2</td></tr></tbody></table>< /br><content>Text Header</content><br/>No table here<content styleCode="Bold" xmlns="urn:hl7-org:v3">Patient Instructions</content><br xmlns="urn:hl7-org:v3" /><table xmlns="urn:hl7-org:v3"><tbody><tr><td ID="potpatinstr-1">instruction</td></tr></tbody></table>';
-      const expectedResult = [
-        {
-          resultName: "Future Tests",
-          tables: [[{ Name: { metadata: {}, value: "test1" } }]],
-        },
-        {
-          resultName: "Pending Tests",
-          tables: [[{ Name: { metadata: {}, value: "test2" } }]],
-        },
-        {
-          resultName: "Patient Instructions",
-          tables: [
-            [
-              {
-                "Unknown Header": {
-                  metadata: { id: "potpatinstr-1" },
-                  value: "instruction",
+      it("<content>{name}</content><br/><table/>", () => {
+        const tableString =
+          '<content>Empty Header</content><br /><content>Future Tests</content><br /><table><thead><tr><th>Name</th></tr></thead><tbody><tr data-id=\'procedure9\'><td>test1</td></tr></tbody></table><content>Pending Tests</content><br /><table><thead><tr><th>Name</th></tr></thead><tbody><tr data-id=\'procedure9\'><td>test2</td></tr></tbody></table>< /br><content>Text Header</content><br/>No table here<content styleCode="Bold" xmlns="urn:hl7-org:v3">Patient Instructions</content><br xmlns="urn:hl7-org:v3" /><table xmlns="urn:hl7-org:v3"><tbody><tr><td ID="potpatinstr-1">instruction</td></tr></tbody></table>';
+        const expectedResult = [
+          {
+            resultName: "Future Tests",
+            tables: [[{ Name: { metadata: {}, value: "test1" } }]],
+          },
+          {
+            resultName: "Pending Tests",
+            tables: [[{ Name: { metadata: {}, value: "test2" } }]],
+          },
+          {
+            resultName: "Patient Instructions",
+            tables: [
+              [
+                {
+                  "Unknown Header": {
+                    metadata: { id: "potpatinstr-1" },
+                    value: "instruction",
+                  },
                 },
-              },
+              ],
             ],
-          ],
-        },
-      ];
-      const result = formatTablesToJSON(tableString);
+          },
+        ];
+        const result = formatTablesToJSON(tableString);
 
-      expect(result).toEqual(expectedResult);
-    });
+        expect(result).toEqual(expectedResult);
+      });
 
-    it("<table/>", () => {
-      const tableString =
-        "<table><thead><tr><th>Name</th></tr></thead><tbody><tr ID='lab9'><td>test1</td></tr></tbody></table><table><thead><tr><th>Name</th></tr></thead><tbody><tr ID='lab9'><td>test2</td></tr></tbody></table><table xmlns=\"urn:hl7-org:v3\"><tbody><tr><td ID=\"potpatinstr-1\">instruction</td></tr></tbody></table>";
-      const expectedResult = [
-        {
-          resultId: undefined,
-          resultName: "",
-          tables: [[{ Name: { metadata: {}, value: "test1" } }]],
-        },
-        {
-          resultId: undefined,
-          resultName: "",
-          tables: [[{ Name: { metadata: {}, value: "test2" } }]],
-        },
-        {
-          resultId: undefined,
-          resultName: "",
-          tables: [
-            [
-              {
-                "Unknown Header": {
-                  metadata: { id: "potpatinstr-1" },
-                  value: "instruction",
+      it("<table/>", () => {
+        const tableString =
+          "<table><thead><tr><th>Name</th></tr></thead><tbody><tr ID='lab9'><td>test1</td></tr></tbody></table><table><thead><tr><th>Name</th></tr></thead><tbody><tr ID='lab9'><td>test2</td></tr></tbody></table><table xmlns=\"urn:hl7-org:v3\"><tbody><tr><td ID=\"potpatinstr-1\">instruction</td></tr></tbody></table>";
+        const expectedResult = [
+          {
+            resultId: undefined,
+            resultName: "",
+            tables: [[{ Name: { metadata: {}, value: "test1" } }]],
+          },
+          {
+            resultId: undefined,
+            resultName: "",
+            tables: [[{ Name: { metadata: {}, value: "test2" } }]],
+          },
+          {
+            resultId: undefined,
+            resultName: "",
+            tables: [
+              [
+                {
+                  "Unknown Header": {
+                    metadata: { id: "potpatinstr-1" },
+                    value: "instruction",
+                  },
                 },
-              },
+              ],
             ],
-          ],
-        },
-      ];
-      const result = formatTablesToJSON(tableString);
+          },
+        ];
+        const result = formatTablesToJSON(tableString);
 
-      expect(result).toEqual(expectedResult);
+        expect(result).toEqual(expectedResult);
+      });
     });
+
 
     it("should return an empty array when HTML string input has no tables", () => {
       const htmlString =

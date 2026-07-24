@@ -74,7 +74,8 @@ export function formatTablesToJSON(htmlString: string): HtmlTableJson[] {
   }
 
   // <li>{name}<table/></li> OR <list><item>{name}<table /></item></list>
-  const liArray = doc.querySelectorAll("li, list > item");
+  // Use case: each table is a list item (i.e. lab observations)
+  const liArray = doc.querySelectorAll("li:has(> table), list > item");
   if (liArray.length > 0) {
     liArray.forEach((li) => {
       const tables: HtmlTableJsonRow[][] = [];
