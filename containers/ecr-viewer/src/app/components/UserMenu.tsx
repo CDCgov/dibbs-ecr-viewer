@@ -9,6 +9,12 @@ import { toSentenceCase } from "@/app/utils/format-utils";
 import { Person } from "./Icon";
 import { SignOutButton } from "./SignOutButton";
 
+export const USER_TYPE_DISPLAY: Record<string, string> = {
+  admin: "Admin",
+  prog_admin: "Program admin",
+  standard: "Standard",
+};
+
 /**
  * User Menu component for the eCR Viewer project.
  * This component renders a dropdown menu that contains user information
@@ -73,7 +79,9 @@ const UserMenu = ({
       {showMenu && (
         <div ref={menuRef} className="user-menu">
           <p className="user-email">{user.email}</p>
-          <p className="user-role">{toSentenceCase(user.user_type)}</p>
+          <p className="user-role">
+            {user.user_type && USER_TYPE_DISPLAY[user.user_type]}
+          </p>
           <p className="version-number">version {version}</p>
           <SignOutButton />
         </div>
