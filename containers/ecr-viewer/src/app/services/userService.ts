@@ -18,6 +18,9 @@ import { audit } from "./auditLogService";
 import { UserFacingError } from "./errorService";
 import { getLoggedInUser, getUserByEmail } from "./loggedInUserService";
 
+
+export type UserType = "admin" | "prog_admin" | "standard";
+
 /**
  * @param user User to check is an admin
  * @returns true is the user both exists and is an admin, false otherwise
@@ -199,7 +202,7 @@ export const createUser = audit(
       programs,
     }: {
       email: string;
-      userType: "admin" | "standard";
+      userType: UserType;
       programs: string[];
     },
     trx: Transaction<Core>,
@@ -256,7 +259,7 @@ export const createInitialAdminUser = audit(
 const createUserQuery = async (
   db: Transaction<Core>,
   email: string,
-  user_type: "admin" | "standard",
+  user_type: UserType,
   uuid: string,
   author_uuid: string,
 ) => {
