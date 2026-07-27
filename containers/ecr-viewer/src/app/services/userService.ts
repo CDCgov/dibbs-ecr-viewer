@@ -26,11 +26,35 @@ export const isAdmin = (user: User | undefined): user is User =>
   !!user && user.user_type === "admin" && user.status === "active";
 
 /**
+ * @param user User to check is a program admin
+ * @returns true if the user both exists and is a program admin, false otherwise
+ */
+export const isProgramAdmin = (user: User | undefined): user is User =>
+  !!user && user.user_type === "program_admin" && user.status === "active";
+
+/**
+ * @param user User to check is any admin (admin or program_admin)
+ * @returns true if the user both exists and is an admin or program admin, false otherwise
+ */
+export const isAnyAdmin = (user: User | undefined): user is User =>
+  isAdmin(user) || isProgramAdmin(user);
+
+/**
  * If the logged in user is not an admin, force the page calling this to 404.
  */
 export const notFoundUnlessAdmin = async () => {
   const admin = await getLoggedInUser();
   if (!isAdmin(admin)) {
+    notFound();
+  }
+};
+
+/**
+ * If the logged in user is not an admin or a program admin, force the page calling this to 404.
+ */
+export const notFoundUnlessAnyAdmin = async () => {
+  const user = await getLoggedInUser();
+  if (!isAnyAdmin(user)) {
     notFound();
   }
 };
@@ -48,6 +72,58 @@ export const getCheckAdmin = async (actionDesc: string): Promise<User> => {
   }
 
   return loggedInUser;
+};
+
+/**
+ * Check the currently logged in user is an admin or a program admin and return them.
+ * Throws an error if the currently logged in user isn't an admin or a program admin.
+ * @param actionDesc description of the action that only admins or program admins can do
+ * @returns admin or program admin user
+ */
+export const getCheckAnyAdmin = async (actionDesc: string): Promise<User> => {
+  const loggedInUser = await getLoggedInUser();
+  if (!isAnyAdmin(loggedInUser)) {
+    throw new UserFacingError(`Standard user cannot ${actionDesc}`);
+  }
+
+  return loggedInUser;
+};
+
+/**
+ * Checks that 1) user has admin or program-level role, and
+ * 2) if program-level role, checks they have access to the relevant program area.
+ * @param user User to check access for (defaults to logged in user if undefined)
+ * @param programAreaUuid UUID of the program area to check
+ * @returns whether the user has access to the relevant program area
+ */
+export const hasRelevantProgramAreaAccess = async (
+  user: User | undefined,
+  programAreaUuid: string,
+): Promise<boolean> => {
+  const targetUser = user ?? (await getLoggedInUser());
+  if (!targetUser || targetUser.status !== "active") {
+    return false;
+  }
+
+  if (targetUser.user_type === "admin") {
+    return true;
+  }
+
+  if (
+    targetUser.user_type === "program_admin" ||
+    targetUser.user_type === "standard"
+  ) {
+    const res = await getDb<Core>()
+      .selectFrom("user_program_area")
+      .select("user_program_area.program_area_uuid")
+      .where("user_uuid", "=", targetUser.uuid)
+      .where("program_area_uuid", "=", programAreaUuid)
+      .executeTakeFirst();
+
+    return !!res;
+  }
+
+  return false;
 };
 
 /**
