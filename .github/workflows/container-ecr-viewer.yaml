@@ -147,6 +147,8 @@ jobs:
           sed -i 's/AUTH_ISSUER=.*$/AUTH_ISSUER=${{ secrets.AZURE_AD_ISSUER }}/' .env.local
           sed -i 's/AUTH_ADMIN_USER=.*$/AUTH_ADMIN_USER=${{ secrets.AZURE_ADMIN_USER }}/' .env.local
           sed -i 's/AUTH_ADMIN_PASSWORD=.*$/AUTH_ADMIN_PASSWORD=${{ secrets.AZURE_ADMIN_PASSWORD }}/' .env.local
+          sed -i 's/AUTH_PROGRAM_ADMIN_USER=.*$/AUTH_PROGRAM_ADMIN_USER=${{ secrets.AZURE_PROGRAM_ADMIN_USER }}/' .env.local
+          sed -i 's/AUTH_PROGRAM_ADMIN_PASSWORD=.*$/AUTH_PROGRAM_ADMIN_PASSWORD=${{ secrets.AZURE_APROGRAM_DMIN_PASSWORD }}/' .env.local
           sed -i 's/AUTH_STANDARD_USER=.*$/AUTH_STANDARD_USER=${{ secrets.AZURE_STANDARD_USER }}/' .env.local
           sed -i 's/AUTH_STANDARD_PASSWORD=.*$/AUTH_STANDARD_PASSWORD=${{ secrets.AZURE_STANDARD_PASSWORD }}/' .env.local
 
