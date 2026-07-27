@@ -219,15 +219,14 @@ export const evaluatePatientVitalStatus = (patient: Patient | undefined) => {
 };
 
 /***
- * A patient is deceased if `patient.deceasedBoolean` is true or if there is a date of death. Returns `undefined` if
- * no patient resource exists. Defaults to `false` (alive) when the patient exists but has no deceased fields.
+ * A patient is deceased if `patient.deceasedBoolean` is true or if there is a date of death. If both are `undefined`
+ * return `undefined`.
  */
 const isPatientDeceased = (patient: Patient | undefined) => {
-  if (!patient) return undefined;
   const vitalStatus = evaluateOne(patient, fhirPathMappings.patientVitalStatus);
   const dod = evaluateOne(patient, fhirPathMappings.patientDOD);
 
-  return dod ? true : (vitalStatus ?? false);
+  return dod ? true : vitalStatus;
 };
 
 /**

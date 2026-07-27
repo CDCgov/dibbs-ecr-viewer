@@ -144,13 +144,8 @@ describe("Evaluate Patient Info: Demographics", () => {
       } as unknown as Bundle;
     }
 
-    it("should return `Alive` when no `deceasedBoolean` value is present", () => {
+    it("should return an empty string when no `deceasedBoolean` value is present", () => {
       const actual = evaluatePatientVitalStatus(patient);
-      expect(actual).toEqual("Alive");
-    });
-
-    it("should return an empty string when no patient resource is present", () => {
-      const actual = evaluatePatientVitalStatus(undefined);
       expect(actual).toEqual("");
     });
 
