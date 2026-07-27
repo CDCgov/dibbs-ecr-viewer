@@ -435,12 +435,17 @@ describe("user service", () => {
   describe("hasRelevantProgramAreaAccess", () => {
     it("should return true for admin user", async () => {
       const adminUser = await getCheckAdmin("check");
-      const res = await hasRelevantProgramAreaAccess(adminUser, "some-prog-uuid");
+      const res = await hasRelevantProgramAreaAccess(
+        adminUser,
+        "some-prog-uuid",
+      );
       expect(res).toBeTrue();
     });
 
     it("should return false for inactive or undefined user", async () => {
-      expect(await hasRelevantProgramAreaAccess(undefined, "some-prog-uuid")).toBeFalse();
+      expect(
+        await hasRelevantProgramAreaAccess(undefined, "some-prog-uuid"),
+      ).toBeFalse();
     });
   });
 });
