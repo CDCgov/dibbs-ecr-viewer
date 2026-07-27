@@ -248,7 +248,13 @@ export const evaluateValue = (
     typeof path === "string" ? [path, "ValueX"] : [path.path, path.type];
 
   const originalValue =
-    evaluateOneAndCheck<ValueX>(entry, fhirPath, type, undefined, base) ?? "";
+    evaluateOneAndCheck<ValueX | Period>(
+      entry,
+      fhirPath,
+      type,
+      undefined,
+      base,
+    ) ?? "";
 
   if (
     typeof originalValue === "string" &&
