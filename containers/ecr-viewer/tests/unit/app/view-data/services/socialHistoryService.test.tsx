@@ -110,11 +110,7 @@ describe("Travel History", () => {
 
     render(evaluateTravelHistoryTable(bundleWithMultipleTravelLocations));
 
-    expect(
-      screen.getByText(
-        "Argentina, Brazil",
-      ),
-    ).toBeTruthy();
+    expect(screen.getByText("Argentina, Brazil")).toBeTruthy();
   });
   it("should display nothing when no travel history is available", () => {
     expect(evaluateTravelHistoryTable({} as Bundle)).toBeUndefined();
