@@ -1,0 +1,50 @@
+name: Update trigger-code-reference data
+
+on:
+  # Lets this skeleton run as a check on the pull request that introduces it.
+  pull_request:
+    paths:
+      - .github/workflows/update-trigger-code-reference-data.yaml
+      - containers/trigger-code-reference/assets/RCKMS Condition Codes.csv
+      - containers/trigger-code-reference/data/**
+
+  # The completed workflow will also be runnable on demand.
+  workflow_dispatch:
+
+# TODO: Add a twice-yearly schedule after the workflow can safely create and
+# populate an update pull request.
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-update-prerequisites:
+    name: Validate update prerequisites
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Check required source files
+        shell: bash
+        run: |
+          test -f "containers/trigger-code-reference/assets/RCKMS Condition Codes.csv"
+          test -f "containers/trigger-code-reference/data/seed_tes_data.py"
+
+      - name: Summarize skeleton run
+        shell: bash
+        run: |
+          {
+            echo "## Trigger code reference update"
+            echo
+            echo "The workflow skeleton and required repository files were validated."
+            echo
+            echo "- Event: \`${{ github.event_name }}\`"
+            echo "- TES version discovery: not enabled in this skeleton"
+            echo "- Database generation: not enabled in this skeleton"
+            echo "- Pull request creation: not enabled in this skeleton"
+          } >> "$GITHUB_STEP_SUMMARY"
