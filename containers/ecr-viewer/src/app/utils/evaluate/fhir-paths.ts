@@ -739,7 +739,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   travelHistoryLocation: {
     type: "ValueX",
-    path: "iif(component.where(code.coding.code = 'LOC').value.exists(), component.where(code.coding.code = 'LOC').value, component.where(code.coding.code = 'LOC').extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-address-extension').value)",
+    path: "iif(component.where(code.coding.code = 'LOC').value.exists(), component.where(code.coding.code = 'LOC').value.coding.display.join(', '), component.where(code.coding.code = 'LOC').extension('http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-address-extension').value)",
   },
   travelHistoryPurpose: {
     type: "ValueX",
