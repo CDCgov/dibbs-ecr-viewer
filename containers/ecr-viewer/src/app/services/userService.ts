@@ -30,10 +30,10 @@ export const isAdmin = (user: User | undefined): user is User =>
  * @returns true if the user both exists and is a program admin, false otherwise
  */
 export const isProgramAdmin = (user: User | undefined): user is User =>
-  !!user && user.user_type === "program_admin" && user.status === "active";
+  !!user && user.user_type === "prog_admin" && user.status === "active";
 
 /**
- * @param user User to check is any admin (admin or program_admin)
+ * @param user User to check is any admin (admin or prog_admin)
  * @returns true if the user both exists and is an admin or program admin, false otherwise
  */
 export const isAnyAdmin = (user: User | undefined): user is User =>
@@ -68,7 +68,7 @@ export const notFoundUnlessAnyAdmin = async () => {
 export const getCheckAdmin = async (actionDesc: string): Promise<User> => {
   const loggedInUser = await getLoggedInUser();
   if (!isAdmin(loggedInUser)) {
-    throw new UserFacingError(`Standard user cannot ${actionDesc}`);
+    throw new UserFacingError(`Standard user cannot & program admins cannot ${actionDesc}`);
   }
 
   return loggedInUser;
@@ -110,7 +110,7 @@ export const hasRelevantProgramAreaAccess = async (
   }
 
   if (
-    targetUser.user_type === "program_admin" ||
+    targetUser.user_type === "prog_admin" ||
     targetUser.user_type === "standard"
   ) {
     const res = await getDb<Core>()
