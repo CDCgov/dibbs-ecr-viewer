@@ -435,7 +435,10 @@ describe("user service", () => {
   describe("hasRelevantProgramAreaAccess", () => {
     it("should return true for admin user", async () => {
       const adminUser = await getCheckAdmin("check");
-      const res = await hasRelevantProgramAreaAccess(adminUser, "some-prog-uuid");
+      const res = await hasRelevantProgramAreaAccess(
+        adminUser,
+        "some-prog-uuid",
+      );
       expect(res).toBeTrue();
     });
 
