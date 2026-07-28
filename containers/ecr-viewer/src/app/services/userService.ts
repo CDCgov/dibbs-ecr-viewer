@@ -68,7 +68,9 @@ export const notFoundUnlessAnyAdmin = async () => {
 export const getCheckAdmin = async (actionDesc: string): Promise<User> => {
   const loggedInUser = await getLoggedInUser();
   if (!isAdmin(loggedInUser)) {
-    throw new UserFacingError(`Standard user cannot & program admins cannot ${actionDesc}`);
+    throw new UserFacingError(
+      `Standard user cannot & program admins cannot ${actionDesc}`,
+    );
   }
 
   return loggedInUser;
