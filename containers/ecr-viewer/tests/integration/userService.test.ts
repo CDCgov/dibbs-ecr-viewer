@@ -439,8 +439,19 @@ describe("user service", () => {
       expect(res).toBeTrue();
     });
 
-    it("should return false for inactive or undefined user", async () => {
-      expect(await hasRelevantProgramAreaAccess(undefined, "some-prog-uuid")).toBeFalse();
+    it("should return false for an inactive user", async () => {
+      const adminUser = await getCheckAdmin("check");
+      const inactiveUser = { ...adminUser, status: "inactive" as const };
+      expect(
+        await hasRelevantProgramAreaAccess(inactiveUser, "some-prog-uuid"),
+      ).toBeFalse();
+    });
+
+    it("should return false when no user is passed and none is logged in", async () => {
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue(undefined);
+      expect(
+        await hasRelevantProgramAreaAccess(undefined, "some-prog-uuid"),
+      ).toBeFalse();
     });
   });
 });
