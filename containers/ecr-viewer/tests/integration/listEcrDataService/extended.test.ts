@@ -35,10 +35,7 @@ const extendedTemplate: NewExtendedECR = {
   gender_identity: "Based",
   race: "Star Guy",
   ethnicity: "Star Guy",
-  latitude: "0.0",
-  longitude: "0.0",
   homelessness_status: "Homeless",
-  disabilities: "None",
   tribal_affiliation: "None",
   tribal_enrollment_status: "None",
   current_job_title: "Jedi Master",
@@ -47,7 +44,6 @@ const extendedTemplate: NewExtendedECR = {
   usual_industry: "Jedi Order",
   preferred_language: "Galactic Basic",
   pregnancy_status: "Not Pregnant",
-  rr_id: "12345",
   processing_status: "Processed",
   eicr_version_number: "2",
   authoring_date: new Date("2024-12-02T05:00:00.000Z"),
@@ -177,7 +173,9 @@ describe("listEcrData - extended", () => {
         patient_last_name: "Kenobi",
         patient_report_date: "12/02/2024 12:00\u00A0AM\u00A0EST",
         reportable_conditions: ["Condition1"],
-        rule_summaries: ["Rule1"],
+        rule_summaries: [
+          { condition: "Condition1", rule_summaries: ["Rule1"] },
+        ],
         eicr_set_id: "123",
         eicr_version_number: "2",
         related_ecrs: [
@@ -278,7 +276,9 @@ describe("listEcrData - extended", () => {
         patient_last_name: "Kenobi",
         patient_report_date: "12/02/2024 12:00\u00A0AM\u00A0EST",
         reportable_conditions: ["Condition1"],
-        rule_summaries: ["Rule1"],
+        rule_summaries: [
+          { condition: "Condition1", rule_summaries: ["Rule1"] },
+        ],
         eicr_set_id: "123",
         eicr_version_number: "2",
         related_ecrs: [

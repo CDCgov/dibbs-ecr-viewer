@@ -37,6 +37,7 @@ interface AccordionSubSectionProps {
   title: string;
   className?: string;
   idPrefix?: string;
+  id?: string;
   toolTip?: string;
   children: React.ReactNode;
 }
@@ -55,13 +56,16 @@ export const AccordionSubSection = ({
   title,
   className,
   idPrefix = "",
+  id,
   toolTip,
   children,
 }: AccordionSubSectionProps) => {
   return (
     <div className="gutter-3">
       <ToolTipElement toolTip={toolTip}>
-        <AccordionH4 id={idPrefix + toKebabCase(title)}>{title}</AccordionH4>
+        <AccordionH4 id={id ?? idPrefix + toKebabCase(title)}>
+          {title}
+        </AccordionH4>
       </ToolTipElement>
       <AccordionDiv className={className}>{children}</AccordionDiv>
     </div>

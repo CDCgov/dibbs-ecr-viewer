@@ -39,26 +39,18 @@ export const EcrTableDataRow = ({
   const [isExpanded, setExpanded] = useState(false);
   const patientName = item.patient_first_name + " " + item.patient_last_name;
 
-  const conditionsList = (
-    <ul className="ecr-table-list">
-      {item.reportable_conditions.map((rc, index) => (
-        <li key={index}>{rc}</li>
-      ))}
-    </ul>
-  );
-
-  const summariesList = (
-    <ul className="ecr-table-list">
-      {item.rule_summaries.map((rs, index) => (
-        <li key={index}>{rs}</li>
-      ))}
-    </ul>
-  );
+  const numGroups = Math.max(item.rule_summaries.length, 1);
+  // First group lives in the main <motion.tr>; extra groups get their own <tr> below
+  const firstGroup = item.rule_summaries[0];
+  const extraGroups = item.rule_summaries.slice(1);
+  // Used on both the main row and extra group rows so they share the same stripe color
+  // not doing this would cause the different colors for rule summaries for the same row
+  const parityClass = index % 2 === 0 ? "main-row--odd" : "main-row--even";
 
   return (
     <>
       <motion.tr
-        className="main-row"
+        className={`main-row ${parityClass}`}
         role="row"
         aria-level={1}
         aria-setsize={numEcrs}
@@ -68,7 +60,7 @@ export const EcrTableDataRow = ({
         transition={transition}
         key={`row-${item.ecrId}`}
       >
-        <motion.td role="gridcell" layout="position">
+        <motion.td role="gridcell" layout="position" rowSpan={numGroups}>
           <div className="patient-name-cell">
             {item.related_ecrs.length > 0 && (
               <Button
@@ -100,22 +92,54 @@ export const EcrTableDataRow = ({
             </div>
           </div>
         </motion.td>
-        <motion.td layout="position" role="gridcell">
+        <motion.td layout="position" role="gridcell" rowSpan={numGroups}>
           {item.date_created}
         </motion.td>
-        <motion.td layout="position" role="gridcell">
+        <motion.td layout="position" role="gridcell" rowSpan={numGroups}>
           {item.patient_report_date || noData}
         </motion.td>
-        <motion.td layout="position" role="gridcell">
+        <motion.td layout="position" role="gridcell" rowSpan={numGroups}>
           {item.facility_name || noData}
         </motion.td>
         <motion.td layout="position" role="gridcell">
-          {conditionsList}
+          {firstGroup ? firstGroup.condition : noData}
         </motion.td>
         <motion.td layout="position" role="gridcell">
-          {summariesList}
+          {firstGroup?.rule_summaries.length ? (
+            <ul className="ecr-table-list">
+              {firstGroup.rule_summaries.map((rs, i) => (
+                <li key={i}>{rs}</li>
+              ))}
+            </ul>
+          ) : (
+            noData
+          )}
         </motion.td>
       </motion.tr>
+
+      {extraGroups.map(({ condition, rule_summaries }, i) => (
+        <tr
+          key={`${item.ecrId}-group-${i + 1}`}
+          className={`main-row condition-group-row ${parityClass}`}
+          role="row"
+          aria-level={1}
+        >
+          <td role="gridcell" className="border-top border-base-lighter">
+            {condition}
+          </td>
+          <td role="gridcell" className="border-top border-base-lighter">
+            {rule_summaries.length ? (
+              <ul className="ecr-table-list">
+                {rule_summaries.map((rs, j) => (
+                  <li key={j}>{rs}</li>
+                ))}
+              </ul>
+            ) : (
+              noData
+            )}
+          </td>
+        </tr>
+      ))}
 
       {isExpanded && <RelatedRows item={item} patientName={patientName} />}
     </>

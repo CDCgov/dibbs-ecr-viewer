@@ -1,6 +1,7 @@
 import React from "react";
 
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Bundle, Condition, Immunization } from "fhir/r4";
 import { axe } from "jest-axe";
 
@@ -1152,7 +1153,8 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
     expect(clinicalInfo.getAllByText("Recurrence")).toHaveLength(1);
   });
 
-  it("eCR Viewer renders vital signs given FHIR bundle with vital signs info", () => {
+  it("eCR Viewer renders vital signs collapsed by default and expands them", async () => {
+    const user = userEvent.setup();
     const clinicalInfo = render(
       <ClinicalInfo
         immunizationsDetails={[]}
@@ -1165,13 +1167,32 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
       />,
     );
 
-    const expectedVitalSignsElement = clinicalInfo.getByTestId("vital-signs");
-    expect(expectedVitalSignsElement).toBeInTheDocument();
+    const vitalSignsContent = clinicalInfo.getByTestId(
+      "accordionItem_vital-signs-content",
+    );
+    expect(vitalSignsContent).toBeInTheDocument();
+    expect(vitalSignsContent).not.toBeVisible();
+
+    const vitalSignsButton = clinicalInfo.getByRole("button", {
+      name: "Vital Signs",
+    });
+    expect(vitalSignsButton).toHaveAttribute("aria-expanded", "false");
+
+    await user.click(vitalSignsButton);
+
+    expect(vitalSignsButton).toHaveAttribute("aria-expanded", "true");
+    expect(vitalSignsContent).toBeVisible();
 
     // Ensure only one table (Vital Signs) is rendering
     const expectedTable = clinicalInfo.getAllByTestId("table");
     expect(expectedTable.length).toEqual(1);
     expect(expectedTable[0]).toBeInTheDocument();
+    expect(expectedTable[0].parentElement).toBe(vitalSignsContent);
+    expect(expectedTable[0]).not.toHaveClass(
+      "border-top",
+      "border-left",
+      "border-right",
+    );
 
     // Check Vital Signs table contents
     const expectedValues = [
@@ -1282,8 +1303,9 @@ describe("Check that Clinical Info components render given FHIR bundle", () => {
     expect(expectedTable[0]).toBeInTheDocument();
     expect(expectedTable.length).toEqual(6);
 
-    const expectedVitalSignsElement = clinicalInfo.getByTestId("vital-signs");
-    expect(expectedVitalSignsElement).toBeInTheDocument();
+    expect(
+      clinicalInfo.getByTestId("accordionItem_vital-signs-content"),
+    ).toBeInTheDocument();
 
     const expectedReasonForVisitElement =
       clinicalInfo.getByTestId("reason-for-visit");

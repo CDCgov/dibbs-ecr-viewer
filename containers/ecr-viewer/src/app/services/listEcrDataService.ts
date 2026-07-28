@@ -11,7 +11,7 @@ import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
 import { getDb } from "@/app/data/metadataDb/database";
 import { getSql } from "@/app/data/metadataDb/dialects/common";
 import { ecr_data, Core, User } from "@/app/data/metadataDb/types/core";
-import { EcrDisplay, RelatedEcr } from "@/app/types";
+import { ConditionSummaries, EcrDisplay, RelatedEcr } from "@/app/types";
 import { DateRangePeriod } from "@/app/utils/date-utils";
 
 import { audit } from "./auditLogService";
@@ -22,7 +22,7 @@ import { getLoggedInUser } from "./loggedInUserService";
 export interface MetadataModel {
   eicr_id: string;
   conditions: string[];
-  rule_summaries: string[];
+  rule_summaries: ConditionSummaries[];
   related_ecrs: RelatedEcr[];
   date_created: Date;
   set_id: string | undefined;
@@ -193,6 +193,33 @@ interface EcrsCte extends Core {
   ecr_sets: { set_id: string; max_version_number: number };
 }
 
+const groupSummariesByCondition = (
+  rows: {
+    condition: string | null;
+    rule_summary: string | null;
+    eicr_version_number: string | null | undefined;
+  }[],
+): ConditionSummaries[] => {
+  // One Set per condition so duplicate summaries across versions are collapsed
+  const summaries = new Map<string, Set<string>>();
+  // Tracks the highest version a condition appeared in, used for sort order
+  const maxVersion = new Map<string, number>();
+  for (const { condition, rule_summary, eicr_version_number } of rows) {
+    if (!condition) continue;
+    if (!summaries.has(condition)) summaries.set(condition, new Set());
+    if (rule_summary) summaries.get(condition)!.add(rule_summary);
+    const v = Number(eicr_version_number ?? 0);
+    if (v > (maxVersion.get(condition) ?? 0)) maxVersion.set(condition, v);
+  }
+  // Sort descending by max version so the most recently added condition appears first
+  return [...summaries.entries()]
+    .sort((a, b) => (maxVersion.get(b[0]) ?? 0) - (maxVersion.get(a[0]) ?? 0))
+    .map(([condition, rules]) => ({
+      condition,
+      rule_summaries: [...rules],
+    }));
+};
+
 // Helper to execute the main ecr fetching CTE and also join in the conditions
 // and rule summary data. If this is ever a performance problem, we could likely
 // push this into the DB. Array/string aggregation functions are a mess across the SQLs
@@ -206,22 +233,60 @@ const getMetaModelData = async (
     "conditions" | "rule_summaries" | "related_ecrs"
   >[] = await mainQuery.selectFrom("ecrs").selectAll().execute();
 
+  // Expand through the returned version and all previous versions in the same
+  // set so conditions across earlier versions are returned on the main row.
+  // When a condition filter is set, conditions from later versions are excluded.
   const conditions = await mainQuery
     .selectFrom("ecrs")
-    .leftJoin("ecr_rr_conditions", "ecrs.eicr_id", "ecr_rr_conditions.eicr_id")
-    .select(["ecrs.eicr_id", "ecr_rr_conditions.condition"])
+    .innerJoin("ecr_data", (join) =>
+      join
+        .onRef("ecr_data.set_id", "=", "ecrs.set_id")
+        .on((eb) =>
+          eb(
+            eb.cast<number>("ecr_data.eicr_version_number", "integer"),
+            "<=",
+            eb.cast<number>("ecrs.eicr_version_number", "integer"),
+          ),
+        ),
+    )
+    .innerJoin(
+      "ecr_rr_conditions",
+      "ecr_data.eicr_id",
+      "ecr_rr_conditions.eicr_id",
+    )
+    .select(["ecrs.set_id", "ecr_rr_conditions.condition"])
     .distinct()
     .execute();
 
   const rule_summaries = await mainQuery
     .selectFrom("ecrs")
-    .leftJoin("ecr_rr_conditions", "ecrs.eicr_id", "ecr_rr_conditions.eicr_id")
+    .innerJoin("ecr_data", (join) =>
+      join
+        .onRef("ecr_data.set_id", "=", "ecrs.set_id")
+        .on((eb) =>
+          eb(
+            eb.cast<number>("ecr_data.eicr_version_number", "integer"),
+            "<=",
+            eb.cast<number>("ecrs.eicr_version_number", "integer"),
+          ),
+        ),
+    )
+    .leftJoin(
+      "ecr_rr_conditions",
+      "ecr_data.eicr_id",
+      "ecr_rr_conditions.eicr_id",
+    )
     .leftJoin(
       "ecr_rr_rule_summaries",
       "ecr_rr_conditions.uuid",
       "ecr_rr_rule_summaries.ecr_rr_conditions_id",
     )
-    .select(["ecrs.eicr_id", "ecr_rr_rule_summaries.rule_summary"])
+    .select([
+      "ecrs.set_id",
+      "ecr_data.eicr_version_number",
+      "ecr_rr_conditions.condition",
+      "ecr_rr_rule_summaries.rule_summary",
+    ])
     .distinct()
     .execute();
 
@@ -251,16 +316,11 @@ const getMetaModelData = async (
     return {
       ...ecr,
       conditions: conditions
-        .filter(
-          ({ eicr_id, condition }) => condition && eicr_id === ecr.eicr_id,
-        )
+        .filter(({ set_id, condition }) => condition && set_id === ecr.set_id)
         .map(({ condition }) => condition) as string[],
-      rule_summaries: rule_summaries
-        .filter(
-          ({ eicr_id, rule_summary }) =>
-            rule_summary && eicr_id === ecr.eicr_id,
-        )
-        .map(({ rule_summary }) => rule_summary) as string[],
+      rule_summaries: groupSummariesByCondition(
+        rule_summaries.filter(({ set_id }) => set_id === ecr.set_id),
+      ),
       related_ecrs: related_ecrs.filter(({ set_id }) => set_id === ecr.set_id),
     };
   });

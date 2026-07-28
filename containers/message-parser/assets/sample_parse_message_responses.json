@@ -18,8 +18,6 @@
           "value": {
             "message": "Parsing succeeded!",
             "parsed_values": {
-              "patient_id": "987d9cdd-9f99-4fac-a50d-2fe6b2f0c369",
-              "person_id": "",
               "last_name": "EVERYMAN",
               "first_name": "ADAM",
               "birth_date": "1988-08-18",
@@ -37,7 +35,6 @@
               "provider_id": "",
               "facility_id_number": "",
               "facility_name": "",
-              "facility_type": "",
               "encounter_type": "",
               "encounter_start_date": "",
               "encounter_end_date": "",

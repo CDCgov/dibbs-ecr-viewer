@@ -367,6 +367,26 @@ Performed Date/Time: 01/05/2018
             Abnormal fetal heart rate
           </div>
         </div>
+        <div
+          class="section__line_gray"
+        />
+      </div>
+      <div>
+        <div
+          class="grid-row"
+        >
+          <div
+            class="data-title padding-right-1"
+          >
+            Comments
+          </div>
+          <div
+            class="grid-col maxw7 text-pre-line p-list"
+          >
+            SFH: single viable intrauterine gestation estimated age 11 weeks 5 days, FHR 171 BPM - MS
+Flinn Anatomy: AC 28%, EFW 31% (542g), placenta anterior/high, normal anatomy - SL
+          </div>
+        </div>
       </div>
     </div>
     <h5
