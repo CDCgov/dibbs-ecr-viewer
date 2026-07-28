@@ -2,6 +2,13 @@
 
 Running the `seed_tes_data.py` script will create and populate the `tes.db` SQLite database with data. This database will then be queried to fetch condition and concept information used by the TCRS.
 
+## TES version marker
+
+The `tes-version.txt` file records the TES value set version used to generate the
+committed `tes.db` file. Update this marker only after the database has been
+successfully regenerated. The automation compares it with the latest TES version
+to decide whether an update is needed.
+
 ## Prerequisites
 
 Before you can run the seed script, you'll need to acquire a TES API key. Make a TES account [here](https://tes.tools.aimsplatform.org/) and the `API-KEY` menu will be available to you once you log in.

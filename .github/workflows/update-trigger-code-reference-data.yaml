@@ -1,14 +1,6 @@
 name: Update trigger-code-reference data
 
 on:
-  # Lets this skeleton run as a check on the pull request that introduces it.
-  pull_request:
-    paths:
-      - .github/workflows/update-trigger-code-reference-data.yaml
-      - containers/trigger-code-reference/assets/RCKMS Condition Codes.csv
-      - containers/trigger-code-reference/data/**
-
-  # The completed workflow will also be runnable on demand.
   workflow_dispatch:
 
 # TODO: Add a twice-yearly schedule after the workflow can safely create and
@@ -22,9 +14,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  validate-update-prerequisites:
-    name: Validate update prerequisites
+  discover-tes-version:
+    name: Discover latest TES version
     runs-on: ubuntu-latest
+    outputs:
+      current-version: ${{ steps.compare-versions.outputs.current-version }}
+      latest-version: ${{ steps.compare-versions.outputs.latest-version }}
+      update-needed: ${{ steps.compare-versions.outputs.update-needed }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -34,17 +30,105 @@ jobs:
         run: |
           test -f "containers/trigger-code-reference/assets/RCKMS Condition Codes.csv"
           test -f "containers/trigger-code-reference/data/seed_tes_data.py"
+          test -f "containers/trigger-code-reference/data/tes-version.txt"
 
-      - name: Summarize skeleton run
+      - name: Compare TES versions
+        id: compare-versions
+        env:
+          TES_API_KEY: ${{ secrets.TES_API_KEY }}
         shell: bash
+        run: |
+          set -euo pipefail
+
+          readonly version_file="containers/trigger-code-reference/data/tes-version.txt"
+          current_version="$(tr -d '[:space:]' < "$version_file")"
+
+          if [[ ! "$current_version" =~ ^[0-9]{8}$ ]]; then
+            echo "::error file=${version_file}::TES version must use YYYYMMDD format."
+            exit 1
+          fi
+
+          if [[ -z "$TES_API_KEY" ]]; then
+            echo "::error::The TES_API_KEY Actions secret is required."
+            exit 1
+          fi
+
+          response_file="$(mktemp)"
+          trap 'rm -f "$response_file"' EXIT
+
+          curl --silent --show-error --fail-with-body \
+            --retry 3 \
+            --get "https://tes.tools.aimsplatform.org/api/fhir/ValueSet" \
+            --header "X-API-KEY: $TES_API_KEY" \
+            --data-urlencode "context-type=http://terminology.hl7.org/CodeSystem/usage-context-type|focus" \
+            --data-urlencode "_sort=-version" \
+            --data-urlencode "_count=1" \
+            --output "$response_file"
+
+          latest_version="$(
+            jq --exit-status --raw-output \
+              '.entry[0].resource.version | select(test("^[0-9]{8}$"))' \
+              "$response_file"
+          )"
+
+          if [[ "$latest_version" < "$current_version" ]]; then
+            echo "::error::Latest TES version $latest_version is older than the database version $current_version."
+            exit 1
+          elif [[ "$latest_version" == "$current_version" ]]; then
+            update_needed=false
+          else
+            update_needed=true
+          fi
+
+          {
+            echo "current-version=$current_version"
+            echo "latest-version=$latest_version"
+            echo "update-needed=$update_needed"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Summarize version check
+        shell: bash
+        env:
+          CURRENT_VERSION: ${{ steps.compare-versions.outputs.current-version }}
+          LATEST_VERSION: ${{ steps.compare-versions.outputs.latest-version }}
+          UPDATE_NEEDED: ${{ steps.compare-versions.outputs.update-needed }}
         run: |
           {
             echo "## Trigger code reference update"
             echo
-            echo "The workflow skeleton and required repository files were validated."
-            echo
             echo "- Event: \`${{ github.event_name }}\`"
-            echo "- TES version discovery: not enabled in this skeleton"
-            echo "- Database generation: not enabled in this skeleton"
-            echo "- Pull request creation: not enabled in this skeleton"
+            echo "- Current database version: \`$CURRENT_VERSION\`"
+            echo "- Latest TES version: \`$LATEST_VERSION\`"
+            echo "- Update needed: \`$UPDATE_NEEDED\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  prepare-update:
+    name: Prepare trigger code reference update
+    needs: discover-tes-version
+    if: needs.discover-tes-version.outputs.update-needed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Write target TES version
+        env:
+          LATEST_VERSION: ${{ needs.discover-tes-version.outputs.latest-version }}
+        shell: bash
+        run: |
+          printf '%s\n' "$LATEST_VERSION" \
+            > "containers/trigger-code-reference/data/tes-version.txt"
+
+      - name: Summarize pending update
+        env:
+          CURRENT_VERSION: ${{ needs.discover-tes-version.outputs.current-version }}
+          LATEST_VERSION: ${{ needs.discover-tes-version.outputs.latest-version }}
+        shell: bash
+        run: |
+          {
+            echo "## TES update available"
+            echo
+            echo "An update from \`$CURRENT_VERSION\` to \`$LATEST_VERSION\` is required."
+            echo
+            echo "Database generation and pull request creation will be added to this job."
           } >> "$GITHUB_STEP_SUMMARY"
