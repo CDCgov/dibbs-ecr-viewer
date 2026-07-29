@@ -1,0 +1,8 @@
+# Dependencies used only by the automated condition-code extraction and TES
+# database build. Compile this file with hashes before changing the workflow.
+fhir.resources>=8.2.0
+openpyxl==3.1.5
+python-dotenv
+requests>=2.32.4
+sqlmodel
+tqdm

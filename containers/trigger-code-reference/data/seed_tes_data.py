@@ -32,7 +32,12 @@ if len(sys.argv) < 2:
 _VERSION = sys.argv[1]
 
 _DB_URL = "sqlite:///tes.db"
-_DEBUG = True  # Set this to True if you'd like to see DB migration output
+# SQLAlchemy's echo mode is useful while debugging locally but produces very
+# large logs during a normal database build.
+_DEBUG = os.getenv("TES_DB_DEBUG", "").lower() in {"1", "true", "yes"}
+# GitHub Actions sets CI=true. Hide nested progress bars there so useful errors
+# and the final validation results remain easy to find in the workflow log.
+_DISABLE_PROGRESS = os.getenv("CI", "").lower() == "true"
 
 _engine = create_engine(_DB_URL, echo=_DEBUG)
 SQLModel.metadata.create_all(_engine)
@@ -69,7 +74,11 @@ def _retrieve_tes_info_and_save(concept_code_to_type_dict: dict[str, list[str]])
             bundle = _fetch_conditions_bundle(current_iteration)
 
             for entry in tqdm(
-                bundle.entry, desc="Processing ValueSets", unit=" ValueSet", leave=False
+                bundle.entry,
+                desc="Processing ValueSets",
+                unit=" ValueSet",
+                leave=False,
+                disable=_DISABLE_PROGRESS,
             ):
                 valueSet: ValueSet = entry.resource  # type: ignore
 
@@ -80,6 +89,7 @@ def _retrieve_tes_info_and_save(concept_code_to_type_dict: dict[str, list[str]])
                         desc=f"Processing concepts in compose.indclude for {valueSet.title}",
                         unit=" Concept",
                         leave=False,
+                        disable=_DISABLE_PROGRESS,
                     ):
                         for concept in system.concept:
                             _build_concept(
@@ -97,6 +107,7 @@ def _retrieve_tes_info_and_save(concept_code_to_type_dict: dict[str, list[str]])
                         desc=f"Processing concepts in expansion.contains for {valueSet.title}",
                         unit=" Concept",
                         leave=False,
+                        disable=_DISABLE_PROGRESS,
                     ):
                         _build_concept(
                             session,
@@ -224,6 +235,7 @@ def _fetch_conditions_bundle(current_iteration: int) -> Bundle:
             "_count": _BATCH_SIZE,
         },
         headers=_TES_HEADER,
+        timeout=60,
     )
 
     if response.status_code != 200:
@@ -249,6 +261,7 @@ def _build_concept_type_by_code_dict() -> dict[str, list[str]]:
             "_id": "dxtc,ostc,lotc,lrtc,mrtc,sdtc",
         },
         headers=_TES_HEADER,
+        timeout=60,
     )
 
     if response.status_code != 200:
@@ -263,7 +276,11 @@ def _build_concept_type_by_code_dict() -> dict[str, list[str]]:
     dict = {}
     concept_types_found = []
     for entry in tqdm(
-        bundle.entry, desc="Processing ValueSets", unit=" ValueSet", leave=False
+        bundle.entry,
+        desc="Processing ValueSets",
+        unit=" ValueSet",
+        leave=False,
+        disable=_DISABLE_PROGRESS,
     ):
         valueSet: ValueSet = entry.resource
 
@@ -275,6 +292,7 @@ def _build_concept_type_by_code_dict() -> dict[str, list[str]]:
             desc=f"Processing concepts in expansion.contains for {valueSet.id}",
             unit=" Concept",
             leave=False,
+            disable=_DISABLE_PROGRESS,
         ):
             # A concept can have multiple types
             if concept.code in dict:
