@@ -305,7 +305,7 @@ describe("User Service", () => {
           email: "new-admin@admin.com",
           userType: "admin",
           programs: [],
-        })
+        }),
       ).rejects.toThrow("Program admins cannot create new admins");
     });
 
@@ -337,9 +337,9 @@ describe("User Service", () => {
           email: "new-user@standard.com",
           userType: "standard",
           programs: [programArea456Id],
-        })
+        }),
       ).rejects.toThrow(
-        "Program admins cannot create users outside of their program areas"
+        "Program admins cannot create users outside of their program areas",
       );
     });
   });
@@ -519,7 +519,7 @@ describe("User Service", () => {
       const adminUser = await getCheckAdmin("check");
       const res = await hasRelevantProgramAreaAccess(
         adminUser,
-        "some-prog-uuid"
+        "some-prog-uuid",
       );
       expect(res).toBeTrue();
     });
@@ -528,14 +528,14 @@ describe("User Service", () => {
       const adminUser = await getCheckAdmin("check");
       const inactiveUser = { ...adminUser, status: "inactive" as const };
       expect(
-        await hasRelevantProgramAreaAccess(inactiveUser, "some-prog-uuid")
+        await hasRelevantProgramAreaAccess(inactiveUser, "some-prog-uuid"),
       ).toBeFalse();
     });
 
     it("should return false when no user is passed and none is logged in", async () => {
       (getLoggedInUserSession as jest.Mock).mockResolvedValue(undefined);
       expect(
-        await hasRelevantProgramAreaAccess(undefined, "some-prog-uuid")
+        await hasRelevantProgramAreaAccess(undefined, "some-prog-uuid"),
       ).toBeFalse();
     });
   });
@@ -544,41 +544,31 @@ describe("User Service", () => {
   describe("validateAdminUserPermissions", () => {
     it("should allow admins to manage users of any type", async () => {
       await expect(
-        validateAdminUserPermissions(expectedAdminUser, "admin", [])
+        validateAdminUserPermissions(expectedAdminUser, "admin", []),
       ).resolves.toBeUndefined();
     });
     it("should allow program admins to manage standard users and program admins within their accessible program areas", async () => {
       await expect(
-        validateAdminUserPermissions(
-          expectedProgramAdminUser,
-          "standard",
-          [programArea123Id!]
-        )
+        validateAdminUserPermissions(expectedProgramAdminUser, "standard", [
+          programArea123Id!,
+        ]),
       ).resolves.toBeUndefined();
       await expect(
-        validateAdminUserPermissions(
-          expectedProgramAdminUser,
-          "prog_admin",
-          [programArea123Id!]
-        )
+        validateAdminUserPermissions(expectedProgramAdminUser, "prog_admin", [
+          programArea123Id!,
+        ]),
       ).resolves.toBeUndefined();
     });
     it("should prevent program admins from managing admin users", async () => {
       await expect(
-        validateAdminUserPermissions(
-          expectedProgramAdminUser,
-          "admin",
-          []
-        )
+        validateAdminUserPermissions(expectedProgramAdminUser, "admin", []),
       ).rejects.toThrow(UserFacingError);
     });
     it("should prevent program admins from managing users outside of their accessible program areas", async () => {
       await expect(
-        validateAdminUserPermissions(
-          expectedProgramAdminUser,
-          "standard",
-          [programArea456Id!]
-        )
+        validateAdminUserPermissions(expectedProgramAdminUser, "standard", [
+          programArea456Id!,
+        ]),
       ).rejects.toThrow(UserFacingError);
     });
   });

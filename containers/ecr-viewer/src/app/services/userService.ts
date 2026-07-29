@@ -18,7 +18,6 @@ import { audit } from "./auditLogService";
 import { UserFacingError } from "./errorService";
 import { getLoggedInUser, getUserByEmail } from "./loggedInUserService";
 
-
 export type UserType = "admin" | "prog_admin" | "standard";
 
 /**
@@ -148,7 +147,7 @@ export const hasRelevantProgramAreaAccess = async (
 export async function validateAdminUserPermissions(
   loggedInUser: User,
   userType: UserType,
-  programs: string[]
+  programs: string[],
 ) {
   if (isAdmin(loggedInUser)) return;
 
@@ -160,7 +159,7 @@ export async function validateAdminUserPermissions(
     const hasAccess = await hasRelevantProgramAreaAccess(loggedInUser, program);
     if (!hasAccess) {
       throw new UserFacingError(
-        "Program admins cannot create users outside of their program areas"
+        "Program admins cannot create users outside of their program areas",
       );
     }
   }

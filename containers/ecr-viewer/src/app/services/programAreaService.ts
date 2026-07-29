@@ -219,20 +219,18 @@ export const listProgramAreas = async (): Promise<ListedProgramArea[]> => {
     return await getDb<Core>()
       .transaction()
       .execute(async (db) => {
-        const programAreas =
-          isProgramAdmin(user)
-            ? await db
-                .selectFrom("program_area")
-                .innerJoin(
-                  "user_program_area",
-                  "program_area.uuid",
-                  "user_program_area.program_area_uuid"
-                )
+        const programAreas = isProgramAdmin(user)
+          ? await db
+              .selectFrom("program_area")
+              .innerJoin(
+                "user_program_area",
+                "program_area.uuid",
+                "user_program_area.program_area_uuid",
+              )
               .selectAll("program_area")
               .where("user_program_area.user_uuid", "=", user.uuid)
               .execute()
-            : await db.selectFrom("program_area").selectAll().execute(); 
-        ;
+          : await db.selectFrom("program_area").selectAll().execute();
         const conditionRefs = await db
           .selectFrom("condition_reference")
           .selectAll()
@@ -243,7 +241,7 @@ export const listProgramAreas = async (): Promise<ListedProgramArea[]> => {
             ...c,
             is_duplicate: conditionRefs.some(
               ({ condition_name, code }) =>
-                c.condition_name === condition_name && c.code !== code
+                c.condition_name === condition_name && c.code !== code,
             ),
           }))
           .sort((a, b) => stringSort(a.condition_name, b.condition_name));
@@ -252,7 +250,7 @@ export const listProgramAreas = async (): Promise<ListedProgramArea[]> => {
           .map((pa) => ({
             ...pa,
             conditions: conditions.filter(
-              ({ program_area_uuid }) => program_area_uuid === pa.uuid
+              ({ program_area_uuid }) => program_area_uuid === pa.uuid,
             ),
           }))
           .sort((a, b) => stringSort(a.name, b.name));
