@@ -7,7 +7,6 @@ on:
   workflow_dispatch:
   pull_request:
     types:
-      - opened
       - synchronize
       - reopened
     paths:
@@ -132,18 +131,22 @@ jobs:
       contents: write
       pull-requests: write
     env:
-      BASE_BRANCH: ${{ github.event.repository.default_branch }}
-      BRANCH_NAME: automation/trigger-code-reference-${{ needs.discover-tes-version.outputs.latest-version }}
+      # TODO: After end-to-end feature-branch testing, restore BASE_BRANCH to
+      # ${{ github.event.repository.default_branch }}.
+      BASE_BRANCH: ${{ github.ref_name }}
+      # TODO: Remove the -test suffix when BASE_BRANCH is restored to the
+      # repository default branch.
+      BRANCH_NAME: automation/trigger-code-reference-${{ needs.discover-tes-version.outputs.latest-version }}-test
       CURRENT_VERSION: ${{ needs.discover-tes-version.outputs.current-version }}
       GH_TOKEN: ${{ github.token }}
       LATEST_VERSION: ${{ needs.discover-tes-version.outputs.latest-version }}
     steps:
-      # The generated update branch must start from the default branch, even
-      # when this workflow is being tested manually from a feature branch.
+      # For end-to-end testing, the generated branch temporarily starts from
+      # the feature branch selected when the workflow is run.
       - name: Check out base branch
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.repository.default_branch }}
+          ref: ${{ env.BASE_BRANCH }}
 
       # During feature-branch testing, the PR instructions may not exist on the
       # default branch yet. Read them from the exact commit running this
@@ -314,7 +317,9 @@ jobs:
             echo "::error file=${version_file}::TES version must use YYYYMMDD format."
             exit 1
           fi
-          if [[ "$HEAD_BRANCH" != "automation/trigger-code-reference-$target_version" ]]; then
+          # TODO: Remove the -test suffix after end-to-end feature-branch
+          # testing, together with the temporary BRANCH_NAME change above.
+          if [[ "$HEAD_BRANCH" != "automation/trigger-code-reference-$target_version-test" ]]; then
             echo "::error::PR branch does not match target TES version $target_version."
             exit 1
           fi
