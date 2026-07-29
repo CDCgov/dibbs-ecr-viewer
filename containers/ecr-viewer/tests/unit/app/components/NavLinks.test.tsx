@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import NavLinks from "@/app/components/NavLinks";
 import { User } from "@/app/data/metadataDb/types/core";
 import { getLoggedInUser } from "@/app/services/loggedInUserService";
-import { isAdmin } from "@/app/services/userService";
+import { isAnyAdmin } from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 jest.mock("@/app/utils/auth-utils", () => ({
@@ -15,7 +15,7 @@ jest.mock("@/app/utils/auth-utils", () => ({
 }));
 
 jest.mock("@/app/services/userService", () => ({
-  isAdmin: jest.fn(),
+  isAnyAdmin: jest.fn()
 }));
 jest.mock("@/app/services/loggedInUserService", () => ({
   getLoggedInUser: jest.fn(),
@@ -38,6 +38,17 @@ const mockAdminUser: User = {
   author_uuid: "",
 };
 
+const mockProgramAdminUser: User = {
+  status: "",
+  uuid: "",
+  email: "",
+  date_of_last_login: new Date(),
+  name: "Phillip Phillip",
+  user_type: "prog_admin",
+  date_created: new Date(),
+  author_uuid: "",
+};
+
 const mockStandardUser: User = {
   status: "",
   uuid: "",
@@ -54,7 +65,7 @@ describe("NavLinks component", () => {
     (usePathname as jest.Mock).mockReturnValue("/admin/user");
     (getLoggedInUserSession as jest.Mock).mockResolvedValue(mockAdminUser);
     (getLoggedInUser as jest.Mock).mockResolvedValue(mockAdminUser);
-    (isAdmin as unknown as jest.Mock).mockReturnValue(true);
+    (isAnyAdmin as unknown as jest.Mock).mockReturnValue(true);
 
     render(await NavLinks());
 
@@ -73,10 +84,36 @@ describe("NavLinks component", () => {
     expect(screen.getByTestId("user-menu")).toHaveTextContent("Admin");
   });
 
+  it("renders admin navigation links and user menu for a program admin user", async () => {
+    (usePathname as jest.Mock).mockReturnValue("/admin/user");
+    (getLoggedInUserSession as jest.Mock).mockResolvedValue(
+      mockProgramAdminUser
+    );
+    (getLoggedInUser as jest.Mock).mockResolvedValue(mockProgramAdminUser);
+    (isAnyAdmin as unknown as jest.Mock).mockReturnValue(true);
+
+    render(await NavLinks());
+
+    // Navigation links
+    expect(screen.getByText("eCR library")).toBeInTheDocument();
+    expect(screen.getByText("eCR library")).not.toHaveClass("active-page");
+    expect(screen.getByText("User management")).toBeInTheDocument();
+    expect(screen.getByText("User management")).toHaveClass("active-page");
+    expect(screen.getByText("Program management")).toBeInTheDocument();
+    expect(screen.getByText("Program management")).not.toHaveClass(
+      "active-page"
+    );
+
+    // User menu
+    const userMenu = screen.getByTestId("user-menu");
+    expect(userMenu).toHaveTextContent("Phillip Phillip");
+    expect(userMenu).toHaveTextContent("prog_admin");
+  });
+
   it("Does not render links for a standard user but does render menu", async () => {
     (getLoggedInUserSession as jest.Mock).mockResolvedValue(mockStandardUser);
     (getLoggedInUser as jest.Mock).mockResolvedValue(mockStandardUser);
-    (isAdmin as unknown as jest.Mock).mockReturnValue(false);
+    (isAnyAdmin as unknown as jest.Mock).mockReturnValue(false);
 
     render(await NavLinks());
 
