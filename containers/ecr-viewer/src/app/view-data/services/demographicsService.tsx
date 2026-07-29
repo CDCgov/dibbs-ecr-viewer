@@ -3,7 +3,7 @@ import "server-only"; // FHIR evaluation should be done server side
 import { Bundle, Encounter, Patient, RelatedPerson } from "fhir/r4";
 import { DateTime } from "luxon";
 
-import { formatDate } from "@/app/services/formatDateService";
+import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import {
   formatAddressList,
   formatContactPoint,
@@ -360,7 +360,7 @@ export const evaluateDemographicsData = (
     },
     {
       title: "Date of Death",
-      value: evaluateOne(patient, fhirPathMappings.patientDOD),
+      value: formatDateTime(evaluateOne(patient, fhirPathMappings.patientDOD)),
     },
     {
       title: "Sex",

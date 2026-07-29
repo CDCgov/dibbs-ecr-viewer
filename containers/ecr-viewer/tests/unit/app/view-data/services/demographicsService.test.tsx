@@ -164,6 +164,25 @@ describe("Evaluate Patient Info: Demographics", () => {
       const actual = evaluatePatientVitalStatus(patientDeceasedTrue);
       expect(actual).toEqual("Deceased");
     });
+
+    it("should return `Deceased` when `deceasedDateTime` is present", () => {
+      const bundleWithDOD = {
+        resourceType: "Bundle",
+        entry: [
+          {
+            resource: {
+              id: "1",
+              resourceType: "Patient",
+              deceasedDateTime: "2026-01-27",
+            },
+          },
+        ],
+      } as unknown as Bundle;
+      const fhirIndex = getFhirIndex(bundleWithDOD);
+      const patientWithDOD = getPatient(fhirIndex);
+      const actual = evaluatePatientVitalStatus(patientWithDOD);
+      expect(actual).toEqual("Deceased");
+    });
   });
 
   describe("Censor Gender", () => {
@@ -603,5 +622,30 @@ Home: 123-456-6909`,
     expect(actual.availableData.filter((d) => d.title === "Contact")).toEqual(
       expectedContact,
     );
+  });
+
+  it("should show Vital Status as Deceased and Date of Death when deceasedDateTime is present", () => {
+    const deceasedBundle = {
+      resourceType: "Bundle",
+      entry: [
+        {
+          resource: {
+            id: "deceased-dod-test",
+            resourceType: "Patient",
+            deceasedDateTime: "2026-01-27",
+          },
+        },
+      ],
+    } as unknown as Bundle;
+    const deceasedFhirIndex = getFhirIndex(deceasedBundle);
+    const actual = evaluateDemographicsData(deceasedBundle, deceasedFhirIndex);
+
+    const vitalStatus = actual.availableData.find(
+      (d) => d.title === "Vital Status",
+    );
+    const dod = actual.availableData.find((d) => d.title === "Date of Death");
+
+    expect(vitalStatus?.value).toEqual("Deceased");
+    expect(dod?.value).toEqual("01/27/2026");
   });
 });
