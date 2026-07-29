@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { listProgramAreas } from "@/app/services/programAreaService";
 import { deleteUserAction } from "@/app/services/serverActionService";
-import { listUsers, notFoundUnlessAdmin } from "@/app/services/userService";
+import { listUsers, notFoundUnlessAnyAdmin } from "@/app/services/userService";
 
 import { UserTable } from "./UserTable";
 
@@ -12,7 +12,7 @@ import { UserTable } from "./UserTable";
  * @returns user admin page
  */
 const UserAdminPage = async () => {
-  await notFoundUnlessAdmin();
+  await notFoundUnlessAnyAdmin();
 
   const users = await listUsers();
   const programAreas = await listProgramAreas();

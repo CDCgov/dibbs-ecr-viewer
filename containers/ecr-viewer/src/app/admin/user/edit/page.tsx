@@ -1,7 +1,8 @@
 import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 
-import { UserForm, UserType } from "@/app/admin/user/UserForm";
+import { UserForm } from "@/app/admin/user/UserForm";
+import { isAdmin, UserType } from "@/app/services/userService";
 import { listProgramAreas } from "@/app/services/programAreaService";
 import { updateUserAction } from "@/app/services/serverActionService";
 import {
@@ -11,6 +12,7 @@ import {
   notFoundUnlessAdmin,
 } from "@/app/services/userService";
 import { PageSearchParams } from "@/app/utils/search-param-utils";
+import { getLoggedInUser } from "@/app/services/loggedInUserService";
 
 /**
  * Edit a user
@@ -24,6 +26,7 @@ const EditUserPage = async ({
   searchParams: Promise<PageSearchParams>;
 }) => {
   await notFoundUnlessAdmin();
+  const currentUser = await getLoggedInUser();
   const { uuid } = await searchParams;
 
   // nothing to edit here
@@ -73,6 +76,7 @@ const EditUserPage = async ({
         });
         return { error: res.error };
       }}
+      isLoggedInUserAdmin={isAdmin(currentUser)}
     />
   );
 };

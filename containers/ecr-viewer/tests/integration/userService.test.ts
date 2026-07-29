@@ -17,28 +17,31 @@ import {
   getCheckAdmin,
   getCheckAnyAdmin,
   hasRelevantProgramAreaAccess,
-  isAnyAdmin,
   isLoggedInUserEcrAuthed,
-  isProgramAdmin,
   isUserEcrAuthed,
+  ListedUser,
+  listLoggedInUserProgramAreas,
   listUserProgramAreas,
   listUsers,
   notFoundUnlessAdmin,
   notFoundUnlessAnyAdmin,
   updateUser,
+  validateAdminUserPermissions,
 } from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 import { getLastAuditLog } from "./helpers/core";
 import { buildCore, dropExisting } from "./helpers/ddl";
+import { UserFacingError } from "@/app/services/errorService";
 
 export const makePromiseResolveWithStatus = (
   status: number,
 ): Promise<BlobResponse> =>
   new Promise((resolve) => resolve({ message: "hi there", status }));
 
-const adminEmail = "admin@admin.com";
-const userEmail = "standard@user.com";
+const adminUserEmail = "admin@admin.com";
+const standardUserEmail = "standard@standard.com";
+const programAdminEmail = "programadmin@programadmin.com";
 
 const cond123 = {
   code: "123",
@@ -51,6 +54,14 @@ const cond456 = {
   concept_name: "condition 2 (disease)",
   condition_name: "condition 2",
   condition_category: "category",
+};
+const programArea123 = {
+  name: "Program Area 123",
+  conditions: ["123"],
+};
+const programArea456 = {
+  name: "Program Area 456",
+  conditions: ["456"],
 };
 
 const ecrId = "1-2-3-4";
@@ -110,44 +121,53 @@ afterAll(async () => {
   await dropExisting();
 });
 
-describe("user service", () => {
-  let adminId;
-  let userId;
+describe("User Service", () => {
+  let adminUserId;
+  let standardUserId;
+  let programAdminUserId;
+
+  let programArea123Id;
+  let programArea456Id;
+
+  let expectedAdminUser: ListedUser;
+  let expectedStandardUser: ListedUser;
+  let expectedProgramAdminUser: ListedUser;
+
   it("should create initial admin user", async () => {
     let warning: string[] = [];
     jest.spyOn(console, "warn").mockImplementation((...args) => {
       warning = args;
     });
-    adminId = await createInitialAdminUser({ email: adminEmail });
-    expect(adminId).toMatch(UUID_REGEX);
+    adminUserId = await createInitialAdminUser({ email: adminUserEmail });
+    expect(adminUserId).toMatch(UUID_REGEX);
+
+    expectedAdminUser = {
+      uuid: adminUserId!,
+      email: adminUserEmail,
+      name: null,
+      date_of_last_login: null,
+      user_type: "admin",
+      status: "active",
+      author_uuid: adminUserId!,
+      date_created: expect.any(Date),
+      program_areas: [],
+    };
 
     const createLog = await getLastAuditLog();
     expect(createLog.subject).toEqual("user");
     expect(createLog.action).toEqual("create");
     expect(JSON.parse(createLog.parameter_json)).toStrictEqual({
-      email: adminEmail,
-      uuid: adminId,
+      email: adminUserEmail,
+      uuid: adminUserId,
     });
 
     // see admin listed
     const users = await listUsers();
     expect(users).toBeArrayOfSize(1);
-    expect(users).toStrictEqual([
-      {
-        uuid: adminId,
-        email: adminEmail,
-        name: null,
-        date_of_last_login: null,
-        user_type: "admin",
-        status: "active",
-        author_uuid: adminId,
-        date_created: expect.any(Date),
-        program_areas: [],
-      },
-    ]);
+    expect(users).toStrictEqual([expectedAdminUser]);
 
     // adding again with same email should do nothing
-    const notId = await createInitialAdminUser({ email: adminEmail });
+    const notId = await createInitialAdminUser({ email: adminUserEmail });
     expect(notId).toBeUndefined();
     expect(warning[0]).toContain("Active admin user already exists");
     warning = [];
@@ -160,220 +180,282 @@ describe("user service", () => {
     expect(warning[0]).toContain("Active admin user already exists");
 
     // admin deletes themself
-    await deleteUser({ uuid: adminId! });
+    await deleteUser({ uuid: adminUserId! });
 
     // Current user isn't an admin any more!
     await expect(listUsers()).rejects.toThrow();
 
     //admin re-adds themself, gets same id
-    const newId = await createInitialAdminUser({ email: adminEmail });
-    expect(newId).toBe(adminId);
+    const newId = await createInitialAdminUser({ email: adminUserEmail });
+    expect(newId).toBe(adminUserId);
 
     // see admin listed
     const afterUsers = await listUsers();
     expect(afterUsers).toBeArrayOfSize(1);
-    expect(afterUsers).toStrictEqual([
-      {
-        uuid: adminId,
-        email: adminEmail,
-        name: null,
-        date_of_last_login: null,
-        user_type: "admin",
-        status: "active",
-        author_uuid: adminId,
-        date_created: expect.any(Date),
-        program_areas: [],
-      },
-    ]);
+    expect(afterUsers).toStrictEqual([expectedAdminUser]);
   });
 
-  it("admin should be authed to see ecr", async () => {
+  it("isLoggedInUserEcrAuthed: admin should be authed to see ecr", async () => {
     const res = await isLoggedInUserEcrAuthed(ecrId);
     expect(res).toBeTrue();
   });
 
-  it("should create a standard user", async () => {
-    // admin created in prior test
-    userId = await createUser({
-      email: userEmail,
-      userType: "standard",
-      programs: [],
-    });
-    expect(userId).toMatch(UUID_REGEX);
+  describe("createUser", () => {
+    it("as an admin, should create a standard user", async () => {
+      // admin created in prior test
+      standardUserId = await createUser({
+        email: standardUserEmail,
+        userType: "standard",
+        programs: [],
+      });
+      expect(standardUserId).toMatch(UUID_REGEX);
 
-    // check audit log
-    const createLog = await getLastAuditLog();
-    expect(createLog.actor).toEqual(adminId!);
-    expect(createLog.subject).toEqual("user");
-    expect(createLog.action).toEqual("create");
-    expect(JSON.parse(createLog.parameter_json)).toStrictEqual({
-      email: userEmail,
-      userType: "standard",
-      programs: [],
-      uuid: userId,
-    });
-
-    // see standard user listed
-    const users = await listUsers();
-    expect(users).toBeArrayOfSize(2);
-    expect(users).toStrictEqual([
-      {
-        uuid: expect.any(String),
-        email: adminEmail,
-        name: null,
-        date_of_last_login: null,
-        user_type: "admin",
-        status: "active",
-        author_uuid: adminId!,
-        date_created: expect.any(Date),
-        program_areas: [],
-      },
-      {
-        uuid: userId,
-        email: userEmail,
+      expectedStandardUser = {
+        uuid: standardUserId,
+        email: standardUserEmail,
         name: null,
         date_of_last_login: null,
         user_type: "standard",
         status: "active",
-        author_uuid: adminId!,
+        author_uuid: adminUserId!,
         date_created: expect.any(Date),
         program_areas: [],
-      },
-    ]);
+      };
+
+      // check audit log
+      const createLog = await getLastAuditLog();
+      expect(createLog.actor).toEqual(adminUserId!);
+      expect(createLog.subject).toEqual("user");
+      expect(createLog.action).toEqual("create");
+      expect(JSON.parse(createLog.parameter_json)).toStrictEqual({
+        email: standardUserEmail,
+        userType: "standard",
+        programs: [],
+        uuid: standardUserId,
+      });
+
+      // see standard user listed
+      const users = await listUsers();
+      expect(users).toBeArrayOfSize(2); // admin + standard
+      expect(users).toStrictEqual([expectedAdminUser, expectedStandardUser]);
+    });
+
+    it("as an admin, should create a program admin user", async () => {
+      // Create program area
+      programArea123Id = await createProgramArea(programArea123);
+      expect(programArea123Id).toMatch(UUID_REGEX);
+
+      // Create program admin
+      programAdminUserId = await createUser({
+        email: programAdminEmail,
+        userType: "prog_admin",
+        programs: [programArea123Id],
+      });
+      expect(programAdminUserId).toMatch(UUID_REGEX);
+      expectedProgramAdminUser = {
+        uuid: programAdminUserId,
+        email: programAdminEmail,
+        name: null,
+        date_of_last_login: null,
+        user_type: "prog_admin",
+        status: "active",
+        author_uuid: adminUserId!,
+        date_created: expect.any(Date),
+        program_areas: [
+          {
+            name: "Program Area 123",
+            program_area_uuid: programArea123Id,
+            user_uuid: programAdminUserId,
+          },
+        ],
+      };
+
+      // Check audit log
+      const createLog = await getLastAuditLog();
+      expect(createLog.actor).toEqual(adminUserId!);
+      expect(createLog.subject).toEqual("user");
+      expect(createLog.action).toEqual("create");
+      expect(JSON.parse(createLog.parameter_json)).toStrictEqual({
+        email: programAdminEmail,
+        userType: "prog_admin",
+        programs: [programArea123Id],
+        uuid: programAdminUserId,
+      });
+
+      // Program admin should be listed
+      const users = await listUsers();
+      expect(users).toBeArrayOfSize(3); // admin + standard + program admin
+      expect(users).toStrictEqual([
+        expectedAdminUser,
+        expectedProgramAdminUser,
+        expectedStandardUser,
+      ]);
+    });
+
+    it("as a program admin, should not create an admin user", async () => {
+      // Log in as Program Admin
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        name: "Program Admin 1",
+        email: programAdminEmail,
+      });
+
+      // Program admin should not be able to create admin
+      await expect(
+        createUser({
+          email: "new-admin@admin.com",
+          userType: "admin",
+          programs: [],
+        })
+      ).rejects.toThrow("Program admins cannot create new admins");
+    });
+
+    it("as a program admin, should not create a user for an unauthorized program area", async () => {
+      // Create program area 456
+      programArea456Id = await createProgramArea(programArea456);
+      expect(programArea456Id).toMatch(UUID_REGEX);
+
+      // Ensure logged in user is program admin with access to Program Area 123
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        name: "Program Admin 1",
+        email: programAdminEmail,
+      });
+
+      // Program areas of program admin should be listed
+      const progAreas = await listLoggedInUserProgramAreas();
+      expect(progAreas).toStrictEqual([
+        {
+          uuid: programArea123Id!,
+          author_uuid: adminUserId!,
+          name: "Program Area 123",
+          date_created: expect.any(Date),
+        },
+      ]);
+
+      // Attempt to create standard user with access to Program Area 456
+      await expect(
+        createUser({
+          email: "new-user@standard.com",
+          userType: "standard",
+          programs: [programArea456Id],
+        })
+      ).rejects.toThrow(
+        "Program admins cannot create users outside of their program areas"
+      );
+    });
   });
 
-  it("user should not yet be authed to see ecr", async () => {
-    const res = await isUserEcrAuthed(userId!, ecrId);
+  it("isUserEcrAuthed: standard user should not yet be authed to see ecr", async () => {
+    const res = await isUserEcrAuthed(standardUserId!, ecrId);
     expect(res).toBeFalse();
   });
 
-  it("should update a user", async () => {
-    // standard user created in prior test
-    await updateUser({
-      uuid: userId!,
-      updates: { name: "Olga Nunes" },
-      programs: [],
-    });
+  describe("updateUser", () => {
+    it("as an admin, should update a user", async () => {
+      // standard user created in prior test
+      await updateUser({
+        uuid: standardUserId!,
+        updates: { name: "Olga Nunes" },
+        programs: [],
+      });
 
-    // check audit log
-    const log = await getLastAuditLog();
-    expect(log.actor).toEqual(adminId!);
-    expect(log.subject).toEqual("user");
-    expect(log.action).toEqual("update");
-    expect(JSON.parse(log.parameter_json)).toStrictEqual({
-      updates: { name: "Olga Nunes" },
-      programs: [],
-      uuid: userId!,
-    });
+      // check audit log
+      const log = await getLastAuditLog();
+      expect(log.actor).toEqual(adminUserId!);
+      expect(log.subject).toEqual("user");
+      expect(log.action).toEqual("update");
+      expect(JSON.parse(log.parameter_json)).toStrictEqual({
+        updates: { name: "Olga Nunes" },
+        programs: [],
+        uuid: standardUserId!,
+      });
 
-    // see standard user listed with name
-    const users = await listUsers();
-    expect(users).toBeArrayOfSize(2);
-    expect(users).toStrictEqual([
-      {
-        uuid: adminId!,
-        email: adminEmail,
-        name: null,
-        date_of_last_login: null,
-        user_type: "admin",
-        status: "active",
-        author_uuid: adminId!,
-        date_created: expect.any(Date),
-        program_areas: [],
-      },
-      {
-        uuid: userId!,
-        email: userEmail,
+      expectedStandardUser = {
+        ...expectedStandardUser,
         name: "Olga Nunes",
-        date_of_last_login: null,
-        user_type: "standard",
-        status: "active",
-        author_uuid: adminId!,
-        date_created: expect.any(Date),
-        program_areas: [],
-      },
-    ]);
+      };
+
+      // see standard user listed with name
+      const users = await listUsers();
+      expect(users).toBeArrayOfSize(3);
+      expect(users).toStrictEqual([
+        expectedAdminUser,
+        expectedProgramAdminUser,
+        expectedStandardUser,
+      ]);
+    });
+
+    it("as an admin, should update a user's program areas", async () => {
+      // standard user created in prior test
+      await updateUser({
+        uuid: standardUserId!,
+        updates: { name: "Olga Nunes" },
+        programs: [programArea123Id!],
+      });
+
+      // check audit log
+      const log = await getLastAuditLog();
+      expect(log.actor).toEqual(adminUserId!);
+      expect(log.subject).toEqual("user");
+      expect(log.action).toEqual("update");
+      expect(JSON.parse(log.parameter_json)).toStrictEqual({
+        updates: { name: "Olga Nunes" },
+        programs: [programArea123Id!],
+        uuid: standardUserId!,
+      });
+
+      const progAreas = await listUserProgramAreas(standardUserId!);
+
+      expect(progAreas).toStrictEqual([
+        {
+          uuid: programArea123Id!,
+          author_uuid: adminUserId!,
+          name: "Program Area 123",
+          date_created: expect.any(Date),
+        },
+      ]);
+    });
   });
 
-  it("should update a user's program areas", async () => {
-    // standard user created in prior test
-    const progId = await createProgramArea({
-      name: "Disease",
-      conditions: ["123"],
-    });
-    await updateUser({
-      uuid: userId!,
-      updates: { name: "Olga Nunes" },
-      programs: [progId],
-    });
-
-    // check audit log
-    const log = await getLastAuditLog();
-    expect(log.actor).toEqual(adminId!);
-    expect(log.subject).toEqual("user");
-    expect(log.action).toEqual("update");
-    expect(JSON.parse(log.parameter_json)).toStrictEqual({
-      updates: { name: "Olga Nunes" },
-      programs: [progId],
-      uuid: userId!,
-    });
-
-    const progAreas = await listUserProgramAreas(userId!);
-
-    expect(progAreas).toStrictEqual([
-      {
-        uuid: progId,
-        author_uuid: adminId!,
-        name: "Disease",
-        date_created: expect.any(Date),
-      },
-    ]);
-  });
-
-  it("user should now be authed to see ecr", async () => {
-    const res = await isUserEcrAuthed(userId!, ecrId);
+  it("isUserEcrAuthed: standard user should now be authed to see ecr", async () => {
+    const res = await isUserEcrAuthed(standardUserId!, ecrId);
     expect(res).toBeTrue();
   });
 
-  it("should delete a user", async () => {
-    // standard user created in prior test
-    await deleteUser({ uuid: userId! });
+  describe("deleteUser", () => {
+    it("as an admin, should delete a user", async () => {
+      const beforeUsers = await listUsers();
+      expect(beforeUsers).toBeArrayOfSize(3); // admin + program admin + standard
 
-    // check audit log
-    const deleteLog = await getLastAuditLog();
-    expect(deleteLog.actor).toEqual(adminId!);
-    expect(deleteLog.subject).toEqual("user");
-    expect(deleteLog.action).toEqual("delete");
-    expect(JSON.parse(deleteLog.parameter_json)).toStrictEqual({
-      uuid: userId!,
+      // standard user created in prior test
+      await deleteUser({ uuid: standardUserId! });
+
+      // check audit log
+      const deleteLog = await getLastAuditLog();
+      expect(deleteLog.actor).toEqual(adminUserId!);
+      expect(deleteLog.subject).toEqual("user");
+      expect(deleteLog.action).toEqual("delete");
+      expect(JSON.parse(deleteLog.parameter_json)).toStrictEqual({
+        uuid: standardUserId!,
+      });
+
+      // see only admin + program admin listed
+      const users = await listUsers();
+      expect(users).toBeArrayOfSize(2); // admin + program admin
+      expect(users).toStrictEqual([
+        expectedAdminUser,
+        expectedProgramAdminUser,
+      ]);
+
+      // should also delete standard user program area assignments
+      const progAreas = await listUserProgramAreas(standardUserId!);
+      expect(progAreas).toStrictEqual([]);
     });
-
-    // see only admin user listed
-    const users = await listUsers();
-    expect(users).toBeArrayOfSize(1);
-    expect(users).toStrictEqual([
-      {
-        uuid: adminId!,
-        email: adminEmail,
-        name: null,
-        date_of_last_login: null,
-        user_type: "admin",
-        status: "active",
-        author_uuid: adminId!,
-        date_created: expect.any(Date),
-        program_areas: [],
-      },
-    ]);
-
-    // should also delete program area assignments
-    const progAreas = await listUserProgramAreas(userId!);
-    expect(progAreas).toStrictEqual([]);
   });
 
   describe("getCheckAdmin", () => {
     it("should return admin if user is an admin", async () => {
       const admin = await getCheckAdmin("do a thing");
-      expect(admin.email).toBe(adminEmail);
+      expect(admin.email).toBe(adminUserEmail);
     });
 
     it("should error if user is not an admin", async () => {
@@ -404,7 +486,7 @@ describe("user service", () => {
   describe("getCheckAnyAdmin", () => {
     it("should return admin if user is an admin", async () => {
       const admin = await getCheckAnyAdmin("do a thing");
-      expect(admin.email).toBe(adminEmail);
+      expect(admin.email).toBe(adminUserEmail);
     });
 
     it("should error if user is a standard user", async () => {
@@ -437,7 +519,7 @@ describe("user service", () => {
       const adminUser = await getCheckAdmin("check");
       const res = await hasRelevantProgramAreaAccess(
         adminUser,
-        "some-prog-uuid",
+        "some-prog-uuid"
       );
       expect(res).toBeTrue();
     });
@@ -446,15 +528,58 @@ describe("user service", () => {
       const adminUser = await getCheckAdmin("check");
       const inactiveUser = { ...adminUser, status: "inactive" as const };
       expect(
-        await hasRelevantProgramAreaAccess(inactiveUser, "some-prog-uuid"),
+        await hasRelevantProgramAreaAccess(inactiveUser, "some-prog-uuid")
       ).toBeFalse();
     });
 
     it("should return false when no user is passed and none is logged in", async () => {
       (getLoggedInUserSession as jest.Mock).mockResolvedValue(undefined);
       expect(
-        await hasRelevantProgramAreaAccess(undefined, "some-prog-uuid"),
+        await hasRelevantProgramAreaAccess(undefined, "some-prog-uuid")
       ).toBeFalse();
+    });
+  });
+
+  // TODO ANGELA: Should this really be an integration test? Should this (and others be moved to unit tests)
+  describe("validateAdminUserPermissions", () => {
+    it("should allow admins to manage users of any type", async () => {
+      await expect(
+        validateAdminUserPermissions(expectedAdminUser, "admin", [])
+      ).resolves.toBeUndefined();
+    });
+    it("should allow program admins to manage standard users and program admins within their accessible program areas", async () => {
+      await expect(
+        validateAdminUserPermissions(
+          expectedProgramAdminUser,
+          "standard",
+          [programArea123Id!]
+        )
+      ).resolves.toBeUndefined();
+      await expect(
+        validateAdminUserPermissions(
+          expectedProgramAdminUser,
+          "prog_admin",
+          [programArea123Id!]
+        )
+      ).resolves.toBeUndefined();
+    });
+    it("should prevent program admins from managing admin users", async () => {
+      await expect(
+        validateAdminUserPermissions(
+          expectedProgramAdminUser,
+          "admin",
+          []
+        )
+      ).rejects.toThrow(UserFacingError);
+    });
+    it("should prevent program admins from managing users outside of their accessible program areas", async () => {
+      await expect(
+        validateAdminUserPermissions(
+          expectedProgramAdminUser,
+          "standard",
+          [programArea456Id!]
+        )
+      ).rejects.toThrow(UserFacingError);
     });
   });
 });

@@ -22,7 +22,6 @@ import {
   makePlural,
   stringSort,
   toKebabCase,
-  toTitleCase,
 } from "@/app/utils/format-utils";
 
 export interface FormProgram extends ListedProgramArea {
@@ -59,23 +58,25 @@ export const UserForm = ({
   submitAction,
   banner,
   formTouchedMsg,
+  isLoggedInUserAdmin,
 }: {
   action: string;
   initValues: FormValues;
   submitAction: (
     email: string,
     userType: UserType,
-    programs: string[],
+    programs: string[]
   ) => Promise<ServerActionResult<void>>;
   banner?: ReactNode;
   formTouchedMsg?: string;
+  isLoggedInUserAdmin: boolean;
 }) => {
   const [email, setEmail] = useState(initValues.email || "");
   const [userType, setUserType] = useState<UserType>(
-    initValues.userType || "standard",
+    initValues.userType || "standard"
   );
   const [programs, setPrograms] = useState(
-    [...initValues.programs].sort((a, b) => stringSort(a.name, b.name)),
+    [...initValues.programs].sort((a, b) => stringSort(a.name, b.name))
   );
 
   const { createToast } = React.useContext(ToastContext);
@@ -91,12 +92,11 @@ export const UserForm = ({
     .filter((e) => e !== initValues.email?.toLowerCase())
     .includes(email.toLowerCase());
 
-  const valid =
-    !!email &&
-    (userType === "admin" ||
-      userType === "standard" ||
-      userType === "prog_admin") &&
-    !emailIsDupe;
+  const isValidUserType = isLoggedInUserAdmin
+    ? ["admin", "prog_admin", "standard"].includes(userType)
+    : ["prog_admin", "standard"].includes(userType);
+  const valid = !!email && isValidUserType && !emailIsDupe;
+
   const touched =
     (email && email !== initValues.email) ||
     userType !== (initValues.userType || "standard") ||
@@ -116,7 +116,7 @@ export const UserForm = ({
         const res = await submitAction(
           email.trim(),
           userType,
-          userType === "admin" ? [] : selectedPrograms, // admins should not be saved with assigned programs
+          userType === "admin" ? [] : selectedPrograms // admins should not be saved with assigned programs
         );
         if (!res.error)
           createToast(`${email.trim()} successfully saved`, "success");
@@ -128,7 +128,11 @@ export const UserForm = ({
         setEmail={setEmail}
         emailIsDupe={emailIsDupe}
       />
-      <UserTypeFieldSet userType={userType} setUserType={setUserType} />
+      <UserTypeFieldSet
+        userType={userType}
+        setUserType={setUserType}
+        isLoggedInUserAdmin={isLoggedInUserAdmin}
+      />
       <ProgramFieldSet
         programs={programs}
         setPrograms={setPrograms}
@@ -177,9 +181,11 @@ const EmailFieldSet = ({
 const UserTypeFieldSet = ({
   userType,
   setUserType,
+  isLoggedInUserAdmin,
 }: {
   userType: UserType;
   setUserType: (n: UserType) => void;
+  isLoggedInUserAdmin: boolean;
 }) => {
   return (
     <FieldSet legend="User type">
@@ -188,12 +194,16 @@ const UserTypeFieldSet = ({
         <RequiredMarker />
       </span>
       {[
-        {
-          label: "Admin",
-          value: "admin",
-          description:
-            "Admins have full access to user management, program management, and the eCR Library",
-        },
+        ...(isLoggedInUserAdmin
+          ? [
+              {
+                label: "Admin",
+                value: "admin",
+                description:
+                  "Admins have full access to user management, program management, and the eCR Library",
+              },
+            ]
+          : []),
         {
           label: "Program Admin",
           value: "prog_admin",
