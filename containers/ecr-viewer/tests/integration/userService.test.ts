@@ -15,11 +15,16 @@ import {
   createUser,
   deleteUser,
   getCheckAdmin,
+  getCheckAnyAdmin,
+  hasRelevantProgramAreaAccess,
+  isAnyAdmin,
   isLoggedInUserEcrAuthed,
+  isProgramAdmin,
   isUserEcrAuthed,
   listUserProgramAreas,
   listUsers,
   notFoundUnlessAdmin,
+  notFoundUnlessAnyAdmin,
   updateUser,
 } from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
@@ -393,6 +398,63 @@ describe("user service", () => {
       });
       await notFoundUnlessAdmin();
       expect(notFound).toHaveBeenCalled();
+    });
+  });
+
+  describe("getCheckAnyAdmin", () => {
+    it("should return admin if user is an admin", async () => {
+      const admin = await getCheckAnyAdmin("do a thing");
+      expect(admin.email).toBe(adminEmail);
+    });
+
+    it("should error if user is a standard user", async () => {
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        name: "Sally Standard",
+        email: "standard@user.com",
+      });
+      await expect(getCheckAnyAdmin("do a thing")).rejects.toThrow();
+    });
+  });
+
+  describe("notFoundUnlessAnyAdmin", () => {
+    it("should do nothing if user is an admin", async () => {
+      await notFoundUnlessAnyAdmin();
+      expect(notFound).not.toHaveBeenCalled();
+    });
+
+    it("should notFound if user is a standard user", async () => {
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        name: "Sally Standard",
+        email: "standard@user.com",
+      });
+      await notFoundUnlessAnyAdmin();
+      expect(notFound).toHaveBeenCalled();
+    });
+  });
+
+  describe("hasRelevantProgramAreaAccess", () => {
+    it("should return true for admin user", async () => {
+      const adminUser = await getCheckAdmin("check");
+      const res = await hasRelevantProgramAreaAccess(
+        adminUser,
+        "some-prog-uuid",
+      );
+      expect(res).toBeTrue();
+    });
+
+    it("should return false for an inactive user", async () => {
+      const adminUser = await getCheckAdmin("check");
+      const inactiveUser = { ...adminUser, status: "inactive" as const };
+      expect(
+        await hasRelevantProgramAreaAccess(inactiveUser, "some-prog-uuid"),
+      ).toBeFalse();
+    });
+
+    it("should return false when no user is passed and none is logged in", async () => {
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue(undefined);
+      expect(
+        await hasRelevantProgramAreaAccess(undefined, "some-prog-uuid"),
+      ).toBeFalse();
     });
   });
 });
