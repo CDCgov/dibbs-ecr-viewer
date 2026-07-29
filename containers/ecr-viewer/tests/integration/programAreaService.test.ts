@@ -13,12 +13,14 @@ import {
 } from "@/app/services/programAreaService";
 import {
   createInitialAdminUser,
+  createUser,
   listUserProgramAreas,
   updateUser,
 } from "@/app/services/userService";
 
 import { getLastAuditLog } from "./helpers/core";
 import { buildCore, dropExisting } from "./helpers/ddl";
+import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 const cond123 = {
   code: "123",
@@ -63,14 +65,23 @@ const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
 jest.mock("@/app/utils/auth-utils", () => ({
-  getLoggedInUserSession: jest
-    .fn()
-    .mockResolvedValue({ name: "Adam Admin", email: "admin@admin.com" }),
+  getLoggedInUserSession: jest.fn()
 }));
 
+const mockedGetLoggedInUserSession = getLoggedInUserSession as jest.Mock;
+
 describe("program area service", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   let progId;
+
   it("should create a program area", async () => {
+    mockedGetLoggedInUserSession.mockResolvedValue({
+      name: "Adam Admin",
+      email: "admin@admin.com",
+    });
     const progName = "Fun Times";
     const conditionCodes = ["123", "456"];
     progId = await createProgramArea({
@@ -131,6 +142,10 @@ describe("program area service", () => {
   });
 
   it("should update a program area name", async () => {
+    mockedGetLoggedInUserSession.mockResolvedValue({
+      name: "Adam Admin",
+      email: "admin@admin.com",
+    });
     const progName = "Sad Times";
     const id = await createProgramArea({ name: progName, conditions: ["123"] });
 
@@ -169,6 +184,10 @@ describe("program area service", () => {
   });
 
   it("should update a program area conditions", async () => {
+    mockedGetLoggedInUserSession.mockResolvedValue({
+      name: "Adam Admin",
+      email: "admin@admin.com",
+    });
     const progName = "Sad Times";
     const id = await createProgramArea({ name: progName, conditions: ["123"] });
 
@@ -197,6 +216,10 @@ describe("program area service", () => {
   });
 
   it("should delete a program area", async () => {
+    mockedGetLoggedInUserSession.mockResolvedValue({
+      name: "Adam Admin",
+      email: "admin@admin.com",
+    });
     const beforeCreate = await listProgramAreas();
     const id = await createProgramArea({ name: "test", conditions: ["123"] });
     const afterCreate = await listProgramAreas();
@@ -229,5 +252,34 @@ describe("program area service", () => {
     expect(
       afterUserProgramAreas.filter((p) => p.uuid === progId!),
     ).toBeArrayOfSize(1);
+  });
+
+  it("should only return program areas a program admin has access to", async () => {
+    const accessibleProgramId = await createProgramArea({
+      name: "Accessible Program",
+      conditions: ["123"],
+    });
+    const restrictedProgramId = await createProgramArea({
+      name: "Restricted Program",
+      conditions: ["456"],
+    });
+
+    const programAdminEmail = "programadmin@programadmin.com";
+    await createUser({
+      email: programAdminEmail,
+      userType: "prog_admin",
+      programs: [accessibleProgramId],
+    });
+
+    mockedGetLoggedInUserSession.mockResolvedValue({
+      name: "Philip Program-Admin",
+      email: "programadmin@programadmin.com",
+    });
+
+    const programAreas = await listProgramAreas();
+    const programAreaIds = programAreas.map(({ uuid }) => uuid);
+
+    expect(programAreaIds).toStrictEqual([accessibleProgramId]);
+    expect(programAreaIds).not.toContain(restrictedProgramId);
   });
 });
