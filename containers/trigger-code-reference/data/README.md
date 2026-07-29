@@ -1,4 +1,6 @@
-# Seeding the Terminology Exchange Service (TES) SQLite Database
+# Manually Seeding the Terminology Exchange Service (TES) SQLite Database
+
+**Important**: The process of seeding the TES DB has been automated, see the [update-trigger-code-reference-data.yaml](../../../.github/workflows/update-trigger-code-reference-data.yaml) workflow file which runs on a schedule or can be manually triggered.
 
 Running the `seed_tes_data.py` script will create and populate the `tes.db` SQLite database with data. This database will then be queried to fetch condition and concept information used by the TCRS.
 

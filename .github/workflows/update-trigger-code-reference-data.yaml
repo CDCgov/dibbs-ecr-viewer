@@ -1,5 +1,17 @@
 name: Update trigger-code-reference data
 
+# This workflow keeps the trigger-code-reference SQLite database synchronized
+# with TES and RCKMS:
+# 1. Twice a year (or when run manually), it discovers the latest TES version.
+# 2. If that version differs from the committed database version, it opens a
+#    draft update PR containing the new version marker and manual instructions.
+# 3. An approver downloads the RCKMS Condition Codes workbook and commits the
+#    original .xlsx file to that PR's automation branch.
+# 4. The PR update triggers a trusted copy of the extraction and seed scripts,
+#    which converts the expected worksheet to CSV and rebuilds tes.db using TES.
+# 5. After validating the database, the workflow commits the CSV, database, and
+#    version marker to the same PR branch and marks the draft PR ready for review.
+
 on:
   schedule:
     # GitHub schedules use UTC: June 1 and December 1 at 16:17 UTC.
@@ -131,37 +143,17 @@ jobs:
       contents: write
       pull-requests: write
     env:
-      # TODO: After end-to-end feature-branch testing, restore BASE_BRANCH to
-      # ${{ github.event.repository.default_branch }}.
-      BASE_BRANCH: ${{ github.ref_name }}
-      # TODO: Remove the -test suffix when BASE_BRANCH is restored to the
-      # repository default branch.
-      BRANCH_NAME: automation/trigger-code-reference-${{ needs.discover-tes-version.outputs.latest-version }}-test
+      BASE_BRANCH: ${{ github.event.repository.default_branch }}
+      BRANCH_NAME: automation/trigger-code-reference-${{ needs.discover-tes-version.outputs.latest-version }}
       CURRENT_VERSION: ${{ needs.discover-tes-version.outputs.current-version }}
       GH_TOKEN: ${{ github.token }}
       LATEST_VERSION: ${{ needs.discover-tes-version.outputs.latest-version }}
     steps:
-      # For end-to-end testing, the generated branch temporarily starts from
-      # the feature branch selected when the workflow is run.
+      # Update PRs must always start from the repository's default branch.
       - name: Check out base branch
         uses: actions/checkout@v7
         with:
-          ref: ${{ env.BASE_BRANCH }}
-
-      # During feature-branch testing, the PR instructions may not exist on the
-      # default branch yet. Read them from the exact commit running this
-      # workflow; scheduled runs naturally point to the default branch commit.
-      # TODO: After feature-branch testing is complete and these files are on
-      # main, remove this checkout and copy the PR template directly from
-      # .github/trigger-code-reference-update-pr.md below.
-      - name: Check out workflow resources
-        uses: actions/checkout@v7
-        with:
-          path: workflow-source
-          persist-credentials: false
-          ref: ${{ github.sha }}
-          sparse-checkout: .github/trigger-code-reference-update-pr.md
-          sparse-checkout-cone-mode: false
+          ref: ${{ github.event.repository.default_branch }}
 
       - name: Check for an existing update PR
         id: existing-pr
@@ -229,9 +221,7 @@ jobs:
           set -euo pipefail
 
           body_file="$RUNNER_TEMP/trigger-code-reference-update.md"
-          cp \
-            "workflow-source/.github/trigger-code-reference-update-pr.md" \
-            "$body_file"
+          cp ".github/trigger-code-reference-update-pr.md" "$body_file"
           sed -i \
             -e "s/__CURRENT_VERSION__/$CURRENT_VERSION/g" \
             -e "s/__LATEST_VERSION__/$LATEST_VERSION/g" \
@@ -243,7 +233,7 @@ jobs:
               --base "$BASE_BRANCH" \
               --draft \
               --head "$BRANCH_NAME" \
-              --title "[TEST PR - IGNORE FOR NOW] Update trigger code reference data to $LATEST_VERSION" \
+              --title "chore: Update trigger code reference data to $LATEST_VERSION" \
               --body-file "$body_file"
           )"
           echo "url=$pr_url" >> "$GITHUB_OUTPUT"
@@ -317,9 +307,7 @@ jobs:
             echo "::error file=${version_file}::TES version must use YYYYMMDD format."
             exit 1
           fi
-          # TODO: Remove the -test suffix after end-to-end feature-branch
-          # testing, together with the temporary BRANCH_NAME change above.
-          if [[ "$HEAD_BRANCH" != "automation/trigger-code-reference-$target_version-test" ]]; then
+          if [[ "$HEAD_BRANCH" != "automation/trigger-code-reference-$target_version" ]]; then
             echo "::error::PR branch does not match target TES version $target_version."
             exit 1
           fi
