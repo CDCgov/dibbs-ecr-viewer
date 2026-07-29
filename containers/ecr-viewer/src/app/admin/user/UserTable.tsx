@@ -88,7 +88,10 @@ export const UserTable = ({
     }
 
     // Standard users or program admins not assigned to any program areas
-    if ((user_type === "standard" || user_type === "prog_admin") && program_areas.length === 0) {
+    if (
+      (user_type === "standard" || user_type === "prog_admin") &&
+      program_areas.length === 0
+    ) {
       return filterProgramAreas[NO_PROGRAM_AREA_OPTION];
     }
 

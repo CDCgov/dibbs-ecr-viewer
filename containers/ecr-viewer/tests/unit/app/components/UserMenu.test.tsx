@@ -56,7 +56,7 @@ describe("UserMenu component", () => {
     fireEvent.click(button);
 
     expect(
-      screen.getByText("phillip.phillip@fakestarwarsemail.bananas.com")
+      screen.getByText("phillip.phillip@fakestarwarsemail.bananas.com"),
     ).toBeInTheDocument();
     expect(screen.getByText("Program admin")).toBeInTheDocument();
   });

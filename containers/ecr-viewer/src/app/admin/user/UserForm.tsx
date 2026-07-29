@@ -18,11 +18,7 @@ import { ListedProgramArea } from "@/app/services/programAreaService";
 import { UserType, ListedUser } from "@/app/services/userService";
 import { AccordionItem } from "@/app/types";
 import { notEmpty } from "@/app/utils/data-utils";
-import {
-  makePlural,
-  stringSort,
-  toKebabCase,
-} from "@/app/utils/format-utils";
+import { makePlural, stringSort, toKebabCase } from "@/app/utils/format-utils";
 
 export interface FormProgram extends ListedProgramArea {
   checked?: boolean;
@@ -65,7 +61,7 @@ export const UserForm = ({
   submitAction: (
     email: string,
     userType: UserType,
-    programs: string[]
+    programs: string[],
   ) => Promise<ServerActionResult<void>>;
   banner?: ReactNode;
   formTouchedMsg?: string;
@@ -73,10 +69,10 @@ export const UserForm = ({
 }) => {
   const [email, setEmail] = useState(initValues.email || "");
   const [userType, setUserType] = useState<UserType>(
-    initValues.userType || "standard"
+    initValues.userType || "standard",
   );
   const [programs, setPrograms] = useState(
-    [...initValues.programs].sort((a, b) => stringSort(a.name, b.name))
+    [...initValues.programs].sort((a, b) => stringSort(a.name, b.name)),
   );
 
   const { createToast } = React.useContext(ToastContext);
@@ -116,7 +112,7 @@ export const UserForm = ({
         const res = await submitAction(
           email.trim(),
           userType,
-          userType === "admin" ? [] : selectedPrograms // admins should not be saved with assigned programs
+          userType === "admin" ? [] : selectedPrograms, // admins should not be saved with assigned programs
         );
         if (!res.error)
           createToast(`${email.trim()} successfully saved`, "success");
@@ -276,8 +272,8 @@ export const ProgramFieldSet = ({
         ? (checked: boolean) => {
             setPrograms(
               programs.map((c) =>
-                c.uuid === program.uuid ? { ...c, checked } : c
-              )
+                c.uuid === program.uuid ? { ...c, checked } : c,
+              ),
             );
           }
         : undefined,
@@ -314,7 +310,7 @@ export const ProgramFieldSet = ({
                     programs.map((c) => ({
                       ...c,
                       checked,
-                    }))
+                    })),
                   )
                 }
                 aria-controls={programs

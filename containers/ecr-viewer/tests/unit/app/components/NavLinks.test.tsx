@@ -15,7 +15,7 @@ jest.mock("@/app/utils/auth-utils", () => ({
 }));
 
 jest.mock("@/app/services/userService", () => ({
-  isAnyAdmin: jest.fn()
+  isAnyAdmin: jest.fn(),
 }));
 jest.mock("@/app/services/loggedInUserService", () => ({
   getLoggedInUser: jest.fn(),
@@ -87,7 +87,7 @@ describe("NavLinks component", () => {
   it("renders admin navigation links and user menu for a program admin user", async () => {
     (usePathname as jest.Mock).mockReturnValue("/admin/user");
     (getLoggedInUserSession as jest.Mock).mockResolvedValue(
-      mockProgramAdminUser
+      mockProgramAdminUser,
     );
     (getLoggedInUser as jest.Mock).mockResolvedValue(mockProgramAdminUser);
     (isAnyAdmin as unknown as jest.Mock).mockReturnValue(true);
@@ -101,7 +101,7 @@ describe("NavLinks component", () => {
     expect(screen.getByText("User management")).toHaveClass("active-page");
     expect(screen.getByText("Program management")).toBeInTheDocument();
     expect(screen.getByText("Program management")).not.toHaveClass(
-      "active-page"
+      "active-page",
     );
 
     // User menu
