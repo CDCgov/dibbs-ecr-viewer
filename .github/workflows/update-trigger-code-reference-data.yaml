@@ -138,10 +138,27 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       LATEST_VERSION: ${{ needs.discover-tes-version.outputs.latest-version }}
     steps:
-      - name: Check out repository
+      # The generated update branch must start from the default branch, even
+      # when this workflow is being tested manually from a feature branch.
+      - name: Check out base branch
         uses: actions/checkout@v7
         with:
           ref: ${{ github.event.repository.default_branch }}
+
+      # During feature-branch testing, the PR instructions may not exist on the
+      # default branch yet. Read them from the exact commit running this
+      # workflow; scheduled runs naturally point to the default branch commit.
+      # TODO: After feature-branch testing is complete and these files are on
+      # main, remove this checkout and copy the PR template directly from
+      # .github/trigger-code-reference-update-pr.md below.
+      - name: Check out workflow resources
+        uses: actions/checkout@v7
+        with:
+          path: workflow-source
+          persist-credentials: false
+          ref: ${{ github.sha }}
+          sparse-checkout: .github/trigger-code-reference-update-pr.md
+          sparse-checkout-cone-mode: false
 
       - name: Check for an existing update PR
         id: existing-pr
@@ -167,19 +184,36 @@ jobs:
         run: |
           set -euo pipefail
 
+          readonly version_file="containers/trigger-code-reference/data/tes-version.txt"
           if git ls-remote --exit-code --heads origin "$BRANCH_NAME"; then
-            echo "::error::Branch $BRANCH_NAME already exists without an open PR."
-            exit 1
+            # A previous run can push the branch and then fail before creating
+            # its PR. Reuse it only when its sole change is the expected marker.
+            git fetch --no-tags origin \
+              "refs/heads/$BRANCH_NAME:refs/remotes/origin/$BRANCH_NAME"
+            mapfile -t changed_files < <(
+              git diff --name-only "HEAD...origin/$BRANCH_NAME"
+            )
+            branch_version="$(
+              git show "origin/$BRANCH_NAME:$version_file" |
+                tr -d '[:space:]'
+            )"
+            if [[ "${#changed_files[@]}" -ne 1 ]] ||
+              [[ "${changed_files[0]}" != "$version_file" ]] ||
+              [[ "$branch_version" != "$LATEST_VERSION" ]]; then
+              echo "::error::Existing branch $BRANCH_NAME is not a reusable automation branch."
+              exit 1
+            fi
+            echo "Reusing automation branch $BRANCH_NAME from the previous run."
+            exit 0
           fi
 
           git switch --create "$BRANCH_NAME"
           # On the update PR this marker is the target version. The PR remains a
           # draft until a newly generated database contains the same version.
-          printf '%s\n' "$LATEST_VERSION" \
-            > "containers/trigger-code-reference/data/tes-version.txt"
+          printf '%s\n' "$LATEST_VERSION" > "$version_file"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "containers/trigger-code-reference/data/tes-version.txt"
+          git add "$version_file"
           git commit \
             --message "chore: prepare trigger code reference update $LATEST_VERSION"
           git push --set-upstream origin "$BRANCH_NAME"
@@ -192,7 +226,9 @@ jobs:
           set -euo pipefail
 
           body_file="$RUNNER_TEMP/trigger-code-reference-update.md"
-          cp ".github/trigger-code-reference-update-pr.md" "$body_file"
+          cp \
+            "workflow-source/.github/trigger-code-reference-update-pr.md" \
+            "$body_file"
           sed -i \
             -e "s/__CURRENT_VERSION__/$CURRENT_VERSION/g" \
             -e "s/__LATEST_VERSION__/$LATEST_VERSION/g" \
