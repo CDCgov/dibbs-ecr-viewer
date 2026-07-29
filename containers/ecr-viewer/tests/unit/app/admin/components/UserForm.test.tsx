@@ -82,6 +82,7 @@ describe("UserForm", () => {
           users: mockUsers,
         }}
         submitAction={async () => ({})}
+        isLoggedInUserAdmin={true}
       />,
     );
 
@@ -167,6 +168,7 @@ describe("UserForm", () => {
           users: [],
         }}
         submitAction={mockSubmitAction}
+        isLoggedInUserAdmin={true}
       />,
     );
 

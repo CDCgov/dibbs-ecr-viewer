@@ -132,6 +132,41 @@ export const hasRelevantProgramAreaAccess = async (
 };
 
 /**
+ * Validates whether a user has permission to manage another user's role and
+ * program area assignments.
+ *
+ * Admin users bypass all restrictions. Program admins cannot manage admin users
+ * and can only assign users to program areas they have access to.
+ *
+ * @param loggedInUser - The user performing the user management action.
+ * @param userType - The user type being assigned to the managed user.
+ * @param programs - The program area IDs being assigned to the managed user.
+ *
+ * @throws {UserFacingError} If a program admin attempts to manage an admin user
+ * or assign a user to a program area they do not have access to.
+ */
+export async function validateAdminUserPermissions(
+  loggedInUser: User,
+  userType: UserType,
+  programs: string[]
+) {
+  if (isAdmin(loggedInUser)) return;
+
+  if (userType === "admin") {
+    throw new UserFacingError("Program admins cannot create new admins.");
+  }
+
+  for (const program of programs) {
+    const hasAccess = await hasRelevantProgramAreaAccess(loggedInUser, program);
+    if (!hasAccess) {
+      throw new UserFacingError(
+        "Program admins cannot create users outside of their program areas"
+      );
+    }
+  }
+}
+
+/**
  * Given an ecrId return not found if the user is not authorized to see it.
  * @param ecrId ID of the ecr to authorize
  * @returns whether the logged in user can see this eCR
@@ -207,7 +242,9 @@ export const createUser = audit(
     },
     trx: Transaction<Core>,
   ): Promise<string> => {
-    const creatingUser = await getCheckAdmin("create new users");
+    const creatingUser = await getCheckAnyAdmin("create new users");
+    await validateAdminUserPermissions(creatingUser, userType, programs);
+
     try {
       const uuid = await createUserQuery(
         trx,
@@ -475,7 +512,7 @@ export type ListedUser = User & { program_areas: NamedUserProgramArea[] };
  * @returns list of all active users
  */
 export const listUsers = async (): Promise<ListedUser[]> => {
-  await getCheckAdmin("list users");
+  await getCheckAnyAdmin("list users");
 
   try {
     return await getDb<Core>()

@@ -10,8 +10,9 @@ import {
   isAdmin,
   ListedUser,
   listUsers,
-  notFoundUnlessAdmin,
+  notFoundUnlessAnyAdmin,
 } from "@/app/services/userService";
+import { getLoggedInUser } from "@/app/services/loggedInUserService";
 
 jest.mock("@/app/data/metadataDb/database");
 jest.mock("@/app/utils/auth-utils", () => ({
@@ -27,18 +28,39 @@ jest.mock("@/app/services/listConditionsService", () => ({
   listConditionReferences: jest.fn().mockResolvedValue([]),
 }));
 
-const mockUsers: ListedUser[] = [
+const mockAdmin: ListedUser = 
   {
     uuid: "123",
     email: "admin@admin.com",
     name: "Adam Admin",
     date_of_last_login: new Date("2025-04-15T10:30:00Z"),
     user_type: "admin",
-    status: "Active",
+    status: "active",
     date_created: new Date("2025-01-01T09:00:00Z"),
     author_uuid: "123",
     program_areas: [],
-  },
+  };
+const mocKProgramAdmin: ListedUser =
+  {
+    uuid: "456",
+    email: "programadmin@programadmin.com",
+    name: "Peter Program-Admin",
+    date_of_last_login: new Date("2025-04-15T10:30:00Z"),
+    user_type: "prog_admin",
+    status: "active",
+    date_created: new Date("2025-01-01T09:00:00Z"),
+    author_uuid: "123",
+    program_areas: [
+      {
+        program_area_uuid: "222",
+        user_uuid: "456",
+        name: "Program Area Two",
+      },
+    ],
+  };
+const mockUsers: ListedUser[] = [
+  mockAdmin,
+  mocKProgramAdmin,
   {
     uuid: "234",
     email: "sallystandard@standard.com",
@@ -50,12 +72,12 @@ const mockUsers: ListedUser[] = [
     author_uuid: "123",
     program_areas: [
       {
-        program_area_uuid: "456",
+        program_area_uuid: "222",
         user_uuid: "234",
         name: "Program Area Two",
       },
       {
-        program_area_uuid: "789",
+        program_area_uuid: "333",
         user_uuid: "234",
         name: "Program Area Three",
       },
@@ -72,7 +94,7 @@ const mockUsers: ListedUser[] = [
     author_uuid: "123",
     program_areas: [
       {
-        program_area_uuid: "789",
+        program_area_uuid: "333",
         user_uuid: "345",
         name: "Program Area Three",
       },
@@ -83,12 +105,12 @@ const mockUsers: ListedUser[] = [
 const mockPrograms: FormProgram[] = [
   {
     name: "Program Area Two",
-    uuid: "456",
+    uuid: "222",
     date_created: new Date("2025-01-05"),
     author_uuid: "abc",
     conditions: [
       {
-        code: "123",
+        code: "cond0",
         concept_name: "condition (disease)",
         condition_name: "condition",
         condition_category: "category",
@@ -99,24 +121,24 @@ const mockPrograms: FormProgram[] = [
   },
   {
     name: "Program Area Three",
-    uuid: "789",
+    uuid: "333",
     date_created: new Date("2025-01-09"),
     author_uuid: "abc",
     conditions: [
       {
-        code: "456",
+        code: "cond1",
         concept_name: "condition 1 (disease)",
         condition_name: "condition",
         condition_category: "category",
-        program_area_uuid: "789",
+        program_area_uuid: "333",
         is_duplicate: false,
       },
       {
-        code: "789",
+        code: "cond2",
         concept_name: "condition 2 (disease)",
         condition_name: "condition",
         condition_category: "category",
-        program_area_uuid: "789",
+        program_area_uuid: "333",
         is_duplicate: false,
       },
     ],
@@ -129,16 +151,15 @@ describe("User Admin Page", () => {
   });
 
   it("should check user is an admin", async () => {
-    (isAdmin as unknown as jest.Mock).mockReturnValue(false);
     (listUsers as jest.Mock).mockResolvedValue([]);
     (listProgramAreas as jest.Mock).mockResolvedValue([]);
 
     render(await UserAdminPage());
-    expect(notFoundUnlessAdmin).toHaveBeenCalled();
+    expect(notFoundUnlessAnyAdmin).toHaveBeenCalled();
   });
 
   it("should list users when available", async () => {
-    (notFoundUnlessAdmin as unknown as jest.Mock).mockReturnValue(true);
+    (notFoundUnlessAnyAdmin as unknown as jest.Mock).mockReturnValue(true);
     (listUsers as jest.Mock).mockResolvedValue(mockUsers);
     (listProgramAreas as jest.Mock).mockResolvedValue(mockPrograms);
 
@@ -149,7 +170,9 @@ describe("User Admin Page", () => {
 
   describe("Creating users", () => {
     it("should render a create user page", async () => {
+      (isAdmin as unknown as jest.Mock).mockReturnValue(true);
       (listProgramAreas as jest.Mock).mockResolvedValue(mockPrograms);
+
       const { container } = render(await CreateUserPage());
       expect(container).toMatchSnapshot();
       let results;
@@ -160,6 +183,7 @@ describe("User Admin Page", () => {
     });
 
     it("should render a create user page with no programs", async () => {
+      (isAdmin as unknown as jest.Mock).mockReturnValue(true);
       (listProgramAreas as jest.Mock).mockResolvedValue([]);
       const { container } = render(await CreateUserPage());
       expect(container).toMatchSnapshot();
@@ -194,6 +218,39 @@ describe("User Admin Page", () => {
       });
       expect(selectAll).not.toBeInTheDocument();
       expect(deselectAll).not.toBeInTheDocument();
+    });
+
+    it("As a program admin, can only create other program admins or standard users", async () => {
+      (isAdmin as unknown as jest.Mock).mockReturnValue(false);
+      (notFoundUnlessAnyAdmin as unknown as jest.Mock).mockResolvedValue(true);
+      (listProgramAreas as jest.Mock).mockResolvedValue(mockPrograms);
+      (getLoggedInUser as jest.Mock).mockResolvedValue(mocKProgramAdmin);
+
+      render(await CreateUserPage());
+
+      expect(screen.getByRole("radio", { name: /Program Admin/i })).toBeInTheDocument();
+      expect(screen.getByRole("radio", { name: /Standard/i })).toBeInTheDocument();
+      expect(screen.queryByRole("radio", { name: /^Admin$/i })).not.toBeInTheDocument();
+    });
+
+    it("As a program admin, can only create users in their program areas", async () => {
+      (isAdmin as unknown as jest.Mock).mockReturnValue(false);
+      (notFoundUnlessAnyAdmin as unknown as jest.Mock).mockResolvedValue(true);
+      (listProgramAreas as jest.Mock).mockResolvedValue([mockPrograms[0]]);
+      (getLoggedInUser as jest.Mock).mockResolvedValue(mocKProgramAdmin);
+
+      render(await CreateUserPage());
+
+      expect(screen.getByRole("checkbox", { name: /Select Program Area Two/i })).toBeInTheDocument();
+      expect(screen.queryByRole("checkbox", { name: /Select Program Area Three/i })).not.toBeInTheDocument();
+    });
+
+    it("As a standard user, cannot access the Create User page", async () => {
+      (notFoundUnlessAnyAdmin as unknown as jest.Mock).mockImplementation(() => {
+        throw new Error("Not found");
+      });
+
+      await expect(CreateUserPage()).rejects.toThrow("Not found");
     });
   });
 });
