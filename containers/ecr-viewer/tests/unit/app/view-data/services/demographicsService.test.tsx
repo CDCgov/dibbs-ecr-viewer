@@ -187,7 +187,7 @@ describe("Evaluate Patient Info: Demographics", () => {
 
       // Date of death
       const actualDateOfDeath = formatDateTime(
-        evaluateOne(patientWithDOD, fhirPathMappings.patientDOD)
+        evaluateOne(patientWithDOD, fhirPathMappings.patientDOD),
       );
       expect(actualDateOfDeath).toInclude("01/27/2026 8:00");
     });
