@@ -185,7 +185,7 @@ describe("Evaluate Patient Info: Demographics", () => {
       const actual = evaluatePatientVitalStatus(patientWithDOD);
       expect(actual).toEqual("Deceased");
 
-      // Date of death
+      // Death Date/Time
       const actualDateOfDeath = formatDateTime(
         evaluateOne(patientWithDOD, fhirPathMappings.patientDOD),
       );
@@ -208,7 +208,7 @@ describe("Evaluate Patient Info: Demographics", () => {
   });
 
   describe("Create Patient Age Data Prop", () => {
-    it("should return Age at Death if there is a date of death", () => {
+    it("should return Age at Death if there is a death date/time", () => {
       const patientAgeProp = createPatientAgeDataProp(
         BundleWithDeceasedPatient,
         patientDeceased,
@@ -632,7 +632,7 @@ Home: 123-456-6909`,
     );
   });
 
-  it("should show Vital Status as Deceased and Date of Death when deceasedDateTime is present", () => {
+  it("should show Vital Status as Deceased and Death Date/Time when deceasedDateTime is present", () => {
     const deceasedBundle = {
       resourceType: "Bundle",
       entry: [
@@ -651,7 +651,7 @@ Home: 123-456-6909`,
     const vitalStatus = actual.availableData.find(
       (d) => d.title === "Vital Status",
     );
-    const dod = actual.availableData.find((d) => d.title === "Date of Death");
+    const dod = actual.availableData.find((d) => d.title === "Death Date/Time");
 
     expect(vitalStatus?.value).toEqual("Deceased");
     expect(dod?.value).toEqual("01/27/2026");
