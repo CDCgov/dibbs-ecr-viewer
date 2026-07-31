@@ -281,7 +281,52 @@ test.describe("user management page", () => {
     await expect(page.getByText(userStandard3)).toBeVisible();
   });
 
-  test("it should not show to non-admin", async ({ page }) => {
+  test("program admin: has restricted user creation permissions", async ({
+    page,
+    browserName,
+  }) => {
+    // Admin creates random program
+    await logIn(page);
+    const program1 = await getRandomProgramArea(page, ["COVID"]);
+
+    // Log in as program admin.
+    await page.context().clearCookies();
+    await logIn(page, {
+      userType: "PROGRAM_ADMIN",
+    });
+
+    await page.goto("/ecr-viewer/admin/user/create");
+    expect(page.getByRole("heading", { name: "Create user" }));
+
+    // Program admins can only create program-restricted users
+    await expect(page.locator("#userType-admin")).not.toBeVisible();
+    await expect(page.getByLabel("Program Admin")).toBeVisible();
+    await expect(page.getByLabel("Standard")).toBeVisible();
+
+    // Program admins can only create users for their program areas
+    await expect(
+      page.getByLabel(`Select ${program1}`, { exact: true })
+    ).not.toBeVisible();
+    await expect(
+      page.getByLabel(`Select COVID`, { exact: true })
+    ).toBeVisible();
+
+    // Program admin successfully creates standard user
+    const standardUser = await createRandomUser(browserName, page, "standard", [
+      "COVID",
+    ]);
+    await page.waitForURL("/ecr-viewer/admin/user");
+    await page
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("50"); // Increase user table pagination for testing
+    const standardRow = page
+      .getByRole("row")
+      .filter({ has: page.getByRole("cell", { name: standardUser }) });
+    await expect(standardRow.getByText("Standard")).toBeVisible();
+    await expect(standardRow.getByText("COVID")).toBeVisible();
+  });
+
+  test("should not show to standard user", async ({ page }) => {
     await logIn(page, { userType: "STANDARD" });
     await page.goto("/ecr-viewer/admin/user");
 
