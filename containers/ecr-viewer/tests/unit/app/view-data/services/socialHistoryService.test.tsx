@@ -896,7 +896,7 @@ describe("Evaluate Patient Info: Social History", () => {
           {
             resource: {
               resourceType: "Observation",
-              id: "12345",
+              id: "12345-2",
               status: "final",
               meta: {
                 profile: [
