@@ -2,7 +2,6 @@ import "server-only"; // fhirpath should only be used on the server
 
 import {
   Address,
-  Bundle,
   CodeableConcept,
   Coding,
   Element,
@@ -35,17 +34,7 @@ import {
   getResourceById,
 } from "@/app/view-data/services/fhirResourcesIndexService";
 
-// TODO: Follow up on FHIR/fhirpath typing
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const evaluateCache: Map<string, any> = new Map();
-
-const isBundle = (e: Element | Element[] | FhirResource): e is Bundle => {
-  if ("resourceType" in e) {
-    return e?.resourceType === "Bundle";
-  }
-
-  return false;
-};
+let evaluateCache = new WeakMap<object, Map<string, unknown[]>>();
 
 type FhirData = Element | Element[] | FhirResource | undefined;
 
@@ -123,13 +112,17 @@ export const evaluateAllAndCheck = <Result>(
   base?: string,
 ): Result[] => {
   if (!fhirData) return [];
-  const fhirDataIdentifier: string =
-    (isBundle(fhirData)
-      ? fhirData?.entry?.[0]?.fullUrl
-      : !Array.isArray(fhirData) && fhirData?.id) || JSON.stringify(fhirData);
-  const key =
-    fhirDataIdentifier + JSON.stringify(context) + JSON.stringify(path);
-  if (!evaluateCache.has(key)) {
+
+  const cacheTarget = fhirData as object;
+  const key = JSON.stringify({ path, expectedType, context, base });
+  let resourceCache = evaluateCache.get(cacheTarget);
+
+  if (!resourceCache) {
+    resourceCache = new Map<string, unknown[]>();
+    evaluateCache.set(cacheTarget, resourceCache);
+  }
+
+  if (!resourceCache.has(key)) {
     const result = fhirPathEvaluate(
       fhirData,
       base ? { expression: path, base } : path,
@@ -137,9 +130,10 @@ export const evaluateAllAndCheck = <Result>(
       fhirpath_r4_model,
     ) as Result[];
     checkResult(result, expectedType);
-    evaluateCache.set(key, result);
+    resourceCache.set(key, result);
   }
-  return evaluateCache.get(key);
+
+  return resourceCache.get(key) as Result[];
 };
 
 /**
@@ -171,7 +165,7 @@ export const evaluateOneAndCheck = <Result>(
  * Reset the evaluate cache map
  */
 export const clearEvaluateCache = () => {
-  evaluateCache.clear();
+  evaluateCache = new WeakMap<object, Map<string, unknown[]>>();
 };
 
 /**
