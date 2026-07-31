@@ -195,7 +195,7 @@ test.describe("user management page", () => {
     // filter by user type
     await page.getByLabel("Filter by user type").click();
     await expect(page.getByText("Filter by user type")).toBeVisible();
-    await page.locator('label[for="userType-admin"]').click();
+    await page.locator('label[for="user-type-admin"]').click();
     await expect(
       page.getByRole("table").getByText("Standard"),
     ).not.toBeVisible();
@@ -366,7 +366,7 @@ const createRandomUser = async (
   await page.getByLabel("Email").fill(email);
 
   if (userType === "admin") {
-    await page.locator('label[for="userType-admin"]').click();
+    await page.locator('label[for="user-type-admin"]').click();
   }
 
   if (userType === "prog_admin" || userType === "standard") {
