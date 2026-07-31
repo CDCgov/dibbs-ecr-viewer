@@ -94,7 +94,7 @@ describe("Snapshot tests", () => {
                   entry: [
                     {
                       reference:
-                        "Procedure/b40f0081-4052-4971-3f3b-e3d9f5e1e44d",
+                        "Procedure/b40f0081-4052-4971-3f3b-e3d9f5e1e44d-2",
                     },
                     {
                       reference:
@@ -171,7 +171,7 @@ describe("Snapshot tests", () => {
           },
           {
             resource: {
-              id: "b40f0081-4052-4971-3f3b-e3d9f5e1e44d",
+              id: "b40f0081-4052-4971-3f3b-e3d9f5e1e44d-2",
               code: {
                 coding: [
                   {
