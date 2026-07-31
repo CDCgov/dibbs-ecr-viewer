@@ -23,6 +23,7 @@ import {
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
+import { noData } from "@/app/utils/data-utils";
 
 const BundleWithPatient = _BundleWithPatient as Bundle;
 const fhirIndexBundleWithPatient = getFhirIndex(BundleWithPatient);
@@ -655,5 +656,35 @@ Home: 123-456-6909`,
 
     expect(vitalStatus?.value).toEqual("Deceased");
     expect(dod?.value).toEqual("01/27/2026");
+  });
+
+  it("should show show No Data if no Vital Status data", () => {
+    const vitalStatusUnknownBundle = {
+      resourceType: "Bundle",
+      type: "document",
+      entry: [
+        {
+          resource: {
+            resourceType: "Patient",
+            id: "unk-summary-patient"
+          },
+        },
+      ],
+    } as unknown as Bundle;
+    const vitalStatusUnknownSummary = evaluateDemographicsData(
+      vitalStatusUnknownBundle,
+      getFhirIndex(vitalStatusUnknownBundle)
+    );
+
+    expect(
+      vitalStatusUnknownSummary.unavailableData.find(
+        (s) => s.title === "Vital Status"
+      )?.value
+    ).toEqual("");
+    expect(
+      vitalStatusUnknownSummary.availableData.find(
+        (s) => s.title === "Death Date/Time"
+      )
+    ).toBeUndefined();
   });
 });
