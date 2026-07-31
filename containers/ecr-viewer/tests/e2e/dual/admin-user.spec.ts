@@ -366,8 +366,7 @@ const createRandomUser = async (
   await page.getByLabel("Email").fill(email);
 
   if (userType === "admin") {
-    const adminRadio = page.getByLabel(/^Admin\b/);
-    await adminRadio.scrollIntoViewIfNeeded();
+    const adminRadio = page.locator("#userType-admin");
     await adminRadio.dispatchEvent("click");
   }
 
