@@ -91,7 +91,7 @@ test("seed standard and program admin user. seed covid program", async ({
     await adminRadio.scrollIntoViewIfNeeded();
     await adminRadio.dispatchEvent("click");
 
-    await page.getByRole("button", { name: "COVID", exact: true }).click();
+    await page.getByRole("button", { name: "Select COVID", exact: true }).click();
 
     await page.getByRole("button", { name: "Save user" }).first().click();
 
