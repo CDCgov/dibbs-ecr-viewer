@@ -545,13 +545,13 @@ exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data
           class="table-header"
           scope="col"
         >
-          Context
+          Outcome
         </th>
         <th
           class="table-header"
           scope="col"
         >
-          Value
+          Count
         </th>
         <th
           class="table-header"
