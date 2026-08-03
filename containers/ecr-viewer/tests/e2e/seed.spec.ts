@@ -6,13 +6,15 @@ import { logIn } from "./utils";
 // standard user and a program admin with access to the covid program area. It is run as part of
 // the `convert-seed-data` npm script.
 
-test("seed standard user and covid program", async ({ page }) => {
+test("seed standard and program admin user. seed covid program", async ({
+  page,
+}) => {
   test.skip(
     process.env.CONFIG_NAME.endsWith("INTEGRATED") &&
       !process.env.CONFIG_NAME.endsWith("NON_INTEGRATED"),
     "No seeding if no metadata db",
   );
-  test.setTimeout(60000); // keycloak is slow
+  test.setTimeout(120000); // keycloak is slow
   await logIn(page);
 
   await page.goto("/ecr-viewer/admin/program");
@@ -65,53 +67,17 @@ test("seed standard user and covid program", async ({ page }) => {
 
     await page.waitForURL("/ecr-viewer/admin/user");
   }
-});
-
-test("seed program admin user", async ({ page }) => {
-  test.skip(
-    process.env.CONFIG_NAME.endsWith("INTEGRATED") &&
-      !process.env.CONFIG_NAME.endsWith("NON_INTEGRATED"),
-    "No seeding if no metadata db"
-  );
-  test.setTimeout(60000); // keycloak is slow
-  await logIn(page);
-
-  await page.goto("/ecr-viewer/admin/program");
 
   await expect(
-    page.getByRole("heading", { name: "Program management" })
+    page.getByRole("heading", { name: "User management" }),
   ).toBeVisible();
 
-  if ((await page.getByText("COVID").all()).length === 0) {
-    await page.goto("/ecr-viewer/admin/program/create");
-
-    await expect(
-      page.getByRole("heading", { name: "Create program area" })
-    ).toBeVisible();
-
-    await page.getByLabel("Program area name").fill("COVID");
-
-    await page.getByPlaceholder("Search condition or category").fill("covid");
-    await page.getByRole("button", { name: "Select all", exact: true }).click();
-
-    await page
-      .getByRole("button", { name: "Save program area" })
-      .first()
-      .click();
-
-    await page.waitForURL("/ecr-viewer/admin/program");
-  }
-
-  await page.goto("/ecr-viewer/admin/user");
-
-  await expect(
-    page.getByRole("heading", { name: "User management" })
-  ).toBeVisible();
-
-  if ((await page.getByText("ecr-viewer@program-admin.com").all()).length === 0) {
+  if (
+    (await page.getByText("ecr-viewer@programadmin.com").all()).length === 0
+  ) {
     await page.goto("/ecr-viewer/admin/user/create");
     await expect(
-      page.getByRole("heading", { name: "Create user" })
+      page.getByRole("heading", { name: "Create user" }),
     ).toBeVisible();
 
     await page.getByLabel("Email").fill(process.env.AUTH_PROGRAM_ADMIN_USER!);
