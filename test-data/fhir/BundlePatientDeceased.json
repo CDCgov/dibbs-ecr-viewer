@@ -21,8 +21,8 @@
         ],
         "birthDate": "1814-04-01",
         "deceasedBoolean": true,
-        "deceasedDate": "1819-01-27",
-        "gender": "male"
+        "gender": "male",
+        "deceasedDateTime": "1819-01-27"
       }
     }
   ]

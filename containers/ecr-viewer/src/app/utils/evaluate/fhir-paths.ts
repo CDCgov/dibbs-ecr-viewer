@@ -231,7 +231,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   patientDOD: {
     type: "string",
-    path: "Patient.deceasedDate",
+    path: "Patient.deceasedDateTime",
   },
   patientGender: {
     type: "string",
