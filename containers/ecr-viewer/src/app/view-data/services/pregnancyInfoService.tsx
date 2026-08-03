@@ -442,11 +442,11 @@ const evaluatePregnancySummary = (fhirBundle: Bundle, fhirIndex: FhirIndex) => {
 
   const columns: ColumnInfoInput[] = [
     {
-      columnName: "Context",
+      columnName: "Outcome",
       infoPath: "code",
     },
     {
-      columnName: "Value",
+      columnName: "Count",
       infoPath: "valueX",
     },
     {
