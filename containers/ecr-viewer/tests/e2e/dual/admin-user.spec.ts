@@ -305,10 +305,10 @@ test.describe("user management page", () => {
 
     // Program admins can only create users for their program areas
     await expect(
-      page.getByLabel(`Select ${program1}`, { exact: true })
+      page.getByLabel(`Select ${program1}`, { exact: true }),
     ).not.toBeVisible();
     await expect(
-      page.getByLabel(`Select COVID`, { exact: true })
+      page.getByLabel(`Select COVID`, { exact: true }),
     ).toBeVisible();
 
     // Program admin successfully creates standard user
