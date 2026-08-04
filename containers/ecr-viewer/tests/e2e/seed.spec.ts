@@ -52,12 +52,11 @@ test("seed standard and program admin user. seed covid program", async ({
 
   // Seed standard user
   if (
-    (await page.getByText(process.env.AUTH_STANDARD_USER!).all())
-      .length === 0
+    (await page.getByText(process.env.AUTH_STANDARD_USER!).all()).length === 0
   ) {
     await page.goto("/ecr-viewer/admin/user/create");
     await expect(
-      page.getByRole("heading", { name: "Create user" })
+      page.getByRole("heading", { name: "Create user" }),
     ).toBeVisible();
 
     await page.getByLabel("Email").fill(process.env.AUTH_STANDARD_USER!);
@@ -84,7 +83,7 @@ test("seed standard and program admin user. seed covid program", async ({
   ) {
     await page.goto("/ecr-viewer/admin/user/create");
     await expect(
-      page.getByRole("heading", { name: "Create user" })
+      page.getByRole("heading", { name: "Create user" }),
     ).toBeVisible();
 
     await page.getByLabel("Email").fill(process.env.AUTH_PROGRAM_ADMIN_USER!);
