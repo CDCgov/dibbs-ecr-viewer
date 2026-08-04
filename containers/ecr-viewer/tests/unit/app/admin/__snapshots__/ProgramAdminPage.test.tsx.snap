@@ -115,7 +115,7 @@ exports[`Program Admin Page Creating programs should render a create program pag
             Add conditions
           </legend>
           <span>
-            Select a minimum of 1 condition
+            The conditions are grouped by RCKMS condition categories. Select a minimum of 1 condition
             <abbr
               class="usa-hint usa-hint--required"
               title="required"
@@ -212,12 +212,6 @@ exports[`Program Admin Page Creating programs should render a create program pag
                     <strong>
                       category
                     </strong>
-                    <br />
-                    <span
-                      class="text-base"
-                    >
-                      RCKMS condition category
-                    </span>
                   </div>
                   <span>
                     0
