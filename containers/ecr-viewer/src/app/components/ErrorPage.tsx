@@ -87,13 +87,14 @@ export const MetadataDbInvalid = () => (
 );
 
 /**
- * @returns The metadata db invalid error page JSX component.
+ * @returns The incomplete user setup error page for users without program areas.
+ * Relevant to standard users and program admins.
  */
-export const StandardUserNoPrograms = () => (
+export const UserWithoutProgramAreas = () => (
   <ErrorPage title="Your user setup is incomplete">
     <p>
       To be able to view eCRs, you must be added to at least one program area.
-      Reach out out to your eCR Viewer admin to complete setup.
+      Reach out to your eCR Viewer admin to complete setup.
     </p>
   </ErrorPage>
 );
