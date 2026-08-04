@@ -12,7 +12,7 @@ import { SignOutButton } from "./SignOutButton";
 export const USER_TYPE_DISPLAY: Record<string, string> = {
   admin: "Admin",
   prog_admin: "Program admin",
-  standard: "Standard",
+  standard: "Standard user",
 };
 
 /**
