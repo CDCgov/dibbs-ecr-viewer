@@ -7,6 +7,7 @@ import { createInitialAdminUser, createUser } from "@/app/services/userService";
  * Seed the user and program tables with:
  * - an admin (admin@admin.com)
  * - standard user (standard@standard.com)
+ * - program admin user (programadmin@programadmin.com)
  * - two conditions (123, 456)
  * - one program area (for condition 123)
  */
@@ -35,6 +36,11 @@ export const seedUserProgramData = async () => {
   await createUser({
     email: "standard@standard.com",
     userType: "standard",
+    programs: [progId],
+  });
+  await createUser({
+    email: "programadmin@programadmin.com",
+    userType: "prog_admin",
     programs: [progId],
   });
 };

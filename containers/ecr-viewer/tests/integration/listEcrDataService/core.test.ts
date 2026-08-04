@@ -39,6 +39,13 @@ const filterDates = {
   endDate: new Date("12-03-2024"),
 };
 
+const listParams = {
+  startIndex: 0,
+  itemsPerPage: 25,
+  sortColumn: "date_created",
+  sortDirection: "DESC",
+};
+
 const coreTemplate: NewCoreECR = {
   eicr_id: "12345",
   set_id: "123",
@@ -202,20 +209,62 @@ describe("generate sort statement", () => {
 });
 
 describe("listEcrData - core", () => {
-  const checkAuditLog = async (
-    startIndex: number,
-    itemsPerPage: number,
-    sortColumn: string,
-    sortDirection: string,
-  ) => {
+  const expectedEcr: EcrDisplay = {
+    date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
+    ecrId: "12345",
+    facility_name: "Hospital A",
+    patient_date_of_birth: "12/01/2024",
+    patient_first_name: "Billy",
+    patient_last_name: "Bob",
+    patient_report_date: "12/02/2024 7:00\u00A0AM\u00A0EST",
+    reportable_conditions: ["Condition1"],
+    rule_summaries: [{ condition: "Condition1", rule_summaries: ["Rule1"] }],
+    eicr_set_id: "123",
+    eicr_version_number: "2",
+    related_ecrs: [{ ...relatedEcr, set_id: "123" }],
+  };
+
+  const createListEcrFixture = async ({
+    conditionCode,
+    includeUnauthorizedCondition = false,
+  }: {
+    conditionCode?: string;
+    includeUnauthorizedCondition?: boolean;
+  } = {}) => {
+    await createCoreEcr(coreTemplate);
+    await createCoreEcr({ ...coreTemplate, ...relatedEcr });
+    await createEcrCondition({
+      uuid: "12345",
+      eicr_id: "12345",
+      condition: "Condition1",
+      ...(conditionCode && { condition_code: conditionCode }),
+    });
+
+    if (includeUnauthorizedCondition) {
+      await createEcrCondition({
+        uuid: "23456",
+        eicr_id: "12345",
+        condition: "Condition2",
+        condition_code: "456",
+      });
+    }
+
+    await createEcrRule({
+      uuid: "12345",
+      ecr_rr_conditions_id: "12345",
+      rule_summary: "Rule1",
+    });
+  };
+
+  const checkAuditLog = async () => {
     const log = await getLastAuditLog();
     expect(log.subject).toEqual("ecr");
     expect(log.action).toEqual("query");
     expect(JSON.parse(log.parameter_json)).toStrictEqual({
-      startIndex,
-      itemsPerPage,
-      sortColumn,
-      sortDirection,
+      startIndex: listParams.startIndex,
+      itemsPerPage: listParams.itemsPerPage,
+      sortColumn: listParams.sortColumn,
+      sortDirection: listParams.sortDirection,
       filterDates: {
         startDate: filterDates.startDate.toISOString(),
         endDate: filterDates.endDate.toISOString(),
@@ -223,220 +272,58 @@ describe("listEcrData - core", () => {
     });
   };
 
-  it("should return empty array when no data is found", async () => {
-    const startIndex = 0;
-    const itemsPerPage = 25;
-    const sortColumn = "date_created";
-    const sortDirection = "DESC";
-
-    const actual = await listEcrData({
-      startIndex,
-      itemsPerPage,
-      sortColumn,
-      sortDirection,
-      filterDates,
-    });
-    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
-    expect(actual).toBeEmpty();
+  const expectListResults = async (expected: EcrDisplay[]) => {
+    const actual = await listEcrData({...listParams, filterDates});
+    await checkAuditLog();
+    expect(actual).toStrictEqual(expected);
 
     const actualCount = await getTotalEcrCount(filterDates);
     expect(actualCount).toEqual(actual.length);
+  };
+
+  afterEach(async () => {
+    await clearEcrCore();
+  });
+
+  it("should return empty array when no data is found", async () => {
+    await expectListResults([]);
   });
 
   it("should return all data when found for admin", async () => {
-    await createCoreEcr(coreTemplate);
-    await createCoreEcr({ ...coreTemplate, ...relatedEcr });
-    await createEcrCondition({
-      uuid: "12345",
-      eicr_id: "12345",
-      condition: "Condition1",
-    });
-    await createEcrRule({
-      uuid: "12345",
-      ecr_rr_conditions_id: "12345",
-      rule_summary: "Rule1",
-    });
-
-    const startIndex = 0;
-    const itemsPerPage = 25;
-    const sortColumn = "date_created";
-    const sortDirection = "DESC";
-    const actual: EcrDisplay[] = await listEcrData({
-      startIndex,
-      itemsPerPage,
-      sortColumn,
-      sortDirection,
-      filterDates,
-    });
-    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
-    expect(actual).toStrictEqual([
-      {
-        date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
-        ecrId: "12345",
-        facility_name: "Hospital A",
-        patient_date_of_birth: "12/01/2024",
-        patient_first_name: "Billy",
-        patient_last_name: "Bob",
-        patient_report_date: "12/02/2024 7:00\u00A0AM\u00A0EST",
-        reportable_conditions: ["Condition1"],
-        rule_summaries: [
-          { condition: "Condition1", rule_summaries: ["Rule1"] },
-        ],
-        eicr_set_id: "123",
-        eicr_version_number: "2",
-        related_ecrs: [
-          {
-            ...relatedEcr,
-            set_id: "123",
-          },
-        ],
-      },
-    ]);
-
-    const actualCount = await getTotalEcrCount(filterDates);
-    expect(actualCount).toEqual(actual.length);
-
-    await clearEcrCore();
+    await createListEcrFixture();
+    await expectListResults([expectedEcr]);
   });
 
-  it("should not return unauthorized data when found for standard user", async () => {
-    (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+  describe.each([
+    {
+      userType: "standard user",
       email: "standard@standard.com",
-    });
-    await createCoreEcr(coreTemplate);
-    await createCoreEcr({ ...coreTemplate, ...relatedEcr });
-    await createEcrCondition({
-      uuid: "12345",
-      eicr_id: "12345",
-      condition: "Condition1",
-      // no condition code
-    });
-    await createEcrCondition({
-      uuid: "23456",
-      eicr_id: "12345",
-      condition: "Condition2",
-      condition_code: "456", // not in user's program
-    });
-    await createEcrRule({
-      uuid: "12345",
-      ecr_rr_conditions_id: "12345",
-      rule_summary: "Rule1",
+    },
+    {
+      userType: "program admin",
+      email: "programadmin@programadmin.com",
+    },
+  ])("when logged in as a $userType", ({ email }) => {
+    beforeEach(() => {
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({ email });
     });
 
-    const startIndex = 0;
-    const itemsPerPage = 25;
-    const sortColumn = "date_created";
-    const sortDirection = "DESC";
-    const actual: EcrDisplay[] = await listEcrData({
-      startIndex,
-      itemsPerPage,
-      sortColumn,
-      sortDirection,
-      filterDates,
-    });
-    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
-    expect(actual).toStrictEqual([]);
-
-    const actualCount = await getTotalEcrCount(filterDates);
-    expect(actualCount).toEqual(actual.length);
-
-    await clearEcrCore();
-  });
-
-  it("should return authorized data when found for standard user", async () => {
-    (getLoggedInUserSession as jest.Mock).mockResolvedValue({
-      email: "standard@standard.com",
-    });
-    await createCoreEcr(coreTemplate);
-    await createCoreEcr({ ...coreTemplate, ...relatedEcr });
-    await createEcrCondition({
-      uuid: "12345",
-      eicr_id: "12345",
-      condition: "Condition1",
-      condition_code: "123",
-    });
-    await createEcrRule({
-      uuid: "12345",
-      ecr_rr_conditions_id: "12345",
-      rule_summary: "Rule1",
+    it("should not return unauthorized data", async () => {
+      // Condition 1 has no condition code. Condition2 is unauthorized
+      await createListEcrFixture({ includeUnauthorizedCondition: true });
+      await expectListResults([]);
     });
 
-    const startIndex = 0;
-    const itemsPerPage = 25;
-    const sortColumn = "date_created";
-    const sortDirection = "DESC";
-    const actual: EcrDisplay[] = await listEcrData({
-      startIndex,
-      itemsPerPage,
-      sortColumn,
-      sortDirection,
-      filterDates,
+    it("should return authorized data", async () => {
+      await createListEcrFixture({ conditionCode: "123" });
+      await expectListResults([expectedEcr]);
     });
-    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
-    expect(actual).toStrictEqual([
-      {
-        date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
-        ecrId: "12345",
-        facility_name: "Hospital A",
-        patient_date_of_birth: "12/01/2024",
-        patient_first_name: "Billy",
-        patient_last_name: "Bob",
-        patient_report_date: "12/02/2024 7:00\u00A0AM\u00A0EST",
-        reportable_conditions: ["Condition1"],
-        rule_summaries: [
-          { condition: "Condition1", rule_summaries: ["Rule1"] },
-        ],
-        eicr_set_id: "123",
-        eicr_version_number: "2",
-        related_ecrs: [
-          {
-            ...relatedEcr,
-            set_id: "123",
-          },
-        ],
-      },
-    ]);
-
-    const actualCount = await getTotalEcrCount(filterDates);
-    expect(actualCount).toEqual(actual.length);
-
-    await clearEcrCore();
   });
 
   it("should return no data when no user", async () => {
     (getLoggedInUserSession as jest.Mock).mockResolvedValue(undefined);
-    await createCoreEcr(coreTemplate);
-    await createCoreEcr({ ...coreTemplate, ...relatedEcr });
-    await createEcrCondition({
-      uuid: "12345",
-      eicr_id: "12345",
-      condition: "Condition1",
-      condition_code: "123",
-    });
-    await createEcrRule({
-      uuid: "12345",
-      ecr_rr_conditions_id: "12345",
-      rule_summary: "Rule1",
-    });
-
-    const startIndex = 0;
-    const itemsPerPage = 25;
-    const sortColumn = "date_created";
-    const sortDirection = "DESC";
-    const actual: EcrDisplay[] = await listEcrData({
-      startIndex,
-      itemsPerPage,
-      sortColumn,
-      sortDirection,
-      filterDates,
-    });
-    checkAuditLog(startIndex, itemsPerPage, sortColumn, sortDirection);
-    expect(actual).toStrictEqual([]);
-
-    const actualCount = await getTotalEcrCount(filterDates);
-    expect(actualCount).toEqual(actual.length);
-
-    await clearEcrCore();
+    await createListEcrFixture({ conditionCode: "123" });
+    await expectListResults([]);
   });
 
   it("should order related_ecrs by version number descending regardless of date_created order", async () => {
@@ -465,13 +352,7 @@ describe("listEcrData - core", () => {
     await createCoreEcr(v2);
     await createCoreEcr(v1);
 
-    const actual: EcrDisplay[] = await listEcrData({
-      startIndex: 0,
-      itemsPerPage: 25,
-      sortColumn: "date_created",
-      sortDirection: "DESC",
-      filterDates,
-    });
+    const actual: EcrDisplay[] = await listEcrData({...listParams, filterDates});
 
     expect(actual).toHaveLength(1);
     expect(actual[0].eicr_version_number).toEqual("3");
@@ -489,24 +370,14 @@ describe("listEcrData - core", () => {
         set_id: "123",
       },
     ]);
-
-    await clearEcrCore();
   });
 
   it("should return expected results when search term matches patient first, last, or full name", async () => {
     await createCoreEcr(coreTemplate);
 
-    const startIndex = 0;
-    const itemsPerPage = 25;
-    const sortColumn = "date_created";
-    const sortDirection = "DESC";
-
     // Test first name match
     let actual = await listEcrData({
-      startIndex,
-      itemsPerPage,
-      sortColumn,
-      sortDirection,
+      ...listParams,
       filterDates,
       searchTerm: "Billy",
     });
@@ -515,10 +386,7 @@ describe("listEcrData - core", () => {
 
     // Test last name match
     actual = await listEcrData({
-      startIndex,
-      itemsPerPage,
-      sortColumn,
-      sortDirection,
+      ...listParams,
       filterDates,
       searchTerm: "Bob",
     });
@@ -527,27 +395,17 @@ describe("listEcrData - core", () => {
 
     // Test full name match
     actual = await listEcrData({
-      startIndex,
-      itemsPerPage,
-      sortColumn,
-      sortDirection,
+      ...listParams,
       filterDates,
       searchTerm: "Billy Bob",
     });
     expect(actual).toHaveLength(1);
     expect(actual[0].patient_first_name).toEqual("Billy");
     expect(actual[0].patient_last_name).toEqual("Bob");
-
-    await clearEcrCore();
   });
 });
 
 describe("listEcrData - multi-version condition aggregation", () => {
-  const startIndex = 0;
-  const itemsPerPage = 25;
-  const sortColumn = "date_created";
-  const sortDirection = "DESC";
-
   beforeEach(async () => {
     await createCoreEcr(coreTemplate); // v2
     await createCoreEcr({ ...coreTemplate, ...relatedEcr }); // v1, same set_id
@@ -569,10 +427,7 @@ describe("listEcrData - multi-version condition aggregation", () => {
 
   it("should show conditions from all versions when no filter is applied", async () => {
     const actual = await listEcrData({
-      startIndex,
-      itemsPerPage,
-      sortColumn,
-      sortDirection,
+      ...listParams,
       filterDates,
     });
 
@@ -586,10 +441,7 @@ describe("listEcrData - multi-version condition aggregation", () => {
 
   it("should not show conditions from later versions when a condition filter matches an earlier version", async () => {
     const actual = await listEcrData({
-      startIndex,
-      itemsPerPage,
-      sortColumn,
-      sortDirection,
+      ...listParams,
       filterDates,
       filterConditions: ["Condition2"],
     });
