@@ -50,8 +50,10 @@ test("seed standard and program admin user. seed covid program", async ({
     page.getByRole("heading", { name: "User management" }),
   ).toBeVisible();
 
+  // Seed standard user
   if (
-    (await page.getByText(process.env.AUTH_STANDARD_USER!).all()).length === 0
+    (await page.getByText(process.env.AUTH_STANDARD_USER!).all())
+      .length === 0
   ) {
     await page.goto("/ecr-viewer/admin/user/create");
     await expect(
