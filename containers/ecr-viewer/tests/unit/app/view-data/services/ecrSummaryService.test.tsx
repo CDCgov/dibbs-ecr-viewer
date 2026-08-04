@@ -355,7 +355,7 @@ describe("ecrSummaryService Tests", () => {
         deceasedSummary.find((d) => d.title === "Vital Status")?.value,
       ).toEqual("Deceased");
       expect(
-        deceasedSummary.find((d) => d.title === "Death Date/Time")?.value
+        deceasedSummary.find((d) => d.title === "Death Date/Time")?.value,
       ).toEqual("07/01/2026 8:45\u00A0AM\u00A0EDT");
     });
 

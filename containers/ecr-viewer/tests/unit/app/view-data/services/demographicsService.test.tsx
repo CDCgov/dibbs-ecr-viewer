@@ -666,25 +666,25 @@ Home: 123-456-6909`,
         {
           resource: {
             resourceType: "Patient",
-            id: "unk-summary-patient"
+            id: "unk-summary-patient",
           },
         },
       ],
     } as unknown as Bundle;
     const vitalStatusUnknownSummary = evaluateDemographicsData(
       vitalStatusUnknownBundle,
-      getFhirIndex(vitalStatusUnknownBundle)
+      getFhirIndex(vitalStatusUnknownBundle),
     );
 
     expect(
       vitalStatusUnknownSummary.unavailableData.find(
-        (s) => s.title === "Vital Status"
-      )?.value
+        (s) => s.title === "Vital Status",
+      )?.value,
     ).toEqual("");
     expect(
       vitalStatusUnknownSummary.availableData.find(
-        (s) => s.title === "Death Date/Time"
-      )
+        (s) => s.title === "Death Date/Time",
+      ),
     ).toBeUndefined();
   });
 });

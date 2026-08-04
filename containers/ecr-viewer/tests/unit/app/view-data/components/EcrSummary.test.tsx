@@ -18,7 +18,7 @@ describe("EcrSummary tests", () => {
       },
       {
         title: "Vital Status",
-        value: "Alive"
+        value: "Alive",
       },
       {
         title: "Sex",

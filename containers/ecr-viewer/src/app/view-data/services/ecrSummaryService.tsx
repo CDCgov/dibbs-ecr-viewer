@@ -11,7 +11,10 @@ import {
   Patient,
 } from "fhir/r4";
 
-import { formatDateTime, formatStartEndDateTime } from "@/app/services/formatDateService";
+import {
+  formatDateTime,
+  formatStartEndDateTime,
+} from "@/app/services/formatDateService";
 import {
   formatCodeableConcept,
   formatCoding,
@@ -125,14 +128,14 @@ export const evaluateEcrSummaryPatient = (
       title: "Patient Address",
       value:
         formatCurrentAddress(
-          evaluateAll(patient, fhirPathMappings.patientAddressList)
+          evaluateAll(patient, fhirPathMappings.patientAddressList),
         ) || noDataSummary,
     },
     {
       title: "Patient Contact",
       value:
         formatContactPoint(
-          evaluateAll(patient, fhirPathMappings.patientTelecom)
+          evaluateAll(patient, fhirPathMappings.patientTelecom),
         ) || noDataSummary,
     },
     ...parentGuardian,
