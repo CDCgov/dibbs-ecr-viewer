@@ -17,6 +17,7 @@ on:
     # GitHub schedules use UTC: June 1 and December 1 at 16:17 UTC.
     - cron: "17 16 1 6,12 *"
   workflow_dispatch:
+  # Pull request trigger is needed for step #4 in the workflow described above
   pull_request:
     types:
       - synchronize
@@ -254,7 +255,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
   process-update-pr:
-    name: Process condition codes workbook
+    name: Process file and generate DB
     if: >-
       github.event_name == 'pull_request' &&
       github.event.pull_request.head.repo.full_name == github.repository &&

@@ -29,4 +29,4 @@ The workflow will then:
 
 The generated commit may cause one final approval-required workflow run. That run verifies that the committed database already matches the target version.
 
-**Do not merge this PR until all checks pass.**
+**Do not merge this PR until all checks pass - it is also recommended to test the branch locally to confirm everything works as expected.**
