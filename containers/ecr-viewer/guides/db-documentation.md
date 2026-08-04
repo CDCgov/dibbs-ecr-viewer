@@ -66,7 +66,7 @@ This table stores user information.
 | `email`              | `varchar(200)` | NOT NULL    |                   | User's email address, must be unique                            |
 | `name`               | `varchar(200)` | NULL        |                   | User's full name                                                |
 | `date_of_last_login` | `datetime`     | NULL        |                   | Date and time of user's last login                              |
-| `user_type`          | `varchar(12)`  | NOT NULL    |                   | Type of user (e.g., admin, prog_admin, standard)                            |
+| `user_type`          | `varchar(12)`  | NOT NULL    |                   | Type of user (e.g., admin, prog_admin, standard)                |
 | `status`             | `varchar(12)`  | NOT NULL    | active            | User's account status                                           |
 | `date_created`       | `datetime`     | NOT NULL    | Current timestamp | Date and time when the user record was created                  |
 | `author_uuid`        | `varchar(200)` | NOT NULL    |                   | Foreign key, references `user.uuid`, creator of the user record |
