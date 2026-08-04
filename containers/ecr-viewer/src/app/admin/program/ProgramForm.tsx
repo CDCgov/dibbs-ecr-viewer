@@ -369,7 +369,8 @@ const ConditionFieldSet = ({
   return (
     <FieldSet legend="Add conditions">
       <span>
-        The conditions are grouped by RCKMS condition categories. Select a minimum of 1 condition
+        The conditions are grouped by RCKMS condition categories. Select a
+        minimum of 1 condition
         <RequiredMarker />
       </span>
       <div className="display-flex flex-justify margin-top-3">
