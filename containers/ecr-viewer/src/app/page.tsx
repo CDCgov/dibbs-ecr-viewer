@@ -7,7 +7,7 @@ import { dbIsValid } from "./api/migrate-db/migrate";
 import Filters from "./components/EcrFilters";
 import {
   MetadataDbInvalid,
-  StandardUserNoPrograms,
+  UserWithoutProgramAreas,
 } from "./components/ErrorPage";
 import LibrarySearch from "./components/LibrarySearch";
 import { NoDataRow } from "./components/table/NoDataRow";
@@ -19,7 +19,7 @@ import { INITIAL_HEADERS } from "./constants";
 import { getAllConditions } from "./services/listConditionsService";
 import { getTotalEcrCount } from "./services/listEcrDataService";
 import { getLoggedInUser } from "./services/loggedInUserService";
-import { listLoggedInUserProgramAreas } from "./services/userService";
+import { isAdmin, listLoggedInUserProgramAreas } from "./services/userService";
 import { returnParamDates } from "./utils/date-utils";
 import { PageSearchParams, getLibraryConfig } from "./utils/search-param-utils";
 
@@ -42,10 +42,10 @@ const HomePage = async ({
   const user = await getLoggedInUser();
   if (!user) {
     notFound();
-  } else if (user.user_type === "standard") {
+  } else if (!isAdmin(user)) {
     const progAreas = await listLoggedInUserProgramAreas();
     if (progAreas.length === 0) {
-      return <StandardUserNoPrograms />;
+      return <UserWithoutProgramAreas />;
     }
   }
 

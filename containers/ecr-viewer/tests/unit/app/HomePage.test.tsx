@@ -7,7 +7,10 @@ import { DEFAULT_ITEMS_PER_PAGE } from "@/app/constants";
 import HomePage from "@/app/page";
 import { getTotalEcrCount } from "@/app/services/listEcrDataService";
 import { getLoggedInUser } from "@/app/services/loggedInUserService";
-import { listLoggedInUserProgramAreas } from "@/app/services/userService";
+import {
+  isAdmin,
+  listLoggedInUserProgramAreas,
+} from "@/app/services/userService";
 import { returnParamDates } from "@/app/utils/date-utils";
 import { PageSearchParams } from "@/app/utils/search-param-utils";
 
@@ -47,6 +50,9 @@ jest.mock("@/app/utils/auth-utils", () => ({
 describe("Home Page", () => {
   beforeEach(() => {
     (dbIsValid as jest.Mock).mockResolvedValue(true);
+    (isAdmin as unknown as jest.Mock).mockImplementation(
+      (user) => user?.user_type === "admin",
+    );
   });
   afterEach(() => {
     process.env.METADATA_DATABASE_TYPE = "postgres";
@@ -105,6 +111,31 @@ describe("Home Page", () => {
     (getLoggedInUser as jest.Mock).mockResolvedValue({
       uuid: "1234",
       user_type: "standard",
+    });
+    (listLoggedInUserProgramAreas as jest.Mock).mockResolvedValue([
+      { uuid: "4567" },
+    ]);
+    render(await HomePage(resolveParams({})));
+    expect(getTotalEcrCount).toHaveBeenCalledOnce();
+    expect(notFound).not.toHaveBeenCalled();
+  });
+  it("yes metadata database, program admin user with no program areas, should not show the homepage", async () => {
+    (getLoggedInUser as jest.Mock).mockResolvedValue({
+      uuid: "1234",
+      user_type: "prog_admin",
+    });
+    (listLoggedInUserProgramAreas as jest.Mock).mockResolvedValue([]);
+    render(await HomePage(resolveParams({})));
+    expect(getTotalEcrCount).not.toHaveBeenCalled();
+    expect(notFound).not.toHaveBeenCalled();
+    expect(
+      screen.getByText("Your user setup is incomplete"),
+    ).toBeInTheDocument();
+  });
+  it("yes metadata database, program admin user with program areas, should show the homepage", async () => {
+    (getLoggedInUser as jest.Mock).mockResolvedValue({
+      uuid: "1234",
+      user_type: "prog_admin",
     });
     (listLoggedInUserProgramAreas as jest.Mock).mockResolvedValue([
       { uuid: "4567" },
