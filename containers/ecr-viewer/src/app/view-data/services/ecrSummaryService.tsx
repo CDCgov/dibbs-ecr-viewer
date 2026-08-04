@@ -416,7 +416,3 @@ const evaluateEcrSummaryRelevantImmunizations = (
       ]
     : [];
 };
-function isPatientDeceased(patient: Patient | undefined) {
-  throw new Error("Function not implemented.");
-}
-
