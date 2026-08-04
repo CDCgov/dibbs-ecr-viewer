@@ -23,6 +23,7 @@ test("seed standard and program admin user. seed covid program", async ({
     page.getByRole("heading", { name: "Program management" }),
   ).toBeVisible();
 
+  // Seed COVID program area
   if ((await page.getByText("COVID").all()).length === 0) {
     await page.goto("/ecr-viewer/admin/program/create");
 
@@ -74,6 +75,7 @@ test("seed standard and program admin user. seed covid program", async ({
     page.getByRole("heading", { name: "User management" }),
   ).toBeVisible();
 
+  // Seed program admin (COVID)
   if (
     (await page.getByText(process.env.AUTH_PROGRAM_ADMIN_USER!).all())
       .length === 0
@@ -89,7 +91,7 @@ test("seed standard and program admin user. seed covid program", async ({
     await adminRadio.scrollIntoViewIfNeeded();
     await adminRadio.dispatchEvent("click");
 
-    await page.getByRole("button", { name: "Select all", exact: true }).click();
+    await page.getByRole("button", { name: "COVID", exact: true }).click();
 
     await page.getByRole("button", { name: "Save user" }).first().click();
 
