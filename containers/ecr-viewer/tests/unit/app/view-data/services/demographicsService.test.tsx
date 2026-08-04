@@ -4,7 +4,7 @@ import * as _BundleWithPatient from "@/../../../test-data/fhir/BundlePatient.jso
 import * as _BundleWithDeceasedPatient from "@/../../../test-data/fhir/BundlePatientDeceased.json";
 import * as _BundlePatientMultiple from "@/../../../test-data/fhir/BundlePatientMultiple.json";
 import { formatAge } from "@/app/services/formatService";
-import { evaluateValue } from "@/app/utils/evaluate";
+import { evaluateOne, evaluateValue } from "@/app/utils/evaluate";
 import mappings from "@/app/utils/evaluate/fhir-paths";
 
 import {
@@ -21,6 +21,8 @@ import {
   createPatientAgeDataProp,
 } from "@/app/view-data/services/demographicsService";
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
+import { formatDateTime } from "@/app/services/formatDateService";
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 
 const BundleWithPatient = _BundleWithPatient as Bundle;
 const fhirIndexBundleWithPatient = getFhirIndex(BundleWithPatient);
@@ -173,7 +175,7 @@ describe("Evaluate Patient Info: Demographics", () => {
             resource: {
               id: "1",
               resourceType: "Patient",
-              deceasedDateTime: "2026-01-27",
+              deceasedDateTime: "2026-01-27T08:00:00",
             },
           },
         ],
@@ -182,6 +184,12 @@ describe("Evaluate Patient Info: Demographics", () => {
       const patientWithDOD = getPatient(fhirIndex);
       const actual = evaluatePatientVitalStatus(patientWithDOD);
       expect(actual).toEqual("Deceased");
+
+      // Death Date/Time
+      const actualDateOfDeath = formatDateTime(
+        evaluateOne(patientWithDOD, fhirPathMappings.patientDOD),
+      );
+      expect(actualDateOfDeath).toInclude("01/27/2026 8:00");
     });
   });
 
@@ -200,7 +208,7 @@ describe("Evaluate Patient Info: Demographics", () => {
   });
 
   describe("Create Patient Age Data Prop", () => {
-    it("should return Age at Death if there is a date of death", () => {
+    it("should return Age at Death if there is a death date/time", () => {
       const patientAgeProp = createPatientAgeDataProp(
         BundleWithDeceasedPatient,
         patientDeceased,
@@ -624,7 +632,7 @@ Home: 123-456-6909`,
     );
   });
 
-  it("should show Vital Status as Deceased and Date of Death when deceasedDateTime is present", () => {
+  it("should show Vital Status as Deceased and Death Date/Time when deceasedDateTime is present", () => {
     const deceasedBundle = {
       resourceType: "Bundle",
       entry: [
@@ -643,7 +651,7 @@ Home: 123-456-6909`,
     const vitalStatus = actual.availableData.find(
       (d) => d.title === "Vital Status",
     );
-    const dod = actual.availableData.find((d) => d.title === "Date of Death");
+    const dod = actual.availableData.find((d) => d.title === "Death Date/Time");
 
     expect(vitalStatus?.value).toEqual("Deceased");
     expect(dod?.value).toEqual("01/27/2026");

@@ -219,7 +219,7 @@ export const evaluatePatientVitalStatus = (patient: Patient | undefined) => {
 };
 
 /***
- * A patient is deceased if `patient.deceasedBoolean` is true or if there is a date of death. If both are `undefined`
+ * A patient is deceased if `patient.deceasedBoolean` is true or if there is a date/time of death. If both are `undefined`
  * return `undefined`.
  */
 const isPatientDeceased = (patient: Patient | undefined) => {
@@ -359,7 +359,7 @@ export const evaluateDemographicsData = (
       value: evaluatePatientVitalStatus(patient),
     },
     {
-      title: "Date of Death",
+      title: "Death Date/Time",
       value: formatDateTime(evaluateOne(patient, fhirPathMappings.patientDOD)),
     },
     {

@@ -6,16 +6,13 @@ import {
   Coding,
   Condition,
   ContactPoint,
-  DiagnosticReport,
   Dosage,
   EncounterParticipant,
   Extension,
   HumanName,
   Immunization,
-  MedicationStatement,
   Observation,
   ObservationReferenceRange,
-  Organization,
   PatientCommunication,
   PatientContact,
   Period,
@@ -82,6 +79,7 @@ export type PathTypes = {
   pregnancyLastLiveBirth: Observation;
   pregnancyRhType: Observation;
   pregnancyDRhSensitized: Observation;
+  pregnancySummary: Observation;
   postpartumStatus: Observation;
   patientNationality: ValueX;
   patientCountryResidence: ValueX;
@@ -395,6 +393,10 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   pregnancyDRhSensitized: {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '55607006'))",
+  },
+  pregnancySummary: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '10162-6'))",
   },
 
   // eCR Metadata

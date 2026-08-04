@@ -37,82 +37,78 @@ describe("evaluate", () => {
     );
   });
   it("should call fhirpath.evaluate 1 time when the same call is made 2 times", () => {
-    evaluateAllAndCheck<string>({ id: "2345" }, "id", "string");
-    evaluateAllAndCheck<string>({ id: "2345" }, "id", "string");
+    const resource = { id: "2345" };
+
+    evaluateAllAndCheck<string>(resource, "id", "string");
+    evaluateAllAndCheck<string>(resource, "id", "string");
 
     expect(fhirPathEvaluateSpy).toHaveBeenCalledExactlyOnceWith(
-      { id: "2345" },
+      resource,
       "id",
       undefined,
       fhirpath_r4_model,
     );
   });
   it("should call fhirpath.evaluate 2 time when the context is different", () => {
-    evaluateAllAndCheck<string>({ id: "%id" }, "id", "string", { id: 1 });
-    evaluateAllAndCheck<string>({ id: "%id" }, "id", "string", { id: 2 });
+    const resource = { id: "%id" };
+
+    evaluateAllAndCheck<string>(resource, "id", "string", { id: 1 });
+    evaluateAllAndCheck<string>(resource, "id", "string", { id: 2 });
 
     expect(fhirPathEvaluateSpy).toHaveBeenCalledTimes(2);
     expect(fhirPathEvaluateSpy).toHaveBeenNthCalledWith(
       1,
-      { id: "%id" },
+      resource,
       "id",
       { id: 1 },
       fhirpath_r4_model,
     );
     expect(fhirPathEvaluateSpy).toHaveBeenNthCalledWith(
       2,
-      { id: "%id" },
+      resource,
       "id",
       { id: 2 },
       fhirpath_r4_model,
     );
   });
 
-  it("should call once per bundle url", () => {
-    // this test can use any valid mapping
-    evaluateAll(
-      {
-        resourceType: "Bundle",
-        type: "document",
-        entry: [{ fullUrl: "test/123" }],
-      },
-      fhirPathMappings.careTeamParticipantPeriod,
-    );
-    evaluateAll(
-      {
-        resourceType: "Bundle",
-        type: "document",
-        entry: [{ fullUrl: "test/123" }],
-      },
-      fhirPathMappings.careTeamParticipantPeriod,
-    );
+  it("should reuse an evaluation for the same bundle instance", () => {
+    const bundle: Bundle = {
+      resourceType: "Bundle",
+      type: "document",
+      entry: [{ fullUrl: "test/123" }],
+    };
+
+    evaluateAll(bundle, fhirPathMappings.careTeamParticipantPeriod);
+    evaluateAll(bundle, fhirPathMappings.careTeamParticipantPeriod);
 
     expect(fhirPathEvaluateSpy).toHaveBeenCalledExactlyOnceWith(
-      {
-        resourceType: "Bundle",
-        type: "document",
-        entry: [{ fullUrl: "test/123" }],
-      },
+      bundle,
       "period.text",
       undefined,
       fhirpath_r4_model,
     );
   });
 
-  it("should call once if id is the same", () => {
-    // this test can use any valid mapping
-    evaluateAll({ id: "1234" }, fhirPathMappings.careTeamParticipantPeriod);
-    evaluateAll(
-      { id: "1234", resourceType: "Observation" },
-      fhirPathMappings.careTeamParticipantPeriod,
-    );
+  it("should evaluate distinct resources that share an ID separately", () => {
+    const preliminary = {
+      id: "same-id",
+      resourceType: "Observation",
+      status: "preliminary",
+    } as Observation;
+    const final = {
+      id: "same-id",
+      resourceType: "Observation",
+      status: "final",
+    } as Observation;
 
-    expect(fhirPathEvaluateSpy).toHaveBeenCalledExactlyOnceWith(
-      { id: "1234" },
-      "period.text",
-      undefined,
-      fhirpath_r4_model,
-    );
+    expect(
+      evaluateAllAndCheck<string>(preliminary, "status", "string"),
+    ).toEqual(["preliminary"]);
+    expect(evaluateAllAndCheck<string>(final, "status", "string")).toEqual([
+      "final",
+    ]);
+    expect(fhirPathEvaluateSpy).toHaveBeenCalledTimes(2);
   });
 
   describe("evaluateOne", () => {
