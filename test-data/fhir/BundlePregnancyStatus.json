@@ -94,6 +94,9 @@
               },
               {
                 "reference": "MedicationAdministration/ceacfcfd-ca17-208e-3425-119c3a64ce92"
+              },
+              {
+                "reference": "Observation/133a1e3c-6196-f26a-b677-408228cf6d9b"
               }
             ]
           }
@@ -915,6 +918,330 @@
         "meta": {
           "source": "ecr"
         }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:133a1e3c-6196-f26a-b677-408228cf6d9b",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "133a1e3c-6196-f26a-b677-408228cf6d9b",
+        "meta": {
+          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:0a648e8a-c61c-46dd-bd0c-3081db0a9f66"
+          }
+        ],
+        "status": "preliminary",
+        "code": {
+          "coding": [
+            {
+              "code": "10162-6",
+              "system": "http://loinc.org",
+              "display": "History of pregnancies Narrative"
+            }
+          ]
+        },
+        "effectiveDateTime": "2018-01-05T10:15:00",
+        "hasMember": [
+          {
+            "reference": "Observation/5f32e660-c236-709d-95e7-9885d71726ea"
+          },
+          {
+            "reference": "Observation/d3ed4b69-b29f-7ea0-fc02-ce121aec5644"
+          },
+          {
+            "reference": "Observation/ebcebb42-7f64-5d9e-5876-3d0bc0425d62"
+          },
+          {
+            "reference": "Observation/c0820644-f1cf-d7c7-8166-e564f7f09c31"
+          },
+          {
+            "reference": "Observation/89743fcb-9f3c-cddb-2651-eba9fe440560"
+          },
+          {
+            "reference": "Observation/84ae9bf5-c9bb-f29f-1294-02d97e5783c1"
+          },
+          {
+            "reference": "Observation/1bd9fc99-056d-f6f7-cce9-764ef9e36945"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:5f32e660-c236-709d-95e7-9885d71726ea",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "5f32e660-c236-709d-95e7-9885d71726ea",
+        "meta": {
+          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:18701808-d4cb-4a6c-b10b-4eaeb66f1158"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "11996-6",
+              "system": "http://loinc.org",
+              "display": "[#] Pregnancies"
+            }
+          ]
+        },
+        "effectiveDateTime": "2018-01-05T10:15:00",
+        "valueInteger": 6
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:d3ed4b69-b29f-7ea0-fc02-ce121aec5644",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "d3ed4b69-b29f-7ea0-fc02-ce121aec5644",
+        "meta": {
+          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:789ac49c-dc03-452c-b9ca-03d3e7e47053"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "11977-6",
+              "system": "http://loinc.org",
+              "display": "[#] Parity"
+            }
+          ]
+        },
+        "effectiveDateTime": "2018-01-05T10:15:00",
+        "valueInteger": 2
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:ebcebb42-7f64-5d9e-5876-3d0bc0425d62",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "ebcebb42-7f64-5d9e-5876-3d0bc0425d62",
+        "meta": {
+          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:24b29bc7-fb9b-4e63-8959-d11eaddd278d"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "11612-9",
+              "system": "http://loinc.org",
+              "display": "[#] Abortions"
+            }
+          ]
+        },
+        "effectiveDateTime": "2018-01-05T10:15:00",
+        "valueInteger": 3
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:c0820644-f1cf-d7c7-8166-e564f7f09c31",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "c0820644-f1cf-d7c7-8166-e564f7f09c31",
+        "meta": {
+          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:afa83ee4-6f90-4dc1-82c7-07e76c913633"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "11639-2",
+              "system": "http://loinc.org",
+              "display": "[#] Births.term"
+            }
+          ]
+        },
+        "effectiveDateTime": "2018-01-05T10:15:00",
+        "valueInteger": 2
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:89743fcb-9f3c-cddb-2651-eba9fe440560",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "89743fcb-9f3c-cddb-2651-eba9fe440560",
+        "meta": {
+          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:94fb02ab-1ea8-4931-bab3-8f976bcd776a"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "11637-6",
+              "system": "http://loinc.org",
+              "display": "[#] Births.preterm"
+            }
+          ]
+        },
+        "effectiveDateTime": "2018-01-05T10:15:00",
+        "valueInteger": 0
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:84ae9bf5-c9bb-f29f-1294-02d97e5783c1",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "84ae9bf5-c9bb-f29f-1294-02d97e5783c1",
+        "meta": {
+          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:ddecefa4-702b-49ab-b25b-5be78e5fc5b0"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "11638-4",
+              "system": "http://loinc.org",
+              "display": "[#] Births.still living"
+            }
+          ]
+        },
+        "effectiveDateTime": "2018-01-05T10:15:00",
+        "valueInteger": 2
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:1bd9fc99-056d-f6f7-cce9-764ef9e36945",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "1bd9fc99-056d-f6f7-cce9-764ef9e36945",
+        "meta": {
+          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:40c2a16f-8b4f-42aa-bb8e-fa96c1e5e5d3"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "68496-9",
+              "system": "http://loinc.org",
+              "display": "Previous live births now dead #"
+            }
+          ]
+        },
+        "effectiveDateTime": "2018-01-05T10:15:00",
+        "valueInteger": 0
       }
     }
   ]

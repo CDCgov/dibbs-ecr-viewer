@@ -547,7 +547,7 @@ exports[`Tests for eCR Document Given no data, info message for empty sections s
                         <div
                           class="data-title padding-right-1"
                         >
-                          Date of Death
+                          Death Date/Time
                         </div>
                         <div
                           class="grid-col maxw7 text-pre-line p-list text-italic text-base"
@@ -1291,6 +1291,25 @@ exports[`Tests for eCR Document Given no data, info message for empty sections s
                           class="data-title padding-right-1"
                         >
                           Medications Administered
+                        </div>
+                        <div
+                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
+                        >
+                          No data
+                        </div>
+                      </div>
+                      <div
+                        class="section__line_gray"
+                      />
+                    </div>
+                    <div>
+                      <div
+                        class="grid-row"
+                      >
+                        <div
+                          class="data-title padding-right-1"
+                        >
+                          History of Pregnancies
                         </div>
                         <div
                           class="grid-col maxw7 text-pre-line p-list text-italic text-base"
