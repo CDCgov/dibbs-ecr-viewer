@@ -273,7 +273,7 @@ describe("listEcrData - core", () => {
   };
 
   const expectListResults = async (expected: EcrDisplay[]) => {
-    const actual = await listEcrData({...listParams, filterDates});
+    const actual = await listEcrData({ ...listParams, filterDates });
     await checkAuditLog();
     expect(actual).toStrictEqual(expected);
 
@@ -352,7 +352,10 @@ describe("listEcrData - core", () => {
     await createCoreEcr(v2);
     await createCoreEcr(v1);
 
-    const actual: EcrDisplay[] = await listEcrData({...listParams, filterDates});
+    const actual: EcrDisplay[] = await listEcrData({
+      ...listParams,
+      filterDates,
+    });
 
     expect(actual).toHaveLength(1);
     expect(actual[0].eicr_version_number).toEqual("3");

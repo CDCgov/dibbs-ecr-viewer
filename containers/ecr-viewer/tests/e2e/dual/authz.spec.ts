@@ -3,17 +3,16 @@ import { test, expect } from "@playwright/test";
 import { logIn } from "../utils";
 
 test.describe("Authorization", () => {
-
   test.describe("Standard user", () => {
     test.beforeEach(
-      async ({ page }) => await logIn(page, { userType: "STANDARD" })
+      async ({ page }) => await logIn(page, { userType: "STANDARD" }),
     );
 
     test("header", async ({ page }) => {
       await page.goto("/ecr-viewer");
 
       await expect(
-        page.getByRole("heading", { name: "eCR library" })
+        page.getByRole("heading", { name: "eCR library" }),
       ).toBeVisible();
 
       await expect(page.getByText("User management")).not.toBeVisible();
@@ -24,12 +23,12 @@ test.describe("Authorization", () => {
       await page.goto("/ecr-viewer");
 
       await expect(
-        page.getByRole("heading", { name: "eCR library" })
+        page.getByRole("heading", { name: "eCR library" }),
       ).toBeVisible();
 
       // Only COVID is filterable
       await expect(
-        page.getByLabel("Filter by reportable condition")
+        page.getByLabel("Filter by reportable condition"),
       ).toContainText("1");
 
       await page.getByLabel("Filter by reportable condition").click();
@@ -51,7 +50,7 @@ test.describe("Authorization", () => {
 
     test("can't see non-covid eCR", async ({ page }) => {
       await page.goto(
-        "/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703"
+        "/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
       );
 
       await expect(page.getByText("Page not found")).toBeVisible();
@@ -59,25 +58,25 @@ test.describe("Authorization", () => {
 
     test("can see covid eCR", async ({ page }) => {
       await page.goto(
-        "/ecr-viewer/view-data?id=10c13861-86a8-4a9a-aec6-b615921178df"
+        "/ecr-viewer/view-data?id=10c13861-86a8-4a9a-aec6-b615921178df",
       );
 
       await expect(
-        page.getByRole("heading", { name: "eCR Summary" })
+        page.getByRole("heading", { name: "eCR Summary" }),
       ).toBeVisible();
     });
-  })
+  });
 
   test.describe("Program admin user", () => {
     test.beforeEach(
-      async ({ page }) => await logIn(page, { userType: "PROGRAM_ADMIN" })
+      async ({ page }) => await logIn(page, { userType: "PROGRAM_ADMIN" }),
     );
 
     test("header", async ({ page }) => {
       await page.goto("/ecr-viewer");
 
       await expect(
-        page.getByRole("heading", { name: "eCR library" })
+        page.getByRole("heading", { name: "eCR library" }),
       ).toBeVisible();
 
       await expect(page.getByText("User management")).toBeVisible();
@@ -88,12 +87,12 @@ test.describe("Authorization", () => {
       await page.goto("/ecr-viewer");
 
       await expect(
-        page.getByRole("heading", { name: "eCR library" })
+        page.getByRole("heading", { name: "eCR library" }),
       ).toBeVisible();
 
       // Only COVID is filterable
       await expect(
-        page.getByLabel("Filter by reportable condition")
+        page.getByLabel("Filter by reportable condition"),
       ).toContainText("1");
 
       await page.getByLabel("Filter by reportable condition").click();
@@ -115,7 +114,7 @@ test.describe("Authorization", () => {
 
     test("can't see non-covid eCR", async ({ page }) => {
       await page.goto(
-        "/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703"
+        "/ecr-viewer/view-data?id=db734647-fc99-424c-a864-7e3cda82e703",
       );
 
       await expect(page.getByText("Page not found")).toBeVisible();
@@ -123,13 +122,12 @@ test.describe("Authorization", () => {
 
     test("can see covid eCR", async ({ page }) => {
       await page.goto(
-        "/ecr-viewer/view-data?id=10c13861-86a8-4a9a-aec6-b615921178df"
+        "/ecr-viewer/view-data?id=10c13861-86a8-4a9a-aec6-b615921178df",
       );
 
       await expect(
-        page.getByRole("heading", { name: "eCR Summary" })
+        page.getByRole("heading", { name: "eCR Summary" }),
       ).toBeVisible();
     });
   });
-
 });
