@@ -137,5 +137,5 @@ describe.each([
       const conditions = await getAllConditions();
       expect(conditions).toStrictEqual(expectedNoUser);
     });
-  }
+  },
 );

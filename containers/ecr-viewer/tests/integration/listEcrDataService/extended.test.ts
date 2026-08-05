@@ -121,7 +121,7 @@ describe("listEcrData - extended", () => {
       },
     ],
   };
-  
+
   const checkAuditLog = async () => {
     const log = await getLastAuditLog();
     expect(log.subject).toEqual("ecr");
@@ -171,18 +171,17 @@ describe("listEcrData - extended", () => {
   };
 
   const expectListResults = async (expected: EcrDisplay[]) => {
-    const actual = await listEcrData({...listParams, filterDates});
+    const actual = await listEcrData({ ...listParams, filterDates });
     await checkAuditLog();
     expect(actual).toStrictEqual(expected);
 
     const actualCount = await getTotalEcrCount(filterDates);
     expect(actualCount).toEqual(actual.length);
   };
-  
+
   afterEach(async () => {
     await clearEcrExtended();
   });
-  
 
   it("should return empty array when no data is found", async () => {
     await expectListResults([]);
@@ -222,7 +221,7 @@ describe("listEcrData - extended", () => {
   it("should return no data when no user", async () => {
     (getLoggedInUserSession as jest.Mock).mockResolvedValue(undefined);
 
-    await createListEcrFixture({ conditionCode: "123"})
+    await createListEcrFixture({ conditionCode: "123" });
     await expectListResults([]);
   });
 });
