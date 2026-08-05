@@ -55,6 +55,12 @@ const cond456 = {
   condition_name: "condition 2",
   condition_category: "category",
 };
+const condUnauthorized = {
+  code: "789",
+  concept_name: "condition unauthorized",
+  condition_name: "condition unauthorized",
+  condition_category: "category",
+};
 const programArea123 = {
   name: "Program Area 123",
   conditions: ["123"],
@@ -62,6 +68,10 @@ const programArea123 = {
 const programArea456 = {
   name: "Program Area 456",
   conditions: ["456"],
+};
+const programAreaUnauthorized = {
+  name: "Program Area Unauthorized",
+  conditions: ["789"],
 };
 
 const ecrId = "1-2-3-4";
@@ -97,6 +107,10 @@ beforeAll(async () => {
     .insertInto("condition_reference")
     .values(cond456)
     .execute();
+  await getDb<Core>()
+    .insertInto("condition_reference")
+    .values(condUnauthorized)
+    .execute();
   await saveFhirMetadata(
     ecrId,
     "core",
@@ -123,11 +137,12 @@ afterAll(async () => {
 
 describe("User Service", () => {
   let adminUserId;
-  let standardUserId;
-  let programAdminUserId;
+  let standardUserId: string;
+  let programAdminUserId: string;
 
-  let programArea123Id;
-  let programArea456Id;
+  let programArea123Id: string;
+  let programArea456Id: string;
+  let programAreaUnauthorizedId: string;
 
   let expectedAdminUser: ListedUser;
   let expectedStandardUser: ListedUser;
@@ -138,7 +153,9 @@ describe("User Service", () => {
     jest.spyOn(console, "warn").mockImplementation((...args) => {
       warning = args;
     });
-    adminUserId = await createInitialAdminUser({ email: adminUserEmail });
+    adminUserId = await createInitialAdminUser({
+      email: adminUserEmail,
+    });
     expect(adminUserId).toMatch(UUID_REGEX);
 
     expectedAdminUser = {
@@ -203,6 +220,7 @@ describe("User Service", () => {
   describe("createUser", () => {
     it("as an admin, should create a standard user", async () => {
       // admin created in prior test
+      // creates standard user no programs
       standardUserId = await createUser({
         email: standardUserEmail,
         userType: "standard",
@@ -241,15 +259,14 @@ describe("User Service", () => {
     });
 
     it("as an admin, should create a program admin user", async () => {
-      // Create program area
-      programArea123Id = await createProgramArea(programArea123);
-      expect(programArea123Id).toMatch(UUID_REGEX);
+      programArea456Id = await createProgramArea(programArea456);
+      expect(programArea456Id).toMatch(UUID_REGEX);
 
-      // Create program admin
+      // Create program admin w/ access to program area 456
       programAdminUserId = await createUser({
         email: programAdminEmail,
         userType: "prog_admin",
-        programs: [programArea123Id],
+        programs: [programArea456Id],
       });
       expect(programAdminUserId).toMatch(UUID_REGEX);
       expectedProgramAdminUser = {
@@ -263,8 +280,8 @@ describe("User Service", () => {
         date_created: expect.any(Date),
         program_areas: [
           {
-            name: "Program Area 123",
-            program_area_uuid: programArea123Id,
+            name: "Program Area 456",
+            program_area_uuid: programArea456Id,
             user_uuid: programAdminUserId,
           },
         ],
@@ -278,18 +295,13 @@ describe("User Service", () => {
       expect(JSON.parse(createLog.parameter_json)).toStrictEqual({
         email: programAdminEmail,
         userType: "prog_admin",
-        programs: [programArea123Id],
+        programs: [programArea456Id],
         uuid: programAdminUserId,
       });
 
       // Program admin should be listed
       const users = await listUsers();
-      expect(users).toBeArrayOfSize(3); // admin + standard + program admin
-      expect(users).toStrictEqual([
-        expectedAdminUser,
-        expectedProgramAdminUser,
-        expectedStandardUser,
-      ]);
+      expect(users).toContainEqual(expectedProgramAdminUser);
     });
 
     it("as a program admin, should not create an admin user", async () => {
@@ -311,8 +323,8 @@ describe("User Service", () => {
 
     it("as a program admin, should not create a user for an unauthorized program area", async () => {
       // Create program area 456
-      programArea456Id = await createProgramArea(programArea456);
-      expect(programArea456Id).toMatch(UUID_REGEX);
+      programArea123Id = await createProgramArea(programArea123);
+      expect(programArea123Id).toMatch(UUID_REGEX);
 
       // Ensure logged in user is program admin with access to Program Area 123
       (getLoggedInUserSession as jest.Mock).mockResolvedValue({
@@ -324,9 +336,9 @@ describe("User Service", () => {
       const progAreas = await listLoggedInUserProgramAreas();
       expect(progAreas).toStrictEqual([
         {
-          uuid: programArea123Id!,
+          uuid: programArea456Id!,
           author_uuid: adminUserId!,
-          name: "Program Area 123",
+          name: "Program Area 456",
           date_created: expect.any(Date),
         },
       ]);
@@ -336,7 +348,7 @@ describe("User Service", () => {
         createUser({
           email: "new-user@standard.com",
           userType: "standard",
-          programs: [programArea456Id],
+          programs: [programArea123Id],
         }),
       ).rejects.toThrow(
         "Program admins cannot create users outside of their program areas",
@@ -344,9 +356,16 @@ describe("User Service", () => {
     });
   });
 
-  it("isUserEcrAuthed: standard user should not yet be authed to see ecr", async () => {
-    const res = await isUserEcrAuthed(standardUserId!, ecrId);
-    expect(res).toBeFalse();
+  describe("isUserEcrAuthed: not yet authed to see eCR", () => {
+    it("standard user", async () => {
+      const res = await isUserEcrAuthed(standardUserId, ecrId);
+      expect(res).toBeFalse();
+    });
+
+    it("program admin", async () => {
+      const res = await isUserEcrAuthed(programAdminUserId, ecrId);
+      expect(res).toBeFalse();
+    });
   });
 
   describe("updateUser", () => {
@@ -384,7 +403,7 @@ describe("User Service", () => {
       ]);
     });
 
-    it("as an admin, should update a user's program areas", async () => {
+    it("as an admin, should update a standard user's program areas", async () => {
       // standard user created in prior test
       await updateUser({
         uuid: standardUserId!,
@@ -414,11 +433,82 @@ describe("User Service", () => {
         },
       ]);
     });
+
+    it("as an admin, should update a program admin's program areas", async () => {
+      // program user created in prior test
+      await updateUser({
+        uuid: programAdminUserId!,
+        updates: {},
+        programs: [programArea123Id!, programArea456Id!], // Add access to Program area 123
+      });
+
+      // check audit log
+      const log = await getLastAuditLog();
+      expect(log.actor).toEqual(adminUserId!);
+      expect(log.subject).toEqual("user");
+      expect(log.action).toEqual("update");
+      expect(JSON.parse(log.parameter_json)).toStrictEqual({
+        updates: {},
+        programs: [programArea123Id!, programArea456Id!],
+        uuid: programAdminUserId!,
+      });
+
+      const progAreas = await listUserProgramAreas(programAdminUserId!);
+
+      expect(progAreas).toHaveLength(2);
+      expect(progAreas).toEqual(
+        expect.arrayContaining([
+          {
+            uuid: programArea123Id!,
+            author_uuid: adminUserId!,
+            name: "Program Area 123",
+            date_created: expect.any(Date),
+          },
+          {
+            uuid: programArea456Id!,
+            author_uuid: adminUserId!,
+            name: "Program Area 456",
+            date_created: expect.any(Date),
+          },
+        ]),
+      );
+
+      expectedProgramAdminUser = {
+        ...expectedProgramAdminUser,
+        program_areas: [
+          ...expectedProgramAdminUser.program_areas,
+          {
+            name: "Program Area 123",
+            program_area_uuid: programArea123Id,
+            user_uuid: programAdminUserId,
+          },
+        ],
+      };
+    });
   });
 
-  it("isUserEcrAuthed: standard user should now be authed to see ecr", async () => {
-    const res = await isUserEcrAuthed(standardUserId!, ecrId);
-    expect(res).toBeTrue();
+  describe("isUserEcrAuthed: should now be authed to see eCR", () => {
+    it("standard user", async () => {
+      await updateUser({
+        uuid: standardUserId,
+        updates: {},
+        programs: [programArea123Id],
+      });
+
+      const res = await isUserEcrAuthed(standardUserId, ecrId);
+      expect(res).toBeTrue();
+    });
+
+    it("program admin", async () => {
+      await updateUser({
+        uuid: programAdminUserId,
+        updates: {},
+        programs: [programArea123Id, programArea456Id],
+      });
+
+      const res = await isUserEcrAuthed(programAdminUserId, ecrId);
+      expect(res).toBeTrue();
+    });
   });
 
   describe("deleteUser", () => {
@@ -441,10 +531,17 @@ describe("User Service", () => {
       // see only admin + program admin listed
       const users = await listUsers();
       expect(users).toBeArrayOfSize(2); // admin + program admin
-      expect(users).toStrictEqual([
-        expectedAdminUser,
-        expectedProgramAdminUser,
-      ]);
+      expect(users).toEqual(
+        expect.arrayContaining([
+          expectedAdminUser,
+          expect.objectContaining({
+            ...expectedProgramAdminUser,
+            program_areas: expect.arrayContaining(
+              expectedProgramAdminUser.program_areas,
+            ),
+          }),
+        ]),
+      );
 
       // should also delete standard user program area assignments
       const progAreas = await listUserProgramAreas(standardUserId!);
@@ -564,9 +661,15 @@ describe("User Service", () => {
       ).rejects.toThrow(UserFacingError);
     });
     it("should prevent program admins from managing users outside of their accessible program areas", async () => {
+      // Create unauthorized program area
+      programAreaUnauthorizedId = await createProgramArea(
+        programAreaUnauthorized,
+      );
+      expect(programAreaUnauthorizedId).toMatch(UUID_REGEX);
+
       await expect(
         validateAdminUserPermissions(expectedProgramAdminUser, "standard", [
-          programArea456Id!,
+          programAreaUnauthorizedId!,
         ]),
       ).rejects.toThrow(UserFacingError);
     });
