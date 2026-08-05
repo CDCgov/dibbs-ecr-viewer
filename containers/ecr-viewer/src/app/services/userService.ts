@@ -507,11 +507,11 @@ export type NamedUserProgramArea = UserProgramArea & { name: string };
 export type ListedUser = User & { program_areas: NamedUserProgramArea[] };
 
 /**
- * List all active users. The logged in user must be an admin.
- * @returns list of all active users
+ * List active users visible to the logged in admin.
+ * @returns list of visible active users
  */
 export const listUsers = async (): Promise<ListedUser[]> => {
-  await getCheckAnyAdmin("list users");
+  const loggedInUser = await getCheckAnyAdmin("list users");
 
   try {
     return await getDb<Core>()
@@ -532,12 +532,21 @@ export const listUsers = async (): Promise<ListedUser[]> => {
           ])
           .execute();
 
-        return users.map((user) => ({
+        const listedUsers = users.map((user) => ({
           ...user,
           program_areas: userProgramAreas.filter(
             ({ user_uuid }) => user_uuid === user.uuid,
           ),
         }));
+
+        if (isAdmin(loggedInUser)) return listedUsers;
+
+        // For program admins, any users returned not be an admin, and must be
+        // in at least one of their program areas
+        return listedUsers.filter(
+          ({ user_type, program_areas }) =>
+            user_type !== "admin" && program_areas.length > 0,
+        );
       });
   } catch (error: unknown) {
     const message = "Failed to list users";

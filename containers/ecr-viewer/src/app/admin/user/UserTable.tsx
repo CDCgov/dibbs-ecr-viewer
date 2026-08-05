@@ -28,9 +28,14 @@ import { USER_TYPE_DISPLAY } from "@/app/constants";
 import { makePlural, stringSort } from "@/app/utils/format-utils";
 import { ForceClient } from "@/app/view-data/components/ForceClient";
 
-const USER_TYPE_FILTER_OPTIONS: Record<string, string> = {
+const ADMIN_USER_TYPE_FILTER_OPTIONS: Record<string, string> = {
   all: "All users",
-  ...USER_TYPE_DISPLAY
+  ...USER_TYPE_DISPLAY,
+};
+const PROGRAM_ADMIN_USER_TYPE_FILTER_OPTIONS: Record<string, string> = {
+  all: "All users",
+  prog_admin: USER_TYPE_DISPLAY.prog_admin,
+  standard: USER_TYPE_DISPLAY.standard,
 };
 const NO_PROGRAM_AREA_OPTION: string = "No program areas (Standard)";
 const ALL_PROGRAM_AREAS_OPTION: string = "All program areas (Admin)";
@@ -42,21 +47,28 @@ type FilterProgramAreasType = Record<string, boolean>;
  * @param props React props
  * @param props.users listed users
  * @param props.programAreas listed program areas
+ * @param props.isLoggedInUserAdmin whether the logged-in user is an admin
  * @param props.deleteAction action to do upon delete confirmation
  * @returns paginated, sorted table of users
  */
 export const UserTable = ({
   users,
   programAreas,
+  isLoggedInUserAdmin,
   deleteAction,
 }: {
   users: ListedUser[];
   programAreas: ListedProgramArea[];
+  isLoggedInUserAdmin: boolean;
   deleteAction: (uuid: string) => Promise<ServerActionResult<void>>;
 }) => {
   const initFilterProgramAreaState: FilterProgramAreasType = {
-    [ALL_PROGRAM_AREAS_OPTION]: true,
-    [NO_PROGRAM_AREA_OPTION]: true,
+    ...(isLoggedInUserAdmin
+      ? {
+          [ALL_PROGRAM_AREAS_OPTION]: true,
+          [NO_PROGRAM_AREA_OPTION]: true,
+        }
+      : {}),
     ...programAreas.reduce((acc, program) => {
       acc[program.name] = true;
       return acc;
@@ -205,6 +217,7 @@ export const UserTable = ({
         <FilterByUserType
           filterUserTypeOption={filterUserTypeOption}
           setFilterUserTypeOption={setFilterUserTypeOption}
+          isLoggedInUserAdmin={isLoggedInUserAdmin}
         />
         <FilterByProgramArea
           isAllSelected={isAllSelected}
@@ -224,22 +237,28 @@ export const UserTable = ({
 const FilterByUserType = ({
   filterUserTypeOption,
   setFilterUserTypeOption,
+  isLoggedInUserAdmin,
 }: {
   filterUserTypeOption: string;
   setFilterUserTypeOption: (v: string) => void;
+  isLoggedInUserAdmin: boolean;
 }) => {
+  const options = isLoggedInUserAdmin
+    ? ADMIN_USER_TYPE_FILTER_OPTIONS
+    : PROGRAM_ADMIN_USER_TYPE_FILTER_OPTIONS;
+
   return (
     <Filter
       isActive={true}
       type="user type"
-      title={USER_TYPE_FILTER_OPTIONS[filterUserTypeOption]}
+      title={options[filterUserTypeOption]}
       resetHandler={() => {}}
       icon={Person}
     >
       <div className="display-flex flex-column">
         <RadioDateOptions
           groupName="user-type"
-          optionsMap={USER_TYPE_FILTER_OPTIONS}
+          optionsMap={options}
           onChange={setFilterUserTypeOption}
           currentOption={filterUserTypeOption}
           classNames="padding-bottom-1"
