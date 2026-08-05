@@ -8,9 +8,13 @@ import {
   Encounter,
   Observation,
   Organization,
+  Patient,
 } from "fhir/r4";
 
-import { formatStartEndDateTime } from "@/app/services/formatDateService";
+import {
+  formatDateTime,
+  formatStartEndDateTime,
+} from "@/app/services/formatDateService";
 import {
   formatCodeableConcept,
   formatCoding,
@@ -47,6 +51,7 @@ import {
   calculatePatientAge,
   getPatient,
   evaluatePatientDOB,
+  evaluatePatientVitalStatus,
 } from "@/app/view-data/services/demographicsService";
 import { evaluateLabInfoData } from "./labsService";
 import { getReportabilityRulesReasons } from "./reportabilityService";
@@ -80,6 +85,8 @@ export const evaluateEcrSummaryPatient = (
         ]
       : [];
 
+  const vitalStatus = evaluatePatientVitalStatus(patient);
+
   return [
     {
       title: "Patient Name",
@@ -89,6 +96,21 @@ export const evaluateEcrSummaryPatient = (
       title: "DOB",
       value: evaluatePatientDOB(patient) || noDataSummary,
     },
+    {
+      title: "Vital Status",
+      value: vitalStatus || noDataSummary,
+    },
+    ...(vitalStatus === "Deceased"
+      ? [
+          {
+            title: "Death Date/Time",
+            value:
+              formatDateTime(
+                evaluateOne(patient, fhirPathMappings.patientDOD),
+              ) || noDataSummary,
+          },
+        ]
+      : []),
     {
       title: "Sex",
       // Unknown and Other sex options removed to be in compliance with Executive Order 14168

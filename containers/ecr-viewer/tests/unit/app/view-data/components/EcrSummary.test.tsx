@@ -17,6 +17,10 @@ describe("EcrSummary tests", () => {
         value: "04/15/1900",
       },
       {
+        title: "Vital Status",
+        value: "Alive",
+      },
+      {
         title: "Sex",
         value: "male",
       },
