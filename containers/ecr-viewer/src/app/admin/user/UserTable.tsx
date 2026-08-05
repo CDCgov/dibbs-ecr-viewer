@@ -24,18 +24,13 @@ import { ServerActionResult } from "@/app/services/errorService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
 import { ListedUser, NamedUserProgramArea } from "@/app/services/userService";
-import {
-  makePlural,
-  stringSort,
-  toSentenceCase,
-} from "@/app/utils/format-utils";
+import { USER_TYPE_DISPLAY } from "@/app/constants";
+import { makePlural, stringSort } from "@/app/utils/format-utils";
 import { ForceClient } from "@/app/view-data/components/ForceClient";
 
 const USER_TYPE_FILTER_OPTIONS: Record<string, string> = {
   all: "All users",
-  admin: "Admin",
-  prog_admin: "Program Admin",
-  standard: "Standard",
+  ...USER_TYPE_DISPLAY
 };
 const NO_PROGRAM_AREA_OPTION: string = "No program areas (Standard)";
 const ALL_PROGRAM_AREAS_OPTION: string = "All program areas (Admin)";
@@ -125,7 +120,7 @@ export const UserTable = ({
       value: "User type",
       dataSortable: true,
       sortDirection: "",
-      formatter: toSentenceCase,
+      formatter: (userType: string) => USER_TYPE_DISPLAY[userType],
     },
     {
       id: "program_areas",
@@ -185,7 +180,9 @@ export const UserTable = ({
           },
           {
             title: "User Type",
-            value: toSentenceCase(selectedUser?.user_type),
+            value:
+              selectedUser?.user_type &&
+              USER_TYPE_DISPLAY[selectedUser.user_type],
           },
           {
             title: "Program Area Access",

@@ -4,16 +4,11 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { User } from "@/app/data/metadataDb/types/core";
 import useEscapeKey from "@/app/hooks/useEscapeKey";
-import { toSentenceCase } from "@/app/utils/format-utils";
 
 import { Person } from "./Icon";
 import { SignOutButton } from "./SignOutButton";
+import { USER_TYPE_DISPLAY } from "@/app/constants";
 
-export const USER_TYPE_DISPLAY: Record<string, string> = {
-  admin: "Admin",
-  prog_admin: "Program admin",
-  standard: "Standard user",
-};
 
 /**
  * User Menu component for the eCR Viewer project.

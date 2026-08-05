@@ -201,13 +201,13 @@ const UserTypeFieldSet = ({
             ]
           : []),
         {
-          label: "Program Admin",
+          label: "Program admin",
           value: "prog_admin",
           description:
             "Program Admins have limited access to user management, program management, and the eCR Library",
         },
         {
-          label: "Standard",
+          label: "Standard user",
           value: "standard",
           description:
             "Standard users can only use the eCR Library with limited access to program area(s)",
