@@ -57,6 +57,7 @@ export const buildExtended = async () => {
 export const clearExtended = async () => {
   const db = getDb<Extended>();
   await db.deleteFrom("patient_address").execute();
+  await db.deleteFrom("ecr_lab_specimens").execute();
   await db.deleteFrom("ecr_labs").execute();
   await db.deleteFrom("ecr_immunizations").execute();
   await clearCore();
@@ -68,6 +69,7 @@ export const clearExtended = async () => {
 export const clearEcrExtended = async () => {
   const db = getDb<Extended>();
   await db.deleteFrom("patient_address").execute();
+  await db.deleteFrom("ecr_lab_specimens").execute();
   await db.deleteFrom("ecr_labs").execute();
   await db.deleteFrom("ecr_immunizations").execute();
   await clearEcrCore();
