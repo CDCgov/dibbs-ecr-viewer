@@ -276,7 +276,7 @@ export const evaluateTobaccoUse = (fhirBundle: Bundle) => {
   }
 
   if (educationValue) {
-    value += "Tobacco use cessation education: " + educationValue + "\n";
+    value += "Tobacco Use Cessation Education: " + educationValue + "\n";
   }
 
   return value;
