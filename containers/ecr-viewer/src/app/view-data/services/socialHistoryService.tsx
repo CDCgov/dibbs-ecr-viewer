@@ -60,7 +60,7 @@ export const evaluateSocialData = (
     },
     {
       title: "Tobacco Use",
-      value: evaluateValue(fhirBundle, fhirPathMappings.patientTobaccoUse),
+      value: evaluateTobaccoUse(fhirBundle),
     },
     {
       title: "Travel History",
@@ -197,6 +197,89 @@ export const evaluateOccupation = (fhirBundle: Bundle) => {
   ]
     .filter(Boolean)
     .join("\n\n");
+};
+
+/**
+ * Evaluates tobacco use information from the FHIR bundle and formats it into structured data for display.
+ * @param fhirBundle - The FHIR bundle containing alcohol use data.
+ * @returns A string of evaluated and formatted tobacco use data.
+ */
+export const evaluateTobaccoUse = (fhirBundle: Bundle) => {
+  const status = evaluateValue(
+    fhirBundle,
+    fhirPathMappings.patientTobaccoUseStatus,
+  );
+
+  const historyObs = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.patientTobaccoHistory,
+  );
+
+  const historyValue = historyObs
+    .map((obs) => {
+      return evaluateValue(obs, fhirPathMappings.valueX);
+    })
+    .join(", ");
+
+  const amount = evaluateValue(
+    fhirBundle,
+    fhirPathMappings.patientTobaccoAmount,
+  );
+
+  let amountValue = "";
+  if (amount) {
+    amountValue = amount + " packs per day";
+  }
+
+  const packYears = evaluateValue(
+    fhirBundle,
+    fhirPathMappings.patientTobaccoPackYears,
+  );
+
+  const smokelessStatus = evaluateValue(
+    fhirBundle,
+    fhirPathMappings.patientSmokelessStatus,
+  );
+
+  const educationOb = evaluateOne(
+    fhirBundle,
+    fhirPathMappings.patientTobaccoEducation,
+  );
+
+  const notes = evaluateAll(educationOb, fhirPathMappings.noteText);
+  let educationValue = "";
+  if (notes.length > 0) {
+    educationValue = notes.join(",");
+  }
+
+  // TODO: figure out how to display effective dates
+
+  let value = "";
+  if (status) {
+    value += "Smoking Status: " + status + "\n";
+  }
+
+  if (historyValue) {
+    value += "Smoking History: " + historyValue + "\n";
+  }
+
+  if (amountValue) {
+    value += "Amount: " + amountValue + "\n";
+  }
+
+  if (packYears) {
+    value += "Cigarette Pack-years: " + packYears + "\n";
+  }
+
+  if (smokelessStatus) {
+    value += "Smokeless Status: " + smokelessStatus + "\n";
+  }
+
+  if (educationValue) {
+    value += "Tobacco use cessation education: " + educationValue + "\n";
+  }
+
+  return value;
 };
 
 /**

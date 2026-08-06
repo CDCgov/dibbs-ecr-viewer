@@ -853,6 +853,19 @@ exports[`Evaluate Patient Info: Social History Evaluate Occupation History shoul
 />
 `;
 
+exports[`Evaluate Patient Info: Social History should format tobacco use details when available 1`] = `
+{
+  "title": "Tobacco Use",
+  "value": "Smoking Status: Smokes tobacco daily
+Smoking History: Smokes tobacco daily, Cigarette smoker
+Amount: 3 packs per day
+Cigarette Pack-years: 90
+Smokeless Status: Smokeless tobacco non-user
+Tobacco use cessation education: Tobacco Cessation: Ready to Quit: No; Counseling Given: Yes
+",
+}
+`;
+
 exports[`Social Determinants of Health should display sdoh data  1`] = `
 <div>
   <div

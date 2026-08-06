@@ -60,7 +60,12 @@ export type PathTypes = {
   patientOccupationFromPastOrPresent: Observation;
   patientOccupationFromSocialHistory: Observation;
   patientEmploymentStatus: Observation;
-  patientTobaccoUse: ValueX;
+  patientTobaccoUseStatus: ValueX;
+  patientTobaccoHistory: Observation;
+  patientTobaccoAmount: ValueX;
+  patientTobaccoPackYears: ValueX;
+  patientSmokelessStatus: ValueX;
+  patientTobaccoEducation: Observation;
   patientHomelessStatus: ValueX;
   patientAlcoholUse: ValueX;
   patientAlcoholIntake: ValueX;
@@ -291,9 +296,29 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '74165-2'))",
   },
-  patientTobaccoUse: {
+  patientTobaccoUseStatus: {
     type: "ValueX",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '72166-2')).value",
+  },
+  patientTobaccoHistory: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '11367-0'))",
+  },
+  patientTobaccoAmount: {
+    type: "ValueX",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8663-7')).value",
+  },
+  patientTobaccoPackYears: {
+    type: "ValueX",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '401201003')).value",
+  },
+  patientSmokelessStatus: {
+    type: "ValueX",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '88031-0')).value",
+  },
+  patientTobaccoEducation: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '702388001'))",
   },
   patientHomelessStatus: {
     type: "ValueX",
