@@ -210,27 +210,39 @@ export type ListedProgramArea = ProgramArea & {
 /**
  * List program areas. The logged in user must be an admin or a program admin.
  * If program admin, will only list program areas they have access to.
+ * @param options Function options
+ * @param options.programAreaUuids If provided, list only these program areas
  * @returns list of all program areas
  */
-export const listProgramAreas = async (): Promise<ListedProgramArea[]> => {
+export const listProgramAreas = async (
+  options: { programAreaUuids?: string[] } = {},
+): Promise<ListedProgramArea[]> => {
   const user = await getCheckAnyAdmin("list program areas");
 
   try {
     return await getDb<Core>()
       .transaction()
       .execute(async (db) => {
-        const programAreas = isProgramAdmin(user)
-          ? await db
-              .selectFrom("program_area")
-              .innerJoin(
-                "user_program_area",
-                "program_area.uuid",
-                "user_program_area.program_area_uuid",
-              )
-              .selectAll("program_area")
-              .where("user_program_area.user_uuid", "=", user.uuid)
-              .execute()
-          : await db.selectFrom("program_area").selectAll().execute();
+        const programAreas = options.programAreaUuids
+          ? options.programAreaUuids.length > 0 // User details side-panel
+            ? await db
+                .selectFrom("program_area")
+                .selectAll()
+                .where("uuid", "in", options.programAreaUuids)
+                .execute()
+            : []
+          : isProgramAdmin(user)
+            ? await db
+                .selectFrom("program_area")
+                .innerJoin(
+                  "user_program_area",
+                  "program_area.uuid",
+                  "user_program_area.program_area_uuid"
+                )
+                .selectAll("program_area")
+                .where("user_program_area.user_uuid", "=", user.uuid)
+                .execute()
+            : await db.selectFrom("program_area").selectAll().execute();
         const conditionRefs = await db
           .selectFrom("condition_reference")
           .selectAll()

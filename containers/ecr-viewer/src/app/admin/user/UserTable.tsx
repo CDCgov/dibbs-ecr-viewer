@@ -47,6 +47,7 @@ type FilterProgramAreasType = Record<string, boolean>;
  * @param props React props
  * @param props.users listed users
  * @param props.programAreas listed program areas
+ * @param props.detailProgramAreas program areas available in user details side panel
  * @param props.isLoggedInUserAdmin whether the logged-in user is an admin
  * @param props.deleteAction action to do upon delete confirmation
  * @returns paginated, sorted table of users
@@ -54,11 +55,13 @@ type FilterProgramAreasType = Record<string, boolean>;
 export const UserTable = ({
   users,
   programAreas,
+  detailProgramAreas,
   isLoggedInUserAdmin,
   deleteAction,
 }: {
   users: ListedUser[];
   programAreas: ListedProgramArea[];
+  detailProgramAreas: ListedProgramArea[];
   isLoggedInUserAdmin: boolean;
   deleteAction: (uuid: string) => Promise<ServerActionResult<void>>;
 }) => {
@@ -201,7 +204,7 @@ export const UserTable = ({
             value: (
               <ProgramAreaContent
                 user={selectedUser}
-                programAreas={programAreas}
+                programAreas={detailProgramAreas}
               />
             ),
           },

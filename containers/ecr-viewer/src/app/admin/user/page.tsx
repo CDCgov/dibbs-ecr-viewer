@@ -22,6 +22,33 @@ const UserAdminPage = async () => {
 
   const users = await listUsers();
   const programAreas = await listProgramAreas();
+  const isLoggedInUserAdmin = isAdmin(loggedInUser);
+
+  // Program areas accessible to logged in user
+  const accessibleProgramAreaUuids = new Set(
+    programAreas.map(({ uuid }) => uuid),
+  );
+  const detailProgramAreaUuids = [
+    ...new Set(
+      // For program admins, filters on users that share at least one program area
+      users
+        .filter(
+          ({ program_areas }) =>
+            isLoggedInUserAdmin ||
+            program_areas.some(({ program_area_uuid }) =>
+              accessibleProgramAreaUuids.has(program_area_uuid),
+            ),
+        )
+        // Program admins should be able to view all the 
+        // program areas (and conditions) of their users.
+        .flatMap(({ program_areas }) =>
+          program_areas.map(({ program_area_uuid }) => program_area_uuid),
+        ),
+    ),
+  ];
+  const detailProgramAreas = isLoggedInUserAdmin
+    ? programAreas
+    : await listProgramAreas({ programAreaUuids: detailProgramAreaUuids });
 
   return (
     <>
@@ -38,7 +65,8 @@ const UserAdminPage = async () => {
           <UserTable
             users={users}
             programAreas={programAreas}
-            isLoggedInUserAdmin={isAdmin(loggedInUser)}
+            detailProgramAreas={detailProgramAreas}
+            isLoggedInUserAdmin={isLoggedInUserAdmin}
             deleteAction={async (uuid) => {
               "use server";
               revalidatePath("/ecr-viewer/admin/user");
