@@ -25,7 +25,10 @@ import {
 } from "@/app/data/blobStorage/utils";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core } from "@/app/data/metadataDb/types/core";
-import { Extended, NewECRLabSpecimens } from "@/app/data/metadataDb/types/extended";
+import {
+  Extended,
+  NewECRLabSpecimens,
+} from "@/app/data/metadataDb/types/extended";
 import { dbSchema } from "@/app/data/metadataDb/utils/db-config";
 import { createAuditRecord } from "@/app/services/auditLogService";
 

@@ -64,7 +64,9 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
       test_result_reference_range_high_value: "140",
       test_result_reference_range_high_units: "mg/dL",
       performing_lab: "Lab A",
-      specimens: [{ specimen_type: "Blood", specimen_collection_date: "2024-01-01" }],
+      specimens: [
+        { specimen_type: "Blood", specimen_collection_date: "2024-01-01" },
+      ],
     },
   ],
   immunizations: [],

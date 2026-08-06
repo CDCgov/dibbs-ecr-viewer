@@ -123,7 +123,10 @@ const makeLabMetadata = (index: number) => ({
   test_result_reference_range_high_units: "mL",
   performing_lab: "Skylight Lab",
   specimens: [
-    { specimen_type: "Nasopharyngeal swab", specimen_collection_date: "2026-07-14" },
+    {
+      specimen_type: "Nasopharyngeal swab",
+      specimen_collection_date: "2026-07-14",
+    },
   ],
 });
 
