@@ -162,13 +162,13 @@ export async function validateAdminUserPermissions(
   if (isAdmin(loggedInUser)) return;
 
   if (userType === USER_TYPE.ADMIN) {
-    throw new UserFacingError("Program admins cannot create new admins.");
+    throw new UserFacingError("Program admins cannot manage admins.");
   }
 
   const hasAccess = await hasRelevantProgramAreaAccess(loggedInUser, programs);
   if (!hasAccess) {
     throw new UserFacingError(
-      "Program admins cannot create users outside of their program areas",
+      "Program admins cannot manage users outside of their program areas",
     );
   }
 }
@@ -394,13 +394,52 @@ export const updateUser = audit(
     },
     trx: Transaction<Core>,
   ): Promise<void> => {
-    await getCheckAdmin("update users");
+    const updatingUser = await getCheckAnyAdmin("update users");
+
+    // TODO ANGELA: Add validateAdminUserPermissions
 
     try {
       await checkDupeEmail(trx, updates.email, uuid);
       Object.keys(updates).length > 0 &&
         (await updateUserQuery(trx, uuid, updates));
-      await updateUserProgramAreasQuery(trx, uuid, programs);
+
+      let programsToUpdate = programs;
+
+      // TODO ANGELA: Refactor? First pass
+      if (isProgramAdmin(updatingUser)) {
+        // All programs of user being edited
+        const existingPrograms = await trx
+          .selectFrom("user_program_area")
+          .select("program_area_uuid")
+          .where("user_uuid", "=", uuid)
+          .execute();
+        // All programs of program admin
+        const updatingUserPrograms = await trx
+          .selectFrom("user_program_area")
+          .select("program_area_uuid")
+          .where("user_uuid", "=", updatingUser.uuid)
+          .execute();
+        // Made into a set
+        const accessibleProgramUuids = new Set(
+          updatingUserPrograms.map(({ program_area_uuid }) => program_area_uuid)
+        );
+
+        programsToUpdate = [
+          ...new Set([
+            // Include programs program admin wants to edit
+            ...programs,
+            // Keep programs the editor cannot access
+            ...existingPrograms
+              .filter(
+                ({ program_area_uuid }) =>
+                  !accessibleProgramUuids.has(program_area_uuid)
+              )
+              .map(({ program_area_uuid }) => program_area_uuid),
+          ]),
+        ];
+      }
+
+      await updateUserProgramAreasQuery(trx, uuid, programsToUpdate);
     } catch (error: unknown) {
       let message = "Failed to update user";
       if (error instanceof UserFacingError) {
@@ -428,7 +467,7 @@ const updateUserQuery = async (
 export const listUserProgramAreas = async (
   uuid: string,
 ): Promise<ProgramArea[]> => {
-  await getCheckAdmin("list user program areas");
+  await getCheckAnyAdmin("list user program areas");
   return listUserProgramAreasQuery(getDb<Core>(), uuid);
 };
 

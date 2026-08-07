@@ -3,14 +3,15 @@ import { notFound } from "next/navigation";
 
 import { UserForm } from "@/app/admin/user/UserForm";
 import { USER_TYPE } from "@/app/constants";
-import { isAdmin, UserType } from "@/app/services/userService";
 import { listProgramAreas } from "@/app/services/programAreaService";
 import { updateUserAction } from "@/app/services/serverActionService";
 import {
+  isAdmin,
+  notFoundUnlessAnyAdmin,
+  UserType,
   getUser,
   listUserProgramAreas,
   listUsers,
-  notFoundUnlessAdmin,
 } from "@/app/services/userService";
 import { PageSearchParams } from "@/app/utils/search-param-utils";
 import { getLoggedInUser } from "@/app/services/loggedInUserService";
@@ -26,7 +27,7 @@ const EditUserPage = async ({
 }: {
   searchParams: Promise<PageSearchParams>;
 }) => {
-  await notFoundUnlessAdmin();
+  await notFoundUnlessAnyAdmin();
   const currentUser = await getLoggedInUser();
   const { uuid } = await searchParams;
 
