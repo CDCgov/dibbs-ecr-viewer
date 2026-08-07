@@ -3,9 +3,10 @@ import Link from "next/link";
 
 import { listProgramAreas } from "@/app/services/programAreaService";
 import { deleteProgramAreaAction } from "@/app/services/serverActionService";
-import { notFoundUnlessAdmin } from "@/app/services/userService";
+import { isAdmin, notFoundUnlessAdmin } from "@/app/services/userService";
 
 import { ProgramTable } from "./ProgramTable";
+import { getLoggedInUser } from "@/app/services/loggedInUserService";
 
 /**
  * Program admin landing page with table of active users
@@ -13,6 +14,7 @@ import { ProgramTable } from "./ProgramTable";
  */
 const ProgramAdminPage = async () => {
   await notFoundUnlessAdmin();
+  const currentUser = await getLoggedInUser();
 
   const programAreas = await listProgramAreas();
 
@@ -40,6 +42,7 @@ const ProgramAdminPage = async () => {
               revalidatePath("/ecr-viewer/admin/program");
               return res;
             }}
+            isLoggedInUserAdmin={isAdmin(currentUser)}
           />
         )}
       </div>
