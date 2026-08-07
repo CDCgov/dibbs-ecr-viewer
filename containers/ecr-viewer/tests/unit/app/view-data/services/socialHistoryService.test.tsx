@@ -145,7 +145,9 @@ describe("Evaluate Patient Info: Social History", () => {
       (data) => data.title === "Tobacco Use",
     );
 
-    expect(tobaccoUse).toMatchSnapshot();
+    expect(tobaccoUse).toBeDefined();
+    const { container } = render(tobaccoUse!.value);
+    expect(container).toMatchSnapshot();
   });
 
   describe("Evaluate Occupation", () => {

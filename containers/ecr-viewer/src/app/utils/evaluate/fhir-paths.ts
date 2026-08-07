@@ -60,11 +60,11 @@ export type PathTypes = {
   patientOccupationFromPastOrPresent: Observation;
   patientOccupationFromSocialHistory: Observation;
   patientEmploymentStatus: Observation;
-  patientTobaccoUseStatus: ValueX;
+  patientTobaccoUseStatus: Observation;
   patientTobaccoHistory: Observation;
-  patientTobaccoAmount: ValueX;
-  patientTobaccoPackYears: ValueX;
-  patientSmokelessStatus: ValueX;
+  patientTobaccoAmount: Observation;
+  patientTobaccoPackYears: Observation;
+  patientSmokelessStatus: Observation;
   patientTobaccoEducation: Observation;
   patientHomelessStatus: ValueX;
   patientAlcoholUse: ValueX;
@@ -297,24 +297,24 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '74165-2'))",
   },
   patientTobaccoUseStatus: {
-    type: "ValueX",
-    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '72166-2')).value",
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '72166-2'))",
   },
   patientTobaccoHistory: {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '11367-0'))",
   },
   patientTobaccoAmount: {
-    type: "ValueX",
-    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8663-7')).value",
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8663-7'))",
   },
   patientTobaccoPackYears: {
-    type: "ValueX",
-    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '401201003')).value",
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '401201003'))",
   },
   patientSmokelessStatus: {
-    type: "ValueX",
-    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '88031-0')).value",
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '88031-0'))",
   },
   patientTobaccoEducation: {
     type: "Observation",

@@ -30,6 +30,7 @@ import {
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
 import EvaluateTable, {
+  BaseTable,
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
 import { UnstyledDividedList } from "@/app/view-data/components/UnstyledDividedList";
@@ -61,6 +62,7 @@ export const evaluateSocialData = (
     {
       title: "Tobacco Use",
       value: evaluateTobaccoUse(fhirBundle),
+      fullWidthContent: true,
     },
     {
       title: "Travel History",
@@ -200,86 +202,100 @@ export const evaluateOccupation = (fhirBundle: Bundle) => {
 };
 
 /**
- * Evaluates tobacco use information from the FHIR bundle and formats it into structured data for display.
- * @param fhirBundle - The FHIR bundle containing alcohol use data.
- * @returns A string of evaluated and formatted tobacco use data.
+ * Evaluates tobacco use information from the FHIR bundle and formats it as a table.
+ * @param fhirBundle - The FHIR bundle containing tobacco use data.
+ * @returns A table of tobacco use observations, or undefined if none are found.
  */
 export const evaluateTobaccoUse = (fhirBundle: Bundle) => {
-  const status = evaluateValue(
-    fhirBundle,
-    fhirPathMappings.patientTobaccoUseStatus,
+  const tobaccoObservationGroups = [
+    {
+      detail: "Smoking Status",
+      observations: evaluateAll(
+        fhirBundle,
+        fhirPathMappings.patientTobaccoUseStatus,
+      ),
+      formatObservation: (observation: Observation) =>
+        evaluateValue(observation, fhirPathMappings.valueX),
+    },
+    {
+      detail: "Smoking History",
+      observations: evaluateAll(
+        fhirBundle,
+        fhirPathMappings.patientTobaccoHistory,
+      ),
+      formatObservation: (observation: Observation) =>
+        evaluateValue(observation, fhirPathMappings.valueX),
+    },
+    {
+      detail: "Amount",
+      observations: evaluateAll(
+        fhirBundle,
+        fhirPathMappings.patientTobaccoAmount,
+      ),
+      formatObservation: (observation: Observation) => {
+        const amount = evaluateValue(observation, fhirPathMappings.valueX);
+        return amount ? `${amount} packs per day` : "";
+      },
+    },
+    {
+      detail: "Cigarette Pack-years",
+      observations: evaluateAll(
+        fhirBundle,
+        fhirPathMappings.patientTobaccoPackYears,
+      ),
+      formatObservation: (observation: Observation) =>
+        evaluateValue(observation, fhirPathMappings.valueX),
+    },
+    {
+      detail: "Smokeless Status",
+      observations: evaluateAll(
+        fhirBundle,
+        fhirPathMappings.patientSmokelessStatus,
+      ),
+      formatObservation: (observation: Observation) =>
+        evaluateValue(observation, fhirPathMappings.valueX),
+    },
+    {
+      detail: "Tobacco Use Cessation Education",
+      observations: evaluateAll(
+        fhirBundle,
+        fhirPathMappings.patientTobaccoEducation,
+      ),
+      formatObservation: (observation: Observation) =>
+        evaluateAll(observation, fhirPathMappings.noteText).join(","),
+    },
+  ];
+
+  const tobaccoRows = tobaccoObservationGroups.flatMap(
+    ({ detail, observations, formatObservation }) =>
+      observations.map((observation) => ({
+        detail,
+        observation: formatObservation(observation),
+        date: evaluateValue(observation, fhirPathMappings.effectiveX),
+      })),
   );
 
-  const historyObs = evaluateAll(
-    fhirBundle,
-    fhirPathMappings.patientTobaccoHistory,
+  if (tobaccoRows.length === 0) return undefined;
+
+  const columns: ColumnInfoInput[] = [
+    { columnName: "Tobacco Detail" },
+    { columnName: "Observation" },
+    { columnName: "Date" },
+  ];
+
+  return (
+    <BaseTable columns={columns} fixed={false}>
+      {tobaccoRows.map((row, index) => (
+        <tr key={`tobacco-row-${index}`}>
+          <td className="text-top text-pre-line">{row.detail || noData}</td>
+          <td className="text-top text-pre-line">
+            {row.observation || noData}
+          </td>
+          <td className="text-top text-pre-line">{row.date || noData}</td>
+        </tr>
+      ))}
+    </BaseTable>
   );
-
-  const historyValue = historyObs
-    .map((obs) => {
-      return evaluateValue(obs, fhirPathMappings.valueX);
-    })
-    .join(", ");
-
-  const amount = evaluateValue(
-    fhirBundle,
-    fhirPathMappings.patientTobaccoAmount,
-  );
-
-  let amountValue = "";
-  if (amount) {
-    amountValue = amount + " packs per day";
-  }
-
-  const packYears = evaluateValue(
-    fhirBundle,
-    fhirPathMappings.patientTobaccoPackYears,
-  );
-
-  const smokelessStatus = evaluateValue(
-    fhirBundle,
-    fhirPathMappings.patientSmokelessStatus,
-  );
-
-  const educationOb = evaluateOne(
-    fhirBundle,
-    fhirPathMappings.patientTobaccoEducation,
-  );
-
-  const notes = evaluateAll(educationOb, fhirPathMappings.noteText);
-  let educationValue = "";
-  if (notes.length > 0) {
-    educationValue = notes.join(",");
-  }
-
-  // TODO: figure out how to display effective dates
-
-  let value = "";
-  if (status) {
-    value += "Smoking Status: " + status + "\n";
-  }
-
-  if (historyValue) {
-    value += "Smoking History: " + historyValue + "\n";
-  }
-
-  if (amountValue) {
-    value += "Amount: " + amountValue + "\n";
-  }
-
-  if (packYears) {
-    value += "Cigarette Pack-years: " + packYears + "\n";
-  }
-
-  if (smokelessStatus) {
-    value += "Smokeless Status: " + smokelessStatus + "\n";
-  }
-
-  if (educationValue) {
-    value += "Tobacco Use Cessation Education: " + educationValue + "\n";
-  }
-
-  return value;
 };
 
 /**
