@@ -523,7 +523,7 @@ export const listUsers = async (): Promise<ListedUser[]> => {
           .innerJoin(
             "program_area",
             "user_program_area.program_area_uuid",
-            "program_area.uuid"
+            "program_area.uuid",
           )
           .select([
             "user_program_area.user_uuid",
@@ -535,7 +535,7 @@ export const listUsers = async (): Promise<ListedUser[]> => {
         const listedUsers = users.map((user) => ({
           ...user,
           program_areas: userProgramAreas.filter(
-            ({ user_uuid }) => user_uuid === user.uuid
+            ({ user_uuid }) => user_uuid === user.uuid,
           ),
         }));
 
@@ -549,14 +549,14 @@ export const listUsers = async (): Promise<ListedUser[]> => {
         const accessibleProgramAreaUuids = new Set(
           userProgramAreas
             .filter(({ user_uuid }) => user_uuid === loggedInUserUuid)
-            .map(({ program_area_uuid }) => program_area_uuid)
+            .map(({ program_area_uuid }) => program_area_uuid),
         );
         return listedUsers.filter(
           ({ user_type, program_areas }) =>
             user_type !== "admin" &&
             program_areas.some(({ program_area_uuid }) =>
-              accessibleProgramAreaUuids.has(program_area_uuid)
-            )
+              accessibleProgramAreaUuids.has(program_area_uuid),
+            ),
         );
       });
   } catch (error: unknown) {
