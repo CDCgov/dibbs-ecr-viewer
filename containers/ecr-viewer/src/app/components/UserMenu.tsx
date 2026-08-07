@@ -9,7 +9,6 @@ import { Person } from "./Icon";
 import { SignOutButton } from "./SignOutButton";
 import { USER_TYPE_DISPLAY } from "@/app/constants";
 
-
 /**
  * User Menu component for the eCR Viewer project.
  * This component renders a dropdown menu that contains user information

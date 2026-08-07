@@ -39,7 +39,7 @@ const UserAdminPage = async () => {
               accessibleProgramAreaUuids.has(program_area_uuid),
             ),
         )
-        // Program admins should be able to view all the 
+        // Program admins should be able to view all the
         // program areas (and conditions) of their users.
         .flatMap(({ program_areas }) =>
           program_areas.map(({ program_area_uuid }) => program_area_uuid),

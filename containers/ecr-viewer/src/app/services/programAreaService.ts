@@ -237,7 +237,7 @@ export const listProgramAreas = async (
                 .innerJoin(
                   "user_program_area",
                   "program_area.uuid",
-                  "user_program_area.program_area_uuid"
+                  "user_program_area.program_area_uuid",
                 )
                 .selectAll("program_area")
                 .where("user_program_area.user_uuid", "=", user.uuid)
