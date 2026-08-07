@@ -39,7 +39,7 @@ const mockAdmin: ListedUser = {
   author_uuid: "123",
   program_areas: [],
 };
-const mocKProgramAdmin: ListedUser = {
+const mockProgramAdmin: ListedUser = {
   uuid: "456",
   email: "programadmin@programadmin.com",
   name: "Peter Program-Admin",
@@ -58,7 +58,7 @@ const mocKProgramAdmin: ListedUser = {
 };
 const mockUsers: ListedUser[] = [
   mockAdmin,
-  mocKProgramAdmin,
+  mockProgramAdmin,
   {
     uuid: "234",
     email: "sallystandard@standard.com",
@@ -156,14 +156,40 @@ describe("User Admin Page", () => {
     expect(notFoundUnlessAnyAdmin).toHaveBeenCalled();
   });
 
-  it("should list users when available", async () => {
+  it("for an admin, should list all users and program areas", async () => {
     (notFoundUnlessAnyAdmin as unknown as jest.Mock).mockReturnValue(true);
+    (getLoggedInUser as jest.Mock).mockResolvedValue(mockAdmin);
+    (isAdmin as unknown as jest.Mock).mockReturnValue(true);
     (listUsers as jest.Mock).mockResolvedValue(mockUsers);
     (listProgramAreas as jest.Mock).mockResolvedValue(mockPrograms);
 
     const { container } = render(await UserAdminPage());
     expect(notFound).not.toHaveBeenCalled();
+    expect(listProgramAreas).toHaveBeenCalledTimes(1);
+    expect(listProgramAreas).toHaveBeenCalledWith();
     expect(container).toMatchSnapshot();
+  });
+
+  it("for a program admin, should list all users in their program area(s)", async () => {
+    (notFoundUnlessAnyAdmin as unknown as jest.Mock).mockReturnValue(true);
+    (getLoggedInUser as jest.Mock).mockResolvedValue(mockProgramAdmin);
+    (isAdmin as unknown as jest.Mock).mockReturnValue(false);
+    (listUsers as jest.Mock).mockResolvedValue(mockUsers);
+    (listProgramAreas as jest.Mock)
+      .mockResolvedValueOnce([mockPrograms[0]])
+      .mockResolvedValueOnce(mockPrograms);
+
+    render(await UserAdminPage());
+
+    expect(listProgramAreas).toHaveBeenNthCalledWith(1); // Get program areas for filtering
+    expect(listProgramAreas).toHaveBeenNthCalledWith(2, {
+      // List all of Sally's program areas
+      programAreaUuids: ["222", "333"],
+    });
+    expect(screen.getByText("sallystandard@standard.com")).toBeInTheDocument();
+    expect(
+      screen.queryByText("stevenstandard@standard.com"),
+    ).not.toBeInTheDocument();
   });
 
   describe("Creating users", () => {
@@ -222,7 +248,7 @@ describe("User Admin Page", () => {
       (isAdmin as unknown as jest.Mock).mockReturnValue(false);
       (notFoundUnlessAnyAdmin as unknown as jest.Mock).mockResolvedValue(true);
       (listProgramAreas as jest.Mock).mockResolvedValue(mockPrograms);
-      (getLoggedInUser as jest.Mock).mockResolvedValue(mocKProgramAdmin);
+      (getLoggedInUser as jest.Mock).mockResolvedValue(mockProgramAdmin);
 
       render(await CreateUserPage());
 
@@ -241,7 +267,7 @@ describe("User Admin Page", () => {
       (isAdmin as unknown as jest.Mock).mockReturnValue(false);
       (notFoundUnlessAnyAdmin as unknown as jest.Mock).mockResolvedValue(true);
       (listProgramAreas as jest.Mock).mockResolvedValue([mockPrograms[0]]);
-      (getLoggedInUser as jest.Mock).mockResolvedValue(mocKProgramAdmin);
+      (getLoggedInUser as jest.Mock).mockResolvedValue(mockProgramAdmin);
 
       render(await CreateUserPage());
 

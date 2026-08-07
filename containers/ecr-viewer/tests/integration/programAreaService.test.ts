@@ -282,4 +282,31 @@ describe("program area service", () => {
     expect(programAreaIds).toStrictEqual([accessibleProgramId]);
     expect(programAreaIds).not.toContain(restrictedProgramId);
   });
+
+  it("should return only the requested program areas", async () => {
+    mockedGetLoggedInUserSession.mockResolvedValue({
+      name: "Adam Admin",
+      email: "admin@admin.com",
+    });
+    const firstId = await createProgramArea({
+      name: "Requested Program One",
+      conditions: ["123"],
+    });
+    const secondId = await createProgramArea({
+      name: "Requested Program Two",
+      conditions: ["456"],
+    });
+    await createProgramArea({
+      name: "Unrequested Program",
+      conditions: ["789"],
+    });
+
+    const programAreas = await listProgramAreas({
+      programAreaUuids: [secondId, firstId],
+    });
+
+    expect(programAreas.map(({ uuid }) => uuid).sort()).toStrictEqual(
+      [firstId, secondId].sort(),
+    );
+  });
 });

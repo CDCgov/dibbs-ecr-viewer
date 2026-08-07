@@ -705,7 +705,7 @@ exports[`User Admin Page Creating users should render a create user page with no
 </div>
 `;
 
-exports[`User Admin Page should list users when available 1`] = `
+exports[`User Admin Page for an admin, should list all users and program areas 1`] = `
 <div>
   <main
     class="main-container"
