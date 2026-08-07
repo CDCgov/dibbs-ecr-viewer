@@ -174,7 +174,10 @@ describe("User Admin Page", () => {
     (notFoundUnlessAnyAdmin as unknown as jest.Mock).mockReturnValue(true);
     (getLoggedInUser as jest.Mock).mockResolvedValue(mockProgramAdmin);
     (isAdmin as unknown as jest.Mock).mockReturnValue(false);
-    (listUsers as jest.Mock).mockResolvedValue(mockUsers);
+    (listUsers as jest.Mock).mockResolvedValue([
+      mockProgramAdmin,
+      mockUsers[2],
+    ]);
     (listProgramAreas as jest.Mock)
       .mockResolvedValueOnce([mockPrograms[0]])
       .mockResolvedValueOnce(mockPrograms);
