@@ -187,7 +187,7 @@ describe("User Admin Page", () => {
     expect(listProgramAreas).toHaveBeenNthCalledWith(1); // Get program areas for filtering
     expect(listProgramAreas).toHaveBeenNthCalledWith(2, {
       // List all of Sally's program areas
-      programAreaUuids: ["222", "333"],
+      userUuids: ["456", "234"],
     });
     expect(screen.getByText("sallystandard@standard.com")).toBeInTheDocument();
     expect(

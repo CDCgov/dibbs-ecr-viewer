@@ -13,7 +13,12 @@ import { stringSort } from "@/app/utils/format-utils";
 
 import { audit } from "./auditLogService";
 import { UserFacingError } from "./errorService";
-import { getCheckAdmin, getCheckAnyAdmin, isProgramAdmin } from "./userService";
+import {
+  getCheckAdmin,
+  getCheckAnyAdmin,
+  isProgramAdmin,
+  listUsers,
+} from "./userService";
 
 /**
  * Create a program area with the given name. The currently logged in user
@@ -209,26 +214,39 @@ export type ListedProgramArea = ProgramArea & {
 
 /**
  * List program areas. The logged in user must be an admin or a program admin.
- * If program admin, will only list program areas they have access to.
  * @param options Function options
- * @param options.programAreaUuids If provided, list only these program areas
+ * @param options.userUuids If provided, list program areas for these visible users
  * @returns list of all program areas
  */
 export const listProgramAreas = async (
-  options: { programAreaUuids?: string[] } = {},
+  options: { userUuids?: string[] } = {},
 ): Promise<ListedProgramArea[]> => {
   const user = await getCheckAnyAdmin("list program areas");
 
   try {
+    // User detail side panel
+    // Program admins can view all programs areas of their users.
+    const requestedUserUuids = new Set(options.userUuids);
+    const requestedUsers = options.userUuids
+      ? (await listUsers()).filter(({ uuid }) => requestedUserUuids.has(uuid))
+      : [];
+    const requestedProgramAreaUuids = [
+      ...new Set(
+        requestedUsers.flatMap(({ program_areas }) =>
+          program_areas.map(({ program_area_uuid }) => program_area_uuid),
+        ),
+      ),
+    ];
+
     return await getDb<Core>()
       .transaction()
       .execute(async (db) => {
-        const programAreas = options.programAreaUuids
-          ? options.programAreaUuids.length > 0 // User details side-panel
+        const programAreas = options.userUuids
+          ? requestedProgramAreaUuids.length > 0 // User details side-panel
             ? await db
                 .selectFrom("program_area")
                 .selectAll()
-                .where("uuid", "in", options.programAreaUuids)
+                .where("uuid", "in", requestedProgramAreaUuids)
                 .execute()
             : []
           : isProgramAdmin(user)

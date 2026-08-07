@@ -270,6 +270,11 @@ describe("program area service", () => {
       userType: "prog_admin",
       programs: [accessibleProgramId],
     });
+    const visibleUserId = await createUser({
+      email: "visible@standard.com",
+      userType: "standard",
+      programs: [accessibleProgramId, restrictedProgramId],
+    });
 
     mockedGetLoggedInUserSession.mockResolvedValue({
       name: "Philip Program-Admin",
@@ -281,9 +286,16 @@ describe("program area service", () => {
 
     expect(programAreaIds).toStrictEqual([accessibleProgramId]);
     expect(programAreaIds).not.toContain(restrictedProgramId);
+
+    const detailProgramAreas = await listProgramAreas({
+      userUuids: [visibleUserId],
+    });
+    expect(detailProgramAreas.map(({ uuid }) => uuid).sort()).toStrictEqual(
+      [accessibleProgramId, restrictedProgramId].sort(),
+    );
   });
 
-  it("should return only the requested program areas", async () => {
+  it("should return program areas for only the requested users", async () => {
     mockedGetLoggedInUserSession.mockResolvedValue({
       name: "Adam Admin",
       email: "admin@admin.com",
@@ -301,8 +313,14 @@ describe("program area service", () => {
       conditions: ["789"],
     });
 
+    const userId = await createUser({
+      email: "requested@standard.com",
+      userType: "standard",
+      programs: [secondId, firstId],
+    });
+
     const programAreas = await listProgramAreas({
-      programAreaUuids: [secondId, firstId],
+      userUuids: [userId],
     });
 
     expect(programAreas.map(({ uuid }) => uuid).sort()).toStrictEqual(

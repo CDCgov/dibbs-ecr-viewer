@@ -24,19 +24,9 @@ const UserAdminPage = async () => {
   const programAreas = await listProgramAreas();
   const isLoggedInUserAdmin = isAdmin(loggedInUser);
 
-  const detailProgramAreaUuids = [
-    ...new Set(
-      users
-        // Program admins should be able to view all the
-        // program areas (and conditions) of their users.
-        .flatMap(({ program_areas }) =>
-          program_areas.map(({ program_area_uuid }) => program_area_uuid),
-        ),
-    ),
-  ];
   const detailProgramAreas = isLoggedInUserAdmin
     ? programAreas
-    : await listProgramAreas({ programAreaUuids: detailProgramAreaUuids });
+    : await listProgramAreas({ userUuids: users.map(({ uuid }) => uuid) });
 
   return (
     <>
