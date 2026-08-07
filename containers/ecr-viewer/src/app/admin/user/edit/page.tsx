@@ -48,7 +48,7 @@ const EditUserPage = async ({
   );
 
   const isValidUserType = (value: string): value is UserType => {
-    return value === USER_TYPE.ADMIN || value === USER_TYPE.STANDARD;
+    return value === USER_TYPE.ADMIN || value === USER_TYPE.PROG_ADMIN || value === USER_TYPE.STANDARD;
   };
 
   const users = await listUsers();
