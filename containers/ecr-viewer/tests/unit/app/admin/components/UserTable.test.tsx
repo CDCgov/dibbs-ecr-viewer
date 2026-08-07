@@ -71,11 +71,21 @@ const programAssignment = (userUuid: string, program: ListedProgramArea) => ({
 });
 
 const admin = makeUser("admin", "admin@example.com", "admin", []);
-const programAdmin = makeUser("program-admin", "program-admin@example.com", "prog-admin", [programAssignment("prgoram-admin", programA)])
-const standardUserShared = makeUser("shared", "shared@example.com", "standard", [
-  programAssignment("shared", programA),
-  programAssignment("shared", programB),
-]);
+const programAdmin = makeUser(
+  "program-admin",
+  "program-admin@example.com",
+  "prog-admin",
+  [programAssignment("prgoram-admin", programA)],
+);
+const standardUserShared = makeUser(
+  "shared",
+  "shared@example.com",
+  "standard",
+  [
+    programAssignment("shared", programA),
+    programAssignment("shared", programB),
+  ],
+);
 const standardUserRestricted = makeUser(
   "restricted",
   "restricted@example.com",
@@ -92,7 +102,13 @@ const standardUserUnassigned = makeUser(
 const renderTable = (isLoggedInUserAdmin: boolean) =>
   render(
     <UserTable
-      users={[admin, programAdmin, standardUserShared, standardUserRestricted, standardUserUnassigned]}
+      users={[
+        admin,
+        programAdmin,
+        standardUserShared,
+        standardUserRestricted,
+        standardUserUnassigned,
+      ]}
       programAreas={isLoggedInUserAdmin ? [programA, programB] : [programA]}
       detailProgramAreas={[programA, programB]}
       isLoggedInUserAdmin={isLoggedInUserAdmin}
@@ -141,7 +157,7 @@ describe("UserTable", () => {
         screen.queryByRole("radio", { name: "Admin" }),
       ).not.toBeInTheDocument();
       expect(
-        screen.queryByRole("radio", { name: "Program admin" })
+        screen.queryByRole("radio", { name: "Program admin" }),
       ).toBeInTheDocument();
 
       await user.click(screen.getByLabelText(/Filter by program area/));
@@ -171,7 +187,7 @@ describe("UserTable", () => {
         await user.click(
           screen.getByRole("button", { name: /Program A.*1 condition/ }),
         );
-        // Program admin should see Program B (& conditions) listed because 
+        // Program admin should see Program B (& conditions) listed because
         // their user has access to Program B
         await user.click(
           screen.getByRole("button", { name: /Program B.*1 condition/ }),
