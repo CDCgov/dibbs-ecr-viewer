@@ -166,6 +166,8 @@ describe("Render Medications table", () => {
     );
 
     expect(medicationDetails).toBeVisible();
-    expect(medicationDetails?.textContent).toContain("First medication note\nSecond medication note");
+    expect(medicationDetails?.textContent).toContain(
+      "First medication note\nSecond medication note",
+    );
   });
 });

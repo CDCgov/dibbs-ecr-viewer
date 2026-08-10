@@ -700,8 +700,7 @@ export const returnMedicationsTable = (fhirBundle: Bundle) => {
             value:
               evaluateAll(medicationStatement, fhirPathMappings.noteText).join(
                 "\n",
-              ) ||
-              noData,
+              ) || noData,
           },
         ];
 
