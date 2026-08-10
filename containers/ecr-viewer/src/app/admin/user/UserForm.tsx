@@ -161,7 +161,9 @@ const EmailFieldSet = ({
     <FieldSet legend={<span className={disabledTextClass}>Email</span>}>
       {!isDisabled && <span>Add the new user by their login email</span>}
       <FormGroup error={emailIsDupe}>
-        <label className={classNames("usa-label", "maxw-full", disabledTextClass)}>
+        <label
+          className={classNames("usa-label", "maxw-full", disabledTextClass)}
+        >
           Email
           {!isDisabled && <RequiredMarker />}
           {emailIsDupe && (

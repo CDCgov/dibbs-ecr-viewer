@@ -680,28 +680,42 @@ describe("User Service", () => {
     });
     it("should allow program admins to manage standard users and program admins within their accessible program areas", async () => {
       await expect(
-        validateAdminUserPermissions(expectedProgramAdminUser, "standard", [
-          programArea123Id!,
-        ], "create"),
+        validateAdminUserPermissions(
+          expectedProgramAdminUser,
+          "standard",
+          [programArea123Id!],
+          "create",
+        ),
       ).resolves.toBeUndefined();
       await expect(
-        validateAdminUserPermissions(expectedProgramAdminUser, "prog_admin", [
-          programArea123Id!,
-        ], "create"),
+        validateAdminUserPermissions(
+          expectedProgramAdminUser,
+          "prog_admin",
+          [programArea123Id!],
+          "create",
+        ),
       ).resolves.toBeUndefined();
     });
     it("should prevent program admins from managing admin users", async () => {
       await expect(
-        validateAdminUserPermissions(expectedProgramAdminUser, "admin", [], "create"),
+        validateAdminUserPermissions(
+          expectedProgramAdminUser,
+          "admin",
+          [],
+          "create",
+        ),
       ).rejects.toThrow(UserFacingError);
     });
     it("should prevent program admins from managing users outside of their accessible program areas", async () => {
       expect(programAreaUnauthorizedId).toMatch(UUID_REGEX);
 
       await expect(
-        validateAdminUserPermissions(expectedProgramAdminUser, "standard", [
-          programAreaUnauthorizedId!,
-        ], "create"),
+        validateAdminUserPermissions(
+          expectedProgramAdminUser,
+          "standard",
+          [programAreaUnauthorizedId!],
+          "create",
+        ),
       ).rejects.toThrow(UserFacingError);
     });
   });

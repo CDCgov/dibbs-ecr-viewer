@@ -26,7 +26,7 @@ import { makePlural } from "@/app/utils/format-utils";
 export const ProgramTable = ({
   programAreas,
   deleteAction,
-  isLoggedInUserAdmin
+  isLoggedInUserAdmin,
 }: {
   programAreas: ListedProgramArea[];
   deleteAction: (uuid: string) => Promise<ServerActionResult<void>>;
