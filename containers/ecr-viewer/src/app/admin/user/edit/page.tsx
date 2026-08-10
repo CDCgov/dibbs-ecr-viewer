@@ -71,8 +71,7 @@ const EditUserPage = async ({
         const res = await updateUserAction({
           uuid,
           updates: {
-            email,
-            user_type: userType,
+            ...(isAdmin(currentUser) ? { email, user_type: userType } : {}),
           },
           programs,
         });

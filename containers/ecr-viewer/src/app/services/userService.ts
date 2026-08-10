@@ -123,6 +123,7 @@ export const hasRelevantProgramAreaAccess = async (
     targetUser.user_type === USER_TYPE.PROG_ADMIN ||
     targetUser.user_type === USER_TYPE.STANDARD
   ) {
+    // TODO ANGELA (LATER): Can this use an existing helper function?
     const res = await getDb<Core>()
       .selectFrom("user_program_area")
       .select("user_program_area.program_area_uuid")
@@ -141,23 +142,60 @@ export const hasRelevantProgramAreaAccess = async (
 };
 
 /**
- * Validates whether a user has permission to manage another user's role and
- * program area assignments.
+ * Checks whether a target user is active and shares at least one program area
+ * with the currently logged-in user.
+ * @param targetUserUuid UUID of the target user
+ * @returns whether the target user has access relevant to the logged-in user
+ */
+export const hasRelevantUserAccess = async (
+  targetUserUuid: string,
+): Promise<boolean> => {
+  const targetUser = await getUser(targetUserUuid);
+  const [targetProgramAreas, loggedInProgramAreas] = await Promise.all([
+    listUserProgramAreas(targetUserUuid),
+    listLoggedInUserProgramAreas(),
+  ]);
+  const hasSharedProgramArea = targetProgramAreas.some(({ uuid }) =>
+    loggedInProgramAreas.some(
+      ({ uuid: loggedInProgramUuid }) => loggedInProgramUuid === uuid,
+    ),
+  );
+
+  if (!targetUser || targetUser.status !== "active" || !hasSharedProgramArea) {
+    return false;
+  }
+
+  return true;
+};
+
+// TODO ANGELA: loggedInUser vs targetUserUuid cleanup? email cleanup?
+/**
+ * Validates whether the logged-in user can create or edit another user's
+ * account, role, email, and program area assignments.
  *
- * Admin users bypass all restrictions. Program admins cannot manage admin users
- * and can only assign users to program areas they have access to.
+ * Admin users bypass all restrictions. Program admins cannot manage admin
+ * users, manage users outside their program areas, or modify a user's role or
+ * email when editing an existing user.
  *
  * @param loggedInUser - The user performing the user management action.
- * @param userType - The user type being assigned to the managed user.
- * @param programs - The program area IDs being assigned to the managed user.
+ * @param userType - The user type being assigned, if provided.
+ * @param programs - The program area UUIDs being assigned.
+ * @param action - Whether the user is being created or edited.
+ * @param targetUserUuid - The UUID of the user being edited, if applicable.
+ * @param email - The email being assigned, if provided.
  *
  * @throws {UserFacingError} If a program admin attempts to manage an admin user
- * or assign a user to a program area they do not have access to.
+ * or a user outside their program areas, or modify a user's role or email while
+ * editing.
+ * @returns A promise that resolves when the permission checks pass.
  */
 export async function validateAdminUserPermissions(
   loggedInUser: User,
-  userType: UserType,
+  userType: string | undefined,
   programs: string[],
+  action: "create" | "edit",
+  targetUserUuid?: string,
+  email?: string | null,
 ) {
   if (isAdmin(loggedInUser)) return;
 
@@ -165,6 +203,24 @@ export async function validateAdminUserPermissions(
     throw new UserFacingError("Program admins cannot manage admins.");
   }
 
+  if (targetUserUuid) {
+    const hasUserAccess = await hasRelevantUserAccess(targetUserUuid);
+    if (!hasUserAccess) {
+      throw new UserFacingError(
+        "Program admins cannot manage users outside of their program areas",
+      );
+    }
+  }
+
+  if (action === "edit") {
+    if (!!userType || !!email) {
+      throw new UserFacingError(
+        "Program admins cannot modify user emails or roles.",
+      );
+    }
+  }
+
+  // Program areas
   const hasAccess = await hasRelevantProgramAreaAccess(loggedInUser, programs);
   if (!hasAccess) {
     throw new UserFacingError(
@@ -250,7 +306,12 @@ export const createUser = audit(
     trx: Transaction<Core>,
   ): Promise<string> => {
     const creatingUser = await getCheckAnyAdmin("create new users");
-    await validateAdminUserPermissions(creatingUser, userType, programs);
+    await validateAdminUserPermissions(
+      creatingUser,
+      userType,
+      programs,
+      "create",
+    );
 
     try {
       const uuid = await createUserQuery(
@@ -396,9 +457,16 @@ export const updateUser = audit(
   ): Promise<void> => {
     const updatingUser = await getCheckAnyAdmin("update users");
 
-    // TODO ANGELA: Add validateAdminUserPermissions
-
     try {
+      await validateAdminUserPermissions(
+        updatingUser,
+        updates.user_type,
+        programs,
+        "edit",
+        uuid,
+        updates.email,
+      );
+
       await checkDupeEmail(trx, updates.email, uuid);
       Object.keys(updates).length > 0 &&
         (await updateUserQuery(trx, uuid, updates));
@@ -421,7 +489,9 @@ export const updateUser = audit(
           .execute();
         // Made into a set
         const accessibleProgramUuids = new Set(
-          updatingUserPrograms.map(({ program_area_uuid }) => program_area_uuid)
+          updatingUserPrograms.map(
+            ({ program_area_uuid }) => program_area_uuid,
+          ),
         );
 
         programsToUpdate = [
@@ -432,7 +502,7 @@ export const updateUser = audit(
             ...existingPrograms
               .filter(
                 ({ program_area_uuid }) =>
-                  !accessibleProgramUuids.has(program_area_uuid)
+                  !accessibleProgramUuids.has(program_area_uuid),
               )
               .map(({ program_area_uuid }) => program_area_uuid),
           ]),
