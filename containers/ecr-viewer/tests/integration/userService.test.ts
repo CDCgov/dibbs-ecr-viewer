@@ -16,25 +16,18 @@ import {
   createInitialAdminUser,
   createUser,
   deleteUser,
-  getCheckAdmin,
-  getCheckAnyAdmin,
-  hasRelevantProgramAreaAccess,
   isLoggedInUserEcrAuthed,
   isUserEcrAuthed,
   ListedUser,
   listLoggedInUserProgramAreas,
   listUserProgramAreas,
   listUsers,
-  notFoundUnlessAdmin,
-  notFoundUnlessAnyAdmin,
   updateUser,
-  validateAdminUserPermissions,
 } from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 import { getLastAuditLog } from "./helpers/core";
 import { buildCore, dropExisting } from "./helpers/ddl";
-import { UserFacingError } from "@/app/services/errorService";
 
 export const makePromiseResolveWithStatus = (
   status: number,
@@ -584,139 +577,4 @@ describe("User Service", () => {
     });
   });
 
-  describe("getCheckAdmin", () => {
-    it("should return admin if user is an admin", async () => {
-      const admin = await getCheckAdmin("do a thing");
-      expect(admin.email).toBe(adminUserEmail);
-    });
-
-    it("should error if user is not an admin", async () => {
-      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
-        name: "Sally Standard",
-        email: "standard@user.com",
-      });
-      await expect(getCheckAdmin("do a thing")).rejects.toThrow();
-    });
-  });
-
-  describe("notFoundUnlessAdmin", () => {
-    it("should do nothing if user is an admin", async () => {
-      await notFoundUnlessAdmin();
-      expect(notFound).not.toHaveBeenCalled();
-    });
-
-    it("should notFound if user is not an admin", async () => {
-      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
-        name: "Sally Standard",
-        email: "standard@user.com",
-      });
-      await notFoundUnlessAdmin();
-      expect(notFound).toHaveBeenCalled();
-    });
-  });
-
-  describe("getCheckAnyAdmin", () => {
-    it("should return admin if user is an admin", async () => {
-      const admin = await getCheckAnyAdmin("do a thing");
-      expect(admin.email).toBe(adminUserEmail);
-    });
-
-    it("should error if user is a standard user", async () => {
-      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
-        name: "Sally Standard",
-        email: "standard@user.com",
-      });
-      await expect(getCheckAnyAdmin("do a thing")).rejects.toThrow();
-    });
-  });
-
-  describe("notFoundUnlessAnyAdmin", () => {
-    it("should do nothing if user is an admin", async () => {
-      await notFoundUnlessAnyAdmin();
-      expect(notFound).not.toHaveBeenCalled();
-    });
-
-    it("should notFound if user is a standard user", async () => {
-      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
-        name: "Sally Standard",
-        email: "standard@user.com",
-      });
-      await notFoundUnlessAnyAdmin();
-      expect(notFound).toHaveBeenCalled();
-    });
-  });
-
-  describe("hasRelevantProgramAreaAccess", () => {
-    it("should return true for admin user", async () => {
-      const adminUser = await getCheckAdmin("check");
-      const res = await hasRelevantProgramAreaAccess(adminUser, [
-        "some-prog-uuid",
-      ]);
-      expect(res).toBeTrue();
-    });
-
-    it("should return false for an inactive user", async () => {
-      const adminUser = await getCheckAdmin("check");
-      const inactiveUser = { ...adminUser, status: "inactive" as const };
-      expect(
-        await hasRelevantProgramAreaAccess(inactiveUser, ["some-prog-uuid"]),
-      ).toBeFalse();
-    });
-
-    it("should return false when no user is passed and none is logged in", async () => {
-      (getLoggedInUserSession as jest.Mock).mockResolvedValue(undefined);
-      expect(
-        await hasRelevantProgramAreaAccess(undefined, ["some-prog-uuid"]),
-      ).toBeFalse();
-    });
-  });
-
-  // TODO ANGELA: Should this really be an integration test? Should this (and others be moved to unit tests)
-  describe("validateAdminUserPermissions", () => {
-    it("should allow admins to manage users of any type", async () => {
-      await expect(
-        validateAdminUserPermissions(expectedAdminUser, "admin", [], "create"),
-      ).resolves.toBeUndefined();
-    });
-    it("should allow program admins to manage standard users and program admins within their accessible program areas", async () => {
-      await expect(
-        validateAdminUserPermissions(
-          expectedProgramAdminUser,
-          "standard",
-          [programArea123Id!],
-          "create",
-        ),
-      ).resolves.toBeUndefined();
-      await expect(
-        validateAdminUserPermissions(
-          expectedProgramAdminUser,
-          "prog_admin",
-          [programArea123Id!],
-          "create",
-        ),
-      ).resolves.toBeUndefined();
-    });
-    it("should prevent program admins from managing admin users", async () => {
-      await expect(
-        validateAdminUserPermissions(
-          expectedProgramAdminUser,
-          "admin",
-          [],
-          "create",
-        ),
-      ).rejects.toThrow(UserFacingError);
-    });
-    it("should prevent program admins from managing users outside of their accessible program areas", async () => {
-      expect(programAreaUnauthorizedId).toMatch(UUID_REGEX);
-
-      await expect(
-        validateAdminUserPermissions(
-          expectedProgramAdminUser,
-          "standard",
-          [programAreaUnauthorizedId!],
-          "create",
-        ),
-      ).rejects.toThrow(UserFacingError);
-    });
-  });
 });
