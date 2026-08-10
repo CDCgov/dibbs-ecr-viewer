@@ -207,7 +207,7 @@ export async function validateAdminUserPermissions(
     const hasUserAccess = await hasRelevantUserAccess(targetUserUuid);
     if (!hasUserAccess) {
       throw new UserFacingError(
-        "Program admins cannot manage users outside of their program areas",
+        "Program admins cannot manage users outside of their program areas.",
       );
     }
   }
@@ -224,7 +224,7 @@ export async function validateAdminUserPermissions(
   const hasAccess = await hasRelevantProgramAreaAccess(loggedInUser, programs);
   if (!hasAccess) {
     throw new UserFacingError(
-      "Program admins cannot manage users outside of their program areas",
+      "Program admins cannot manage users outside of their program areas.",
     );
   }
 }

@@ -320,7 +320,7 @@ describe("User Service", () => {
           userType: "admin",
           programs: [],
         }),
-      ).rejects.toThrow("Program admins cannot create new admins");
+      ).rejects.toThrow("Program admins cannot manage admins.");
     });
 
     it("as a program admin, should not create a user for an unauthorized program area", async () => {
@@ -353,7 +353,7 @@ describe("User Service", () => {
           programs: [programArea123Id],
         }),
       ).rejects.toThrow(
-        "Program admins cannot create users outside of their program areas",
+        "Program admins cannot manage users outside of their program areas.",
       );
     });
   });
@@ -675,24 +675,24 @@ describe("User Service", () => {
   describe("validateAdminUserPermissions", () => {
     it("should allow admins to manage users of any type", async () => {
       await expect(
-        validateAdminUserPermissions(expectedAdminUser, "admin", []),
+        validateAdminUserPermissions(expectedAdminUser, "admin", [], "create"),
       ).resolves.toBeUndefined();
     });
     it("should allow program admins to manage standard users and program admins within their accessible program areas", async () => {
       await expect(
         validateAdminUserPermissions(expectedProgramAdminUser, "standard", [
           programArea123Id!,
-        ]),
+        ], "create"),
       ).resolves.toBeUndefined();
       await expect(
         validateAdminUserPermissions(expectedProgramAdminUser, "prog_admin", [
           programArea123Id!,
-        ]),
+        ], "create"),
       ).resolves.toBeUndefined();
     });
     it("should prevent program admins from managing admin users", async () => {
       await expect(
-        validateAdminUserPermissions(expectedProgramAdminUser, "admin", []),
+        validateAdminUserPermissions(expectedProgramAdminUser, "admin", [], "create"),
       ).rejects.toThrow(UserFacingError);
     });
     it("should prevent program admins from managing users outside of their accessible program areas", async () => {
@@ -701,7 +701,7 @@ describe("User Service", () => {
       await expect(
         validateAdminUserPermissions(expectedProgramAdminUser, "standard", [
           programAreaUnauthorizedId!,
-        ]),
+        ], "create"),
       ).rejects.toThrow(UserFacingError);
     });
   });

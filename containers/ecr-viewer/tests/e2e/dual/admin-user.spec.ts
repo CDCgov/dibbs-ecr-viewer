@@ -358,7 +358,7 @@ test.describe("user management page", () => {
 
     await expect(page.getByText(sharedUser)).toBeVisible();
     await expect(page.getByText(restrictedUser)).not.toBeVisible();
-    await expect(page.getByText(unassignedUser)).not.toBeVisible(); // TODO ANGELA: Left off here
+    await expect(page.getByText(unassignedUser)).not.toBeVisible();
 
     // Should not see Filter by Admin user type
     await page.getByLabel("Filter by user type").click();
