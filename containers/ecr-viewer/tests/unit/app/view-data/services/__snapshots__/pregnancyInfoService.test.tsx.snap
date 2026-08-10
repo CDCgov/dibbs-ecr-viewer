@@ -532,3 +532,156 @@ exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data
 Start: 06/18/2017
 </div>
 `;
+
+exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data  8`] = `
+<div>
+  <table
+    class="usa-table usa-table--borderless width-full _fixed_1khz6_1 table-caption-margin border-top border-left border-right"
+    data-testid="table"
+  >
+    <thead>
+      <tr>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Outcome
+        </th>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Count
+        </th>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Date
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          [#] Pregnancies
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          6
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          01/05/2018 10:15 AM
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          [#] Parity
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          2
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          01/05/2018 10:15 AM
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          [#] Abortions
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          3
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          01/05/2018 10:15 AM
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          [#] Births.term
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          2
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          01/05/2018 10:15 AM
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          [#] Births.preterm
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          0
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          01/05/2018 10:15 AM
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          [#] Births.still living
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          2
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          01/05/2018 10:15 AM
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Previous live births now dead #
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          0
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          01/05/2018 10:15 AM
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
