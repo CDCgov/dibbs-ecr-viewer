@@ -10,11 +10,6 @@ interface Address {
   period_end: string | undefined;
 }
 
-interface Specimen {
-  specimen_type: string | undefined;
-  specimen_collection_date: string | undefined;
-}
-
 interface Lab {
   uuid: string | undefined;
   test_type: string | undefined;
@@ -33,8 +28,9 @@ interface Lab {
   test_result_reference_range_low_units: string | undefined;
   test_result_reference_range_high_value: string | undefined;
   test_result_reference_range_high_units: string | undefined;
+  specimen_type: string | undefined;
   performing_lab: string | undefined;
-  specimens: Specimen[] | undefined;
+  specimen_collection_date: string | undefined;
 }
 
 interface Immunization {

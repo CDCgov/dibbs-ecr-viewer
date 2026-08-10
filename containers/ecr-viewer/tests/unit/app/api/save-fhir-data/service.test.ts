@@ -121,13 +121,9 @@ const makeLabMetadata = (index: number) => ({
   test_result_reference_range_low_units: "mL",
   test_result_reference_range_high_value: "10",
   test_result_reference_range_high_units: "mL",
+  specimen_type: "Nasopharyngeal swab",
   performing_lab: "Skylight Lab",
-  specimens: [
-    {
-      specimen_type: "Nasopharyngeal swab",
-      specimen_collection_date: "2026-07-14",
-    },
-  ],
+  specimen_collection_date: "2026-07-14",
 });
 
 const makeExtendedMetadata = (
@@ -301,10 +297,11 @@ describe("saveFhirMetadata", () => {
 
   it("saves lab metadata in batches", async () => {
     const { inserts } = makeMetadataDbMock();
-    const { specimens: _specimens, ...firstLab } = makeLabMetadata(0);
+    const firstLab = makeLabMetadata(0);
     const labColumnCount = Object.keys({
       ...firstLab,
       eicr_id: ecrId,
+      specimen_collection_date: new Date(firstLab.specimen_collection_date),
     }).length;
     const maxLabBatchSize = Math.floor(2099 / labColumnCount);
     const labs = Array.from({ length: maxLabBatchSize + 1 }, (_, index) =>
@@ -321,9 +318,6 @@ describe("saveFhirMetadata", () => {
     );
 
     const labInserts = inserts.filter((insert) => insert.table === "ecr_labs");
-    const specimenInserts = inserts.filter(
-      (insert) => insert.table === "ecr_lab_specimens",
-    );
 
     expect(result).toEqual({
       message: "Success. Saved metadata to database.",
@@ -337,24 +331,6 @@ describe("saveFhirMetadata", () => {
       (labInserts[0].values as Array<Record<string, unknown>>)[0],
     ).toMatchObject({
       eicr_id: ecrId,
-      performing_lab: "Skylight Lab",
-    });
-    expect(
-      (labInserts[0].values as Array<Record<string, unknown>>)[0],
-    ).not.toHaveProperty("specimens");
-
-    // Specimens are inserted once their parent lab batch has been committed,
-    // so they follow the same [maxLabBatchSize, 1] split as the labs.
-    expect(specimenInserts).toHaveLength(2);
-    expect(
-      specimenInserts.map((insert) => (insert.values as unknown[]).length),
-    ).toEqual([maxLabBatchSize, 1]);
-    expect(
-      (specimenInserts[0].values as Array<Record<string, unknown>>)[0],
-    ).toMatchObject({
-      eicr_id: ecrId,
-      lab_uuid: "lab-0",
-      specimen_type: "Nasopharyngeal swab",
       specimen_collection_date: new Date("2026-07-14"),
     });
     expect(rollbackFhirData).not.toHaveBeenCalled();

@@ -25,10 +25,7 @@ import {
 } from "@/app/data/blobStorage/utils";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core } from "@/app/data/metadataDb/types/core";
-import {
-  Extended,
-  NewECRLabSpecimens,
-} from "@/app/data/metadataDb/types/extended";
+import { Extended } from "@/app/data/metadataDb/types/extended";
 import { dbSchema } from "@/app/data/metadataDb/utils/db-config";
 import { createAuditRecord } from "@/app/services/auditLogService";
 
@@ -300,28 +297,17 @@ const saveExtendedMetadata = async (
   }
   if (metadata.labs) {
     let batchToInsert = [];
-    let specimensToInsert: NewECRLabSpecimens[] = [];
 
     for (let i = 0; i < metadata.labs.length; i++) {
-      const { specimens, ...lab } = metadata.labs[i];
       const record = {
-        ...lab,
+        ...metadata.labs[i],
         eicr_id: ecrId,
+        specimen_collection_date: asDate(
+          metadata.labs[i].specimen_collection_date,
+        ),
       };
 
       batchToInsert.push(record);
-
-      if (record.uuid && specimens?.length) {
-        specimensToInsert.push(
-          ...specimens.map((specimen) => ({
-            uuid: randomUUID(),
-            eicr_id: ecrId,
-            lab_uuid: record.uuid as string,
-            specimen_type: specimen.specimen_type,
-            specimen_collection_date: asDate(specimen.specimen_collection_date),
-          })),
-        );
-      }
 
       const numColumns = Object.keys(record).length;
 
@@ -335,26 +321,6 @@ const saveExtendedMetadata = async (
         await trx.insertInto("ecr_labs").values(batchToInsert).execute();
 
         batchToInsert = [];
-
-        // Specimens reference ecr_labs via a foreign key, so they can only be
-        // inserted once their parent lab batch has been committed.
-        if (specimensToInsert.length) {
-          const maxSpecimenRowsPerBatch = Math.floor(
-            2099 / Object.keys(specimensToInsert[0]).length,
-          );
-          for (
-            let j = 0;
-            j < specimensToInsert.length;
-            j += maxSpecimenRowsPerBatch
-          ) {
-            await trx
-              .insertInto("ecr_lab_specimens")
-              .values(specimensToInsert.slice(j, j + maxSpecimenRowsPerBatch))
-              .execute();
-          }
-
-          specimensToInsert = [];
-        }
       }
     }
   }
