@@ -7,6 +7,7 @@ import {
   Composition,
   Device,
   DiagnosticReport,
+  Element,
   Observation,
   Organization,
   Specimen,
@@ -487,9 +488,8 @@ export const evaluateDiagnosticReportData = (
     },
     {
       columnName: "Lab Comment",
-      infoPath: "noteText",
+      evaluateEntry: evaluateLabCommentNotes,
       hiddenBaseText: "comment",
-      applyToValue: (v) => <FieldValue>{safeParse(v)}</FieldValue>,
       className: "minw-10 width-20",
     },
   ];
@@ -513,6 +513,13 @@ export const evaluateDiagnosticReportData = (
       />
     );
   }
+};
+
+const evaluateLabCommentNotes = (entry: Element) => {
+  const notes = evaluateAll(entry, fhirPathMappings.noteText);
+  if (notes.length === 0) return "";
+
+  return <FieldValue>{safeParse(notes.join("<br />"))}</FieldValue>;
 };
 
 /**
