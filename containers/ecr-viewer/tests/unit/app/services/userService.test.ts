@@ -262,7 +262,7 @@ describe("userService", () => {
           action: "create",
           targetUserType: "admin",
           targetProgramAreaUuids: [],
-        })
+        }),
       ).resolves.toBeUndefined();
     });
 
@@ -273,7 +273,7 @@ describe("userService", () => {
           action: "create",
           targetUserType: "standard",
           targetProgramAreaUuids: [accessibleProgramAreaId],
-        })
+        }),
       ).resolves.toBeUndefined();
       await expect(
         validateAdminUserPermissions({
@@ -281,7 +281,7 @@ describe("userService", () => {
           action: "create",
           targetUserType: "prog_admin",
           targetProgramAreaUuids: [accessibleProgramAreaId],
-        })
+        }),
       ).resolves.toBeUndefined();
     });
 
@@ -292,7 +292,7 @@ describe("userService", () => {
           action: "create",
           targetUserType: "admin",
           targetProgramAreaUuids: [],
-        })
+        }),
       ).rejects.toThrow(UserFacingError);
     });
 
@@ -303,7 +303,7 @@ describe("userService", () => {
           action: "create",
           targetUserType: "standard",
           targetProgramAreaUuids: [inaccessibleProgramAreaId],
-        })
+        }),
       ).rejects.toThrow(UserFacingError);
     });
 
@@ -314,7 +314,7 @@ describe("userService", () => {
           action: "edit",
           targetUserUuid: "no-shared-user",
           targetProgramAreaUuids: [],
-        })
+        }),
       ).rejects.toThrow(UserFacingError);
     });
 

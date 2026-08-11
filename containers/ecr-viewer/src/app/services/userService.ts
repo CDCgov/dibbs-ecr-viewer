@@ -123,7 +123,6 @@ export const hasRelevantProgramAreaAccess = async (
     targetUser.user_type === USER_TYPE.PROG_ADMIN ||
     targetUser.user_type === USER_TYPE.STANDARD
   ) {
-
     const res = await getDb<Core>()
       .selectFrom("user_program_area")
       .select("user_program_area.program_area_uuid")
@@ -189,23 +188,21 @@ export const hasRelevantUserAccess = async (
  * editing.
  * @returns A promise that resolves when the permission checks pass.
  */
-export async function validateAdminUserPermissions(
-  {
-    loggedInUser,
-    action,
-    targetUserType,
-    targetProgramAreaUuids,
-    targetUserUuid,
-    targetEmail,
-  }: {
-    loggedInUser: User;
-    action: "create" | "edit";
-    targetUserType?: User["user_type"];
-    targetProgramAreaUuids: string[];
-    targetUserUuid?: string;
-    targetEmail?: string | null;
-  },
-) {
+export async function validateAdminUserPermissions({
+  loggedInUser,
+  action,
+  targetUserType,
+  targetProgramAreaUuids,
+  targetUserUuid,
+  targetEmail,
+}: {
+  loggedInUser: User;
+  action: "create" | "edit";
+  targetUserType?: User["user_type"];
+  targetProgramAreaUuids: string[];
+  targetUserUuid?: string;
+  targetEmail?: string | null;
+}) {
   if (isAdmin(loggedInUser)) return;
 
   if (targetUserType === USER_TYPE.ADMIN) {
@@ -544,9 +541,7 @@ export const listLoggedInUserProgramAreas = async (): Promise<
   ProgramArea[]
 > => {
   const user = await getLoggedInUser();
-  return user
-    ? await listUserProgramAreasQuery(getDb<Core>(), user.uuid)
-    : [];
+  return user ? await listUserProgramAreasQuery(getDb<Core>(), user.uuid) : [];
 };
 
 export const listUserProgramAreasQuery = async (
