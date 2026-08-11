@@ -243,44 +243,109 @@ describe("userService", () => {
   describe("validateAdminUserPermissions", () => {
     it("allows admins to manage users of any type", async () => {
       await expect(
-        validateAdminUserPermissions(adminUser, "admin", [], "create")
+        validateAdminUserPermissions({
+          loggedInUser: adminUser,
+          action: "create",
+          targetUserType: "admin",
+          targetProgramAreaUuids: [],
+        })
       ).resolves.toBeUndefined();
     });
 
-    it("allows program admins to manage users in accessible program areas", async () => {
+    it("allows program admins to create users in accessible program areas", async () => {
       await expect(
-        validateAdminUserPermissions(
-          programAdminUser,
-          "standard",
-          [accessibleProgramAreaId],
-          "create"
-        )
+        validateAdminUserPermissions({
+          loggedInUser: programAdminUser,
+          action: "create",
+          targetUserType: "standard",
+          targetProgramAreaUuids: [accessibleProgramAreaId],
+        })
       ).resolves.toBeUndefined();
       await expect(
-        validateAdminUserPermissions(
-          programAdminUser,
-          "prog_admin",
-          [accessibleProgramAreaId],
-          "create"
-        )
+        validateAdminUserPermissions({
+          loggedInUser: programAdminUser,
+          action: "create",
+          targetUserType: "prog_admin",
+          targetProgramAreaUuids: [accessibleProgramAreaId],
+        })
       ).resolves.toBeUndefined();
     });
 
-    it("prevents program admins from managing admin users", async () => {
+    it("should invalidate program admins from managing admin users", async () => {
       await expect(
-        validateAdminUserPermissions(programAdminUser, "admin", [], "create")
+        validateAdminUserPermissions({
+          loggedInUser: programAdminUser,
+          action: "create",
+          targetUserType: "admin",
+          targetProgramAreaUuids: [],
+        })
       ).rejects.toThrow(UserFacingError);
     });
 
-    it("prevents program admins from managing users outside their accessible program areas", async () => {
+    it("should invalidate program admins from creating users outside their accessible program areas", async () => {
       await expect(
-        validateAdminUserPermissions(
-          programAdminUser,
-          "standard",
-          [inaccessibleProgramAreaId],
-          "create"
-        )
+        validateAdminUserPermissions({
+          loggedInUser: programAdminUser,
+          action: "create",
+          targetUserType: "standard",
+          targetProgramAreaUuids: [inaccessibleProgramAreaId],
+        })
       ).rejects.toThrow(UserFacingError);
+    });
+
+    it("should invalidate program admins from editing users outside their program areas", async () => {
+      await expect(
+        validateAdminUserPermissions({
+          loggedInUser: programAdminUser,
+          action: "edit",
+          targetUserUuid: "no-shared-user",
+          targetProgramAreaUuids: [],
+        })
+      ).rejects.toThrow(UserFacingError);
+    });
+
+    it("should invalidate program admins from editing a user's role or email", async () => {
+      await expect(
+        validateAdminUserPermissions({
+          loggedInUser: programAdminUser,
+          action: "edit",
+          targetUserUuid: "target-user",
+          targetUserType: "standard",
+          targetProgramAreaUuids: [],
+        }),
+      ).rejects.toThrow(UserFacingError);
+
+      await expect(
+        validateAdminUserPermissions({
+          loggedInUser: programAdminUser,
+          action: "edit",
+          targetUserUuid: "target-user",
+          targetEmail: "updated@example.com",
+          targetProgramAreaUuids: [],
+        }),
+      ).rejects.toThrow(UserFacingError);
+    });
+
+    it("should invalidate program admins from assigning inaccessible program areas while editing", async () => {
+      await expect(
+        validateAdminUserPermissions({
+          loggedInUser: programAdminUser,
+          action: "edit",
+          targetUserUuid: "target-user",
+          targetProgramAreaUuids: [inaccessibleProgramAreaId],
+        }),
+      ).rejects.toThrow(UserFacingError);
+    });
+
+    it("allows program admins to assign accessible program areas while editing", async () => {
+      await expect(
+        validateAdminUserPermissions({
+          loggedInUser: programAdminUser,
+          action: "edit",
+          targetUserUuid: "target-user",
+          targetProgramAreaUuids: [accessibleProgramAreaId],
+        }),
+      ).resolves.toBeUndefined();
     });
   });
 });

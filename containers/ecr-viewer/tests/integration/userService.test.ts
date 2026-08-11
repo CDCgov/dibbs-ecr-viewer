@@ -590,6 +590,33 @@ describe("User Service", () => {
       });
     });
 
+    it("as a program admin, should preserve a user's inaccessible program area", async () => {
+      // Assign the user to one accessible and one inaccessible program area as an admin.
+      await updateUser({
+        uuid: standardUserId!,
+        updates: {},
+        programs: [programArea123Id!, programAreaUnauthorizedId!],
+      });
+
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        name: "Program Admin",
+        email: programAdminEmail,
+      });
+
+      // The program admin submits only an accessible area.
+      await updateUser({
+        uuid: standardUserId!,
+        updates: {},
+        programs: [programArea456Id!],
+      });
+
+      expect(await listUserProgramAreas(standardUserId!)).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ uuid: programArea456Id! }),
+          expect.objectContaining({ uuid: programAreaUnauthorizedId! }),
+        ]),
+      );
+    });
   });
 
   describe("isUserEcrAuthed: should now be authed to see eCR", () => {

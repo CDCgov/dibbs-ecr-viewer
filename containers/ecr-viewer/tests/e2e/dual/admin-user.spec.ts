@@ -398,6 +398,9 @@ test.describe("user management page", () => {
     await page.context().clearCookies();
     await logIn(page, { userType: "PROGRAM_ADMIN", useCookies: false });
     await page.goto("/ecr-viewer/admin/user");
+    await page
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("100");
     await page.getByRole("button", { name: user }).click();
     const dialog = page.getByRole("dialog");
     await dialog.getByText("Edit user").click();
