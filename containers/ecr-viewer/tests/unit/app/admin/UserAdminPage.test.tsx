@@ -4,12 +4,15 @@ import { notFound } from "next/navigation";
 
 import { FormProgram, ProgramFieldSet } from "@/app/admin/user/UserForm";
 import CreateUserPage from "@/app/admin/user/create/page";
+import EditUserPage from "@/app/admin/user/edit/page";
 import UserAdminPage from "@/app/admin/user/page";
 import { listProgramAreas } from "@/app/services/programAreaService";
 import {
   isAdmin,
+  getUser,
   ListedUser,
   listUsers,
+  listUserProgramAreas,
   notFoundUnlessAnyAdmin,
 } from "@/app/services/userService";
 import { getLoggedInUser } from "@/app/services/loggedInUserService";
@@ -290,6 +293,58 @@ describe("User Admin Page", () => {
       );
 
       await expect(CreateUserPage()).rejects.toThrow("Not found");
+    });
+  });
+
+  describe("Editing users", () => {
+    it("as a program admin, should render an edit user page with restricted permissions", async () => {
+      (notFoundUnlessAnyAdmin as unknown as jest.Mock).mockResolvedValue(true);
+      (getLoggedInUser as unknown as jest.Mock).mockResolvedValue(
+        mockProgramAdmin,
+      );
+      (isAdmin as unknown as jest.Mock).mockReturnValue(false);
+      (getUser as jest.Mock).mockResolvedValue(mockUsers[2]);
+      (listUserProgramAreas as jest.Mock).mockResolvedValue([
+        mockPrograms[0],
+      ]);
+      (listProgramAreas as jest.Mock).mockResolvedValue(mockPrograms);
+      (listUsers as jest.Mock).mockResolvedValue(mockUsers);
+
+      const { container } = render(
+        await EditUserPage({
+          searchParams: Promise.resolve({ uuid: "234" }),
+        }),
+      );
+      expect(container).toMatchSnapshot();
+      let results;
+      await act(async () => {
+        results = await axe(container);
+      });
+      expect(results).toHaveNoViolations();
+    });
+    
+    it("as a program admin, cannot edit a user's email or user type", async () => {
+      (notFoundUnlessAnyAdmin as unknown as jest.Mock).mockResolvedValue(true);
+      (getLoggedInUser as jest.Mock).mockResolvedValue(mockProgramAdmin);
+      (isAdmin as unknown as jest.Mock).mockReturnValue(false);
+      (getUser as jest.Mock).mockResolvedValue(mockUsers[2]);
+      (listUserProgramAreas as jest.Mock).mockResolvedValue([
+        mockPrograms[0],
+      ]);
+      (listProgramAreas as jest.Mock).mockResolvedValue(mockPrograms);
+      (listUsers as jest.Mock).mockResolvedValue(mockUsers);
+
+      render(
+        await EditUserPage({
+          searchParams: Promise.resolve({ uuid: "234" }),
+        }),
+      );
+
+      expect(screen.getByLabelText(/Email/i)).toBeDisabled();
+      expect(screen.getAllByRole("radio")).toHaveLength(2);
+      screen.getAllByRole("radio").forEach((radio) =>
+        expect(radio).toBeDisabled(),
+      );
     });
   });
 });
