@@ -483,7 +483,7 @@ describe("User Service", () => {
 
     it("as a program admin, should not update an unauthorized user", async () => {
       programAreaUnauthorizedId = await createProgramArea(
-        programAreaUnauthorized
+        programAreaUnauthorized,
       );
       unauthorizedUserId = await createUser({
         email: unauthorizedUserEmail,
@@ -501,9 +501,9 @@ describe("User Service", () => {
           uuid: unauthorizedUserId!,
           updates: { name: "Unauthorized Update" },
           programs: [],
-        })
+        }),
       ).rejects.toThrow(
-        "Program admins cannot manage users outside of their program areas."
+        "Program admins cannot manage users outside of their program areas.",
       );
     });
 
@@ -519,9 +519,7 @@ describe("User Service", () => {
           updates: { email: "updated@programadmin.com" },
           programs: [programArea456Id!],
         }),
-      ).rejects.toThrow(
-        "Program admins cannot modify user emails or roles.",
-      );
+      ).rejects.toThrow("Program admins cannot modify user emails or roles.");
     });
 
     it("as a program admin, should not update a user's role", async () => {
@@ -536,9 +534,7 @@ describe("User Service", () => {
           updates: { user_type: "standard" },
           programs: [programArea456Id!],
         }),
-      ).rejects.toThrow(
-        "Program admins cannot modify user emails or roles.",
-      );
+      ).rejects.toThrow("Program admins cannot modify user emails or roles.");
     });
 
     it("as a program admin, should not update a user's unauthorized program areas", async () => {
@@ -706,5 +702,4 @@ describe("User Service", () => {
       );
     });
   });
-
 });

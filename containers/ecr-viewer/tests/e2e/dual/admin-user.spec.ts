@@ -340,13 +340,13 @@ test.describe("user management page", () => {
       browserName,
       page,
       "standard",
-      [otherProgram]
+      [otherProgram],
     );
     const unassignedUser = await createRandomUser(
       browserName,
       page,
       "standard",
-      []
+      [],
     );
 
     await page.context().clearCookies();
@@ -369,7 +369,7 @@ test.describe("user management page", () => {
     await page.getByLabel("Filter by program area").click();
     await expect(page.getByText("All program areas (Admin)")).not.toBeVisible();
     await expect(
-      page.getByText("No program areas (Standard)")
+      page.getByText("No program areas (Standard)"),
     ).not.toBeVisible();
     const covidFilter = page.getByLabel("COVID", { exact: true });
     await covidFilter.dispatchEvent("click");

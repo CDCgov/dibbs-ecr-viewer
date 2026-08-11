@@ -80,7 +80,11 @@ jest.mock("@/app/data/metadataDb/database", () => ({
           return query;
         }),
         where: jest.fn(
-          (_column: string, _operator: string, value: string | (() => void)) => {
+          (
+            _column: string,
+            _operator: string,
+            value: string | (() => void),
+          ) => {
             if (typeof value === "string") programAreaValues.push(value);
             return query;
           },
@@ -91,7 +95,10 @@ jest.mock("@/app/data/metadataDb/database", () => ({
             ? {
                 ...standardUser,
                 uuid: programAreaValues[0],
-                status: programAreaValues[0] === "inactive-user" ? "inactive" : "active",
+                status:
+                  programAreaValues[0] === "inactive-user"
+                    ? "inactive"
+                    : "active",
               }
             : programAreaValues.includes(accessibleProgramAreaId)
               ? { program_area_uuid: accessibleProgramAreaId }
@@ -109,7 +116,6 @@ jest.mock("@/app/data/metadataDb/database", () => ({
 }));
 
 describe("userService", () => {
-  
   describe("isLoggedInUserEcrAuthed", () => {
     it("admin should be authed to see ecr", async () => {
       const res = await isLoggedInUserEcrAuthed("some-ecr-id");
@@ -127,13 +133,19 @@ describe("userService", () => {
 
   describe("isUserEcrAuthed", () => {
     it("should authorize a user with access to the eCR's program area", async () => {
-      const res = await isUserEcrAuthed("some-user-id", accessibleProgramAreaId);
+      const res = await isUserEcrAuthed(
+        "some-user-id",
+        accessibleProgramAreaId,
+      );
 
       expect(res).toBeTrue();
     });
 
     it("should not authorize a user without access to the eCR's program area", async () => {
-      const res = await isUserEcrAuthed("some-user-id", inaccessibleProgramAreaId);
+      const res = await isUserEcrAuthed(
+        "some-user-id",
+        inaccessibleProgramAreaId,
+      );
 
       expect(res).toBeFalse();
     });
@@ -205,7 +217,7 @@ describe("userService", () => {
       const adminUser = await getCheckAdmin("check");
       const res = await hasRelevantProgramAreaAccess(
         adminUser,
-        "some-prog-uuid"
+        ["some-prog-uuid"],
       );
       expect(res).toBeTrue();
     });
@@ -214,14 +226,14 @@ describe("userService", () => {
       const adminUser = await getCheckAdmin("check");
       const inactiveUser = { ...adminUser, status: "inactive" as const };
       expect(
-        await hasRelevantProgramAreaAccess(inactiveUser, "some-prog-uuid")
+        await hasRelevantProgramAreaAccess(inactiveUser, ["some-prog-uuid"]),
       ).toBeFalse();
     });
 
     it("should return false when no user is passed and none is logged in", async () => {
       (getLoggedInUser as jest.Mock).mockResolvedValue(undefined);
       expect(
-        await hasRelevantProgramAreaAccess(undefined, "some-prog-uuid")
+        await hasRelevantProgramAreaAccess(undefined, ["some-prog-uuid"]),
       ).toBeFalse();
     });
   });
@@ -232,7 +244,9 @@ describe("userService", () => {
     });
 
     it("should return false when users do not share a program area", async () => {
-      await expect(hasRelevantUserAccess("no-shared-user")).resolves.toBeFalse();
+      await expect(
+        hasRelevantUserAccess("no-shared-user"),
+      ).resolves.toBeFalse();
     });
 
     it("should return false for an inactive user", async () => {
