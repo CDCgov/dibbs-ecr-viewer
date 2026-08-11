@@ -304,9 +304,7 @@ describe("User Admin Page", () => {
       );
       (isAdmin as unknown as jest.Mock).mockReturnValue(false);
       (getUser as jest.Mock).mockResolvedValue(mockUsers[2]);
-      (listUserProgramAreas as jest.Mock).mockResolvedValue([
-        mockPrograms[0],
-      ]);
+      (listUserProgramAreas as jest.Mock).mockResolvedValue([mockPrograms[0]]);
       (listProgramAreas as jest.Mock).mockResolvedValue(mockPrograms);
       (listUsers as jest.Mock).mockResolvedValue(mockUsers);
 
@@ -322,15 +320,13 @@ describe("User Admin Page", () => {
       });
       expect(results).toHaveNoViolations();
     });
-    
+
     it("as a program admin, cannot edit a user's email or user type", async () => {
       (notFoundUnlessAnyAdmin as unknown as jest.Mock).mockResolvedValue(true);
       (getLoggedInUser as jest.Mock).mockResolvedValue(mockProgramAdmin);
       (isAdmin as unknown as jest.Mock).mockReturnValue(false);
       (getUser as jest.Mock).mockResolvedValue(mockUsers[2]);
-      (listUserProgramAreas as jest.Mock).mockResolvedValue([
-        mockPrograms[0],
-      ]);
+      (listUserProgramAreas as jest.Mock).mockResolvedValue([mockPrograms[0]]);
       (listProgramAreas as jest.Mock).mockResolvedValue(mockPrograms);
       (listUsers as jest.Mock).mockResolvedValue(mockUsers);
 
@@ -342,9 +338,9 @@ describe("User Admin Page", () => {
 
       expect(screen.getByLabelText(/Email/i)).toBeDisabled();
       expect(screen.getAllByRole("radio")).toHaveLength(2);
-      screen.getAllByRole("radio").forEach((radio) =>
-        expect(radio).toBeDisabled(),
-      );
+      screen
+        .getAllByRole("radio")
+        .forEach((radio) => expect(radio).toBeDisabled());
     });
   });
 });
