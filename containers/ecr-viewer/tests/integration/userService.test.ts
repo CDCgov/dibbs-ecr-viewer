@@ -205,11 +205,9 @@ describe("User Service", () => {
     const afterUsers = await listUsers();
     expect(afterUsers).toBeArrayOfSize(1);
     expect(afterUsers).toStrictEqual([expectedAdminUser]);
-  });
 
-  it("isLoggedInUserEcrAuthed: admin should be authed to see ecr", async () => {
-    const res = await isLoggedInUserEcrAuthed(ecrId);
-    expect(res).toBeTrue();
+    // admin should be authed to see eCR
+    expect(await isLoggedInUserEcrAuthed(ecrId)).toBeTrue();
   });
 
   describe("createUser", () => {

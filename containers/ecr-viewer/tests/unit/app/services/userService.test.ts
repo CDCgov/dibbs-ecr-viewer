@@ -3,7 +3,10 @@ import { UserFacingError } from "@/app/services/errorService";
 import {
   getCheckAdmin,
   getCheckAnyAdmin,
+  hasRelevantUserAccess,
   hasRelevantProgramAreaAccess,
+  isLoggedInUserEcrAuthed,
+  isUserEcrAuthed,
   notFoundUnlessAdmin,
   notFoundUnlessAnyAdmin,
   validateAdminUserPermissions,
@@ -62,20 +65,42 @@ jest.mock("@/app/data/metadataDb/database", () => ({
   getDb: jest.fn(() => ({
     selectFrom: jest.fn(() => {
       const programAreaValues: string[] = [];
+      let isUserQuery = false;
       const query: {
         select: jest.Mock;
+        selectAll: jest.Mock;
         where: jest.Mock;
+        innerJoin: jest.Mock;
         executeTakeFirst: jest.Mock;
+        execute: jest.Mock;
       } = {
         select: jest.fn(() => query),
-        where: jest.fn((_column: string, _operator: string, value: string) => {
-          programAreaValues.push(value);
+        selectAll: jest.fn((...fields: unknown[]) => {
+          isUserQuery = fields.length === 0;
           return query;
         }),
+        where: jest.fn(
+          (_column: string, _operator: string, value: string | (() => void)) => {
+            if (typeof value === "string") programAreaValues.push(value);
+            return query;
+          },
+        ),
+        innerJoin: jest.fn(() => query),
         executeTakeFirst: jest.fn(async () =>
-          programAreaValues.includes(accessibleProgramAreaId)
-            ? { program_area_uuid: accessibleProgramAreaId }
-            : undefined,
+          isUserQuery
+            ? {
+                ...standardUser,
+                uuid: programAreaValues[0],
+                status: programAreaValues[0] === "inactive-user" ? "inactive" : "active",
+              }
+            : programAreaValues.includes(accessibleProgramAreaId)
+              ? { program_area_uuid: accessibleProgramAreaId }
+              : undefined,
+        ),
+        execute: jest.fn(async () =>
+          programAreaValues.includes("no-shared-user")
+            ? []
+            : [{ uuid: accessibleProgramAreaId }],
         ),
       };
       return query;
@@ -84,6 +109,36 @@ jest.mock("@/app/data/metadataDb/database", () => ({
 }));
 
 describe("userService", () => {
+  
+  describe("isLoggedInUserEcrAuthed", () => {
+    it("admin should be authed to see ecr", async () => {
+      const res = await isLoggedInUserEcrAuthed("some-ecr-id");
+      expect(res).toBeTrue();
+    });
+
+    it("should not authorize a user when no user is logged in", async () => {
+      (getLoggedInUser as jest.Mock).mockResolvedValue(undefined);
+
+      const res = await isLoggedInUserEcrAuthed("some-ecr-id");
+
+      expect(res).toBeFalse();
+    });
+  });
+
+  describe("isUserEcrAuthed", () => {
+    it("should authorize a user with access to the eCR's program area", async () => {
+      const res = await isUserEcrAuthed("some-user-id", accessibleProgramAreaId);
+
+      expect(res).toBeTrue();
+    });
+
+    it("should not authorize a user without access to the eCR's program area", async () => {
+      const res = await isUserEcrAuthed("some-user-id", inaccessibleProgramAreaId);
+
+      expect(res).toBeFalse();
+    });
+  });
+
   describe("getCheckAdmin", () => {
     it("should return admin if user is an admin", async () => {
       const admin = await getCheckAdmin("do a thing");
@@ -100,6 +155,12 @@ describe("userService", () => {
     it("should return admin if user is an admin", async () => {
       const admin = await getCheckAnyAdmin("do a thing");
       expect(admin.email).toBe(adminUserEmail);
+    });
+
+    it("should return admin if user is a program admin", async () => {
+      (getLoggedInUser as jest.Mock).mockResolvedValue(programAdminUser);
+      const programAdmin = await getCheckAnyAdmin("do a thing");
+      expect(programAdmin.email).toBe(programAdminEmail);
     });
 
     it("should error if user is a standard user", async () => {
@@ -127,6 +188,11 @@ describe("userService", () => {
       expect(notFound).not.toHaveBeenCalled();
     });
 
+    it("should do nothing if user is a program admin", async () => {
+      await notFoundUnlessAnyAdmin();
+      expect(notFound).not.toHaveBeenCalled();
+    });
+
     it("should notFound if user is a standard user", async () => {
       (getLoggedInUser as jest.Mock).mockResolvedValue(standardUser);
       await notFoundUnlessAnyAdmin();
@@ -139,7 +205,7 @@ describe("userService", () => {
       const adminUser = await getCheckAdmin("check");
       const res = await hasRelevantProgramAreaAccess(
         adminUser,
-        "some-prog-uuid",
+        "some-prog-uuid"
       );
       expect(res).toBeTrue();
     });
@@ -148,24 +214,36 @@ describe("userService", () => {
       const adminUser = await getCheckAdmin("check");
       const inactiveUser = { ...adminUser, status: "inactive" as const };
       expect(
-        await hasRelevantProgramAreaAccess(inactiveUser, "some-prog-uuid"),
+        await hasRelevantProgramAreaAccess(inactiveUser, "some-prog-uuid")
       ).toBeFalse();
     });
 
     it("should return false when no user is passed and none is logged in", async () => {
       (getLoggedInUser as jest.Mock).mockResolvedValue(undefined);
       expect(
-        await hasRelevantProgramAreaAccess(undefined, "some-prog-uuid"),
+        await hasRelevantProgramAreaAccess(undefined, "some-prog-uuid")
       ).toBeFalse();
     });
   });
 
-  // TODO ANGELA: Add for hasRelevantUserAccess
+  describe("hasRelevantUserAccess", () => {
+    it("should return true for an active user sharing a program area", async () => {
+      await expect(hasRelevantUserAccess("target-user")).resolves.toBeTrue();
+    });
+
+    it("should return false when users do not share a program area", async () => {
+      await expect(hasRelevantUserAccess("no-shared-user")).resolves.toBeFalse();
+    });
+
+    it("should return false for an inactive user", async () => {
+      await expect(hasRelevantUserAccess("inactive-user")).resolves.toBeFalse();
+    });
+  });
 
   describe("validateAdminUserPermissions", () => {
     it("allows admins to manage users of any type", async () => {
       await expect(
-        validateAdminUserPermissions(adminUser, "admin", [], "create"),
+        validateAdminUserPermissions(adminUser, "admin", [], "create")
       ).resolves.toBeUndefined();
     });
 
@@ -175,22 +253,22 @@ describe("userService", () => {
           programAdminUser,
           "standard",
           [accessibleProgramAreaId],
-          "create",
-        ),
+          "create"
+        )
       ).resolves.toBeUndefined();
       await expect(
         validateAdminUserPermissions(
           programAdminUser,
           "prog_admin",
           [accessibleProgramAreaId],
-          "create",
-        ),
+          "create"
+        )
       ).resolves.toBeUndefined();
     });
 
     it("prevents program admins from managing admin users", async () => {
       await expect(
-        validateAdminUserPermissions(programAdminUser, "admin", [], "create"),
+        validateAdminUserPermissions(programAdminUser, "admin", [], "create")
       ).rejects.toThrow(UserFacingError);
     });
 
@@ -200,8 +278,8 @@ describe("userService", () => {
           programAdminUser,
           "standard",
           [inaccessibleProgramAreaId],
-          "create",
-        ),
+          "create"
+        )
       ).rejects.toThrow(UserFacingError);
     });
   });
