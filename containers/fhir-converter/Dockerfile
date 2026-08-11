@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 # Download FHIR-Converter
 
-RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch laura/tobacco-history --depth 1 /App
+RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch 8.8.2 --depth 1 /App
 
 WORKDIR /App
 
