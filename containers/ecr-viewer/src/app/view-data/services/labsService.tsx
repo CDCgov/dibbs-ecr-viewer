@@ -715,10 +715,39 @@ const getLabsContent = (
 ) => {
   const labTableDiagnostic = evaluateDiagnosticReportData(obs, fhirIndex);
   const labTableOrganisms = evaluateOrganismsReportData(obs);
-  const labSpecimen = evaluateReference2<Specimen>(
-    fhirIndex,
-    report.specimen?.[0]?.reference,
-  );
+
+  // A DiagnosticReport can reference more than one Specimen. Resolve all
+  // of them so each gets its own "Specimen (Source)" group below.
+  const specimens = (report.specimen ?? [])
+    .map((ref) => evaluateReference2<Specimen>(fhirIndex, ref.reference))
+    .filter(notEmpty);
+
+  const getSpecimenFields = (specimen?: Specimen): DisplayDataProps[] => [
+    {
+      title: "Received Time",
+      value:
+        evaluateValue(specimen, fhirPathMappings.specimenReceivedTime) ||
+        noData,
+      className: "lab-text-content",
+    },
+    {
+      title: "Collection Time",
+      value:
+        evaluateValue(specimen, fhirPathMappings.specimenCollectionTime) ||
+        noData,
+      className: "lab-text-content",
+    },
+    {
+      title: "Anatomical Location/Laterality",
+      value:
+        evaluateValue(specimen, fhirPathMappings.specimenBodySite) ||
+        returnFieldValueFromLabHtmlString(
+          labReportJson,
+          "Anatomical Location / Laterality",
+        ),
+      className: "lab-text-content",
+    },
+  ];
 
   const rrInfo: DisplayDataProps[] = [
     {
@@ -731,36 +760,9 @@ const getLabsContent = (
       value: returnAnalysisTime(labReportJson, "Analysis Time"),
       className: "lab-text-content",
     },
-    {
-      title: "Collection Time",
-      value:
-        evaluateValue(labSpecimen, fhirPathMappings.specimenCollectionTime) ||
-        noData,
-      className: "lab-text-content",
-    },
-    {
-      title: "Received Time",
-      value:
-        evaluateValue(labSpecimen, fhirPathMappings.specimenReceivedTime) ||
-        noData,
-      className: "lab-text-content",
-    },
-    {
-      title: "Specimen (Source)",
-      value:
-        evaluateValue(labSpecimen, fhirPathMappings.specimenSource) || noData,
-      className: "lab-text-content",
-    },
-    {
-      title: "Anatomical Location/Laterality",
-      value:
-        evaluateValue(labSpecimen, fhirPathMappings.specimenBodySite) ||
-        returnFieldValueFromLabHtmlString(
-          labReportJson,
-          "Anatomical Location / Laterality",
-        ),
-      className: "lab-text-content",
-    },
+    // With no specimen to attribute these fields to, fall back to showing
+    // them flat instead of under a "Specimen (Source)" group.
+    ...(specimens.length === 0 ? getSpecimenFields(undefined) : []),
     {
       title: "Collection Method/Volume",
       value: returnFieldValueFromLabHtmlString(
@@ -812,7 +814,7 @@ const getLabsContent = (
       {labTableDiagnostic}
       {labTableOrganisms}
 
-      {availableData.length > 0 && (
+      {(availableData.length > 0 || specimens.length > 0) && (
         <h6
           // inline styling to overwrite usa-prose nested style
           style={{ marginTop: "-1rem" }}
@@ -822,6 +824,18 @@ const getLabsContent = (
         </h6>
       )}
       <DataDisplayList items={availableData} />
+
+      {specimens.map((specimen, i) => {
+        const source = evaluateValue(specimen, fhirPathMappings.specimenSource);
+        return (
+          <React.Fragment key={specimen.id ?? i}>
+            <h6 className={h6ClassName}>
+              Specimen (Source){source ? `: ${source}` : ""}
+            </h6>
+            <DataDisplayList items={getSpecimenFields(specimen)} />
+          </React.Fragment>
+        );
+      })}
 
       {unavailableData.length > 0 && (
         <h6 className={h6ClassName}>Unavailable lab information</h6>
