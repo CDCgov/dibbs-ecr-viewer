@@ -323,6 +323,42 @@ describe("ecrSummaryService Tests", () => {
       expect(guardian).toBeUndefined();
     });
 
+    it("should only show Death Date/Time in Summary when the patient is deceased", () => {
+      const livingSummary = evaluateEcrSummaryPatient(
+        BundlePatient,
+        fhirIndexBundlePatient,
+      );
+
+      expect(
+        livingSummary.find((d) => d.title === "Death Date/Time"),
+      ).toBeUndefined();
+
+      const deceasedBundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Patient",
+              id: "deceased-summary-patient",
+              deceasedDateTime: "2026-07-01T08:45:00-04:00",
+            },
+          },
+        ],
+      } as unknown as Bundle;
+      const deceasedSummary = evaluateEcrSummaryPatient(
+        deceasedBundle,
+        getFhirIndex(deceasedBundle),
+      );
+
+      expect(
+        deceasedSummary.find((d) => d.title === "Vital Status")?.value,
+      ).toEqual("Deceased");
+      expect(
+        deceasedSummary.find((d) => d.title === "Death Date/Time")?.value,
+      ).toEqual("07/01/2026 8:45\u00A0AM\u00A0EDT");
+    });
+
     it("should show parent/guardian info if minor", () => {
       const bundle = {
         resourceType: "Bundle",
