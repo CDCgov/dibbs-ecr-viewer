@@ -456,17 +456,16 @@ export const updateUser = audit(
     trx: Transaction<Core>,
   ): Promise<void> => {
     const updatingUser = await getCheckAnyAdmin("update users");
+    await validateAdminUserPermissions(
+      updatingUser,
+      updates.user_type,
+      programs,
+      "edit",
+      uuid,
+      updates.email
+    );
 
     try {
-      await validateAdminUserPermissions(
-        updatingUser,
-        updates.user_type,
-        programs,
-        "edit",
-        uuid,
-        updates.email,
-      );
-
       await checkDupeEmail(trx, updates.email, uuid);
       Object.keys(updates).length > 0 &&
         (await updateUserQuery(trx, uuid, updates));
