@@ -60,7 +60,12 @@ export type PathTypes = {
   patientOccupationFromPastOrPresent: Observation;
   patientOccupationFromSocialHistory: Observation;
   patientEmploymentStatus: Observation;
-  patientTobaccoUse: ValueX;
+  patientTobaccoUseStatus: Observation;
+  patientTobaccoHistory: Observation;
+  patientTobaccoAmount: Observation;
+  patientTobaccoPackYears: Observation;
+  patientSmokelessStatus: Observation;
+  patientTobaccoEducation: Observation;
   patientHomelessStatus: ValueX;
   patientAlcoholUse: ValueX;
   patientAlcoholIntake: ValueX;
@@ -291,9 +296,29 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "Observation",
     path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '74165-2'))",
   },
-  patientTobaccoUse: {
-    type: "ValueX",
-    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '72166-2')).value",
+  patientTobaccoUseStatus: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '72166-2'))",
+  },
+  patientTobaccoHistory: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '11367-0'))",
+  },
+  patientTobaccoAmount: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '8663-7'))",
+  },
+  patientTobaccoPackYears: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '401201003'))",
+  },
+  patientSmokelessStatus: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://loinc.org' and code = '88031-0'))",
+  },
+  patientTobaccoEducation: {
+    type: "Observation",
+    path: "entry.resource.Observation.where(code.coding.exists(system = 'http://snomed.info/sct' and code = '702388001'))",
   },
   patientHomelessStatus: {
     type: "ValueX",

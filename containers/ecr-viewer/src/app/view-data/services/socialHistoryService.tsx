@@ -30,6 +30,7 @@ import {
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
 import EvaluateTable, {
+  BaseTable,
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
 import { UnstyledDividedList } from "@/app/view-data/components/UnstyledDividedList";
@@ -60,7 +61,8 @@ export const evaluateSocialData = (
     },
     {
       title: "Tobacco Use",
-      value: evaluateValue(fhirBundle, fhirPathMappings.patientTobaccoUse),
+      value: evaluateTobaccoUse(fhirBundle),
+      fullWidthContent: true,
     },
     {
       title: "Travel History",
@@ -197,6 +199,103 @@ export const evaluateOccupation = (fhirBundle: Bundle) => {
   ]
     .filter(Boolean)
     .join("\n\n");
+};
+
+/**
+ * Evaluates tobacco use information from the FHIR bundle and formats it as a table.
+ * @param fhirBundle - The FHIR bundle containing tobacco use data.
+ * @returns A table of tobacco use observations, or undefined if none are found.
+ */
+export const evaluateTobaccoUse = (fhirBundle: Bundle) => {
+  const tobaccoObservationGroups = [
+    {
+      detail: "Smoking Status",
+      observations: evaluateAll(
+        fhirBundle,
+        fhirPathMappings.patientTobaccoUseStatus,
+      ),
+      formatObservation: (observation: Observation) =>
+        evaluateValue(observation, fhirPathMappings.valueX),
+    },
+    {
+      detail: "Smoking History",
+      observations: evaluateAll(
+        fhirBundle,
+        fhirPathMappings.patientTobaccoHistory,
+      ),
+      formatObservation: (observation: Observation) =>
+        evaluateValue(observation, fhirPathMappings.valueX),
+    },
+    {
+      detail: "Amount",
+      observations: evaluateAll(
+        fhirBundle,
+        fhirPathMappings.patientTobaccoAmount,
+      ),
+      formatObservation: (observation: Observation) => {
+        const amount = evaluateValue(observation, fhirPathMappings.valueX);
+        return amount ? `${amount} packs per day` : "";
+      },
+    },
+    {
+      detail: "Cigarette Pack-years",
+      observations: evaluateAll(
+        fhirBundle,
+        fhirPathMappings.patientTobaccoPackYears,
+      ),
+      formatObservation: (observation: Observation) =>
+        evaluateValue(observation, fhirPathMappings.valueX),
+    },
+    {
+      detail: "Smokeless Status",
+      observations: evaluateAll(
+        fhirBundle,
+        fhirPathMappings.patientSmokelessStatus,
+      ),
+      formatObservation: (observation: Observation) =>
+        evaluateValue(observation, fhirPathMappings.valueX),
+    },
+    {
+      detail: "Tobacco Use Cessation Education",
+      observations: evaluateAll(
+        fhirBundle,
+        fhirPathMappings.patientTobaccoEducation,
+      ),
+      formatObservation: (observation: Observation) =>
+        evaluateAll(observation, fhirPathMappings.noteText).join(","),
+    },
+  ];
+
+  const tobaccoRows = tobaccoObservationGroups.flatMap(
+    ({ detail, observations, formatObservation }) =>
+      observations.map((observation) => ({
+        detail,
+        observation: formatObservation(observation),
+        date: evaluateValue(observation, fhirPathMappings.effectiveX),
+      })),
+  );
+
+  if (tobaccoRows.length === 0) return undefined;
+
+  const columns: ColumnInfoInput[] = [
+    { columnName: "Tobacco Detail" },
+    { columnName: "Observation" },
+    { columnName: "Date" },
+  ];
+
+  return (
+    <BaseTable columns={columns} fixed={false}>
+      {tobaccoRows.map((row, index) => (
+        <tr key={`tobacco-row-${index}`}>
+          <td className="text-top text-pre-line">{row.detail || noData}</td>
+          <td className="text-top text-pre-line">
+            {row.observation || noData}
+          </td>
+          <td className="text-top text-pre-line">{row.date || noData}</td>
+        </tr>
+      ))}
+    </BaseTable>
+  );
 };
 
 /**
