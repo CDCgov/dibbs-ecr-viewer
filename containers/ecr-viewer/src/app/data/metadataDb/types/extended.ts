@@ -67,8 +67,6 @@ export interface ecr_labs {
   test_result_reference_range_low_units: string | undefined;
   test_result_reference_range_high_value: number | string | null;
   test_result_reference_range_high_units: string | undefined;
-  specimen_type: string | undefined;
-  specimen_collection_date: Date | undefined;
   performing_lab: string | undefined;
 }
 
