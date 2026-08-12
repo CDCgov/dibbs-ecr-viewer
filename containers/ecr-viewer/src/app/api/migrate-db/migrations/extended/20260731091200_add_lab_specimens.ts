@@ -33,7 +33,9 @@ async function backfillSpecimens(db: Kysely<AnyDb>): Promise<void> {
   if (!specimenRows.length) return;
 
   // SQL Server has a limit of 2100 parameters per query which is the lower number of the two databases we support
-  const maxRowsPerBatch = Math.floor(2099 / Object.keys(specimenRows[0]).length);
+  const maxRowsPerBatch = Math.floor(
+    2099 / Object.keys(specimenRows[0]).length,
+  );
   for (let i = 0; i < specimenRows.length; i += maxRowsPerBatch) {
     await db
       .insertInto("ecr_lab_specimens")
@@ -51,7 +53,12 @@ async function backfillSpecimens(db: Kysely<AnyDb>): Promise<void> {
 async function restoreLabSpecimenColumns(db: Kysely<AnyDb>): Promise<void> {
   const specimens = await db
     .selectFrom("ecr_lab_specimens")
-    .select(["lab_uuid", "eicr_id", "specimen_type", "specimen_collection_date"])
+    .select([
+      "lab_uuid",
+      "eicr_id",
+      "specimen_type",
+      "specimen_collection_date",
+    ])
     .execute();
 
   const oneSpecimenPerLab = new Map<string, (typeof specimens)[number]>();
