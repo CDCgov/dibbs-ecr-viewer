@@ -252,6 +252,29 @@ exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot tes
                     <div
                       class="data-title padding-right-1"
                     >
+                      Anatomical Region
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
                       Anatomical Location/Laterality
                     </div>
                     <div
@@ -827,6 +850,29 @@ Mos Eisley, CO 00055
                     <div
                       class="data-title padding-right-1"
                     >
+                      Anatomical Region
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
                       Collection Method/Volume
                     </div>
                     <div
@@ -1216,6 +1262,29 @@ Mos Eisley, CO 00055
                 >
                   Unavailable lab information
                 </h6>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Anatomical Region
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
                 <div>
                   <div
                     class="grid-row"
@@ -1906,6 +1975,29 @@ County: Empire
                       class="data-title padding-right-1"
                     >
                       Analysis Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Anatomical Region
                     </div>
                     <div
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"

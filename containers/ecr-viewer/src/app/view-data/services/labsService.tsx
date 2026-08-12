@@ -752,6 +752,14 @@ const getLabsContent = (
       className: "lab-text-content",
     },
     {
+      title: "Anatomical Region",
+      value: returnFieldValueFromLabHtmlString(
+        labReportJson,
+        "Anatomical Region",
+      ),
+      className: "lab-text-content",
+    },
+    {
       title: "Anatomical Location/Laterality",
       value:
         evaluateValue(labSpecimen, fhirPathMappings.specimenBodySite) ||

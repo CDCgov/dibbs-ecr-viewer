@@ -19,7 +19,8 @@ services:
       start_period: 10s # Give it 10s to boot
 
   fhir-converter-proxy-service:
-    platform: linux/amd64
+    # haproxy:3.3-alpine is multi-arch; run native (arm64) to avoid emulated
+    # amd64 haproxy workers segfaulting (SIGSEGV/139) on large eCR conversions.
     build:
       context: ../../fhir-converter-proxy/
     depends_on:
@@ -30,6 +31,9 @@ services:
     environment:
       FHIR_CONVERTER_PROXY_PORT: ${FHIR_CONVERTER_PROXY_PORT:-8080}
       FHIR_CONVERTER_PORT: ${FHIR_CONVERTER_PORT:-8080}
+      # Serialize conversions so only one large eCR is in the converter's memory
+      # at a time (default is 3), reducing peak RAM under emulation.
+      FHIR_CONVERTER_PROXY_MAX_CONNECTIONS: 1
       ENVIRONMENT: local
 
   ingestion-service:
