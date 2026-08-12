@@ -17,16 +17,6 @@ export const withUnauthorized: ProxyFactory = (
   end: ChainableProxy,
 ) => {
   return async function (request: NextRequest) {
-    // punching a hole through for orchestration for the moment
-    if (request.nextUrl.pathname.endsWith("/save-fhir-data")) {
-      if (
-        request.headers.get("x-orchestration") === "true" &&
-        request.headers.get("user-agent")?.startsWith("python-httpx/")
-      ) {
-        return end(request);
-      }
-    }
-
     // Redirect not helpful for api routes, just deny access
     if (request.nextUrl.pathname.includes(`/api/`)) {
       return NextResponse.json(
