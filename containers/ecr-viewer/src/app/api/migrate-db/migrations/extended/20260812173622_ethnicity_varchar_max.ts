@@ -14,9 +14,7 @@ export async function up(db: Kysely<AnyDb>): Promise<void> {
 
   await _db.schema
     .alterTable("ecr_data")
-    .alterColumn("ethnicity", (col) =>
-      col.setDataType(getSql("maxVarchar")),
-    )
+    .alterColumn("ethnicity", (col) => col.setDataType(getSql("maxVarchar")))
     .execute();
 }
 
@@ -28,8 +26,6 @@ export async function down(db: Kysely<AnyDb>): Promise<void> {
   const _db = db.withSchema(dbNamespace());
   await _db.schema
     .alterTable("ecr_data")
-    .alterColumn("ethnicity", (col) =>
-      col.setDataType("varchar(255)"),
-    )
+    .alterColumn("ethnicity", (col) => col.setDataType("varchar(255)"))
     .execute();
 }
