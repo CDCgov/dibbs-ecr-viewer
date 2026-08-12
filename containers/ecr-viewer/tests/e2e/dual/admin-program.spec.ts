@@ -19,7 +19,27 @@ test.describe("program management page", () => {
     expect(accessibilityScanResultsBase.violations).toEqual([]);
   });
 
-  test("should create a program", async ({ page }) => {
+  test("as program admin, should only see accessible programs", async ({
+    page,
+  }) => {
+    await page.context().clearCookies();
+    await logIn(page, { userType: "PROGRAM_ADMIN", useCookies: false });
+    await page.goto("/ecr-viewer/admin/program");
+
+    await expect(
+      page.getByRole("heading", { name: "Program management" }),
+    ).toBeVisible();
+
+    const programRows = page
+      .getByRole("table")
+      .getByRole("row")
+      .filter({ has: page.getByRole("cell") });
+    await expect(programRows).toHaveCount(1);
+    await expect(programRows.getByRole("cell", { name: "COVID", exact: true }))
+      .toBeVisible();
+  });
+
+  test("as admin, should create a program", async ({ page }) => {
     await page.goto("/ecr-viewer/admin/program");
 
     await expect(

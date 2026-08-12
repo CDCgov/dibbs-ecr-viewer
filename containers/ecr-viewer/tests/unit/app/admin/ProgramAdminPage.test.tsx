@@ -7,7 +7,7 @@ import ProgramCreatePage from "@/app/admin/program/create/page";
 import ProgramAdminPage from "@/app/admin/program/page";
 import { listConditionReferences } from "@/app/services/listConditionsService";
 import { listProgramAreas } from "@/app/services/programAreaService";
-import { isAdmin, notFoundUnlessAdmin } from "@/app/services/userService";
+import { isAdmin, notFoundUnlessAnyAdmin } from "@/app/services/userService";
 
 jest.mock("@/app/data/metadataDb/database");
 jest.mock("@/app/utils/auth-utils", () => ({
@@ -27,12 +27,12 @@ describe("Program Admin Page", () => {
     jest.clearAllMocks();
   });
 
-  it("should check user is an admin", async () => {
+  it("should check user is any admin", async () => {
     (isAdmin as unknown as jest.Mock).mockReturnValue(false);
     (listProgramAreas as jest.Mock).mockResolvedValue([]);
 
     render(await ProgramAdminPage());
-    expect(notFoundUnlessAdmin).toHaveBeenCalled();
+    expect(notFoundUnlessAnyAdmin).toHaveBeenCalled();
   });
 
   it("should show no program areas message if none", async () => {
