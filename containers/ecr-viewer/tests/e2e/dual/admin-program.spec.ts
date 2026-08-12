@@ -35,8 +35,9 @@ test.describe("program management page", () => {
       .getByRole("row")
       .filter({ has: page.getByRole("cell") });
     await expect(programRows).toHaveCount(1);
-    await expect(programRows.getByRole("cell", { name: "COVID", exact: true }))
-      .toBeVisible();
+    await expect(
+      programRows.getByRole("cell", { name: "COVID", exact: true }),
+    ).toBeVisible();
   });
 
   test("as admin, should create a program", async ({ page }) => {
