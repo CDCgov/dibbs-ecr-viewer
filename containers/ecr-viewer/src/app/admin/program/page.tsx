@@ -6,6 +6,7 @@ import { deleteProgramAreaAction } from "@/app/services/serverActionService";
 import { isAdmin, notFoundUnlessAnyAdmin } from "@/app/services/userService";
 
 import { ProgramTable } from "./ProgramTable";
+import { ProgramManagementWithoutProgramAreas } from "@/app/components/ErrorPage";
 import { getLoggedInUser } from "@/app/services/loggedInUserService";
 
 /**
@@ -15,8 +16,11 @@ import { getLoggedInUser } from "@/app/services/loggedInUserService";
 const ProgramAdminPage = async () => {
   await notFoundUnlessAnyAdmin();
   const currentUser = await getLoggedInUser();
-
   const programAreas = await listProgramAreas();
+
+  if (!isAdmin(currentUser) && programAreas.length === 0) {
+    return <ProgramManagementWithoutProgramAreas />;
+  }
 
   return (
     <main className="main-container">

@@ -7,7 +7,7 @@ import { dbIsValid } from "./api/migrate-db/migrate";
 import Filters from "./components/EcrFilters";
 import {
   MetadataDbInvalid,
-  UserWithoutProgramAreas,
+  LibraryWithoutProgramAreas,
 } from "./components/ErrorPage";
 import LibrarySearch from "./components/LibrarySearch";
 import { NoDataRow } from "./components/table/NoDataRow";
@@ -45,7 +45,7 @@ const HomePage = async ({
   } else if (!isAdmin(user)) {
     const progAreas = await listLoggedInUserProgramAreas();
     if (progAreas.length === 0) {
-      return <UserWithoutProgramAreas />;
+      return <LibraryWithoutProgramAreas />;
     }
   }
 
