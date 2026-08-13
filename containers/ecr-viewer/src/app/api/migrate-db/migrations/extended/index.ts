@@ -7,4 +7,5 @@ export default {
   "20260403143048_add_immunization_variables": require("./20260403143048_add_immunization_variables"),
   "20260609174023_update_immunization": require("./20260609174023_update_immunization"),
   "20260723173756_remove_unused_cols": require("./20260723173756_remove_unused_cols"),
+  "20260812173622_ethnicity_varchar_max.ts": require("./20260812173622_ethnicity_varchar_max"),
 };
