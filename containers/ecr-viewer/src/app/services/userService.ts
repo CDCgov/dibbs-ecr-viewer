@@ -97,16 +97,20 @@ export const getCheckAnyAdmin = async (actionDesc: string): Promise<User> => {
  * Checks that 1) user has admin or program-level role, and
  * 2) if program-level role, checks they have access to the relevant program area.
  * @param user User to check access for (defaults to logged in user if undefined)
- * @param programAreaUuid UUID of the program area to check
- * @returns whether the user has access to the relevant program area
+ * @param programAreaUuids UUIDs of the program areas to check
+ * @returns whether the user has access to all relevant program areas
  */
 export const hasRelevantProgramAreaAccess = async (
   user: User | undefined,
-  programAreaUuid: string,
+  programAreaUuids: string[],
 ): Promise<boolean> => {
   const targetUser = user ?? (await getLoggedInUser());
   if (!targetUser || targetUser.status !== "active") {
     return false;
+  }
+
+  if (programAreaUuids.length === 0) {
+    return true;
   }
 
   if (targetUser.user_type === "admin") {
@@ -121,10 +125,14 @@ export const hasRelevantProgramAreaAccess = async (
       .selectFrom("user_program_area")
       .select("user_program_area.program_area_uuid")
       .where("user_uuid", "=", targetUser.uuid)
-      .where("program_area_uuid", "=", programAreaUuid)
-      .executeTakeFirst();
+      .where("program_area_uuid", "in", programAreaUuids)
+      .execute();
 
-    return !!res;
+    const accessibleProgramAreas = new Set(
+      res.map(({ program_area_uuid }) => program_area_uuid),
+    );
+
+    return programAreaUuids.every((uuid) => accessibleProgramAreas.has(uuid));
   }
 
   return false;
@@ -155,13 +163,11 @@ export async function validateAdminUserPermissions(
     throw new UserFacingError("Program admins cannot create new admins.");
   }
 
-  for (const program of programs) {
-    const hasAccess = await hasRelevantProgramAreaAccess(loggedInUser, program);
-    if (!hasAccess) {
-      throw new UserFacingError(
-        "Program admins cannot create users outside of their program areas",
-      );
-    }
+  const hasAccess = await hasRelevantProgramAreaAccess(loggedInUser, programs);
+  if (!hasAccess) {
+    throw new UserFacingError(
+      "Program admins cannot create users outside of their program areas",
+    );
   }
 }
 
