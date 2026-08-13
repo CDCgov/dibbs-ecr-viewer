@@ -3,16 +3,14 @@
  */
 import { Bundle } from "fhir/r4";
 
-import { createFakeZip } from "../../../helpers";
+import { createFakeZip } from "../../helpers";
 import {
+  BundleExtendedMetadata,
+  BundleMetadata,
   deleteFromStorage,
   saveFhirMetadata,
   saveToStorage,
-} from "@/app/api/save-fhir-data/service";
-import type {
-  BundleExtendedMetadata,
-  BundleMetadata,
-} from "@/app/api/save-fhir-data/types";
+} from "@/app/services/saveFhirDataService";
 import {
   deleteFromAzure,
   existsInAzure,

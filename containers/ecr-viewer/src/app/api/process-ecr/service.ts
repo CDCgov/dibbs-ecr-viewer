@@ -4,14 +4,12 @@ import { SaxesParser } from "saxes";
 import { fetch, Agent, FormData } from "undici";
 
 import {
+  BundleExtendedMetadata,
+  BundleMetadata,
   deleteFromStorage,
   saveToStorage,
   saveWithMetadata,
-} from "@/app/api/save-fhir-data/service";
-import {
-  BundleExtendedMetadata,
-  BundleMetadata,
-} from "@/app/api/save-fhir-data/types";
+} from "@/app/services/saveFhirDataService";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core } from "@/app/data/metadataDb/types/core";
 import { dbDialect, dbSchema } from "@/app/data/metadataDb/utils/db-config";
