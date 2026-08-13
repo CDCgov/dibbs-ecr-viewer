@@ -259,8 +259,7 @@ export const returnProblemsTable = (
     { columnName: "Onset Age", infoPath: "activeProblemsOnsetAge" },
     {
       columnName: "Comments",
-      infoPath: "noteText",
-      applyToValue: (v) => <FieldValue>{safeParse(v)}</FieldValue>,
+      evaluateEntry: evaluateCommentNotes,
       hiddenBaseText: "comment",
     },
   ];
@@ -288,6 +287,13 @@ export const returnProblemsTable = (
       fixed={false}
     />
   );
+};
+
+const evaluateCommentNotes = (entry: Element) => {
+  const notes = evaluateAll(entry, fhirPathMappings.noteText);
+  if (notes.length === 0) return "";
+
+  return <FieldValue>{safeParse(notes.join("<br />"))}</FieldValue>;
 };
 
 type ConditionWithFormattedOnsetAge = Omit<Condition, "onsetAge"> & {
@@ -692,8 +698,9 @@ export const returnMedicationsTable = (fhirBundle: Bundle) => {
           {
             title: "Text",
             value:
-              evaluateValue(medicationStatement, fhirPathMappings.noteText) ||
-              noData,
+              evaluateAll(medicationStatement, fhirPathMappings.noteText).join(
+                "\n",
+              ) || noData,
           },
         ];
 

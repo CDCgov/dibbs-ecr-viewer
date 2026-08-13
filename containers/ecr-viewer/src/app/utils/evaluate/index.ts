@@ -275,12 +275,12 @@ export const evaluateValue = (
     value = range || originalValue.text || "";
   } else if (isReference(originalValue, originalValuePath)) {
     value = formatReference(originalValue) || "";
+  } else if (isAddress(originalValue, originalValuePath)) {
+    value = formatAddress(originalValue);
   } else if (isPeriod(originalValue, originalValuePath)) {
     // Note: there are two period formatters, start/end is more commonly used, but
     // we may need to think in the future about making this more flexible
     value = formatStartEndDateTime(originalValue);
-  } else if (isAddress(originalValue, originalValuePath)) {
-    value = formatAddress(originalValue);
   } else if (typeof originalValue === "object") {
     console.error(`Not implemented for ${originalValuePath}`);
   }
