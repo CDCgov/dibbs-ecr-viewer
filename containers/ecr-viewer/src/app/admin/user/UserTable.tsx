@@ -31,9 +31,10 @@ import {
 } from "@/app/utils/format-utils";
 import { ForceClient } from "@/app/view-data/components/ForceClient";
 
-const USER_TYPE_OPTIONS: Record<string, string> = {
+const USER_TYPE_FILTER_OPTIONS: Record<string, string> = {
   all: "All users",
   admin: "Admin",
+  prog_admin: "Program Admin",
   standard: "Standard",
 };
 const NO_PROGRAM_AREA_OPTION: string = "No program areas (Standard)";
@@ -86,8 +87,11 @@ export const UserTable = ({
       return false;
     }
 
-    // Standard users not assigned to any program areas
-    if (user_type === "standard" && program_areas.length === 0) {
+    // Standard users or program admins not assigned to any program areas
+    if (
+      (user_type === "standard" || user_type === "prog_admin") &&
+      program_areas.length === 0
+    ) {
       return filterProgramAreas[NO_PROGRAM_AREA_OPTION];
     }
 
@@ -231,14 +235,14 @@ const FilterByUserType = ({
     <Filter
       isActive={true}
       type="user type"
-      title={USER_TYPE_OPTIONS[filterUserTypeOption]}
+      title={USER_TYPE_FILTER_OPTIONS[filterUserTypeOption]}
       resetHandler={() => {}}
       icon={Person}
     >
       <div className="display-flex flex-column">
         <RadioDateOptions
           groupName="user-type"
-          optionsMap={USER_TYPE_OPTIONS}
+          optionsMap={USER_TYPE_FILTER_OPTIONS}
           onChange={setFilterUserTypeOption}
           currentOption={filterUserTypeOption}
           classNames="padding-bottom-1"

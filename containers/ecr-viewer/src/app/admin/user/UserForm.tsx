@@ -15,17 +15,10 @@ import { FormPageContent } from "@/app/components/forms/FormPageContent";
 import { ToastContext } from "@/app/components/toast/ToastProvider";
 import { ServerActionResult } from "@/app/services/errorService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
-import { ListedUser } from "@/app/services/userService";
+import { UserType, ListedUser } from "@/app/services/userService";
 import { AccordionItem } from "@/app/types";
 import { notEmpty } from "@/app/utils/data-utils";
-import {
-  makePlural,
-  stringSort,
-  toKebabCase,
-  toTitleCase,
-} from "@/app/utils/format-utils";
-
-export type UserType = "admin" | "standard";
+import { makePlural, stringSort, toKebabCase } from "@/app/utils/format-utils";
 
 export interface FormProgram extends ListedProgramArea {
   checked?: boolean;
@@ -61,6 +54,7 @@ export const UserForm = ({
   submitAction,
   banner,
   formTouchedMsg,
+  isLoggedInUserAdmin,
 }: {
   action: string;
   initValues: FormValues;
@@ -71,6 +65,7 @@ export const UserForm = ({
   ) => Promise<ServerActionResult<void>>;
   banner?: ReactNode;
   formTouchedMsg?: string;
+  isLoggedInUserAdmin: boolean;
 }) => {
   const [email, setEmail] = useState(initValues.email || "");
   const [userType, setUserType] = useState<UserType>(
@@ -93,10 +88,11 @@ export const UserForm = ({
     .filter((e) => e !== initValues.email?.toLowerCase())
     .includes(email.toLowerCase());
 
-  const valid =
-    !!email &&
-    (userType === "admin" || userType === "standard") &&
-    !emailIsDupe;
+  const isValidUserType = isLoggedInUserAdmin
+    ? ["admin", "prog_admin", "standard"].includes(userType)
+    : ["prog_admin", "standard"].includes(userType);
+  const valid = !!email && isValidUserType && !emailIsDupe;
+
   const touched =
     (email && email !== initValues.email) ||
     userType !== (initValues.userType || "standard") ||
@@ -128,7 +124,11 @@ export const UserForm = ({
         setEmail={setEmail}
         emailIsDupe={emailIsDupe}
       />
-      <UserTypeFieldSet userType={userType} setUserType={setUserType} />
+      <UserTypeFieldSet
+        userType={userType}
+        setUserType={setUserType}
+        isLoggedInUserAdmin={isLoggedInUserAdmin}
+      />
       <ProgramFieldSet
         programs={programs}
         setPrograms={setPrograms}
@@ -177,9 +177,11 @@ const EmailFieldSet = ({
 const UserTypeFieldSet = ({
   userType,
   setUserType,
+  isLoggedInUserAdmin,
 }: {
   userType: UserType;
   setUserType: (n: UserType) => void;
+  isLoggedInUserAdmin: boolean;
 }) => {
   return (
     <FieldSet legend="User type">
@@ -188,27 +190,39 @@ const UserTypeFieldSet = ({
         <RequiredMarker />
       </span>
       {[
+        ...(isLoggedInUserAdmin
+          ? [
+              {
+                label: "Admin",
+                value: "admin",
+                description:
+                  "Admins have full access to user management, program management, and the eCR Library",
+              },
+            ]
+          : []),
         {
-          name: "admin",
+          label: "Program Admin",
+          value: "prog_admin",
           description:
-            "Admins have full access to user management, program management, and the eCR Library",
+            "Program Admins have limited access to user management, program management, and the eCR Library",
         },
         {
-          name: "standard",
+          label: "Standard",
+          value: "standard",
           description:
             "Standard users can only use the eCR Library with limited access to program area(s)",
         },
       ].map((option) => (
         <Radio
-          key={option.name}
-          label={toTitleCase(option.name)}
+          key={option.value}
+          label={option.label}
           labelDescription={option.description}
           type="radio"
           required={true}
           name="userType"
-          id={`userType-${option.name}`}
-          value={option.name}
-          checked={userType === option.name}
+          id={`userType-${option.value}`}
+          value={option.value}
+          checked={userType === option.value}
           onChange={(e) => setUserType(e.target.value as UserType)}
         />
       ))}
@@ -231,7 +245,8 @@ export const ProgramFieldSet = ({
   const [expandedPrograms, setExpandedPrograms] = useState<
     Record<string, boolean>
   >(valsToBoolean(programs, false));
-  const isStandardUser = userType === "standard";
+  const isProgramLevelUser =
+    userType === "prog_admin" || userType === "standard";
 
   const accordionItems: AccordionItem[] = programs.map((program) => {
     const { name, conditions } = program;
@@ -253,7 +268,7 @@ export const ProgramFieldSet = ({
       checkboxGroup: "program",
       checkboxLabel: `Select ${program.name}`,
       isChecked: program.checked === true,
-      onChecked: isStandardUser
+      onChecked: isProgramLevelUser
         ? (checked: boolean) => {
             setPrograms(
               programs.map((c) =>
@@ -268,14 +283,14 @@ export const ProgramFieldSet = ({
   return (
     <FieldSet legend="Program area access">
       <span>
-        {isStandardUser ? (
+        {isProgramLevelUser ? (
           <>Select one or more program areas</>
         ) : (
           <>Admins will be able to see all program areas and conditions</>
         )}
       </span>
 
-      {isStandardUser && (
+      {isProgramLevelUser && (
         <>
           <p className="text-bold font-size-md">
             {numProgramsSelected} program area{makePlural(numProgramsSelected)}{" "}

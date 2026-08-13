@@ -13,7 +13,7 @@ import { stringSort } from "@/app/utils/format-utils";
 
 import { audit } from "./auditLogService";
 import { UserFacingError } from "./errorService";
-import { getCheckAdmin } from "./userService";
+import { getCheckAdmin, getCheckAnyAdmin, isProgramAdmin } from "./userService";
 
 /**
  * Create a program area with the given name. The currently logged in user
@@ -208,20 +208,29 @@ export type ListedProgramArea = ProgramArea & {
 };
 
 /**
- * List program areas. The logged in user must be an admin.
+ * List program areas. The logged in user must be an admin or a program admin.
+ * If program admin, will only list program areas they have access to.
  * @returns list of all program areas
  */
 export const listProgramAreas = async (): Promise<ListedProgramArea[]> => {
-  await getCheckAdmin("list program areas");
+  const user = await getCheckAnyAdmin("list program areas");
 
   try {
     return await getDb<Core>()
       .transaction()
       .execute(async (db) => {
-        const programAreas = await db
-          .selectFrom("program_area")
-          .selectAll()
-          .execute();
+        const programAreas = isProgramAdmin(user)
+          ? await db
+              .selectFrom("program_area")
+              .innerJoin(
+                "user_program_area",
+                "program_area.uuid",
+                "user_program_area.program_area_uuid",
+              )
+              .selectAll("program_area")
+              .where("user_program_area.user_uuid", "=", user.uuid)
+              .execute()
+          : await db.selectFrom("program_area").selectAll().execute();
         const conditionRefs = await db
           .selectFrom("condition_reference")
           .selectAll()

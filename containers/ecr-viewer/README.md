@@ -74,6 +74,7 @@ To run the eCR Viewer locally:
 The default IDP is keycloak for local development. The default users are (password is `pw`):
 
 - admin: `ecr-viewer-admin`
+- program admin (access to COVID eCRs): `ecr-viewer-program-admin`
 - standard (access to COVID eCRs): `ecr-viewer-standard`
 
 ### Windows Setup

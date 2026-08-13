@@ -62,7 +62,7 @@ test.describe("user management page", () => {
     expect(accessibilityScanResultsSidePanel.violations).toEqual([]);
   });
 
-  test("should create, edit, and delete a new user", async ({
+  test("admin: should create, edit, and delete a new user", async ({
     page,
     browserName,
   }) => {
@@ -157,7 +157,10 @@ test.describe("user management page", () => {
     await page.goto("/ecr-viewer/admin/program");
   });
 
-  test("filter by user type or program area", async ({ page, browserName }) => {
+  test("admin: filter by user type or program area", async ({
+    page,
+    browserName,
+  }) => {
     await logIn(page);
 
     // Create programs
@@ -192,7 +195,7 @@ test.describe("user management page", () => {
     // filter by user type
     await page.getByLabel("Filter by user type").click();
     await expect(page.getByText("Filter by user type")).toBeVisible();
-    await page.getByLabel("Admin").dispatchEvent("click");
+    await page.getByLabel(/^Admin\b/).dispatchEvent("click");
     await expect(
       page.getByRole("table").getByText("Standard"),
     ).not.toBeVisible();
@@ -278,7 +281,52 @@ test.describe("user management page", () => {
     await expect(page.getByText(userStandard3)).toBeVisible();
   });
 
-  test("it should not show to non-admin", async ({ page }) => {
+  test("program admin: has restricted user creation permissions", async ({
+    page,
+    browserName,
+  }) => {
+    // Admin creates random program
+    await logIn(page);
+    const program1 = await getRandomProgramArea(page, ["COVID"]);
+
+    // Log in as program admin.
+    await page.context().clearCookies();
+    await logIn(page, {
+      userType: "PROGRAM_ADMIN",
+    });
+
+    await page.goto("/ecr-viewer/admin/user/create");
+    expect(page.getByRole("heading", { name: "Create user" }));
+
+    // Program admins can only create program-restricted users
+    await expect(page.locator("#userType-admin")).not.toBeVisible();
+    await expect(page.getByLabel("Program Admin")).toBeVisible();
+    await expect(page.getByLabel("Standard")).toBeVisible();
+
+    // Program admins can only create users for their program areas
+    await expect(
+      page.getByLabel(`Select ${program1}`, { exact: true }),
+    ).not.toBeVisible();
+    await expect(
+      page.getByLabel(`Select COVID`, { exact: true }),
+    ).toBeVisible();
+
+    // Program admin successfully creates standard user
+    const standardUser = await createRandomUser(browserName, page, "standard", [
+      "COVID",
+    ]);
+    await page.waitForURL("/ecr-viewer/admin/user");
+    await page
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("50"); // Increase user table pagination for testing
+    const standardRow = page
+      .getByRole("row")
+      .filter({ has: page.getByRole("cell", { name: standardUser }) });
+    await expect(standardRow.getByText("Standard")).toBeVisible();
+    await expect(standardRow.getByText("COVID")).toBeVisible();
+  });
+
+  test("should not show to standard user", async ({ page }) => {
     await logIn(page, { userType: "STANDARD" });
     await page.goto("/ecr-viewer/admin/user");
 
@@ -348,7 +396,7 @@ const getRandomProgramArea = async (page: Page, notThese: string[] = []) => {
 const createRandomUser = async (
   browserName: string,
   page: Page,
-  userType: string = "standard",
+  userType: "admin" | "prog_admin" | "standard" = "standard",
   programAreas: string[],
 ) => {
   await page.goto("/ecr-viewer/admin/user");
@@ -363,16 +411,18 @@ const createRandomUser = async (
   await page.getByLabel("Email").fill(email);
 
   if (userType === "admin") {
-    const adminRadio = page.getByLabel("Admin");
+    const adminRadio = page.locator("#userType-admin");
     await adminRadio.dispatchEvent("click");
   }
 
-  if (userType === "standard") {
-    for (const program of programAreas) {
-      const standardRadio = page.getByLabel("Standard");
-      await standardRadio.scrollIntoViewIfNeeded();
-      await standardRadio.dispatchEvent("click");
+  if (userType === "prog_admin" || userType === "standard") {
+    const userTypeRadio = page.getByLabel(
+      userType === "prog_admin" ? "Program Admin" : "Standard",
+    );
+    await userTypeRadio.scrollIntoViewIfNeeded();
+    await userTypeRadio.dispatchEvent("click");
 
+    for (const program of programAreas) {
       const checkbox = page.getByLabel(`Select ${program}`, {
         exact: true,
       });
