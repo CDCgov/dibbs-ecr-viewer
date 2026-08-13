@@ -8,4 +8,5 @@ export default {
   "20260609174023_update_immunization": require("./20260609174023_update_immunization"),
   "20260723173756_remove_unused_cols": require("./20260723173756_remove_unused_cols"),
   "20260812173622_ethnicity_varchar_max.ts": require("./20260812173622_ethnicity_varchar_max"),
+  "20260731091200_add_lab_specimens": require("./20260731091200_add_lab_specimens"),
 };

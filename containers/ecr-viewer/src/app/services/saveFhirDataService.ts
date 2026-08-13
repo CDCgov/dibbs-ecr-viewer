@@ -25,7 +25,10 @@ import {
 } from "@/app/data/blobStorage/utils";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core } from "@/app/data/metadataDb/types/core";
-import { Extended } from "@/app/data/metadataDb/types/extended";
+import {
+  Extended,
+  NewECRLabSpecimens,
+} from "@/app/data/metadataDb/types/extended";
 import { dbSchema } from "@/app/data/metadataDb/utils/db-config";
 import { createAuditRecord } from "@/app/services/auditLogService";
 
@@ -46,6 +49,11 @@ interface Address {
   period_end: string | undefined;
 }
 
+interface Specimen {
+  specimen_type: string | undefined;
+  specimen_collection_date: string | undefined;
+}
+
 interface Lab {
   uuid: string | undefined;
   test_type: string | undefined;
@@ -64,9 +72,8 @@ interface Lab {
   test_result_reference_range_low_units: string | undefined;
   test_result_reference_range_high_value: string | undefined;
   test_result_reference_range_high_units: string | undefined;
-  specimen_type: string | undefined;
   performing_lab: string | undefined;
-  specimen_collection_date: string | undefined;
+  specimens: Specimen[] | undefined;
 }
 
 interface Immunization {
@@ -390,17 +397,28 @@ const saveExtendedMetadata = async (
   }
   if (metadata.labs) {
     let batchToInsert = [];
+    let specimensToInsert: NewECRLabSpecimens[] = [];
 
     for (let i = 0; i < metadata.labs.length; i++) {
+      const { specimens, ...lab } = metadata.labs[i];
       const record = {
-        ...metadata.labs[i],
+        ...lab,
         eicr_id: ecrId,
-        specimen_collection_date: asDate(
-          metadata.labs[i].specimen_collection_date,
-        ),
       };
 
       batchToInsert.push(record);
+
+      if (record.uuid && specimens?.length) {
+        specimensToInsert.push(
+          ...specimens.map((specimen) => ({
+            uuid: randomUUID(),
+            eicr_id: ecrId,
+            lab_uuid: record.uuid as string,
+            specimen_type: specimen.specimen_type,
+            specimen_collection_date: asDate(specimen.specimen_collection_date),
+          })),
+        );
+      }
 
       const numColumns = Object.keys(record).length;
 
@@ -414,6 +432,26 @@ const saveExtendedMetadata = async (
         await trx.insertInto("ecr_labs").values(batchToInsert).execute();
 
         batchToInsert = [];
+
+        // Specimens reference ecr_labs via a foreign key, so they can only be
+        // inserted once their parent lab batch has been committed.
+        if (specimensToInsert.length) {
+          const maxSpecimenRowsPerBatch = Math.floor(
+            2099 / Object.keys(specimensToInsert[0]).length,
+          );
+          for (
+            let j = 0;
+            j < specimensToInsert.length;
+            j += maxSpecimenRowsPerBatch
+          ) {
+            await trx
+              .insertInto("ecr_lab_specimens")
+              .values(specimensToInsert.slice(j, j + maxSpecimenRowsPerBatch))
+              .execute();
+          }
+
+          specimensToInsert = [];
+        }
       }
     }
   }

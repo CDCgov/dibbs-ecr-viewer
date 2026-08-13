@@ -65,9 +65,10 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
       test_result_reference_range_low_units: "mg/dL",
       test_result_reference_range_high_value: "140",
       test_result_reference_range_high_units: "mg/dL",
-      specimen_type: "Blood",
       performing_lab: "Lab A",
-      specimen_collection_date: "2024-01-01",
+      specimens: [
+        { specimen_type: "Blood", specimen_collection_date: "2024-01-01" },
+      ],
     },
   ],
   immunizations: [],
@@ -133,6 +134,22 @@ describe("saveFhirData - extended", () => {
       .where("eicr_id", "=", "1-2-3-4")
       .executeTakeFirst();
     expect(savedEcr?.facility_name).toEqual("Hospital A");
+
+    const savedLab = await getDb<Extended>()
+      .selectFrom("ecr_labs")
+      .select("uuid")
+      .where("eicr_id", "=", "1-2-3-4")
+      .executeTakeFirstOrThrow();
+
+    const savedSpecimens = await getDb<Extended>()
+      .selectFrom("ecr_lab_specimens")
+      .select(["lab_uuid", "specimen_type", "specimen_collection_date"])
+      .where("eicr_id", "=", "1-2-3-4")
+      .execute();
+    expect(savedSpecimens).toHaveLength(1);
+    expect(savedSpecimens[0].lab_uuid).toEqual(savedLab.uuid);
+    expect(savedSpecimens[0].specimen_type).toEqual("Blood");
+    expect(savedSpecimens[0].specimen_collection_date).toBeInstanceOf(Date);
 
     // check audit log
     const log = await getLastAuditLog();
