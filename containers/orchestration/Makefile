@@ -36,7 +36,7 @@ build-image:
 
 local-dev:
 	@echo "Starting local development environment..."
-	$(MAKE) support-services && export DATABASE_URL=postgresql://postgres:pw@localhost:5432/ecr_viewer_db && $(MAKE) run-python
+	$(MAKE) support-services && $(MAKE) run-python
 
 support-services:
 	@echo "Starting support services..."

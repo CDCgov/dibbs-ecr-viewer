@@ -4,7 +4,6 @@ import os
 import httpx
 from fastapi import HTTPException, Response, WebSocket
 
-from app.handlers.request_builders.ecr_viewer import build_save_fhir_data_body
 from app.handlers.request_builders.fhir_converter import build_fhir_converter_request
 from app.handlers.request_builders.ingestion import (
     build_geocoding_request,
@@ -18,7 +17,6 @@ from app.handlers.request_builders.message_parser import (
 from app.handlers.request_builders.trigger_code_reference import (
     build_stamp_condition_extensions_request,
 )
-from app.handlers.response_builders.ecr_viewer import unpack_save_fhir_data_response
 from app.handlers.response_builders.fhir_converter import unpack_fhir_converter_response
 from app.handlers.response_builders.ingestion import (
     unpack_ingestion_standardization,
@@ -39,8 +37,6 @@ SERVICE_URLS = {
     "fhir_converter": os.environ.get("FHIR_CONVERTER_URL"),
     "message_parser": os.environ.get("MESSAGE_PARSER_URL"),
     "trigger_code_reference": os.environ.get("TRIGGER_CODE_REFERENCE_URL"),
-    "save_bundle": os.environ.get("ECR_VIEWER_URL"),
-    "save_metadata": os.environ.get("ECR_VIEWER_URL"),
 }
 
 # Mappings of endpoint names to the service input and output building
@@ -54,7 +50,6 @@ ENDPOINT_TO_REQUEST_BODY = {
     "standardize_phones": build_ingestion_phone_request,
     "stamp-condition-extensions": build_stamp_condition_extensions_request,
     "parse_message": build_message_parser_message_request,
-    "save-fhir-data": build_save_fhir_data_body,
 }
 ENDPOINT_TO_RESPONSE = {
     "convert-to-fhir": unpack_fhir_converter_response,
@@ -64,7 +59,6 @@ ENDPOINT_TO_RESPONSE = {
     "standardize_phones": unpack_ingestion_standardization,
     "stamp-condition-extensions": unpack_stamp_condition_extensions_response,
     "parse_message": unpack_parsed_message_response,
-    "save-fhir-data": unpack_save_fhir_data_response,
 }
 
 
@@ -189,9 +183,7 @@ async def call_apis(
                 detail=error_detail,
             )
 
-        # Save_bundle does not contain any updates to the data
-        if service not in ["save_bundle"]:
-            current_message = service_response.msg_content
+        current_message = service_response.msg_content
         name = step.get("name", service)
         responses[name] = response
     return (response, responses)
