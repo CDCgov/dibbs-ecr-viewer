@@ -14,6 +14,7 @@ import { stringSort } from "@/app/utils/format-utils";
 
 import { audit } from "./auditLogService";
 import { UserFacingError } from "./errorService";
+import { listAdminConditionReferencesQuery } from "./listConditionsService";
 import {
   getCheckAdmin,
   getCheckAnyAdmin,
@@ -115,6 +116,36 @@ export const getProgramArea = async (
 };
 
 /**
+ * Validate admins permissions to manage conditions.
+ * Full admins and empty condition lists pass validation by default.
+ *
+ * @param user User whose access should be validated.
+ * @param conditions Condition codes the user is attempting to manage.
+ * @param trx Transaction used to query the user's accessible conditions.
+ * @throws {UserFacingError} If an admin includes an inaccessible condition.
+ */
+const validateAdminConditionAccess = async (
+  user: Awaited<ReturnType<typeof getCheckAnyAdmin>>,
+  conditions: string[],
+  trx: Transaction<Core>,
+): Promise<void> => {
+  if (!isProgramAdmin(user) || conditions.length === 0) return;
+
+  const accessibleConditions = await listAdminConditionReferencesQuery(
+    user,
+    trx,
+    conditions,
+  );
+
+  const accessibleCodes = new Set(accessibleConditions.map(({ code }) => code));
+  if (conditions.some((code) => !accessibleCodes.has(code))) {
+    throw new UserFacingError(
+      "Program admins cannot manage conditions outside of their program areas.",
+    );
+  }
+};
+
+/**
  * Update a program with the the given uuid.
  * @param uuid (current) id of the program area to update
  * @param updates object with fields to update in the record.
@@ -137,7 +168,7 @@ export const updateProgramArea = audit(
     },
     trx: Transaction<Core>,
   ): Promise<void> => {
-    await getCheckAdmin("update program areas");
+    const updatingUser = await getCheckAnyAdmin("update program areas");
 
     try {
       if (!!name) {
@@ -150,6 +181,7 @@ export const updateProgramArea = audit(
       }
 
       if (!!conditions) {
+        await validateAdminConditionAccess(updatingUser, conditions, trx);
         await trx
           .updateTable("condition_reference")
           .set({ program_area_uuid: null })
