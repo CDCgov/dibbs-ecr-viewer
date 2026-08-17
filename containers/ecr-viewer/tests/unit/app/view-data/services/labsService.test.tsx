@@ -281,10 +281,6 @@ describe("LabsService tests", () => {
             labReportNormal!,
             fhirIndexBundleLabInvalidResultsDiv,
           ),
-          // Deliberately has no identifier, so the reportResultId fallback
-          // (which reads report.identifier) can't spuriously match this
-          // report against jsonLabs derived from a different, valid bundle.
-          { resourceType: "DiagnosticReport", code: {}, status: "final" },
         );
 
         expect(result).toBeUndefined();
