@@ -263,28 +263,31 @@
         "data_type": "string",
         "nullable": true
       },
-      "specimen_type": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Specimen' and id = %ref).type.coding.display",
-        "data_type": "string",
-        "reference_lookup": [
-          "Observation.id",
-          "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(result.where(reference.endsWith(%ref)).exists()).specimen[0].reference"
-        ],
-        "nullable": true
-      },
       "performing_lab": {
         "fhir_path": "Observation.performer.display",
         "data_type": "string",
         "nullable": true
       },
-      "specimen_collection_date": {
-        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Specimen' and id = %ref).collection.collectedPeriod.start | Bundle.entry.resource.where(resourceType = 'Specimen' and id = %ref).collection.collectedDateTime",
-        "data_type": "datetime",
+      "specimens": {
+        "fhir_path": "Bundle.entry.resource.where(resourceType = 'Specimen' and id = %ref)",
+        "data_type": "array",
         "reference_lookup": [
           "Observation.id",
-          "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(result.where(reference.endsWith(%ref)).exists()).specimen[0].reference"
+          "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(result.where(reference.endsWith(%ref)).exists()).specimen.reference"
         ],
-        "nullable": true
+        "nullable": true,
+        "secondary_schema": {
+          "specimen_type": {
+            "fhir_path": "type.coding.display",
+            "data_type": "string",
+            "nullable": true
+          },
+          "specimen_collection_date": {
+            "fhir_path": "collection.collectedPeriod.start | collection.collectedDateTime",
+            "data_type": "datetime",
+            "nullable": true
+          }
+        }
       }
     }
   },

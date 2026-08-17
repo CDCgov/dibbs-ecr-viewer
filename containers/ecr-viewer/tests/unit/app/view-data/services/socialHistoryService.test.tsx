@@ -43,6 +43,79 @@ describe("Travel History", () => {
     );
     expect(container).toMatchSnapshot();
   });
+  it("should join multiple locations on a travel observation", () => {
+    const bundleWithMultipleTravelLocations: Bundle = {
+      resourceType: "Bundle",
+      type: "document",
+      entry: [
+        {
+          resource: {
+            resourceType: "Observation",
+            id: "multi-location-travel",
+            code: {
+              coding: [
+                {
+                  system: "http://snomed.info/sct",
+                  code: "420008001",
+                  display: "Travel",
+                },
+              ],
+              text: "Travel History",
+            },
+            status: "final",
+            component: [
+              {
+                code: {
+                  coding: [
+                    {
+                      system:
+                        "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+                      code: "LOC",
+                      display: "Location",
+                    },
+                  ],
+                },
+                valueCodeableConcept: {
+                  coding: [
+                    {
+                      system: "urn:oid:1.0.3166.1",
+                      code: "AR",
+                      display: "Argentina",
+                    },
+                  ],
+                },
+              },
+              {
+                code: {
+                  coding: [
+                    {
+                      system:
+                        "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+                      code: "LOC",
+                      display: "Location",
+                    },
+                  ],
+                },
+                valueCodeableConcept: {
+                  coding: [
+                    {
+                      system: "urn:oid:1.0.3166.1",
+                      code: "BRA",
+                      display: "Brazil",
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    };
+
+    render(evaluateTravelHistoryTable(bundleWithMultipleTravelLocations));
+
+    expect(screen.getByText("Argentina, Brazil")).toBeTruthy();
+  });
   it("should display nothing when no travel history is available", () => {
     expect(evaluateTravelHistoryTable({} as Bundle)).toBeUndefined();
   });

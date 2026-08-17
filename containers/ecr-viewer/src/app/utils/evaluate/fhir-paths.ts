@@ -27,6 +27,7 @@ export type ValueX =
   | boolean
   | number
   | string
+  | Address
   | CodeableConcept
   | Coding
   | Quantity
@@ -177,7 +178,7 @@ export type PathTypes = {
   observationInterpretation: Coding;
   organizationType: ValueX;
   patientTravelHistory: Observation;
-  travelHistoryLocation: string;
+  travelHistoryLocation: ValueX;
   travelHistoryPurpose: ValueX;
   hasMember: Reference;
   exposureObservations: Observation;

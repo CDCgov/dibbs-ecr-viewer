@@ -15,7 +15,7 @@ def client():
 
 
 test_config_path = (
-    Path(__file__).parent.parent / "app" / "custom_configs" / "integrated.json"
+    Path(__file__).parent.parent / "app" / "default_configs" / "bundle-only.json"
 )
 
 fhir_bundle_path = Path(__file__).parent / "assets" / "patient_bundle.json"
@@ -53,7 +53,7 @@ def test_process_message_success(patched_post_request, client):
     request = {
         "message_type": "ecr",
         "data_type": "ecr",
-        "config_file_name": "non-integrated-core.json",
+        "config_file_name": "bundle-metadata-core.json",
         "message": message,
     }
     # Need a mocked return value for each of the called services,
@@ -99,25 +99,17 @@ def test_process_message_success(patched_post_request, client):
 
     message_parser_post_request = mock.Mock()
     message_parser_post_request.status_code = 200
+    message_parser_post_request.headers = {"content-type": "application/json"}
     message_parser_post_request.json.return_value = {
         "parsed_values": {"eicr_id": "placeholder_id"}
-    }
-
-    save_bundle_post_request = mock.Mock()
-    save_bundle_post_request.status_code = 200
-    save_bundle_post_request.headers = {"content-type": "application/json"}
-    save_bundle_post_request.json.return_value = {
-        "message": "Success. Saved FHIR Bundle to S3: placeholder_id"
     }
 
     patched_post_request.side_effect = [
         conversion_post_request,
         ingestion_post_request,
         ingestion_post_request,
-        ingestion_post_request,
         trigger_code_reference_post_request,
         message_parser_post_request,
-        save_bundle_post_request,
     ]
 
     actual_response = client.post("/process-message", json=request)
@@ -130,7 +122,7 @@ def test_process_message_orchestration_error(patched_call_apis, client):
     request = {
         "message_type": "ecr",
         "data_type": "ecr",
-        "config_file_name": "integrated.json",
+        "config_file_name": "bundle-only.json",
         "message": message,
     }
 
@@ -220,7 +212,7 @@ def test_process_message_mismatched_data_types_ecr(client):
         "message_type": "ecr",
         "data_type": "fhir",
         "message": {"foo": "bar"},
-        "config_file_name": "integrated.json",
+        "config_file_name": "bundle-only.json",
     }
     actual_response = client.post("/process-message", json=request)
     assert actual_response.status_code == 422
@@ -235,7 +227,7 @@ def test_process_message_mismatched_data_types_fhir(client):
         "message_type": "fhir",
         "data_type": "zip",
         "message": "foo",
-        "config_file_name": "integrated.json",
+        "config_file_name": "bundle-only.json",
     }
 
     actual_response = client.post("/process-message", json=request)
@@ -252,7 +244,7 @@ def test_process_message_invalid_fhir(client):
         "message_type": "fhir",
         "data_type": "fhir",
         "message": json.dumps("foo"),
-        "config_file_name": "integrated.json",
+        "config_file_name": "bundle-only.json",
     }
     actual_response = client.post("/process-message", json=request)
     assert actual_response.status_code == 422
@@ -267,7 +259,7 @@ def test_process_message_input_validation_with_rr_data(client):
     request = {
         "message": "foo",
         "data_type": "eicr",
-        "config_file_name": "integrated.json",
+        "config_file_name": "bundle-only.json",
         "message_type": "ecr",
         "rr_data": "bar",
     }
@@ -286,7 +278,7 @@ def test_process_zip_success(patched_post_request, client):
         form_data = {
             "message_type": "ecr",
             "data_type": "zip",
-            "config_file_name": "non-integrated-core.json",
+            "config_file_name": "bundle-metadata-core.json",
         }
         files = {"upload_file": ("file.zip", f)}
 
@@ -333,24 +325,17 @@ def test_process_zip_success(patched_post_request, client):
         }
         message_parser_post_request = mock.Mock()
         message_parser_post_request.status_code = 200
+        message_parser_post_request.headers = {"content-type": "application/json"}
         message_parser_post_request.json.return_value = {
             "parsed_values": {"eicr_id": "placeholder_id"}
-        }
-        save_bundle_post_request = mock.Mock()
-        save_bundle_post_request.status_code = 200
-        save_bundle_post_request.headers = {"content-type": "application/json"}
-        save_bundle_post_request.json.return_value = {
-            "message": "Success. Saved FHIR Bundle to S3: placeholder_id"
         }
 
         patched_post_request.side_effect = [
             conversion_post_request,
             ingestion_post_request,
             ingestion_post_request,
-            ingestion_post_request,
             trigger_code_reference_post_request,
             message_parser_post_request,
-            save_bundle_post_request,
         ]
 
         actual_response = client.post("/process-zip", data=form_data, files=files)
@@ -365,7 +350,7 @@ def test_process_zip_with_empty_zip(client):
         form_data = {
             "message_type": "ecr",
             "data_type": "zip",
-            "config_file_name": "integrated.json",
+            "config_file_name": "bundle-only.json",
         }
         files = {"upload_file": ("file.zip", f)}
 

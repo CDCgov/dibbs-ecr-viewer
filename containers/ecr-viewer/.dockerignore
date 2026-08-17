@@ -9,3 +9,8 @@ seed-scripts
 e2e
 design-review
 .swc
+tests
+scripts
+schema-migration-scripts
+guides
+keycloak

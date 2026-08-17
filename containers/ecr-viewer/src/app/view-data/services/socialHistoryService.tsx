@@ -1,5 +1,8 @@
 import {
+  Address,
   Bundle,
+  CodeableConcept,
+  Coding,
   Element,
   Observation,
   RelatedPerson,
@@ -11,6 +14,8 @@ import { HtmlTableJsonRow } from "@/app/services/htmlTableService";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
 
 import {
+  formatAddress,
+  formatCoding,
   formatCodeableConcept,
   formatCurrentAddress,
   formatPatientContactList,
@@ -22,7 +27,7 @@ import {
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
-import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
+import fhirPathMappings, { ValueX } from "@/app/utils/evaluate/fhir-paths";
 import { toSentenceCase } from "@/app/utils/format-utils";
 import {
   DataDisplay,
@@ -462,7 +467,7 @@ export const evaluateTravelHistoryTable = (fhirBundle: Bundle) => {
   const columns: ColumnInfoInput[] = [
     {
       columnName: "Location",
-      infoPath: "travelHistoryLocation",
+      evaluateEntry: evaluateTravelHistoryLocation,
     },
     {
       columnName: "Date",
@@ -482,6 +487,52 @@ export const evaluateTravelHistoryTable = (fhirBundle: Bundle) => {
   return (
     <EvaluateTable resources={travelHistoryObservations} columns={columns} />
   );
+};
+
+const evaluateTravelHistoryLocation = (travelObs: Element): string => {
+  return evaluateAll(travelObs, fhirPathMappings.travelHistoryLocation)
+    .map(formatTravelHistoryLocation)
+    .map((location) => location.trim())
+    .filter(Boolean)
+    .join(", ");
+};
+
+const formatTravelHistoryLocation = (location: ValueX): string => {
+  if (
+    typeof location === "string" ||
+    typeof location === "number" ||
+    typeof location === "boolean"
+  ) {
+    return location.toString();
+  }
+
+  if (isAddress(location)) {
+    return formatAddress(location);
+  }
+
+  if (isCodeableConcept(location)) {
+    return formatCodeableConcept(location) ?? "";
+  }
+
+  if (isCoding(location)) {
+    return formatCoding(location) ?? "";
+  }
+
+  return "";
+};
+
+const isAddress = (value: object): value is Address => {
+  return ["line", "city", "state", "postalCode", "district", "country"].some(
+    (key) => key in value,
+  );
+};
+
+const isCodeableConcept = (value: object): value is CodeableConcept => {
+  return "text" in value || ("coding" in value && Array.isArray(value.coding));
+};
+
+const isCoding = (value: object): value is Coding => {
+  return ["code", "display", "system"].some((key) => key in value);
 };
 
 const evaluateTravelHistoryDetails = (

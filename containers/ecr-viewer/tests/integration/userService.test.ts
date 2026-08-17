@@ -4,8 +4,10 @@
 
 import { notFound } from "next/navigation";
 
-import { saveFhirMetadata } from "@/app/api/save-fhir-data/service";
-import { BundleMetadata } from "@/app/api/save-fhir-data/types";
+import {
+  BundleMetadata,
+  saveFhirMetadata,
+} from "@/app/services/saveFhirDataService";
 import { BlobResponse } from "@/app/data/blobStorage/utils";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core } from "@/app/data/metadataDb/types/core";
