@@ -224,8 +224,8 @@ const getReportResultId = (
   const resultId = [...new Set(observationRefValsArray)].join(", "); // should only be 1
   if (resultId) return resultId;
 
-  // Some observations (e.g. radiology results) don't carry the
-  // "observation entry reference value" extension the lookup above relies
+  // Some observations don't carry the "observation entry reference value"
+  // extension the lookup above relies
   // on, so nothing gets matched and every HTML-string-sourced field for
   // this report silently comes up empty. Fall back to the DiagnosticReport's
   // own identifier(s), which share the same numeric value used in the
