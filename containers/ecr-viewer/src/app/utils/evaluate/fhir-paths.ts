@@ -168,6 +168,7 @@ export type PathTypes = {
   specimenSource: CodeableConcept;
   specimenBodySite: CodeableConcept;
   observationReferenceValue: string;
+  diagnosticReportIdentifierValue: string;
   observationValue: string;
   observationReferenceRange: ObservationReferenceRange;
   observationDeviceReference: Reference;
@@ -724,6 +725,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "extension('observation entry reference value').valueString",
   },
+  diagnosticReportIdentifierValue: { type: "string", path: "identifier.value" },
   observationValue: {
     type: "string",
     path: "(valueQuantity.value.toString() | valueString | valueCodeableConcept.coding.display | iif(valueQuantity.unit.exists(), iif(valueQuantity.unit = '%', valueQuantity.unit, ' ' + valueQuantity.unit), '') | iif(interpretation.coding.display.exists(), ' (' + interpretation.coding.display + ')', '')).join('')",

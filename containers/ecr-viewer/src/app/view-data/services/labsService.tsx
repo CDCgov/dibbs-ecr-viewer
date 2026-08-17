@@ -102,7 +102,7 @@ export const evaluateLabInfoData = (
 
   for (const report of labReports) {
     const obs = getObservations(report, fhirIndex);
-    const labReportJson = getJsonLab(jsonLabs, obs);
+    const labReportJson = getJsonLab(jsonLabs, obs, report);
     ensureReportHasDateTime(report, obs);
     const content = getLabsContent(report, obs, fhirIndex, labReportJson);
     const organizationId = (report.performer?.[0].reference ?? "").replace(
@@ -209,7 +209,10 @@ const ensureReportHasDateTime = (
   }
 };
 
-const getReportResultId = (observations: Observation[]): string | undefined => {
+const getReportResultId = (
+  observations: Observation[],
+  report: DiagnosticReport,
+): string | undefined => {
   // Get reference value (result ID) from Observations
   const observationRefValsArray = observations.flatMap((observation) => {
     const refVal = evaluateAll(
@@ -218,20 +221,35 @@ const getReportResultId = (observations: Observation[]): string | undefined => {
     );
     return extractNumbersAndPeriods(refVal);
   });
-  return [...new Set(observationRefValsArray)].join(", "); // should only be 1
+  const resultId = [...new Set(observationRefValsArray)].join(", "); // should only be 1
+  if (resultId) return resultId;
+
+  // Some observations (e.g. radiology results) don't carry the
+  // "observation entry reference value" extension the lookup above relies
+  // on, so nothing gets matched and every HTML-string-sourced field for
+  // this report silently comes up empty. Fall back to the DiagnosticReport's
+  // own identifier(s), which share the same numeric value used in the
+  // narrative's <item ID="Result...">.
+  return evaluateAll(
+    report,
+    fhirPathMappings.diagnosticReportIdentifierValue,
+  ).find(Boolean);
 };
 
 /**
  * Retrieves the JSON representation of all lab reports from the labs HTML string.
  * @param jsonLabs - All json lab reports from the HTML
  * @param observations - The DiagnosticReport's observation resources.
+ * @param report - The DiagnosticReport itself, used as a fallback match key
+ *   when none of its observations carry the reference-value extension.
  * @returns The JSON representation of the lab reports.
  */
 export const getJsonLab = (
   jsonLabs: HtmlTableJson[],
   observations: Observation[],
+  report: DiagnosticReport,
 ): HtmlTableJson | undefined => {
-  const resultId = getReportResultId(observations);
+  const resultId = getReportResultId(observations, report);
   if (!resultId) return;
 
   // Get specified lab report (by reference value)
@@ -744,14 +762,6 @@ const getLabsContent = (
         noData,
       className: "lab-text-content",
     },
-//     {
-//       title: "Anatomical Region",
-//       value: returnFieldValueFromLabHtmlString(
-//         labReportJson,
-//         "Anatomical Region",
-//       ),
-//       className: "lab-text-content",
-//     },
     {
       title: "Anatomical Location/Laterality",
       value:
@@ -764,6 +774,8 @@ const getLabsContent = (
     },
   ];
 
+
+
   const rrInfo: DisplayDataProps[] = [
     {
       title: "Observation Time",
@@ -773,6 +785,14 @@ const getLabsContent = (
     {
       title: "Analysis Time",
       value: returnAnalysisTime(labReportJson, "Analysis Time"),
+      className: "lab-text-content",
+    },
+    {
+      title: "Anatomical Region",
+      value: returnFieldValueFromLabHtmlString(
+              labReportJson,
+              "Anatomical Region",
+            ),
       className: "lab-text-content",
     },
     // With no specimen to attribute these fields to, fall back to showing

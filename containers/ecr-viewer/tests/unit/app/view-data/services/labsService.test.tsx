@@ -185,6 +185,7 @@ const jsonLabs = getAllLabJsonObjects(fhirIndexBundleLab);
 const labReportAbnormalJsonObject = getJsonLab(
   jsonLabs,
   getObservations(labReportAbnormal!, fhirIndexBundleLab),
+  labReportAbnormal!,
 );
 
 const pathLabOrganismsTableAndNarr =
@@ -249,6 +250,7 @@ describe("LabsService tests", () => {
         const result = getJsonLab(
           jsonLabs,
           getObservations(labReportNormal!, fhirIndexBundleLab),
+          labReportNormal!,
         );
 
         expect(result).toEqual(expectedResult);
@@ -265,6 +267,7 @@ describe("LabsService tests", () => {
         const result = getJsonLab(
           jsonLabs,
           getObservations(labReportWithoutIds!, fhirIndexBundleLabNoLabIds),
+          labReportWithoutIds!,
         );
 
         expect(result).toBeUndefined();
@@ -278,6 +281,10 @@ describe("LabsService tests", () => {
             labReportNormal!,
             fhirIndexBundleLabInvalidResultsDiv,
           ),
+          // Deliberately has no identifier, so the reportResultId fallback
+          // (which reads report.identifier) can't spuriously match this
+          // report against jsonLabs derived from a different, valid bundle.
+          { resourceType: "DiagnosticReport", code: {}, status: "final" },
         );
 
         expect(result).toBeUndefined();
