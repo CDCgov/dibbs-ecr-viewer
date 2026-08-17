@@ -67,5 +67,5 @@ if ! systemctl is-active --quiet docker.service; then
   exit 4
 fi
 
-systemctl status docker.service
+systemctl status docker.service --no-pager
 echo "Docker installation complete!"
