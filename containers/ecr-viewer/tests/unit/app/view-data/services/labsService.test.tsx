@@ -281,6 +281,7 @@ describe("LabsService tests", () => {
             labReportNormal!,
             fhirIndexBundleLabInvalidResultsDiv,
           ),
+          { resourceType: "DiagnosticReport", code: {}, status: "final" },
         );
 
         expect(result).toBeUndefined();
