@@ -774,8 +774,6 @@ const getLabsContent = (
     },
   ];
 
-
-
   const rrInfo: DisplayDataProps[] = [
     {
       title: "Observation Time",
@@ -790,9 +788,9 @@ const getLabsContent = (
     {
       title: "Anatomical Region",
       value: returnFieldValueFromLabHtmlString(
-              labReportJson,
-              "Anatomical Region",
-            ),
+        labReportJson,
+        "Anatomical Region",
+      ),
       className: "lab-text-content",
     },
     // With no specimen to attribute these fields to, fall back to showing
