@@ -270,8 +270,9 @@ test.describe("program management page", () => {
     await page
       .getByRole("combobox", { name: "Users per page" })
       .selectOption("25");
-    const rowProgramAdmin = await page
-      .getByRole("button", { name: process.env.AUTH_PROGRAM_ADMIN_USER! });
+    const rowProgramAdmin = await page.getByRole("button", {
+      name: process.env.AUTH_PROGRAM_ADMIN_USER!,
+    });
     await rowProgramAdmin.scrollIntoViewIfNeeded();
     await rowProgramAdmin.dispatchEvent("click");
     await page.getByRole("dialog").getByText("Edit user").click();
@@ -358,8 +359,7 @@ const createRandomProgramArea = async (
       throw new Error("Could not find an unassigned condition");
     }
 
-    const checkbox =
-      checkboxes[Math.floor(Math.random() * checkboxes.length)];
+    const checkbox = checkboxes[Math.floor(Math.random() * checkboxes.length)];
     const selectedConditionName = await checkbox
       .locator("..")
       .locator("p")
@@ -369,13 +369,14 @@ const createRandomProgramArea = async (
 
     triedConditionNames.add(selectedConditionName);
     const conditionIsAssigned =
-      (await checkbox.locator("..").getByText(/Condition in /).count()) > 0;
+      (await checkbox
+        .locator("..")
+        .getByText(/Condition in /)
+        .count()) > 0;
     if (conditionIsAssigned) continue;
 
     await checkbox.scrollIntoViewIfNeeded();
-    await checkbox.evaluate((element) =>
-      (element as HTMLInputElement).click(),
-    );
+    await checkbox.evaluate((element) => (element as HTMLInputElement).click());
 
     const reassignmentModal = page
       .getByRole("dialog")
