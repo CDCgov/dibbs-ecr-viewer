@@ -73,7 +73,7 @@ download_scripts() {
 }
 
 download_config() {
-  cd ~
+  cd
   echo "Downloading docker configuration..."
 
   # -P set directory, -nc skip if file exists because we don't want to overwrite any user settings
