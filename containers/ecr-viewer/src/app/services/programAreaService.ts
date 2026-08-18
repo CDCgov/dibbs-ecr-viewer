@@ -18,6 +18,7 @@ import { listAdminConditionReferencesQuery } from "./listConditionsService";
 import {
   getCheckAdmin,
   getCheckAnyAdmin,
+  isAdmin,
   listUserProgramAreasQuery,
 } from "./userService";
 
@@ -124,12 +125,12 @@ export const getProgramArea = async (
  * @param trx Transaction used to query the user's accessible conditions.
  * @throws {UserFacingError} If an admin includes an inaccessible condition.
  */
-const validateAdminConditionAccess = async (
+export const validateAdminConditionAccess = async (
   user: Awaited<ReturnType<typeof getCheckAnyAdmin>>,
   conditions: string[],
   trx: Transaction<Core>,
 ): Promise<void> => {
-  if (!isProgramAdmin(user) || conditions.length === 0) return;
+  if (isAdmin(user) || conditions.length === 0) return;
 
   const accessibleConditions = await listAdminConditionReferencesQuery(
     user,
@@ -172,6 +173,20 @@ export const updateProgramArea = audit(
 
     try {
       if (!!name) {
+        if (!isAdmin(updatingUser)) {
+          const currentProgramArea = await trx
+            .selectFrom("program_area")
+            .select("name")
+            .where("uuid", "=", uuid)
+            .executeTakeFirst();
+
+          if (currentProgramArea?.name !== name) {
+            throw new UserFacingError(
+              "Program admins cannot update program area names.",
+            );
+          }
+        }
+
         await checkDupeName(trx, name, uuid);
         await trx
           .updateTable("program_area")
