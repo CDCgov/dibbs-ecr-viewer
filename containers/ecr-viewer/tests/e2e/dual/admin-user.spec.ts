@@ -480,6 +480,7 @@ test.describe("user management page", () => {
 
 const getRandomProgramArea = async (page: Page, notThese: string[] = []) => {
   await page.goto("/ecr-viewer/admin/program");
+  const adminProgramTestProgram = /^Program (?:\d+|(?:chromium|firefox|webkit)\d+)/;
 
   const rows = await page.getByRole("row").all();
   for (const row of rows) {
@@ -490,7 +491,7 @@ const getRandomProgramArea = async (page: Page, notThese: string[] = []) => {
     if (
       !!program &&
       !notThese.includes(program) &&
-      !program.match(/^Program \d+/)
+      !adminProgramTestProgram.test(program)
     ) {
       return program;
     }
