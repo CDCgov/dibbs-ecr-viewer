@@ -3,13 +3,15 @@ import { revalidatePath } from "next/cache";
 import { ProgramForm } from "@/app/admin/program/ProgramForm";
 import { listConditionReferences } from "@/app/services/listConditionsService";
 import { createProgramAreaAction } from "@/app/services/serverActionService";
-import { notFoundUnlessAdmin } from "@/app/services/userService";
+import { isAdmin, notFoundUnlessAdmin } from "@/app/services/userService";
+import { getLoggedInUser } from "@/app/services/loggedInUserService";
 
 /**
  * @returns Page to create a program area
  */
 const CreateProgramPage = async () => {
   await notFoundUnlessAdmin();
+  const currentUser = await getLoggedInUser();
 
   const conditions = await listConditionReferences();
 
@@ -23,6 +25,7 @@ const CreateProgramPage = async () => {
         return await createProgramAreaAction({ name, conditions });
       }}
       formTouchedMsg="You have unsaved changes. To create a program area, you must add a program name and at least one condition."
+      isLoggedInUserAdmin={isAdmin(currentUser)}
     />
   );
 };
