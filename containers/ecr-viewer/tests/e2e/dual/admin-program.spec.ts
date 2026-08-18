@@ -267,8 +267,12 @@ test.describe("program management page", () => {
     // Assign both programs to program admin
     await page.goto("/ecr-viewer/admin/user");
     await page
-      .getByRole("button", { name: process.env.AUTH_PROGRAM_ADMIN_USER! })
-      .click();
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("25");
+    const rowProgramAdmin = await page
+      .getByRole("button", { name: process.env.AUTH_PROGRAM_ADMIN_USER! });
+    await rowProgramAdmin.scrollIntoViewIfNeeded();
+    await rowProgramAdmin.dispatchEvent("click");
     await page.getByRole("dialog").getByText("Edit user").click();
     await page.waitForURL(/\/ecr-viewer\/admin\/user\/edit\?uuid=.*/);
     const checkboxTarget = await page
