@@ -3,12 +3,18 @@
  */
 
 import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
-import { getAllConditions } from "@/app/services/listConditionsService";
+import { getDb } from "@/app/data/metadataDb/database";
+import { Core } from "@/app/data/metadataDb/types/core";
+import {
+  getAllConditions,
+  listAdminConditionReferences,
+  listAdminConditionReferencesQuery,
+} from "@/app/services/listConditionsService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 import { createCoreEcr, createEcrCondition } from "./helpers/core";
 import { buildCore, dropExisting } from "./helpers/ddl";
-import { seedUserProgramData } from "./helpers/seed";
+import { getSeededUser, seedUserProgramData } from "./helpers/seed";
 
 jest.mock("@/app/utils/auth-utils");
 
@@ -139,3 +145,63 @@ describe.each([
     });
   },
 );
+
+describe("listAdminConditionReferences", () => {
+  it("returns all condition references for admins", async () => {
+    (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+      email: "admin@admin.com",
+    });
+
+    const conditions = await listAdminConditionReferences();
+
+    expect(conditions.map(({ code }) => code)).toStrictEqual(["123", "456"]);
+  });
+
+  it("returns only condition references in a program admin's program areas", async () => {
+    (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+      email: "programadmin@programadmin.com",
+    });
+
+    const conditions = await listAdminConditionReferences();
+
+    expect(conditions.map(({ code }) => code)).toStrictEqual(["123"]);
+  });
+
+  it("rejects standard users", async () => {
+    (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+      email: "standard@standard.com",
+    });
+
+    await expect(listAdminConditionReferences()).rejects.toThrow(
+      "Standard user cannot list condition references",
+    );
+  });
+});
+
+describe("listAdminConditionReferencesQuery", () => {
+  it("returns all references for an admin and filters by requested codes", async () => {
+    const admin = await getSeededUser("admin@admin.com");
+    const db = getDb<Core>();
+
+    const allConditions = await listAdminConditionReferencesQuery(admin, db);
+    const filteredConditions = await listAdminConditionReferencesQuery(
+      admin,
+      db,
+      ["456"],
+    );
+
+    expect(allConditions.map(({ code }) => code)).toStrictEqual(["123", "456"]);
+    expect(filteredConditions.map(({ code }) => code)).toStrictEqual(["456"]);
+  });
+
+  it("returns only references accessible to a program admin", async () => {
+    const programAdmin = await getSeededUser("programadmin@programadmin.com");
+
+    const conditions = await listAdminConditionReferencesQuery(
+      programAdmin,
+      getDb<Core>(),
+    );
+
+    expect(conditions.map(({ code }) => code)).toStrictEqual(["123"]);
+  });
+});
