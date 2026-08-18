@@ -324,8 +324,16 @@ describe("LabsService tests", () => {
         const jsonLabs: HtmlTableJson[] = [
           // Unrelated report; its ID happens to contain "111.42" as a
           // substring, but isn't actually delimited the same way.
-          { resultId: "Result.9111.429", resultName: "Wrong report", tables: [] },
-          { resultId: "Result.111.42", resultName: "Correct report", tables: [] },
+          {
+            resultId: "Result.9111.429",
+            resultName: "Wrong report",
+            tables: [],
+          },
+          {
+            resultId: "Result.111.42",
+            resultName: "Correct report",
+            tables: [],
+          },
         ];
         const observations: Observation[] = [
           {
@@ -357,9 +365,9 @@ describe("LabsService tests", () => {
       });
 
       it("matches when resultId is a dot-delimited segment within the item ID", () => {
-        expect(
-          matchesResultId("Result.1.2.840.114350.111.42", "111.42"),
-        ).toBe(true);
+        expect(matchesResultId("Result.1.2.840.114350.111.42", "111.42")).toBe(
+          true,
+        );
       });
 
       it("does not match when resultId is only a bare substring, not a delimited segment", () => {
@@ -367,9 +375,7 @@ describe("LabsService tests", () => {
       });
 
       it("matches any candidate in a comma-separated resultId list", () => {
-        expect(
-          matchesResultId("Result.111.42", "999.99, 111.42"),
-        ).toBe(true);
+        expect(matchesResultId("Result.111.42", "999.99, 111.42")).toBe(true);
       });
 
       it("does not match a short resultId that only coincides with a middle segment of an unrelated item ID", () => {
