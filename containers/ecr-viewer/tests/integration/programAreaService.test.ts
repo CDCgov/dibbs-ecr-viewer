@@ -95,7 +95,7 @@ describe("program area service", () => {
 
   describe("as an admin", () => {
     let progId;
-    
+
     it("should create a program area", async () => {
       const progName = "Fun Times";
       const conditionCodes = ["123", "456"];
@@ -104,7 +104,7 @@ describe("program area service", () => {
         conditions: conditionCodes,
       });
       expect(progId).toMatch(UUID_REGEX);
-  
+
       // check audit log
       const log = await getLastAuditLog();
       expect(log.actor).toEqual(adminId!);
@@ -115,7 +115,7 @@ describe("program area service", () => {
         conditions: conditionCodes,
         uuid: progId,
       });
-  
+
       // see program area listed
       const programAreas = await listProgramAreas();
       expect(programAreas).toBeArrayOfSize(1);
@@ -131,7 +131,7 @@ describe("program area service", () => {
           ],
         },
       ]);
-  
+
       const conditions = await listConditionReferences();
       expect(conditions).toBeArrayOfSize(3);
       for (const code of conditionCodes) {
@@ -143,7 +143,7 @@ describe("program area service", () => {
       expect(
         conditions.filter((c) => c.program_area_uuid === null),
       ).toBeArrayOfSize(1);
-  
+
       // program with name already exists
       jest.spyOn(console, "error").mockImplementation();
       await expect(
@@ -155,16 +155,19 @@ describe("program area service", () => {
         "Failed to create program area. This program area name already exists.",
       );
     });
-  
+
     it("should update a program area name", async () => {
       const progName = "Sad Times";
-      const id = await createProgramArea({ name: progName, conditions: ["123"] });
-  
+      const id = await createProgramArea({
+        name: progName,
+        conditions: ["123"],
+      });
+
       const beforeNameConds = await listConditionReferences();
       await updateProgramArea({ uuid: id, name: "Happy Days" });
       const afterNameConds = await listConditionReferences();
       const afterNameProgramAreas = await listProgramAreas();
-  
+
       // check audit log
       const log = await getLastAuditLog();
       expect(log.actor).toEqual(adminId!);
@@ -174,7 +177,7 @@ describe("program area service", () => {
         name: "Happy Days",
         uuid: id,
       });
-  
+
       expect(
         // eslint-disable-next-line unused-imports/no-unused-vars
         beforeNameConds.map(({ program_area_name, ...cond }) => cond),
@@ -184,7 +187,7 @@ describe("program area service", () => {
       );
       const progArea = afterNameProgramAreas.find((p) => p.uuid === id);
       expect(progArea).toHaveProperty("name", "Happy Days");
-  
+
       // program with name already exists
       jest.spyOn(console, "error").mockImplementation();
       await expect(
@@ -193,19 +196,22 @@ describe("program area service", () => {
         "Failed to update program area. This program area name already exists.",
       );
     });
-  
+
     it("should update a program area conditions", async () => {
       const progName = "Sad Times";
-      const id = await createProgramArea({ name: progName, conditions: ["123"] });
-  
+      const id = await createProgramArea({
+        name: progName,
+        conditions: ["123"],
+      });
+
       const beforeConds = await listConditionReferences();
       const beforeCond = beforeConds.filter((c) => c.program_area_uuid === id);
       expect(beforeCond).toBeArrayOfSize(1);
       expect(beforeCond[0]).toHaveProperty("code", "123");
       await updateProgramArea({ uuid: id, conditions: ["789"] });
-  
+
       const afterConds = await listConditionReferences();
-  
+
       // check audit log
       const log = await getLastAuditLog();
       expect(log.actor).toEqual(adminId!);
@@ -215,24 +221,28 @@ describe("program area service", () => {
         conditions: ["789"],
         uuid: id,
       });
-  
+
       expect(beforeConds).not.toStrictEqual(afterConds);
       const cond = afterConds.filter((c) => c.program_area_uuid === id);
       expect(cond).toBeArrayOfSize(1);
       expect(cond[0]).toHaveProperty("code", "789");
     });
-  
+
     it("should delete a program area", async () => {
       const beforeCreate = await listProgramAreas();
       const id = await createProgramArea({ name: "test", conditions: ["123"] });
       const afterCreate = await listProgramAreas();
-  
-      await updateUser({ uuid: adminId!, updates: {}, programs: [id, progId!] });
+
+      await updateUser({
+        uuid: adminId!,
+        updates: {},
+        programs: [id, progId!],
+      });
       const beforeUserProgramAreas = await listUserProgramAreas(adminId!);
       expect(beforeUserProgramAreas).toBeArrayOfSize(2);
-  
+
       await deleteProgramArea({ uuid: id });
-  
+
       // check audit log
       const log = await getLastAuditLog();
       expect(log.actor).toEqual(adminId!);
@@ -241,22 +251,22 @@ describe("program area service", () => {
       expect(JSON.parse(log.parameter_json)).toStrictEqual({
         uuid: id,
       });
-  
+
       const afterDelete = await listProgramAreas();
-  
+
       expect(beforeCreate.map(({ uuid }) => uuid)).toStrictEqual(
         afterDelete.map(({ uuid }) => uuid),
       );
       expect(afterDelete).toBeArrayOfSize(3);
       expect(afterCreate).toBeArrayOfSize(4);
-  
+
       const afterUserProgramAreas = await listUserProgramAreas(adminId!);
       expect(afterUserProgramAreas).toBeArrayOfSize(1);
       expect(
         afterUserProgramAreas.filter((p) => p.uuid === progId!),
       ).toBeArrayOfSize(1);
     });
-  
+
     it("should return program areas for only the requested users", async () => {
       const firstId = await createProgramArea({
         name: "Requested Program One",
@@ -270,17 +280,17 @@ describe("program area service", () => {
         name: "Unrequested Program",
         conditions: ["789"],
       });
-  
+
       const userId = await createUser({
         email: "requested@standard.com",
         userType: "standard",
         programs: [secondId, firstId],
       });
-  
+
       const programAreas = await listProgramAreas({
         userUuids: [userId],
       });
-  
+
       expect(programAreas.map(({ uuid }) => uuid).sort()).toStrictEqual(
         [firstId, secondId].sort(),
       );
@@ -326,7 +336,7 @@ describe("program area service", () => {
         userUuids: [visibleUserId],
       });
       expect(detailProgramAreas.map(({ uuid }) => uuid).sort()).toStrictEqual(
-        [accessibleProgramId, restrictedProgramId].sort()
+        [accessibleProgramId, restrictedProgramId].sort(),
       );
     });
 
@@ -346,7 +356,7 @@ describe("program area service", () => {
         "Standard user cannot & program admins cannot create program areas",
       );
       await expect(deleteProgramArea({ uuid: programAreaId })).rejects.toThrow(
-        "Standard user cannot & program admins cannot delete program areas"
+        "Standard user cannot & program admins cannot delete program areas",
       );
     });
 
@@ -357,9 +367,7 @@ describe("program area service", () => {
       });
       await logInAsProgramAdmin([programAreaId]);
 
-      const consoleError = jest
-        .spyOn(console, "error")
-        .mockImplementation();
+      const consoleError = jest.spyOn(console, "error").mockImplementation();
       try {
         await expect(
           updateProgramArea({
@@ -383,10 +391,7 @@ describe("program area service", () => {
         name: "Program Admin Condition Target",
         conditions: ["789"],
       });
-      await logInAsProgramAdmin([
-        accessibleProgramAreaId,
-        targetProgramAreaId,
-      ]);
+      await logInAsProgramAdmin([accessibleProgramAreaId, targetProgramAreaId]);
 
       await updateProgramArea({
         uuid: targetProgramAreaId,
@@ -398,7 +403,8 @@ describe("program area service", () => {
         ({ uuid }) => uuid === targetProgramAreaId,
       );
       expect(programArea?.conditions.map(({ code }) => code)).toStrictEqual([
-        "123", "789"
+        "123",
+        "789",
       ]);
     });
 
@@ -411,14 +417,9 @@ describe("program area service", () => {
         name: "Program Admin Restricted Condition Target",
         conditions: ["789"],
       });
-      await logInAsProgramAdmin([
-        accessibleProgramAreaId,
-        targetProgramAreaId,
-      ]);
+      await logInAsProgramAdmin([accessibleProgramAreaId, targetProgramAreaId]);
 
-      const consoleError = jest
-        .spyOn(console, "error")
-        .mockImplementation();
+      const consoleError = jest.spyOn(console, "error").mockImplementation();
       try {
         await expect(
           updateProgramArea({

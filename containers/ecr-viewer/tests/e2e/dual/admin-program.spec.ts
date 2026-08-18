@@ -257,12 +257,13 @@ test.describe("program management page", () => {
     page,
     browserName,
   }) => {
-    const targetProgram = await createRandomProgramArea(page, browserName, ["covid"]);
-    const sourceProgram = await createRandomProgramArea(
-      page,
-      browserName,
-      [targetProgram.conditionName, "covid"],
-    );
+    const targetProgram = await createRandomProgramArea(page, browserName, [
+      "covid",
+    ]);
+    const sourceProgram = await createRandomProgramArea(page, browserName, [
+      targetProgram.conditionName,
+      "covid",
+    ]);
 
     // Assign both programs to program admin
     await page.goto("/ecr-viewer/admin/user");
@@ -275,12 +276,16 @@ test.describe("program management page", () => {
     await rowProgramAdmin.dispatchEvent("click");
     await page.getByRole("dialog").getByText("Edit user").click();
     await page.waitForURL(/\/ecr-viewer\/admin\/user\/edit\?uuid=.*/);
-    const checkboxTarget = await page
-      .getByLabel(`Select ${targetProgram.name}`, { exact: true });
+    const checkboxTarget = await page.getByLabel(
+      `Select ${targetProgram.name}`,
+      { exact: true },
+    );
     await checkboxTarget.scrollIntoViewIfNeeded();
     await checkboxTarget.dispatchEvent("click");
-    const checkboxSource = await page
-      .getByLabel(`Select ${sourceProgram.name}`, { exact: true });
+    const checkboxSource = await page.getByLabel(
+      `Select ${sourceProgram.name}`,
+      { exact: true },
+    );
     await checkboxSource.scrollIntoViewIfNeeded();
     await checkboxSource.dispatchEvent("click");
     await page.getByRole("button", { name: "Save user" }).first().click();
@@ -306,7 +311,7 @@ test.describe("program management page", () => {
     await expect(sourceConditionInSource).toBeVisible();
     const sourceConditionCheckbox = await page.getByLabel(
       sourceProgram.conditionName,
-      { exact: true }
+      { exact: true },
     );
     await sourceConditionCheckbox.scrollIntoViewIfNeeded();
     await sourceConditionCheckbox.dispatchEvent("click");
@@ -320,11 +325,9 @@ test.describe("program management page", () => {
     await page.waitForURL("/ecr-viewer/admin/program");
 
     // The reassigned condition is in target
-    const sourceProgramRow = page
-      .getByRole("row")
-      .filter({
-        has: page.getByRole("button", { name: sourceProgram.name }),
-      });
+    const sourceProgramRow = page.getByRole("row").filter({
+      has: page.getByRole("button", { name: sourceProgram.name }),
+    });
     await expect(
       sourceProgramRow.getByRole("cell", { name: "0 conditions", exact: true }),
     ).toBeVisible();

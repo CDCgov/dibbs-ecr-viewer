@@ -88,19 +88,19 @@ export const ProgramForm = ({
   progUuid?: string;
   submitAction: (
     name: string,
-    conditions: string[]
+    conditions: string[],
   ) => Promise<ServerActionResult<string | void>>;
   formTouchedMsg?: string;
   isLoggedInUserAdmin: boolean;
 }) => {
   const [name, setName] = useState(initValues.name || "");
   const [conditionCategories, setConditionCategories] = useState(
-    groupByCategory(initValues.conditions)
+    groupByCategory(initValues.conditions),
   );
   const { createToast } = React.useContext(ToastContext);
 
   const selectedConditions = sortedCodes(
-    Object.values(conditionCategories).flatMap((id) => id)
+    Object.values(conditionCategories).flatMap((id) => id),
   );
   const numConditionsSelected = selectedConditions.length;
 
@@ -155,7 +155,7 @@ const NameFieldSet = ({
   name,
   setName,
   nameIsDupe,
-  isDisabled
+  isDisabled,
 }: {
   name: string;
   setName: (n: string) => void;
@@ -168,11 +168,11 @@ const NameFieldSet = ({
     <FieldSet
       legend={<span className={disabledTextClass}>Name program area</span>}
     >
-      {!isDisabled && 
-      <span className={disabledTextClass}>
-        Required fields are marked with an asterisk (<RequiredMarker />)
-      </span>
-      }
+      {!isDisabled && (
+        <span className={disabledTextClass}>
+          Required fields are marked with an asterisk (<RequiredMarker />)
+        </span>
+      )}
       <FormGroup error={nameIsDupe} className={disabledTextClass}>
         <label className="usa-label maxw-full">
           Program area name
