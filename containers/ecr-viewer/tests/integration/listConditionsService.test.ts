@@ -65,6 +65,7 @@ describe.each([
     setupNoConditionsEcr: false,
     expectedAdmin: ["condition1", "condition2", "condition3"],
     expectedStandard: ["condition1"],
+    expectedProgramAdmin: ["condition1"],
     expectedNoUser: [],
   },
   {
@@ -77,6 +78,7 @@ describe.each([
       "condition3",
     ],
     expectedStandard: ["condition1"],
+    expectedProgramAdmin: ["condition1"],
     expectedNoUser: [],
   },
 ])(
@@ -87,6 +89,7 @@ describe.each([
     setupNoConditionsEcr,
     expectedAdmin,
     expectedStandard,
+    expectedProgramAdmin,
     expectedNoUser,
   }) => {
     beforeAll(async () => {
@@ -117,6 +120,15 @@ describe.each([
 
       const conditions = await getAllConditions();
       expect(conditions).toStrictEqual(expectedStandard);
+    });
+
+    it("Should retrieve only unique conditions with authz for program admins", async () => {
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        email: "programadmin@programadmin.com",
+      });
+
+      const conditions = await getAllConditions();
+      expect(conditions).toStrictEqual(expectedProgramAdmin);
     });
 
     it("Should retrieve no conditions if no user", async () => {
