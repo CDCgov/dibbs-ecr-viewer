@@ -255,7 +255,7 @@ export const matchesResultId = (itemId: string, resultId: string): boolean => {
     .some((candidate) => {
       // Replace "." with "\." - otherwise "111.42" could wrongly match
       // something like "111X42"
-      const escaped = candidate.replace(/\./g, "\\.");
+      const escaped = candidate.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       // (^|\.) matches either the start of itemId or a literal dot, and the
       // trailing $ requires the match to run all the way to the end of
       // itemId. So this only matches candidate as the item's trailing
