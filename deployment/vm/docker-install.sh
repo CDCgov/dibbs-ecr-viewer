@@ -57,9 +57,9 @@ systemctl enable containerd.service
 if ! systemctl is-active --quiet docker.service; then
   echo "[$(date)] ERROR: Docker service failed to start."
   echo "Docker status:"
-  systemctl status docker.service
+  systemctl status docker.service --no-pager
   echo "Journal logs:"
-  journalctl -xeu docker.service --no-pager -n 40
+  journalctl -xeu docker.service --no-pager
   if [ -f /var/log/docker.log ]; then
     echo "[$(date)] Showing last 40 lines of /var/log/docker.log:"
     tail -40 /var/log/docker.log
