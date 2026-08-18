@@ -5,8 +5,9 @@ import { ProgramForm } from "@/app/admin/program/ProgramForm";
 import { listAdminConditionReferences } from "@/app/services/listConditionsService";
 import { getProgramArea } from "@/app/services/programAreaService";
 import { updateProgramAreaAction } from "@/app/services/serverActionService";
-import { notFoundUnlessAnyAdmin } from "@/app/services/userService";
+import { isAdmin, notFoundUnlessAnyAdmin } from "@/app/services/userService";
 import { PageSearchParams } from "@/app/utils/search-param-utils";
+import { getLoggedInUser } from "@/app/services/loggedInUserService";
 
 /**
  * @param props page props
@@ -19,6 +20,7 @@ const EditProgramPage = async ({
   searchParams: Promise<PageSearchParams>;
 }) => {
   await notFoundUnlessAnyAdmin();
+  const currentUser = await getLoggedInUser();
   const { uuid } = await searchParams;
 
   // nothing to edit here
@@ -45,6 +47,7 @@ const EditProgramPage = async ({
         revalidatePath("/ecr-viewer/admin/program");
         return await updateProgramAreaAction({ uuid, name, conditions });
       }}
+      isLoggedInUserAdmin={isAdmin(currentUser)}
     />
   );
 };
