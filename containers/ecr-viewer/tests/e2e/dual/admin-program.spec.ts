@@ -337,43 +337,50 @@ const createRandomProgramArea = async (
   conditionNamesToAvoid: string[] = [],
 ) => {
   const random = Math.floor(Math.random() * 10000);
-  const name = `Program ${browserName}-${random}`;
+  const name = `Prog admin-program-${browserName}-${random}`;
 
   await page.goto("/ecr-viewer/admin/program/create");
   await page.getByLabel("Program area name").fill(name);
 
-  const checkboxes = await page.getByRole("checkbox").all();
-  let condition: (typeof checkboxes)[number] | undefined;
-  for (const checkbox of checkboxes) {
-    const conditionIsAssigned =
-      (await checkbox.locator("..").getByText(/Condition in /).count()) > 0;
-    const conditionName = await checkbox
+  const triedConditionNames = new Set(conditionNamesToAvoid);
+  let conditionName: string | undefined;
+
+  while (!conditionName) {
+    const checkboxes = await page.getByRole("checkbox").all();
+    if (triedConditionNames.size >= checkboxes.length) {
+      throw new Error("Could not find an unassigned condition");
+    }
+
+    const checkbox =
+      checkboxes[Math.floor(Math.random() * checkboxes.length)];
+    const selectedConditionName = await checkbox
       .locator("..")
       .locator("p")
       .first()
       .innerText();
-    if (
-      !conditionIsAssigned &&
-      !conditionNamesToAvoid.includes(conditionName)
-    ) {
-      condition = checkbox;
-      break;
+    if (triedConditionNames.has(selectedConditionName)) continue;
+
+    triedConditionNames.add(selectedConditionName);
+    const conditionIsAssigned =
+      (await checkbox.locator("..").getByText(/Condition in /).count()) > 0;
+    if (conditionIsAssigned) continue;
+
+    await checkbox.scrollIntoViewIfNeeded();
+    await checkbox.evaluate((element) =>
+      (element as HTMLInputElement).click(),
+    );
+
+    const reassignmentModal = page
+      .getByRole("dialog")
+      .filter({ hasText: "Are you sure you want to add" });
+    if (await reassignmentModal.isVisible()) {
+      await reassignmentModal
+        .getByRole("button", { name: "Close this window" })
+        .click();
+    } else {
+      conditionName = selectedConditionName;
     }
   }
-
-  if (!condition) {
-    throw new Error("Could not find an unassigned condition");
-  }
-
-  const conditionName = await condition
-    .locator("..")
-    .locator("p")
-    .first()
-    .innerText();
-  await condition.scrollIntoViewIfNeeded();
-  await condition.evaluate((element) =>
-    (element as HTMLInputElement).click(),
-  );
 
   await page.getByRole("button", { name: "Save program area" }).first().click();
   await page.waitForURL("/ecr-viewer/admin/program");
