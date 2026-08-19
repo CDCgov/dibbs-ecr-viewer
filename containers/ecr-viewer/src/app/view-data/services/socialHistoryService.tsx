@@ -1,5 +1,8 @@
 import {
+  Address,
   Bundle,
+  CodeableConcept,
+  Coding,
   Element,
   Observation,
   RelatedPerson,
@@ -11,6 +14,8 @@ import { HtmlTableJsonRow } from "@/app/services/htmlTableService";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
 
 import {
+  formatAddress,
+  formatCoding,
   formatCodeableConcept,
   formatCurrentAddress,
   formatPatientContactList,
@@ -22,7 +27,7 @@ import {
   evaluateReference,
   evaluateValue,
 } from "@/app/utils/evaluate";
-import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
+import fhirPathMappings, { ValueX } from "@/app/utils/evaluate/fhir-paths";
 import { toSentenceCase } from "@/app/utils/format-utils";
 import {
   DataDisplay,
@@ -30,6 +35,7 @@ import {
   DisplayDataProps,
 } from "@/app/view-data/components/DataDisplay";
 import EvaluateTable, {
+  BaseTable,
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
 import { UnstyledDividedList } from "@/app/view-data/components/UnstyledDividedList";
@@ -60,7 +66,8 @@ export const evaluateSocialData = (
     },
     {
       title: "Tobacco Use",
-      value: evaluateValue(fhirBundle, fhirPathMappings.patientTobaccoUse),
+      value: evaluateTobaccoUse(fhirBundle),
+      fullWidthContent: true,
     },
     {
       title: "Travel History",
@@ -197,6 +204,103 @@ export const evaluateOccupation = (fhirBundle: Bundle) => {
   ]
     .filter(Boolean)
     .join("\n\n");
+};
+
+/**
+ * Evaluates tobacco use information from the FHIR bundle and formats it as a table.
+ * @param fhirBundle - The FHIR bundle containing tobacco use data.
+ * @returns A table of tobacco use observations, or undefined if none are found.
+ */
+export const evaluateTobaccoUse = (fhirBundle: Bundle) => {
+  const tobaccoObservationGroups = [
+    {
+      detail: "Smoking Status",
+      observations: evaluateAll(
+        fhirBundle,
+        fhirPathMappings.patientTobaccoUseStatus,
+      ),
+      formatObservation: (observation: Observation) =>
+        evaluateValue(observation, fhirPathMappings.valueX),
+    },
+    {
+      detail: "Smoking History",
+      observations: evaluateAll(
+        fhirBundle,
+        fhirPathMappings.patientTobaccoHistory,
+      ),
+      formatObservation: (observation: Observation) =>
+        evaluateValue(observation, fhirPathMappings.valueX),
+    },
+    {
+      detail: "Amount",
+      observations: evaluateAll(
+        fhirBundle,
+        fhirPathMappings.patientTobaccoAmount,
+      ),
+      formatObservation: (observation: Observation) => {
+        const amount = evaluateValue(observation, fhirPathMappings.valueX);
+        return amount ? `${amount} packs per day` : "";
+      },
+    },
+    {
+      detail: "Cigarette Pack-years",
+      observations: evaluateAll(
+        fhirBundle,
+        fhirPathMappings.patientTobaccoPackYears,
+      ),
+      formatObservation: (observation: Observation) =>
+        evaluateValue(observation, fhirPathMappings.valueX),
+    },
+    {
+      detail: "Smokeless Status",
+      observations: evaluateAll(
+        fhirBundle,
+        fhirPathMappings.patientSmokelessStatus,
+      ),
+      formatObservation: (observation: Observation) =>
+        evaluateValue(observation, fhirPathMappings.valueX),
+    },
+    {
+      detail: "Tobacco Use Cessation Education",
+      observations: evaluateAll(
+        fhirBundle,
+        fhirPathMappings.patientTobaccoEducation,
+      ),
+      formatObservation: (observation: Observation) =>
+        evaluateAll(observation, fhirPathMappings.noteText).join(","),
+    },
+  ];
+
+  const tobaccoRows = tobaccoObservationGroups.flatMap(
+    ({ detail, observations, formatObservation }) =>
+      observations.map((observation) => ({
+        detail,
+        observation: formatObservation(observation),
+        date: evaluateValue(observation, fhirPathMappings.effectiveX),
+      })),
+  );
+
+  if (tobaccoRows.length === 0) return undefined;
+
+  const columns: ColumnInfoInput[] = [
+    { columnName: "Tobacco Detail" },
+    { columnName: "Observation" },
+    { columnName: "Date" },
+  ];
+
+  return (
+    <BaseTable columns={columns} fixed={false}>
+      {tobaccoRows.map((row, index) => (
+        <tr key={`tobacco-row-${index}`}>
+          <td className="text-top text-pre-line">{row.detail || noData}</td>
+          <td className="text-top text-pre-line">
+            {row.observation || noData}
+          </td>
+          <td className="text-top text-pre-line">{row.date || noData}</td>
+        </tr>
+      ))}
+    </BaseTable>
+  );
 };
 
 /**
@@ -363,7 +467,7 @@ export const evaluateTravelHistoryTable = (fhirBundle: Bundle) => {
   const columns: ColumnInfoInput[] = [
     {
       columnName: "Location",
-      infoPath: "travelHistoryLocation",
+      evaluateEntry: evaluateTravelHistoryLocation,
     },
     {
       columnName: "Date",
@@ -383,6 +487,52 @@ export const evaluateTravelHistoryTable = (fhirBundle: Bundle) => {
   return (
     <EvaluateTable resources={travelHistoryObservations} columns={columns} />
   );
+};
+
+const evaluateTravelHistoryLocation = (travelObs: Element): string => {
+  return evaluateAll(travelObs, fhirPathMappings.travelHistoryLocation)
+    .map(formatTravelHistoryLocation)
+    .map((location) => location.trim())
+    .filter(Boolean)
+    .join(", ");
+};
+
+const formatTravelHistoryLocation = (location: ValueX): string => {
+  if (
+    typeof location === "string" ||
+    typeof location === "number" ||
+    typeof location === "boolean"
+  ) {
+    return location.toString();
+  }
+
+  if (isAddress(location)) {
+    return formatAddress(location);
+  }
+
+  if (isCodeableConcept(location)) {
+    return formatCodeableConcept(location) ?? "";
+  }
+
+  if (isCoding(location)) {
+    return formatCoding(location) ?? "";
+  }
+
+  return "";
+};
+
+const isAddress = (value: object): value is Address => {
+  return ["line", "city", "state", "postalCode", "district", "country"].some(
+    (key) => key in value,
+  );
+};
+
+const isCodeableConcept = (value: object): value is CodeableConcept => {
+  return "text" in value || ("coding" in value && Array.isArray(value.coding));
+};
+
+const isCoding = (value: object): value is Coding => {
+  return ["code", "display", "system"].some((key) => key in value);
 };
 
 const evaluateTravelHistoryDetails = (

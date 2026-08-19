@@ -1,0 +1,365 @@
+{
+  "resourceType": "Bundle",
+  "type": "document",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:4abc9749-1604-5a06-7bc6-00b2a5c19bae",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "4abc9749-1604-5a06-7bc6-00b2a5c19bae",
+        "meta": {
+          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:1.2.840.114350.1.13.202.3.7.1.1040.1",
+            "value": "Z251^^72166-2"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "72166-2",
+              "system": "http://loinc.org",
+              "display": "Tobacco smoking status"
+            }
+          ]
+        },
+        "effectiveDateTime": "2022-07-22",
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "code": "449868002",
+              "system": "http://snomed.info/sct",
+              "display": "Smokes tobacco daily"
+            }
+          ]
+        },
+        "note": [
+          {
+            "text": "Tobacco UseTypesPacks/DayYears UsedDateSmoking Tobacco: Every DayCigarettes330Smokeless Tobacco: Never"
+          }
+        ],
+        "subject": {
+          "reference": "Patient/5531cd30-b8fd-c7ad-3110-7a9e813ddc06"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:ab3c0254-ccfd-893b-5cf6-0bf668ddc4be",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "ab3c0254-ccfd-893b-5cf6-0bf668ddc4be",
+        "meta": {
+          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:1.2.840.114350.1.13.202.3.7.1.1040.2",
+            "value": "Z251^^449868002"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "11367-0",
+              "system": "http://loinc.org",
+              "display": "History of Tobacco use"
+            }
+          ]
+        },
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "code": "449868002",
+              "system": "http://snomed.info/sct",
+              "display": "Smokes tobacco daily"
+            }
+          ]
+        },
+        "note": [
+          {
+            "text": "Tobacco UseTypesPacks/DayYears UsedDateSmoking Tobacco: Every DayCigarettes330Smokeless Tobacco: Never"
+          }
+        ],
+        "subject": {
+          "reference": "Patient/5531cd30-b8fd-c7ad-3110-7a9e813ddc06"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:dcf56c23-cfe0-96d6-f397-b87a4e28e45e",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "dcf56c23-cfe0-96d6-f397-b87a4e28e45e",
+        "meta": {
+          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:1.2.840.114350.1.13.202.3.7.1.1040.2",
+            "value": "Z251^^65568007"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "11367-0",
+              "system": "http://loinc.org",
+              "display": "History of Tobacco use"
+            }
+          ]
+        },
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "code": "65568007",
+              "system": "http://snomed.info/sct",
+              "display": "Cigarette smoker"
+            }
+          ]
+        },
+        "note": [
+          {
+            "text": "Tobacco UseTypesPacks/DayYears UsedDateSmoking Tobacco: Every DayCigarettes330Smokeless Tobacco: Never"
+          }
+        ],
+        "subject": {
+          "reference": "Patient/5531cd30-b8fd-c7ad-3110-7a9e813ddc06"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:f02bb17d-7ea4-8f39-ee69-f0eeeb6ff0b6",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "f02bb17d-7ea4-8f39-ee69-f0eeeb6ff0b6",
+        "meta": {
+          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:1.2.840.114350.1.13.202.3.7.1.1040.3",
+            "value": "Z251^^8663-7"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "8663-7",
+              "system": "http://loinc.org",
+              "display": "Cigarettes smoked current (pack per day) - Reported"
+            }
+          ]
+        },
+        "effectiveDateTime": "2022-07-22",
+        "valueQuantity": {
+          "value": 3
+        },
+        "note": [
+          {
+            "text": "3"
+          }
+        ],
+        "subject": {
+          "reference": "Patient/5531cd30-b8fd-c7ad-3110-7a9e813ddc06"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:21d80227-3a44-6cc1-5e78-fac8ad175beb",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "21d80227-3a44-6cc1-5e78-fac8ad175beb",
+        "meta": {
+          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:1.2.840.114350.1.13.202.3.7.1.1040.4",
+            "value": "Z251^^401201003"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "401201003",
+              "system": "http://snomed.info/sct",
+              "display": "Cigarette pack-years"
+            }
+          ]
+        },
+        "effectiveDateTime": "2022-07-22",
+        "valueQuantity": {
+          "value": 90
+        },
+        "subject": {
+          "reference": "Patient/5531cd30-b8fd-c7ad-3110-7a9e813ddc06"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:ca969e75-db3d-3267-a223-c431fb327b9a",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "ca969e75-db3d-3267-a223-c431fb327b9a",
+        "meta": {
+          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:1.2.840.114350.1.13.202.3.7.1.1040.8",
+            "value": "Z251^^713914004"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "229819007",
+              "system": "http://snomed.info/sct",
+              "display": "Tobacco use and exposure"
+            },
+            {
+              "code": "88031-0",
+              "system": "http://loinc.org",
+              "display": "Smokeless tobacco status Nom"
+            }
+          ]
+        },
+        "effectiveDateTime": "2022-07-22",
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "code": "451381000124107",
+              "system": "http://snomed.info/sct",
+              "display": "Smokeless tobacco non-user"
+            }
+          ]
+        },
+        "note": [
+          {
+            "text": "Smokeless Tobacco: Never"
+          }
+        ],
+        "subject": {
+          "reference": "Patient/5531cd30-b8fd-c7ad-3110-7a9e813ddc06"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:95ddb799-cc98-fb8a-78a0-73a4bbc51914",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "95ddb799-cc98-fb8a-78a0-73a4bbc51914",
+        "meta": {
+          "profile": ["http://hl7.org/fhir/StructureDefinition/Observation"],
+          "source": "ecr"
+        },
+        "identifier": [
+          {
+            "system": "urn:oid:1.2.840.114350.1.13.202.3.7.1.1040.7",
+            "value": "Z251^^702388001"
+          }
+        ],
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "social-history"
+              }
+            ]
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "code": "702388001",
+              "system": "http://snomed.info/sct",
+              "display": "Tobacco use cessation education"
+            }
+          ]
+        },
+        "effectiveDateTime": "2022-08-02",
+        "note": [
+          {
+            "text": "Tobacco Cessation: Ready to Quit: No; Counseling Given: Yes"
+          }
+        ]
+      }
+    }
+  ]
+}

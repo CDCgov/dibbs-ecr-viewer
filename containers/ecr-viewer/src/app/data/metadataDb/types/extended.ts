@@ -67,9 +67,15 @@ export interface ecr_labs {
   test_result_reference_range_low_units: string | undefined;
   test_result_reference_range_high_value: number | string | null;
   test_result_reference_range_high_units: string | undefined;
+  performing_lab: string | undefined;
+}
+
+export interface ecr_lab_specimens {
+  uuid: Generated<string>;
+  eicr_id: string;
+  lab_uuid: string;
   specimen_type: string | undefined;
   specimen_collection_date: Date | undefined;
-  performing_lab: string | undefined;
 }
 
 export interface ecr_immunizations {
@@ -90,6 +96,9 @@ export type NewPatientAddress = Insertable<patient_address>;
 export type ECRLabs = Selectable<ecr_labs>;
 export type NewECRLabs = Insertable<ecr_labs>;
 
+export type ECRLabSpecimens = Selectable<ecr_lab_specimens>;
+export type NewECRLabSpecimens = Insertable<ecr_lab_specimens>;
+
 export type ECRImmunizations = Selectable<ecr_immunizations>;
 export type NewECRImmunizations = Insertable<ecr_immunizations>;
 
@@ -97,5 +106,6 @@ export interface Extended extends Core {
   ecr_data: extended_ecr_data;
   patient_address: patient_address;
   ecr_labs: ecr_labs;
+  ecr_lab_specimens: ecr_lab_specimens;
   ecr_immunizations: ecr_immunizations;
 }
