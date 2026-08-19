@@ -853,6 +853,167 @@ exports[`Evaluate Patient Info: Social History Evaluate Occupation History shoul
 />
 `;
 
+exports[`Evaluate Patient Info: Social History should format tobacco use details when available 1`] = `
+<div>
+  <table
+    class="usa-table usa-table--borderless width-full table-caption-margin border-top border-left border-right"
+    data-testid="table"
+  >
+    <thead>
+      <tr>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Tobacco Detail
+        </th>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Observation
+        </th>
+        <th
+          class="table-header"
+          scope="col"
+        >
+          Date
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Smoking Status
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Smokes tobacco daily
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          07/22/2022
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Smoking History
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Smokes tobacco daily
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Smoking History
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Cigarette smoker
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          <span
+            class="text-italic text-base"
+          >
+            No data
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Amount
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          3 packs per day
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          07/22/2022
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Cigarette Pack-years
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          90
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          07/22/2022
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Smokeless Status
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Smokeless tobacco non-user
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          07/22/2022
+        </td>
+      </tr>
+      <tr>
+        <td
+          class="text-top text-pre-line"
+        >
+          Tobacco Use Cessation Education
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          Tobacco Cessation: Ready to Quit: No; Counseling Given: Yes
+        </td>
+        <td
+          class="text-top text-pre-line"
+        >
+          08/02/2022
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
 exports[`Social Determinants of Health should display sdoh data  1`] = `
 <div>
   <div

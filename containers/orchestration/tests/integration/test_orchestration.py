@@ -21,7 +21,6 @@ def test_health_check(setup):
         "FHIR_CONVERTER_PORT_NUMBER",
         "INGESTION_PORT_NUMBER",
         "MESSAGE_PARSER_PORT_NUMBER",
-        "ECR_VIEWER_HEALTH_CHECK",
         "TRIGGER_CODE_REFERENCE_PORT_NUMBER",
     ]
 
@@ -117,30 +116,6 @@ def test_process_zip_endpoint_with_zip_and_rr_data(setup):
 
 
 @pytest.mark.integration
-def test_failed_save_to_ecr_viewer(setup):
-    """
-    Full orchestration test of a zip file containing both an eICR and the
-    associated RR data.
-    """
-    with open(
-        Path(__file__).parent.parent / "assets" / "eICR_RR_combo.zip",
-        "rb",
-    ) as file:
-        form_data = {
-            "message_type": "ecr",
-            "data_type": "zip",
-            "config_file_name": "sample-orchestration-s3-config.json",
-        }
-        files = {"upload_file": ("file.zip", file)}
-        orchestration_response = httpx.post(
-            PROCESS_ZIP_ENDPOINT, data=form_data, files=files, timeout=120
-        )
-        assert orchestration_response.status_code == 500, (
-            f"Expected status code 500, but got {orchestration_response.status_code}. Response content is {orchestration_response.content}"
-        )
-
-
-@pytest.mark.integration
 def test_success_save_to_ecr_viewer(setup):
     """
     Full orchestration test of a zip file containing both an eICR and the
@@ -153,7 +128,7 @@ def test_success_save_to_ecr_viewer(setup):
         form_data = {
             "message_type": "ecr",
             "data_type": "zip",
-            "config_file_name": "integrated.json",
+            "config_file_name": "bundle-only.json",
         }
         files = {"upload_file": ("file.zip", file)}
         orchestration_response = httpx.post(
@@ -178,7 +153,7 @@ def test_previous_response_mapping_for_ecr_viewer(setup):
         form_data = {
             "message_type": "ecr",
             "data_type": "zip",
-            "config_file_name": "non-integrated-core.json",
+            "config_file_name": "bundle-metadata-core.json",
         }
         files = {"upload_file": ("file.zip", file)}
         orchestration_response = httpx.post(

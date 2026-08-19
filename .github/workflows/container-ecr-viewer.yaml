@@ -15,7 +15,7 @@ on:
     branches:
       - main
       # TODO ANGELA: Remove before merging to main
-      - angela/1636-admin-hierarchy-pt2-create-user
+      - 1614-add-admin-hierarchy
     paths-ignore:
       - pyproject.toml
   workflow_dispatch:

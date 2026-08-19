@@ -183,29 +183,6 @@ exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot tes
                     <div
                       class="data-title padding-right-1"
                     >
-                      Collection Time
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      <span
-                        class="text-italic text-base"
-                      >
-                        No data
-                      </span>
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
                       Received Time
                     </div>
                     <div
@@ -229,7 +206,7 @@ exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot tes
                     <div
                       class="data-title padding-right-1"
                     >
-                      Specimen (Source)
+                      Collection Time
                     </div>
                     <div
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"
@@ -692,82 +669,6 @@ Mos Eisley, CO 00055
                     <div
                       class="data-title padding-right-1"
                     >
-                      Collection Time
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      02/04/2000 3:51 PM EST
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
-                      Received Time
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      02/04/2000 3:51 PM EST
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
-                      Specimen (Source)
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      Stool
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
-                      Anatomical Location/Laterality
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      STOOL SPECIMEN / Unknown
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
                       Authorizing Provider
                     </div>
                     <div
@@ -812,6 +713,66 @@ Mos Eisley, CO 00055
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"
                     >
                       final
+                    </div>
+                  </div>
+                </div>
+                <h6
+                  class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
+                >
+                  Specimen (Source)
+                  : Stool
+                </h6>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Received Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      02/04/2000 3:51 PM EST
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Collection Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      02/04/2000 3:51 PM EST
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Anatomical Location/Laterality
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      STOOL SPECIMEN / Unknown
                     </div>
                   </div>
                 </div>
@@ -1088,82 +1049,6 @@ Mos Eisley, CO 00055
                     <div
                       class="data-title padding-right-1"
                     >
-                      Collection Time
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      02/04/2000 3:51 PM EST
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
-                      Received Time
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      02/04/2000 3:51 PM EST
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
-                      Specimen (Source)
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      Stool
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
-                      Anatomical Location/Laterality
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      STOOL SPECIMEN / Unknown
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
                       Authorizing Provider
                     </div>
                     <div
@@ -1208,6 +1093,66 @@ Mos Eisley, CO 00055
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"
                     >
                       final
+                    </div>
+                  </div>
+                </div>
+                <h6
+                  class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
+                >
+                  Specimen (Source)
+                  : Stool
+                </h6>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Received Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      02/04/2000 3:51 PM EST
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Collection Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      02/04/2000 3:51 PM EST
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Anatomical Location/Laterality
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      STOOL SPECIMEN / Unknown
                     </div>
                   </div>
                 </div>
@@ -1725,63 +1670,6 @@ County: Empire
                     <div
                       class="data-title padding-right-1"
                     >
-                      Collection Time
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      05/05/1824 11:58 AM GMT-4:56:02
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
-                      Received Time
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      02/03/2000 2:46 PM EST
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
-                      Specimen (Source)
-                    </div>
-                    <div
-                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
-                    >
-                      Blood
-                    </div>
-                  </div>
-                  <div
-                    class="section__line_gray"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="grid-row"
-                  >
-                    <div
-                      class="data-title padding-right-1"
-                    >
                       Collection Method/Volume
                     </div>
                     <div
@@ -1896,7 +1784,8 @@ County: Empire
                 <h6
                   class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
                 >
-                  Unavailable lab information
+                  Specimen (Source)
+                  : Blood
                 </h6>
                 <div>
                   <div
@@ -1905,16 +1794,31 @@ County: Empire
                     <div
                       class="data-title padding-right-1"
                     >
-                      Analysis Time
+                      Received Time
                     </div>
                     <div
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"
                     >
-                      <span
-                        class="text-italic text-base"
-                      >
-                        No data
-                      </span>
+                      02/03/2000 2:46 PM EST
+                    </div>
+                  </div>
+                  <div
+                    class="section__line_gray"
+                  />
+                </div>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Collection Time
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      05/05/1824 11:58 AM GMT-4:56:02
                     </div>
                   </div>
                   <div
@@ -1929,6 +1833,31 @@ County: Empire
                       class="data-title padding-right-1"
                     >
                       Anatomical Location/Laterality
+                    </div>
+                    <div
+                      class="grid-col maxw7 text-pre-line p-list lab-text-content"
+                    >
+                      <span
+                        class="text-italic text-base"
+                      >
+                        No data
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <h6
+                  class="bg-gray-5 margin-x-neg-205 padding-y-2 padding-x-205"
+                >
+                  Unavailable lab information
+                </h6>
+                <div>
+                  <div
+                    class="grid-row"
+                  >
+                    <div
+                      class="data-title padding-right-1"
+                    >
+                      Analysis Time
                     </div>
                     <div
                       class="grid-col maxw7 text-pre-line p-list lab-text-content"

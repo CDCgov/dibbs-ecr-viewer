@@ -154,9 +154,13 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
                     "test_result_reference_range_low_units": "%",
                     "test_result_reference_range_high_value": "44.5",
                     "test_result_reference_range_high_units": "%",
-                    "specimen_type": "Blood specimen",
                     "performing_lab": None,
-                    "specimen_collection_date": "2020-03-09",
+                    "specimens": [
+                        {
+                            "specimen_type": "Blood specimen",
+                            "specimen_collection_date": "2020-03-09",
+                        }
+                    ],
                 },
                 {
                     "uuid": "1415c94e-c259-b369-9425-ee176172d48d",
@@ -179,9 +183,13 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
                     "test_result_reference_range_low_units": "10*3/uL",
                     "test_result_reference_range_high_value": "4.8",
                     "test_result_reference_range_high_units": "10*3/uL",
-                    "specimen_type": "Blood specimen",
                     "performing_lab": None,
-                    "specimen_collection_date": "2020-03-09",
+                    "specimens": [
+                        {
+                            "specimen_type": "Blood specimen",
+                            "specimen_collection_date": "2020-03-09",
+                        }
+                    ],
                 },
                 {
                     "uuid": "9066312e-2cd6-fc9d-223e-090aa5e566d8",
@@ -204,9 +212,8 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
                     "test_result_reference_range_low_units": None,
                     "test_result_reference_range_high_value": "45",
                     "test_result_reference_range_high_units": "[iU]/mL",
-                    "specimen_type": None,
                     "performing_lab": None,
-                    "specimen_collection_date": None,
+                    "specimens": [],
                 },
                 {
                     "uuid": "d9915885-4dd6-2c75-851c-419cf0438d37",
@@ -234,9 +241,8 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
                     "test_result_reference_range_low_units": None,
                     "test_result_reference_range_high_value": None,
                     "test_result_reference_range_high_units": None,
-                    "specimen_type": None,
                     "performing_lab": None,
-                    "specimen_collection_date": None,
+                    "specimens": [],
                 },
                 # Synthetic
                 {
@@ -257,9 +263,8 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
                     "test_result_reference_range_low_units": None,
                     "test_result_reference_range_high_value": None,
                     "test_result_reference_range_high_units": None,
-                    "specimen_type": None,
                     "performing_lab": "Fake City LABORATORY",
-                    "specimen_collection_date": None,
+                    "specimens": [],
                 },
             ],
             "birth_sex": "F",

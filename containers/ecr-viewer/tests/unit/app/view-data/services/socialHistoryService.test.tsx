@@ -6,6 +6,7 @@ import * as _BundleWithTravelHistory from "@/../../../test-data/fhir/BundleTrave
 import * as _BundlePatientMultiple from "@/../../../test-data/fhir/BundlePatientMultiple.json";
 import * as _BundleWithSDOH from "@/../../../test-data/fhir/BundleSDOH.json";
 import * as _BundleWithSexualOrientation from "@/../../../test-data/fhir/BundleSexualOrientation.json";
+import * as _BundleWithTobaccoUse from "@/../../../test-data/fhir/BundleTobaccoUse.json";
 import {
   evaluateTravelHistoryTable,
   returnDisabilityStatusTable,
@@ -26,6 +27,9 @@ const fhirIndexBundleWithTravelHistory = getFhirIndex(BundleWithTravelHistory);
 const BundlePatientMultiple = _BundlePatientMultiple as unknown as Bundle;
 const BundleWithSDOH = _BundleWithSDOH as unknown as Bundle;
 
+const BundleWithTobaccoUse = _BundleWithTobaccoUse as unknown as Bundle;
+const fhirIndexBundleTobaccoUse = getFhirIndex(BundleWithTobaccoUse);
+
 const BundleWithSexualOrientation =
   _BundleWithSexualOrientation as unknown as Bundle;
 const fhirIndexBundleWithSexualOrientation = getFhirIndex(
@@ -38,6 +42,79 @@ describe("Travel History", () => {
       evaluateTravelHistoryTable(BundleWithTravelHistory),
     );
     expect(container).toMatchSnapshot();
+  });
+  it("should join multiple locations on a travel observation", () => {
+    const bundleWithMultipleTravelLocations: Bundle = {
+      resourceType: "Bundle",
+      type: "document",
+      entry: [
+        {
+          resource: {
+            resourceType: "Observation",
+            id: "multi-location-travel",
+            code: {
+              coding: [
+                {
+                  system: "http://snomed.info/sct",
+                  code: "420008001",
+                  display: "Travel",
+                },
+              ],
+              text: "Travel History",
+            },
+            status: "final",
+            component: [
+              {
+                code: {
+                  coding: [
+                    {
+                      system:
+                        "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+                      code: "LOC",
+                      display: "Location",
+                    },
+                  ],
+                },
+                valueCodeableConcept: {
+                  coding: [
+                    {
+                      system: "urn:oid:1.0.3166.1",
+                      code: "AR",
+                      display: "Argentina",
+                    },
+                  ],
+                },
+              },
+              {
+                code: {
+                  coding: [
+                    {
+                      system:
+                        "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+                      code: "LOC",
+                      display: "Location",
+                    },
+                  ],
+                },
+                valueCodeableConcept: {
+                  coding: [
+                    {
+                      system: "urn:oid:1.0.3166.1",
+                      code: "BRA",
+                      display: "Brazil",
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    };
+
+    render(evaluateTravelHistoryTable(bundleWithMultipleTravelLocations));
+
+    expect(screen.getByText("Argentina, Brazil")).toBeTruthy();
   });
   it("should display nothing when no travel history is available", () => {
     expect(evaluateTravelHistoryTable({} as Bundle)).toBeUndefined();
@@ -130,6 +207,20 @@ describe("Evaluate Patient Info: Social History", () => {
     );
 
     expect(actual.availableData[0].value).toEqual("Other");
+  });
+
+  it("should format tobacco use details when available", () => {
+    const actual = evaluateSocialData(
+      BundleWithTobaccoUse,
+      fhirIndexBundleTobaccoUse,
+    );
+    const tobaccoUse = actual.availableData.find(
+      (data) => data.title === "Tobacco Use",
+    );
+
+    expect(tobaccoUse).toBeDefined();
+    const { container } = render(tobaccoUse!.value);
+    expect(container).toMatchSnapshot();
   });
 
   describe("Evaluate Occupation", () => {

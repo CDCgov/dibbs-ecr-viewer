@@ -4,8 +4,10 @@
 
 import { notFound } from "next/navigation";
 
-import { saveFhirMetadata } from "@/app/api/save-fhir-data/service";
-import { BundleMetadata } from "@/app/api/save-fhir-data/types";
+import {
+  BundleMetadata,
+  saveFhirMetadata,
+} from "@/app/services/saveFhirDataService";
 import { BlobResponse } from "@/app/data/blobStorage/utils";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core } from "@/app/data/metadataDb/types/core";
@@ -647,10 +649,9 @@ describe("User Service", () => {
   describe("hasRelevantProgramAreaAccess", () => {
     it("should return true for admin user", async () => {
       const adminUser = await getCheckAdmin("check");
-      const res = await hasRelevantProgramAreaAccess(
-        adminUser,
+      const res = await hasRelevantProgramAreaAccess(adminUser, [
         "some-prog-uuid",
-      );
+      ]);
       expect(res).toBeTrue();
     });
 
@@ -658,14 +659,14 @@ describe("User Service", () => {
       const adminUser = await getCheckAdmin("check");
       const inactiveUser = { ...adminUser, status: "inactive" as const };
       expect(
-        await hasRelevantProgramAreaAccess(inactiveUser, "some-prog-uuid"),
+        await hasRelevantProgramAreaAccess(inactiveUser, ["some-prog-uuid"]),
       ).toBeFalse();
     });
 
     it("should return false when no user is passed and none is logged in", async () => {
       (getLoggedInUserSession as jest.Mock).mockResolvedValue(undefined);
       expect(
-        await hasRelevantProgramAreaAccess(undefined, "some-prog-uuid"),
+        await hasRelevantProgramAreaAccess(undefined, ["some-prog-uuid"]),
       ).toBeFalse();
     });
   });

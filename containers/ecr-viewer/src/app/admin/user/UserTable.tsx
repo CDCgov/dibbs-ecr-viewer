@@ -176,7 +176,7 @@ export const UserTable = ({
         editHref={`/admin/user/edit?uuid=${selectedUser?.uuid}`}
         itemType="user"
         deleteAction={async () => await deleteAction(selectedUser?.uuid!)}
-        deleteExplainerText="Removing the user will remove the user account and data from the eCR Viewer. The user account and data will still be available in your login provider."
+        deleteExplainerText="Removing a user will delete their account from the eCR Viewer. However, the account will remain available in your login provider."
         deleteModalTitle={`Remove ${selectedUser?.name || selectedUser?.email}`}
         deleteModalBody={
           <p>

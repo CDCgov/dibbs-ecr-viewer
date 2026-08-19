@@ -101,7 +101,11 @@ export const DataDisplay = ({
             item.className ? item.className : "",
           )}
         >
-          <FieldValue>{item.value}</FieldValue>
+          {item.fullWidthContent ? (
+            item.value
+          ) : (
+            <FieldValue>{item.value}</FieldValue>
+          )}
         </div>
       </div>
       {dividerLine ? <div className={`section__line_${themeColor}`} /> : ""}

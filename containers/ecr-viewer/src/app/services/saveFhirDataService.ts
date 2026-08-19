@@ -25,15 +25,115 @@ import {
 } from "@/app/data/blobStorage/utils";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core } from "@/app/data/metadataDb/types/core";
-import { Extended } from "@/app/data/metadataDb/types/extended";
+import {
+  Extended,
+  NewECRLabSpecimens,
+} from "@/app/data/metadataDb/types/extended";
 import { dbSchema } from "@/app/data/metadataDb/utils/db-config";
 import { createAuditRecord } from "@/app/services/auditLogService";
-
-import { BundleExtendedMetadata, BundleMetadata } from "./types";
 
 interface SaveResponse {
   message: string;
   status: number;
+}
+
+interface Address {
+  use: "home" | "work" | "temp" | "old" | "billing" | undefined;
+  line: string | undefined;
+  city: string | undefined;
+  district: string | undefined;
+  state: string | undefined;
+  postal_code: string | undefined;
+  country: string | undefined;
+  period_start: string | undefined;
+  period_end: string | undefined;
+}
+
+interface Specimen {
+  specimen_type: string | undefined;
+  specimen_collection_date: string | undefined;
+}
+
+interface Lab {
+  uuid: string | undefined;
+  test_type: string | undefined;
+  test_type_code: string | undefined;
+  test_type_system: string | undefined;
+  test_result_qualitative: string | undefined;
+  test_result_quantitative: string | undefined;
+  test_result_units: string | undefined;
+  test_result_code: string | undefined;
+  test_result_code_display: string | undefined;
+  test_result_code_system: string | undefined;
+  test_result_interpretation: string | undefined;
+  test_result_interpretation_code: string | undefined;
+  test_result_interpretation_system: string | undefined;
+  test_result_reference_range_low_value: string | undefined;
+  test_result_reference_range_low_units: string | undefined;
+  test_result_reference_range_high_value: string | undefined;
+  test_result_reference_range_high_units: string | undefined;
+  performing_lab: string | undefined;
+  specimens: Specimen[] | undefined;
+}
+
+interface Immunization {
+  uuid: string | undefined;
+  name: string | undefined;
+  effective_date: string | undefined;
+  status: string | undefined;
+  status_reason: string | undefined;
+}
+
+interface ruleSummary {
+  rule_summary: string;
+}
+
+interface RR {
+  condition: string;
+  condition_code: string | undefined;
+  rule_summaries: ruleSummary[];
+}
+
+export interface BundleMetadata {
+  last_name: string;
+  first_name: string;
+  birth_date: string;
+  set_id: string | undefined;
+  eicr_version_number: string | undefined;
+  rr: RR[] | undefined;
+  encounter_start_date: string | undefined;
+  facility_name: string | undefined;
+}
+
+export interface BundleExtendedMetadata extends BundleMetadata {
+  gender: string | undefined;
+  race: string | undefined;
+  ethnicity: string | undefined;
+  patient_addresses: Address[] | undefined;
+  processing_status: string | undefined;
+  eicr_id: string;
+  authoring_date: string | undefined;
+  ehr_software: string | undefined;
+  ehr_manufacturer_model: string | undefined;
+  provider_id: string | undefined;
+  facility_id: string | undefined;
+  encounter_type: string | undefined;
+  encounter_end_date: string | undefined;
+  reason_for_visit: string | undefined;
+  active_problems: string | undefined;
+  labs: Lab[] | undefined;
+  immunizations: Immunization[] | undefined;
+  birth_sex: string | undefined;
+  gender_identity: string | undefined;
+  homelessness_status: string | undefined;
+  tribal_affiliation: string | undefined;
+  tribal_enrollment_status: string | undefined;
+  current_job_title: string | undefined;
+  current_job_industry: string | undefined;
+  usual_occupation: string | undefined;
+  usual_industry: string | undefined;
+  preferred_language: string | undefined;
+  pregnancy_status: string | undefined;
 }
 
 /**
@@ -297,17 +397,28 @@ const saveExtendedMetadata = async (
   }
   if (metadata.labs) {
     let batchToInsert = [];
+    let specimensToInsert: NewECRLabSpecimens[] = [];
 
     for (let i = 0; i < metadata.labs.length; i++) {
+      const { specimens, ...lab } = metadata.labs[i];
       const record = {
-        ...metadata.labs[i],
+        ...lab,
         eicr_id: ecrId,
-        specimen_collection_date: asDate(
-          metadata.labs[i].specimen_collection_date,
-        ),
       };
 
       batchToInsert.push(record);
+
+      if (record.uuid && specimens?.length) {
+        specimensToInsert.push(
+          ...specimens.map((specimen) => ({
+            uuid: randomUUID(),
+            eicr_id: ecrId,
+            lab_uuid: record.uuid as string,
+            specimen_type: specimen.specimen_type,
+            specimen_collection_date: asDate(specimen.specimen_collection_date),
+          })),
+        );
+      }
 
       const numColumns = Object.keys(record).length;
 
@@ -321,6 +432,26 @@ const saveExtendedMetadata = async (
         await trx.insertInto("ecr_labs").values(batchToInsert).execute();
 
         batchToInsert = [];
+
+        // Specimens reference ecr_labs via a foreign key, so they can only be
+        // inserted once their parent lab batch has been committed.
+        if (specimensToInsert.length) {
+          const maxSpecimenRowsPerBatch = Math.floor(
+            2099 / Object.keys(specimensToInsert[0]).length,
+          );
+          for (
+            let j = 0;
+            j < specimensToInsert.length;
+            j += maxSpecimenRowsPerBatch
+          ) {
+            await trx
+              .insertInto("ecr_lab_specimens")
+              .values(specimensToInsert.slice(j, j + maxSpecimenRowsPerBatch))
+              .execute();
+          }
+
+          specimensToInsert = [];
+        }
       }
     }
   }

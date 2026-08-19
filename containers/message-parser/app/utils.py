@@ -22,12 +22,7 @@ from app.transport.http import http_request_with_retry
 FAST_LOOKUP_MISS = object()
 FHIR_PATH_VALUE_PHASE = "value"
 REFERENCE_LOOKUP_PHASE = "reference_lookup"
-SPECIMEN_TYPE_FIELD_PATH = "labs.specimen_type"
-SPECIMEN_COLLECTION_DATE_FIELD_PATH = "labs.specimen_collection_date"
-SPECIMEN_FIELD_PATHS = {
-    SPECIMEN_TYPE_FIELD_PATH,
-    SPECIMEN_COLLECTION_DATE_FIELD_PATH,
-}
+SPECIMENS_FIELD_PATH = "labs.specimens"
 LAB_FIELD_ACCESSORS = {
     "labs.uuid": ["id"],
     "labs.test_type": ["code", "coding", "display"],
@@ -431,8 +426,8 @@ class FhirParser:
         """
         Builds an index from lab Observation ids to specimen references.
 
-        Each DiagnosticReport connects result Observations to the report's first
-        Specimen reference. This index lets specimen fields skip the expensive
+        Each DiagnosticReport connects result Observations to all of the report's
+        Specimen references. This index lets specimen fields skip the expensive
         FHIRPath search across DiagnosticReports.
 
         :return: A dictionary keyed by Observation id with Specimen reference lists.
@@ -445,11 +440,12 @@ class FhirParser:
             if resource.get("resourceType") != "DiagnosticReport":
                 continue
 
-            specimens = resource.get("specimen") or []
-            if not specimens:
-                continue
-            specimen_reference = specimens[0].get("reference")
-            if not specimen_reference:
+            specimen_references = [
+                specimen.get("reference")
+                for specimen in resource.get("specimen") or []
+                if specimen.get("reference")
+            ]
+            if not specimen_references:
                 continue
 
             for result in resource.get("result") or []:
@@ -457,8 +453,8 @@ class FhirParser:
                 if not result_reference:
                     continue
                 observation_id = result_reference.split("/")[-1]
-                self.specimen_references_by_observation_id[observation_id].append(
-                    specimen_reference
+                self.specimen_references_by_observation_id[observation_id].extend(
+                    specimen_references
                 )
 
         return self.specimen_references_by_observation_id
@@ -533,7 +529,7 @@ class FhirParser:
 
         if evaluation_phase == REFERENCE_LOOKUP_PHASE and context is None:
             if (
-                field_path in SPECIMEN_FIELD_PATHS
+                field_path == SPECIMENS_FIELD_PATH
                 and isinstance(current_message, dict)
                 and current_message.get("resourceType") == "Observation"
             ):
@@ -549,25 +545,16 @@ class FhirParser:
 
         if (
             evaluation_phase == REFERENCE_LOOKUP_PHASE
-            and field_path in SPECIMEN_FIELD_PATHS
+            and field_path == SPECIMENS_FIELD_PATH
         ):
             return list(self._specimen_reference_index().get(reference_id, []))
 
         if (
             evaluation_phase == FHIR_PATH_VALUE_PHASE
-            and field_path == SPECIMEN_TYPE_FIELD_PATH
+            and field_path == SPECIMENS_FIELD_PATH
         ):
             specimen = self._resource_index().get(("Specimen", reference_id))
-            return self._extract_values(specimen, ["type", "coding", "display"])
-
-        if (
-            evaluation_phase == FHIR_PATH_VALUE_PHASE
-            and field_path == SPECIMEN_COLLECTION_DATE_FIELD_PATH
-        ):
-            specimen = self._resource_index().get(("Specimen", reference_id))
-            return self._extract_values(
-                specimen, ["collection", "collectedPeriod", "start"]
-            ) + self._extract_values(specimen, ["collection", "collectedDateTime"])
+            return [specimen] if specimen else []
 
         if evaluation_phase != FHIR_PATH_VALUE_PHASE:
             return FAST_LOOKUP_MISS
@@ -618,15 +605,19 @@ class FhirParser:
         """
         try:
             if "reference_lookup" in field_parser:
-                reference_path = self._get_reference(
+                reference_paths = self._get_reference(
                     field_parser, current_message, field_path
                 )
-                value = self._evaluate_fhir_path_value(
-                    self.message,
-                    field_parser["fhir_path"],
-                    context={"ref": reference_path},
-                    field_path=field_path,
-                )  # Evaluate on full message, not current
+                value = []
+                for reference_path in reference_paths:
+                    value.extend(
+                        self._evaluate_fhir_path_value(
+                            self.message,
+                            field_parser["fhir_path"],
+                            context={"ref": reference_path},
+                            field_path=field_path,
+                        )  # Evaluate on full message, not current
+                    )
             elif "fhir_path" in field_parser:
                 value = self._evaluate_fhir_path_value(
                     current_message, field_parser["fhir_path"], field_path=field_path
@@ -663,20 +654,25 @@ class FhirParser:
 
         It uses a `reference_lookup` to find a reference ID in the `current_message`.
         `reference_lookup` may be a string or a list of strings. If it is a list of
-        strings, it will evaluate each reference in order, passing the previously
-        resolved reference as `%ref` until it resolves a single final reference.
+        strings, it evaluates each step in order, passing the previously resolved
+        reference as `%ref` to the next step.
 
-        If no matching reference is found, this returns an empty string so the
-        downstream lookup resolves to missing data. If a lookup finds multiple
-        references, this raises an error because the parser cannot choose which
-        reference to follow.
+        Every step except the last must resolve to exactly one reference, since the
+        parser has no way to choose which reference to follow through an
+        intermediate hop. The final step may resolve to any number of references
+        (e.g. a DiagnosticReport with multiple specimens) - all of them are
+        returned so the caller can fan out over each one.
+
+        If a step finds no matching reference, this treats it as missing data and
+        carries forward an empty reference so the downstream lookup resolves to
+        missing data instead of failing the entire parse.
 
         :param field_parser: The parser for a specific field, which must contain a
             `fhir_path` & a `reference_lookup`.
         :param current_message: The FHIR message or sub-section at the current level of
             parsing where the reference is located.
         :param field_path: The dot-separated schema path for the field being parsed.
-        :return: The final reference ID to pass as the `%ref` context value.
+        :return: The list of final reference IDs to pass as the `%ref` context value.
         """
         reference_parser = field_parser["reference_lookup"]
         reference = None
@@ -696,7 +692,9 @@ class FhirParser:
         if reference_parser_cache_key in self.reference_lookup_cache:
             return self.reference_lookup_cache[reference_parser_cache_key]
 
-        for ref_parser in reference_parser:
+        last_step = len(reference_parser) - 1
+        references = [""]
+        for step, ref_parser in enumerate(reference_parser):
             if reference:
                 curr_ref = self._evaluate_fhir_path_value(
                     self.message,
@@ -717,17 +715,19 @@ class FhirParser:
                 # No matching reference was found. Treat as missing data and
                 # propagate an empty reference so the downstream lookup resolves to
                 # a null value instead of failing the entire parse.
-                curr_ref.append("")
-            # Future refactor: Each reference_parser can only refer to one reference
-            elif len(curr_ref) > 1:
+                curr_ref = [""]
+            elif len(curr_ref) > 1 and step != last_step:
                 self.response.status_code = status.HTTP_400_BAD_REQUEST
                 raise ValueError(
                     "Provided `reference_lookup` location points "
                     "to many referencing identifiers"
                 )
 
-            reference = curr_ref[0].split("/")[-1]
+            if step == last_step:
+                references = [ref.split("/")[-1] for ref in curr_ref]
+            else:
+                reference = curr_ref[0].split("/")[-1]
 
-        # Cache the final reference for this message object and reference chain.
-        self.reference_lookup_cache[reference_parser_cache_key] = reference
-        return reference
+        # Cache the final references for this message object and reference chain.
+        self.reference_lookup_cache[reference_parser_cache_key] = references
+        return references

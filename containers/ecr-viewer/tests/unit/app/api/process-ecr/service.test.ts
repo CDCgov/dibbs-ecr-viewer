@@ -18,11 +18,11 @@ import {
   deleteFromStorage,
   saveToStorage,
   saveWithMetadata,
-} from "@/app/api/save-fhir-data/service";
+} from "@/app/services/saveFhirDataService";
 import { S3_SOURCE } from "@/app/data/blobStorage/utils";
 import { getDb } from "@/app/data/metadataDb/database";
 
-jest.mock("@/app/api/save-fhir-data/service");
+jest.mock("@/app/services/saveFhirDataService");
 jest.mock("@/app/data/metadataDb/database", () => ({
   getDb: jest.fn(),
 }));
