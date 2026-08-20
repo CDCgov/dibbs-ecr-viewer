@@ -20,11 +20,11 @@ import {
   PaginatedSortableTable,
   TableColumn,
 } from "@/app/components/table/PaginatedSortableTable";
+import { USER_TYPE, USER_TYPE_DISPLAY } from "@/app/constants";
 import { ServerActionResult } from "@/app/services/errorService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
 import { ListedUser, NamedUserProgramArea } from "@/app/services/userService";
-import { USER_TYPE_DISPLAY } from "@/app/constants";
 import { makePlural, stringSort } from "@/app/utils/format-utils";
 import { ForceClient } from "@/app/view-data/components/ForceClient";
 
@@ -34,8 +34,8 @@ const ADMIN_USER_TYPE_FILTER_OPTIONS: Record<string, string> = {
 };
 const PROGRAM_ADMIN_USER_TYPE_FILTER_OPTIONS: Record<string, string> = {
   all: "All users",
-  prog_admin: USER_TYPE_DISPLAY.prog_admin,
-  standard: USER_TYPE_DISPLAY.standard,
+  [USER_TYPE.PROG_ADMIN]: USER_TYPE_DISPLAY[USER_TYPE.PROG_ADMIN],
+  [USER_TYPE.STANDARD]: USER_TYPE_DISPLAY[USER_TYPE.STANDARD],
 };
 const NO_PROGRAM_AREA_OPTION: string = "No program areas (Standard)";
 const ALL_PROGRAM_AREAS_OPTION: string = "All program areas (Admin)";
@@ -99,14 +99,15 @@ export const UserTable = ({
 
     // Standard users or program admins not assigned to any program areas
     if (
-      (user_type === "standard" || user_type === "prog_admin") &&
+      (user_type === USER_TYPE.STANDARD ||
+        user_type === USER_TYPE.PROG_ADMIN) &&
       program_areas.length === 0
     ) {
       return filterProgramAreas[NO_PROGRAM_AREA_OPTION];
     }
 
     // Admin users must have All program areas (Admin) selected
-    if (user_type === "admin") {
+    if (user_type === USER_TYPE.ADMIN) {
       return filterProgramAreas[ALL_PROGRAM_AREAS_OPTION];
     }
 
@@ -143,7 +144,7 @@ export const UserTable = ({
       dataSortable: false,
       sortDirection: "",
       formatter: (pas: NamedUserProgramArea[], user) =>
-        user.user_type === "admin"
+        user.user_type === USER_TYPE.ADMIN
           ? "All program areas"
           : pas
               .map(({ name }) => name)
@@ -338,7 +339,7 @@ const ProgramAreaContent = ({
   user: ListedUser | null;
   programAreas: ListedProgramArea[];
 }) => {
-  if (user?.user_type === "admin") {
+  if (user?.user_type === USER_TYPE.ADMIN) {
     return "All program areas";
   }
 
