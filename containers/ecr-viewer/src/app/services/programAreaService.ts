@@ -257,7 +257,7 @@ const getVisibleProgramAreas = async (
 
 const getProgramAreasForUserDetails = async (
   db: Transaction<Core>,
-  userUuids: string[]
+  userUuids: string[],
 ): Promise<ProgramArea[]> => {
   if (userUuids.length === 0) return [];
 
@@ -266,7 +266,7 @@ const getProgramAreasForUserDetails = async (
     .innerJoin(
       "user_program_area",
       "program_area.uuid",
-      "user_program_area.program_area_uuid"
+      "user_program_area.program_area_uuid",
     )
     .selectAll("program_area")
     .where("user_program_area.user_uuid", "in", userUuids)
