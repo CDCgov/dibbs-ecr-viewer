@@ -230,9 +230,12 @@ export const listProgramAreas = async (
     return await getDb<Core>()
       .transaction()
       .execute(async (db) => {
-        const programAreas = isAdmin(user)
-          ? await db.selectFrom("program_area").selectAll().execute()
-          : await getVisibleProgramAreas(db, user, options.userUuids);
+        const programAreas =
+          options.userUuids !== undefined
+            ? await getProgramAreasForUserDetails(db, options.userUuids)
+            : user.user_type === USER_TYPE.ADMIN
+              ? await db.selectFrom("program_area").selectAll().execute()
+              : await listUserProgramAreasQuery(db, user.uuid);
         return addConditionsToProgramAreas(db, programAreas);
       });
   } catch (error: unknown) {
@@ -240,19 +243,6 @@ export const listProgramAreas = async (
     console.error({ message, error });
     throw new UserFacingError(message);
   }
-};
-
-const getVisibleProgramAreas = async (
-  db: Transaction<Core>,
-  user: User,
-  userUuids?: string[],
-): Promise<ProgramArea[]> => {
-  if (userUuids !== undefined) {
-    // User details: program admins can view all program areas of their users
-    return getProgramAreasForUserDetails(db, userUuids);
-  }
-  // Return program admin's authorized program areas
-  return listUserProgramAreasQuery(db, user.uuid);
 };
 
 const getProgramAreasForUserDetails = async (
