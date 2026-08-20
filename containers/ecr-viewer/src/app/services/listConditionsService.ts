@@ -150,7 +150,8 @@ export const listAdminConditionReferencesQuery = async (
     )
     .$if(!!codes, (qb) =>
       qb.where("condition_reference.code", "in", codes ?? []),
-    );
+    )
+    .orderBy("condition_reference.code");
 
   return await query.execute();
 };
