@@ -229,7 +229,7 @@ export async function validateAdminUserPermissions({
   // Program areas
   const hasAccess = await hasRelevantProgramAreaAccess(
     loggedInUser,
-    targetProgramAreaUuids
+    targetProgramAreaUuids,
   );
   if (!hasAccess) {
     throw new UserFacingError(

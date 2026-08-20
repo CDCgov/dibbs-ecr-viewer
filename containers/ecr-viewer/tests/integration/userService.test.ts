@@ -2,8 +2,6 @@
  * @jest-environment node
  */
 
-import { notFound } from "next/navigation";
-
 import {
   BundleMetadata,
   saveFhirMetadata,

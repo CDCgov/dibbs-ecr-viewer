@@ -9,7 +9,6 @@ import {
   ConditionReference,
   Core,
   ProgramArea,
-  User,
 } from "@/app/data/metadataDb/types/core";
 import { stringSort } from "@/app/utils/format-utils";
 
@@ -18,8 +17,6 @@ import { UserFacingError } from "./errorService";
 import {
   getCheckAdmin,
   getCheckAnyAdmin,
-  isAdmin,
-  isProgramAdmin,
   listUserProgramAreasQuery,
 } from "./userService";
 

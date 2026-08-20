@@ -83,9 +83,13 @@ jest.mock("@/app/data/metadataDb/database", () => ({
           (
             _column: string,
             _operator: string,
-            value: string | (() => void),
+            value: string | string[] | (() => void),
           ) => {
-            if (typeof value === "string") programAreaValues.push(value);
+            if (typeof value === "string") {
+              programAreaValues.push(value);
+            } else if (Array.isArray(value)) {
+              programAreaValues.push(...value);
+            }
             return query;
           },
         ),
@@ -107,7 +111,12 @@ jest.mock("@/app/data/metadataDb/database", () => ({
         execute: jest.fn(async () =>
           programAreaValues.includes("no-shared-user")
             ? []
-            : [{ uuid: accessibleProgramAreaId }],
+            : [
+                {
+                  uuid: accessibleProgramAreaId,
+                  program_area_uuid: accessibleProgramAreaId,
+                },
+              ],
         ),
       };
       return query;
