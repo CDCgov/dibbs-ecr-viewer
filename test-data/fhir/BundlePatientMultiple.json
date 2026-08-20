@@ -68,10 +68,24 @@
                 }
               },
               {
+                "url": "ombCategory",
+                "valueCoding": {
+                  "code": "2186-5",
+                  "display": "Not Hispanic or Latino"
+                }
+              },
+              {
                 "url": "detailed",
                 "valueCoding": {
                   "code": "2106-3",
                   "display": "White"
+                }
+              },
+              {
+                "url": "detailed",
+                "valueCoding": {
+                  "code": "2131-1",
+                  "display": "Other Pacific Islander"
                 }
               },
               {
