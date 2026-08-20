@@ -3,11 +3,13 @@ import { randomUUID } from "node:crypto";
 
 import { Transaction } from "kysely";
 
+import { USER_TYPE } from "@/app/constants";
 import { getDb } from "@/app/data/metadataDb/database";
 import {
   ConditionReference,
   Core,
   ProgramArea,
+  User,
 } from "@/app/data/metadataDb/types/core";
 import { stringSort } from "@/app/utils/format-utils";
 
@@ -16,8 +18,9 @@ import { UserFacingError } from "./errorService";
 import {
   getCheckAdmin,
   getCheckAnyAdmin,
+  isAdmin,
   isProgramAdmin,
-  listUsers,
+  listUserProgramAreasQuery,
 } from "./userService";
 
 /**
@@ -224,70 +227,78 @@ export const listProgramAreas = async (
   const user = await getCheckAnyAdmin("list program areas");
 
   try {
-    // User detail side panel
-    // Program admins can view all programs areas of their users.
-    const requestedUserUuids = new Set(options.userUuids);
-    const requestedUsers = options.userUuids
-      ? (await listUsers()).filter(({ uuid }) => requestedUserUuids.has(uuid))
-      : [];
-    const requestedProgramAreaUuids = [
-      ...new Set(
-        requestedUsers.flatMap(({ program_areas }) =>
-          program_areas.map(({ program_area_uuid }) => program_area_uuid),
-        ),
-      ),
-    ];
-
     return await getDb<Core>()
       .transaction()
       .execute(async (db) => {
-        const programAreas = options.userUuids
-          ? requestedProgramAreaUuids.length > 0 // User details side-panel
-            ? await db
-                .selectFrom("program_area")
-                .selectAll()
-                .where("uuid", "in", requestedProgramAreaUuids)
-                .execute()
-            : []
-          : isProgramAdmin(user)
-            ? await db
-                .selectFrom("program_area")
-                .innerJoin(
-                  "user_program_area",
-                  "program_area.uuid",
-                  "user_program_area.program_area_uuid",
-                )
-                .selectAll("program_area")
-                .where("user_program_area.user_uuid", "=", user.uuid)
-                .execute()
-            : await db.selectFrom("program_area").selectAll().execute();
-        const conditionRefs = await db
-          .selectFrom("condition_reference")
-          .selectAll()
-          .execute();
-
-        const conditions = conditionRefs
-          .map((c) => ({
-            ...c,
-            is_duplicate: conditionRefs.some(
-              ({ condition_name, code }) =>
-                c.condition_name === condition_name && c.code !== code,
-            ),
-          }))
-          .sort((a, b) => stringSort(a.condition_name, b.condition_name));
-
-        return programAreas
-          .map((pa) => ({
-            ...pa,
-            conditions: conditions.filter(
-              ({ program_area_uuid }) => program_area_uuid === pa.uuid,
-            ),
-          }))
-          .sort((a, b) => stringSort(a.name, b.name));
+        const programAreas = isAdmin(user)
+          ? await db.selectFrom("program_area").selectAll().execute()
+          : await getVisibleProgramAreas(db, user, options.userUuids);
+        return addConditionsToProgramAreas(db, programAreas);
       });
   } catch (error: unknown) {
     const message = "Failed to list program areas";
     console.error({ message, error });
     throw new UserFacingError(message);
   }
+};
+
+const getVisibleProgramAreas = async (
+  db: Transaction<Core>,
+  user: User,
+  userUuids?: string[],
+): Promise<ProgramArea[]> => {
+  if (userUuids !== undefined) {
+    // User details: program admins can view all program areas of their users
+    return getProgramAreasForUserDetails(db, userUuids);
+  }
+  // Return program admin's authorized program areas
+  return listUserProgramAreasQuery(db, user.uuid);
+};
+
+const getProgramAreasForUserDetails = async (
+  db: Transaction<Core>,
+  userUuids: string[]
+): Promise<ProgramArea[]> => {
+  if (userUuids.length === 0) return [];
+
+  return db
+    .selectFrom("program_area")
+    .innerJoin(
+      "user_program_area",
+      "program_area.uuid",
+      "user_program_area.program_area_uuid"
+    )
+    .selectAll("program_area")
+    .where("user_program_area.user_uuid", "in", userUuids)
+    .distinct()
+    .execute();
+};
+
+const addConditionsToProgramAreas = async (
+  db: Transaction<Core>,
+  programAreas: ProgramArea[],
+): Promise<ListedProgramArea[]> => {
+  const conditionRefs = await db
+    .selectFrom("condition_reference")
+    .selectAll()
+    .execute();
+
+  const conditions = conditionRefs
+    .map((c) => ({
+      ...c,
+      is_duplicate: conditionRefs.some(
+        ({ condition_name, code }) =>
+          c.condition_name === condition_name && c.code !== code,
+      ),
+    }))
+    .sort((a, b) => stringSort(a.condition_name, b.condition_name));
+
+  return programAreas
+    .map((pa) => ({
+      ...pa,
+      conditions: conditions.filter(
+        ({ program_area_uuid }) => program_area_uuid === pa.uuid,
+      ),
+    }))
+    .sort((a, b) => stringSort(a.name, b.name));
 };

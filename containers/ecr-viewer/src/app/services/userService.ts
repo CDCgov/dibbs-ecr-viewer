@@ -429,7 +429,7 @@ export const listUserProgramAreas = async (
   uuid: string,
 ): Promise<ProgramArea[]> => {
   await getCheckAdmin("list user program areas");
-  return listUserProgramAreasQuery(uuid);
+  return listUserProgramAreasQuery(getDb<Core>(), uuid);
 };
 
 /**
@@ -440,14 +440,15 @@ export const listLoggedInUserProgramAreas = async (): Promise<
   ProgramArea[]
 > => {
   const user = await getLoggedInUser();
-  return user ? await listUserProgramAreasQuery(user.uuid) : [];
+  return user ? await listUserProgramAreasQuery(getDb<Core>(), user.uuid) : [];
 };
 
-const listUserProgramAreasQuery = async (
+export const listUserProgramAreasQuery = async (
+  db: Kysely<Core>,
   uuid: string,
 ): Promise<ProgramArea[]> => {
   try {
-    return await getDb<Core>()
+    return await db
       .selectFrom(["user_program_area", "program_area"])
       .selectAll(["program_area"])
       .where("user_uuid", "=", uuid)
