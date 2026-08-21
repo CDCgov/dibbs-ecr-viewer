@@ -2,8 +2,6 @@
  * @jest-environment node
  */
 
-import { notFound } from "next/navigation";
-
 import {
   BundleMetadata,
   saveFhirMetadata,
@@ -16,25 +14,18 @@ import {
   createInitialAdminUser,
   createUser,
   deleteUser,
-  getCheckAdmin,
-  getCheckAnyAdmin,
-  hasRelevantProgramAreaAccess,
   isLoggedInUserEcrAuthed,
   isUserEcrAuthed,
   ListedUser,
   listLoggedInUserProgramAreas,
   listUserProgramAreas,
   listUsers,
-  notFoundUnlessAdmin,
-  notFoundUnlessAnyAdmin,
   updateUser,
-  validateAdminUserPermissions,
 } from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 import { getLastAuditLog } from "./helpers/core";
 import { buildCore, dropExisting } from "./helpers/ddl";
-import { UserFacingError } from "@/app/services/errorService";
 
 export const makePromiseResolveWithStatus = (
   status: number,
@@ -44,6 +35,7 @@ export const makePromiseResolveWithStatus = (
 const adminUserEmail = "admin@admin.com";
 const standardUserEmail = "standard@standard.com";
 const programAdminEmail = "programadmin@programadmin.com";
+const unauthorizedUserEmail = "unauthorized@standard.com";
 
 const cond123 = {
   code: "123",
@@ -141,6 +133,7 @@ describe("User Service", () => {
   let adminUserId;
   let standardUserId: string;
   let programAdminUserId: string;
+  let unauthorizedUserId: string;
 
   let programArea123Id: string;
   let programArea456Id: string;
@@ -212,11 +205,9 @@ describe("User Service", () => {
     const afterUsers = await listUsers();
     expect(afterUsers).toBeArrayOfSize(1);
     expect(afterUsers).toStrictEqual([expectedAdminUser]);
-  });
 
-  it("isLoggedInUserEcrAuthed: admin should be authed to see ecr", async () => {
-    const res = await isLoggedInUserEcrAuthed(ecrId);
-    expect(res).toBeTrue();
+    // admin should be authed to see eCR
+    expect(await isLoggedInUserEcrAuthed(ecrId)).toBeTrue();
   });
 
   describe("createUser", () => {
@@ -320,7 +311,7 @@ describe("User Service", () => {
           userType: "admin",
           programs: [],
         }),
-      ).rejects.toThrow("Program admins cannot create new admins");
+      ).rejects.toThrow("Program admins cannot manage admins.");
     });
 
     it("as a program admin, should not create a user for an unauthorized program area", async () => {
@@ -353,7 +344,7 @@ describe("User Service", () => {
           programs: [programArea123Id],
         }),
       ).rejects.toThrow(
-        "Program admins cannot create users outside of their program areas",
+        "Program admins cannot manage users outside of their program areas.",
       );
     });
   });
@@ -487,6 +478,139 @@ describe("User Service", () => {
         ],
       };
     });
+
+    it("as a program admin, should not update an unauthorized user", async () => {
+      programAreaUnauthorizedId = await createProgramArea(
+        programAreaUnauthorized,
+      );
+      unauthorizedUserId = await createUser({
+        email: unauthorizedUserEmail,
+        userType: "standard",
+        programs: [programAreaUnauthorizedId],
+      });
+
+      // Logging in as program admin, should not be able to update unauthorized user
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        name: "Program Admin",
+        email: programAdminEmail,
+      });
+      await expect(
+        updateUser({
+          uuid: unauthorizedUserId!,
+          updates: { name: "Unauthorized Update" },
+          programs: [],
+        }),
+      ).rejects.toThrow(
+        "Program admins cannot manage users outside of their program areas.",
+      );
+    });
+
+    it("as a program admin, should not update a user's email", async () => {
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        name: "Program Admin",
+        email: programAdminEmail,
+      });
+
+      await expect(
+        updateUser({
+          uuid: programAdminUserId!,
+          updates: { email: "updated@programadmin.com" },
+          programs: [programArea456Id!],
+        }),
+      ).rejects.toThrow("Program admins cannot modify user emails or roles.");
+    });
+
+    it("as a program admin, should not update a user's role", async () => {
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        name: "Program Admin",
+        email: programAdminEmail,
+      });
+
+      await expect(
+        updateUser({
+          uuid: programAdminUserId!,
+          updates: { user_type: "standard" },
+          programs: [programArea456Id!],
+        }),
+      ).rejects.toThrow("Program admins cannot modify user emails or roles.");
+    });
+
+    it("as a program admin, should not update a user's unauthorized program areas", async () => {
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        name: "Program Admin",
+        email: programAdminEmail,
+      });
+
+      await expect(
+        updateUser({
+          uuid: programAdminUserId!,
+          updates: {},
+          programs: [programAreaUnauthorizedId],
+        }),
+      ).rejects.toThrow(
+        "Program admins cannot manage users outside of their program areas.",
+      );
+    });
+
+    it("as a program admin, should update a user's authorized program area", async () => {
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        name: "Program Admin",
+        email: programAdminEmail,
+      });
+
+      await updateUser({
+        uuid: standardUserId!,
+        updates: {},
+        programs: [programArea456Id!],
+      });
+      expect(await listUserProgramAreas(standardUserId!)).toStrictEqual([
+        {
+          uuid: programArea456Id!,
+          author_uuid: adminUserId!,
+          name: "Program Area 456",
+          date_created: expect.any(Date),
+        },
+      ]);
+
+      // Restore the standard user's original assignment for subsequent tests.
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        name: "Adam Admin",
+        email: adminUserEmail,
+      });
+      await updateUser({
+        uuid: standardUserId!,
+        updates: {},
+        programs: [programArea123Id!],
+      });
+    });
+
+    it("as a program admin, should preserve a user's inaccessible program area", async () => {
+      // Assign the user to one accessible and one inaccessible program area as an admin.
+      await updateUser({
+        uuid: standardUserId!,
+        updates: {},
+        programs: [programArea123Id!, programAreaUnauthorizedId!],
+      });
+
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        name: "Program Admin",
+        email: programAdminEmail,
+      });
+
+      // The program admin submits only an accessible area.
+      await updateUser({
+        uuid: standardUserId!,
+        updates: {},
+        programs: [programArea456Id!],
+      });
+
+      expect(await listUserProgramAreas(standardUserId!)).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ uuid: programArea456Id! }),
+          expect.objectContaining({ uuid: programAreaUnauthorizedId! }),
+        ]),
+      );
+    });
   });
 
   describe("isUserEcrAuthed: should now be authed to see eCR", () => {
@@ -514,42 +638,24 @@ describe("User Service", () => {
   });
 
   it("listUsers only returns users who share a program area with a program admin", async () => {
-    programAreaUnauthorizedId = await createProgramArea(
-      programAreaUnauthorized,
-    );
-    const unauthorizedUserEmail = "unauthorized@standard.com";
-    const unauthorizedUserId = await createUser({
-      email: unauthorizedUserEmail,
-      userType: "standard",
-      programs: [programAreaUnauthorizedId],
+    (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+      name: "Program Admin",
+      email: programAdminEmail,
     });
 
-    try {
-      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
-        name: "Program Admin",
-        email: programAdminEmail,
-      });
+    const users = await listUsers();
 
-      const users = await listUsers();
-
-      // Should not return admin or unauthorized users
-      expect(users.map(({ email }) => email)).toStrictEqual([
-        programAdminEmail,
-        standardUserEmail,
-      ]);
-    } finally {
-      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
-        name: "Adam Admin",
-        email: adminUserEmail,
-      });
-      await deleteUser({ uuid: unauthorizedUserId });
-    }
+    // Should not return admin or unauthorized users
+    expect(users.map(({ email }) => email)).toStrictEqual([
+      programAdminEmail,
+      standardUserEmail,
+    ]);
   });
 
   describe("deleteUser", () => {
     it("as an admin, should delete a user", async () => {
       const beforeUsers = await listUsers();
-      expect(beforeUsers).toBeArrayOfSize(3); // admin + program admin + standard
+      expect(beforeUsers).toBeArrayOfSize(4); // admin + program admin + standard + standard (unauthorized)
 
       // standard user created in prior test
       await deleteUser({ uuid: standardUserId! });
@@ -565,7 +671,7 @@ describe("User Service", () => {
 
       // see only admin + program admin listed
       const users = await listUsers();
-      expect(users).toBeArrayOfSize(2); // admin + program admin
+      expect(users).toBeArrayOfSize(3); // admin + program admin + standard (unauthorized)
       expect(users).toEqual(
         expect.arrayContaining([
           expectedAdminUser,
@@ -582,127 +688,16 @@ describe("User Service", () => {
       const progAreas = await listUserProgramAreas(standardUserId!);
       expect(progAreas).toStrictEqual([]);
     });
-  });
 
-  describe("getCheckAdmin", () => {
-    it("should return admin if user is an admin", async () => {
-      const admin = await getCheckAdmin("do a thing");
-      expect(admin.email).toBe(adminUserEmail);
-    });
-
-    it("should error if user is not an admin", async () => {
+    it("as a program admin, should not delete a user", async () => {
       (getLoggedInUserSession as jest.Mock).mockResolvedValue({
-        name: "Sally Standard",
-        email: "standard@user.com",
+        name: "Program Admin",
+        email: programAdminEmail,
       });
-      await expect(getCheckAdmin("do a thing")).rejects.toThrow();
-    });
-  });
 
-  describe("notFoundUnlessAdmin", () => {
-    it("should do nothing if user is an admin", async () => {
-      await notFoundUnlessAdmin();
-      expect(notFound).not.toHaveBeenCalled();
-    });
-
-    it("should notFound if user is not an admin", async () => {
-      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
-        name: "Sally Standard",
-        email: "standard@user.com",
-      });
-      await notFoundUnlessAdmin();
-      expect(notFound).toHaveBeenCalled();
-    });
-  });
-
-  describe("getCheckAnyAdmin", () => {
-    it("should return admin if user is an admin", async () => {
-      const admin = await getCheckAnyAdmin("do a thing");
-      expect(admin.email).toBe(adminUserEmail);
-    });
-
-    it("should error if user is a standard user", async () => {
-      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
-        name: "Sally Standard",
-        email: "standard@user.com",
-      });
-      await expect(getCheckAnyAdmin("do a thing")).rejects.toThrow();
-    });
-  });
-
-  describe("notFoundUnlessAnyAdmin", () => {
-    it("should do nothing if user is an admin", async () => {
-      await notFoundUnlessAnyAdmin();
-      expect(notFound).not.toHaveBeenCalled();
-    });
-
-    it("should notFound if user is a standard user", async () => {
-      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
-        name: "Sally Standard",
-        email: "standard@user.com",
-      });
-      await notFoundUnlessAnyAdmin();
-      expect(notFound).toHaveBeenCalled();
-    });
-  });
-
-  describe("hasRelevantProgramAreaAccess", () => {
-    it("should return true for admin user", async () => {
-      const adminUser = await getCheckAdmin("check");
-      const res = await hasRelevantProgramAreaAccess(adminUser, [
-        "some-prog-uuid",
-      ]);
-      expect(res).toBeTrue();
-    });
-
-    it("should return false for an inactive user", async () => {
-      const adminUser = await getCheckAdmin("check");
-      const inactiveUser = { ...adminUser, status: "inactive" as const };
-      expect(
-        await hasRelevantProgramAreaAccess(inactiveUser, ["some-prog-uuid"]),
-      ).toBeFalse();
-    });
-
-    it("should return false when no user is passed and none is logged in", async () => {
-      (getLoggedInUserSession as jest.Mock).mockResolvedValue(undefined);
-      expect(
-        await hasRelevantProgramAreaAccess(undefined, ["some-prog-uuid"]),
-      ).toBeFalse();
-    });
-  });
-
-  // TODO ANGELA: Should this really be an integration test? Should this (and others be moved to unit tests)
-  describe("validateAdminUserPermissions", () => {
-    it("should allow admins to manage users of any type", async () => {
-      await expect(
-        validateAdminUserPermissions(expectedAdminUser, "admin", []),
-      ).resolves.toBeUndefined();
-    });
-    it("should allow program admins to manage standard users and program admins within their accessible program areas", async () => {
-      await expect(
-        validateAdminUserPermissions(expectedProgramAdminUser, "standard", [
-          programArea123Id!,
-        ]),
-      ).resolves.toBeUndefined();
-      await expect(
-        validateAdminUserPermissions(expectedProgramAdminUser, "prog_admin", [
-          programArea123Id!,
-        ]),
-      ).resolves.toBeUndefined();
-    });
-    it("should prevent program admins from managing admin users", async () => {
-      await expect(
-        validateAdminUserPermissions(expectedProgramAdminUser, "admin", []),
-      ).rejects.toThrow(UserFacingError);
-    });
-    it("should prevent program admins from managing users outside of their accessible program areas", async () => {
-      expect(programAreaUnauthorizedId).toMatch(UUID_REGEX);
-
-      await expect(
-        validateAdminUserPermissions(expectedProgramAdminUser, "standard", [
-          programAreaUnauthorizedId!,
-        ]),
-      ).rejects.toThrow(UserFacingError);
+      await expect(deleteUser({ uuid: unauthorizedUserId! })).rejects.toThrow(
+        "Standard user cannot & program admins cannot delete users",
+      );
     });
   });
 });

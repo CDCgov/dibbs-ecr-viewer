@@ -20,6 +20,7 @@ import { UserType, ListedUser } from "@/app/services/userService";
 import { AccordionItem } from "@/app/types";
 import { notEmpty } from "@/app/utils/data-utils";
 import { makePlural, stringSort, toKebabCase } from "@/app/utils/format-utils";
+import classNames from "classnames";
 
 export interface FormProgram extends ListedProgramArea {
   checked?: boolean;
@@ -125,11 +126,13 @@ export const UserForm = ({
         email={email}
         setEmail={setEmail}
         emailIsDupe={emailIsDupe}
+        isDisabled={action === "Edit" && !isLoggedInUserAdmin}
       />
       <UserTypeFieldSet
         userType={userType}
         setUserType={setUserType}
         isLoggedInUserAdmin={isLoggedInUserAdmin}
+        isDisabled={action === "Edit" && !isLoggedInUserAdmin}
       />
       <ProgramFieldSet
         programs={programs}
@@ -145,18 +148,24 @@ const EmailFieldSet = ({
   email,
   setEmail,
   emailIsDupe,
+  isDisabled,
 }: {
   email: string;
   setEmail: (n: string) => void;
   emailIsDupe?: boolean;
+  isDisabled: boolean;
 }) => {
+  const disabledTextClass = isDisabled ? "text-base" : undefined;
+
   return (
-    <FieldSet legend="Email">
-      <span>Add the new user by their login email</span>
+    <FieldSet legend={<span className={disabledTextClass}>Email</span>}>
+      {!isDisabled && <span>Add the new user by their login email</span>}
       <FormGroup error={emailIsDupe}>
-        <label className="usa-label maxw-full">
+        <label
+          className={classNames("usa-label", "maxw-full", disabledTextClass)}
+        >
           Email
-          <RequiredMarker />
+          {!isDisabled && <RequiredMarker />}
           {emailIsDupe && (
             <p className="usa-error-message margin-0">
               This email already exists. Please add a different email.
@@ -168,6 +177,7 @@ const EmailFieldSet = ({
             id="email"
             name="email"
             value={email}
+            disabled={isDisabled}
             onChange={(e) => setEmail(e.target.value)}
           />
         </label>
@@ -180,17 +190,23 @@ const UserTypeFieldSet = ({
   userType,
   setUserType,
   isLoggedInUserAdmin,
+  isDisabled,
 }: {
   userType: UserType;
   setUserType: (n: UserType) => void;
   isLoggedInUserAdmin: boolean;
+  isDisabled: boolean;
 }) => {
+  const disabledTextClass = isDisabled ? "text-base" : undefined;
+
   return (
-    <FieldSet legend="User type">
-      <span>
-        Select the user type
-        <RequiredMarker />
-      </span>
+    <FieldSet legend={<span className={disabledTextClass}>User type</span>}>
+      {!isDisabled && (
+        <span>
+          Select the user type
+          <RequiredMarker />
+        </span>
+      )}
       {[
         ...(isLoggedInUserAdmin
           ? [
@@ -225,6 +241,7 @@ const UserTypeFieldSet = ({
           id={`userType-${option.value}`}
           value={option.value}
           checked={userType === option.value}
+          disabled={isDisabled}
           onChange={(e) => setUserType(e.target.value as UserType)}
         />
       ))}

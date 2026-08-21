@@ -3,14 +3,15 @@ import { notFound } from "next/navigation";
 
 import { UserForm } from "@/app/admin/user/UserForm";
 import { USER_TYPE } from "@/app/constants";
-import { isAdmin, UserType } from "@/app/services/userService";
 import { listProgramAreas } from "@/app/services/programAreaService";
 import { updateUserAction } from "@/app/services/serverActionService";
 import {
+  isAdmin,
+  notFoundUnlessAnyAdmin,
+  UserType,
   getUser,
   listUserProgramAreas,
   listUsers,
-  notFoundUnlessAdmin,
 } from "@/app/services/userService";
 import { PageSearchParams } from "@/app/utils/search-param-utils";
 import { getLoggedInUser } from "@/app/services/loggedInUserService";
@@ -26,7 +27,7 @@ const EditUserPage = async ({
 }: {
   searchParams: Promise<PageSearchParams>;
 }) => {
-  await notFoundUnlessAdmin();
+  await notFoundUnlessAnyAdmin();
   const currentUser = await getLoggedInUser();
   const { uuid } = await searchParams;
 
@@ -48,7 +49,11 @@ const EditUserPage = async ({
   );
 
   const isValidUserType = (value: string): value is UserType => {
-    return value === USER_TYPE.ADMIN || value === USER_TYPE.STANDARD;
+    return (
+      value === USER_TYPE.ADMIN ||
+      value === USER_TYPE.PROG_ADMIN ||
+      value === USER_TYPE.STANDARD
+    );
   };
 
   const users = await listUsers();
@@ -70,8 +75,7 @@ const EditUserPage = async ({
         const res = await updateUserAction({
           uuid,
           updates: {
-            email,
-            user_type: userType,
+            ...(isAdmin(currentUser) ? { email, user_type: userType } : {}),
           },
           programs,
         });

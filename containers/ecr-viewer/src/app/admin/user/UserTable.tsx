@@ -167,6 +167,7 @@ export const UserTable = ({
   return (
     <div>
       <DetailsSidePanel
+        isLoggedInUserAdmin={isLoggedInUserAdmin}
         detailsRef={detailsRef}
         title={selectedUser?.name ? selectedUser?.name : selectedUser?.email!}
         subtitle={`Last logged in: ${
