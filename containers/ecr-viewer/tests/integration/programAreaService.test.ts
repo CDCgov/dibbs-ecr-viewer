@@ -287,6 +287,7 @@ describe("program area service", () => {
     expect(programAreaIds).toStrictEqual([accessibleProgramId]);
     expect(programAreaIds).not.toContain(restrictedProgramId);
 
+    // When viewing user details side panel, should see all their programs
     const detailProgramAreas = await listProgramAreas({
       userUuids: [visibleUserId],
     });
