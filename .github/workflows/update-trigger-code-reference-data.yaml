@@ -1,30 +1,52 @@
 name: Update trigger-code-reference data
 
+# This workflow keeps the trigger-code-reference SQLite database synchronized
+# with TES and RCKMS:
+# 1. Twice a year (or when run manually), it discovers the latest TES version.
+# 2. If that version differs from the committed database version, it opens a
+#    draft update PR containing the new version marker and manual instructions.
+# 3. An approver downloads the RCKMS Condition Codes workbook and commits the
+#    original .xlsx file to that PR's automation branch.
+# 4. The PR update triggers a trusted copy of the extraction and seed scripts,
+#    which converts the expected worksheet to CSV and rebuilds tes.db using TES.
+# 5. After validating the database, the workflow commits the CSV, database, and
+#    version marker to the same PR branch and marks the draft PR ready for review.
+
 on:
-  # Lets this skeleton run as a check on the pull request that introduces it.
-  pull_request:
-    paths:
-      - .github/workflows/update-trigger-code-reference-data.yaml
-      - containers/trigger-code-reference/assets/RCKMS Condition Codes.csv
-      - containers/trigger-code-reference/data/**
-
-  # The completed workflow will also be runnable on demand.
+  schedule:
+    # GitHub schedules use UTC: June 1 and December 1 at 16:17 UTC.
+    - cron: "17 16 1 6,12 *"
   workflow_dispatch:
-
-# TODO: Add a twice-yearly schedule after the workflow can safely create and
-# populate an update pull request.
+  # Pull request trigger is needed for step #4 in the workflow described above
+  pull_request:
+    types:
+      - synchronize
+      - reopened
+    paths:
+      - containers/trigger-code-reference/assets/RCKMS Condition Codes*.xlsx
+      - containers/trigger-code-reference/assets/RCKMS Condition Codes.csv
+      - containers/trigger-code-reference/data/tes-version.txt
+      - containers/trigger-code-reference/data/tes.db
 
 permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
-  validate-update-prerequisites:
-    name: Validate update prerequisites
+  # Scheduled and manual runs start here. Pull request runs skip this job and
+  # go directly to process-update-pr below.
+  discover-tes-version:
+    name: Discover latest TES version
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      current-version: ${{ steps.compare-versions.outputs.current-version }}
+      latest-version: ${{ steps.compare-versions.outputs.latest-version }}
+      update-needed: ${{ steps.compare-versions.outputs.update-needed }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -34,17 +56,443 @@ jobs:
         run: |
           test -f "containers/trigger-code-reference/assets/RCKMS Condition Codes.csv"
           test -f "containers/trigger-code-reference/data/seed_tes_data.py"
+          test -f "containers/trigger-code-reference/data/tes-version.txt"
 
-      - name: Summarize skeleton run
+      - name: Compare TES versions
+        id: compare-versions
+        env:
+          TES_API_KEY: ${{ secrets.TES_API_KEY }}
         shell: bash
+        run: |
+          set -euo pipefail
+
+          readonly version_file="containers/trigger-code-reference/data/tes-version.txt"
+          # This committed value represents the version in the current tes.db.
+          current_version="$(tr -d '[:space:]' < "$version_file")"
+
+          if [[ ! "$current_version" =~ ^[0-9]{8}$ ]]; then
+            echo "::error file=${version_file}::TES version must use YYYYMMDD format."
+            exit 1
+          fi
+
+          if [[ -z "$TES_API_KEY" ]]; then
+            echo "::error::The TES_API_KEY Actions secret is required."
+            exit 1
+          fi
+
+          response_file="$(mktemp)"
+          trap 'rm -f "$response_file"' EXIT
+
+          curl --silent --show-error --fail-with-body \
+            --connect-timeout 10 \
+            --max-time 60 \
+            --retry 3 \
+            --get "https://tes.tools.aimsplatform.org/api/fhir/ValueSet" \
+            --header "X-API-KEY: $TES_API_KEY" \
+            --data-urlencode "context-type=http://terminology.hl7.org/CodeSystem/usage-context-type|focus" \
+            --data-urlencode "_sort=-version" \
+            --data-urlencode "_count=1" \
+            --output "$response_file"
+
+          # TES stores older releases too. Sorting descending and requesting one
+          # result returns the newest release without downloading every value set.
+          latest_version="$(
+            jq --exit-status --raw-output \
+              '.entry[0].resource.version | select(test("^[0-9]{8}$"))' \
+              "$response_file"
+          )"
+
+          if [[ "$latest_version" < "$current_version" ]]; then
+            # Never replace the database with an older upstream release.
+            echo "::error::Latest TES version $latest_version is older than the database version $current_version."
+            exit 1
+          elif [[ "$latest_version" == "$current_version" ]]; then
+            update_needed=false
+          else
+            update_needed=true
+          fi
+
+          {
+            echo "current-version=$current_version"
+            echo "latest-version=$latest_version"
+            echo "update-needed=$update_needed"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Summarize version check
+        shell: bash
+        env:
+          CURRENT_VERSION: ${{ steps.compare-versions.outputs.current-version }}
+          LATEST_VERSION: ${{ steps.compare-versions.outputs.latest-version }}
+          UPDATE_NEEDED: ${{ steps.compare-versions.outputs.update-needed }}
         run: |
           {
             echo "## Trigger code reference update"
             echo
-            echo "The workflow skeleton and required repository files were validated."
-            echo
             echo "- Event: \`${{ github.event_name }}\`"
-            echo "- TES version discovery: not enabled in this skeleton"
-            echo "- Database generation: not enabled in this skeleton"
-            echo "- Pull request creation: not enabled in this skeleton"
+            echo "- Current database version: \`$CURRENT_VERSION\`"
+            echo "- Latest TES version: \`$LATEST_VERSION\`"
+            echo "- Update needed: \`$UPDATE_NEEDED\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  create-update-pr:
+    name: Create trigger code reference update PR
+    needs: discover-tes-version
+    if: needs.discover-tes-version.outputs.update-needed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      BASE_BRANCH: ${{ github.event.repository.default_branch }}
+      BRANCH_NAME: automation/trigger-code-reference-${{ needs.discover-tes-version.outputs.latest-version }}
+      CURRENT_VERSION: ${{ needs.discover-tes-version.outputs.current-version }}
+      GH_TOKEN: ${{ github.token }}
+      LATEST_VERSION: ${{ needs.discover-tes-version.outputs.latest-version }}
+    steps:
+      # Update PRs must always start from the repository's default branch.
+      - name: Check out base branch
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Check for an existing update PR
+        id: existing-pr
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          existing_url="$(
+            gh pr list \
+              --base "$BASE_BRANCH" \
+              --head "$BRANCH_NAME" \
+              --state open \
+              --json url \
+              --jq '.[0].url // empty'
+          )"
+          # Re-running the schedule should reuse an open update PR instead of
+          # creating duplicate PRs for the same TES version.
+          echo "url=$existing_url" >> "$GITHUB_OUTPUT"
+
+      - name: Create update branch
+        if: steps.existing-pr.outputs.url == ''
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          readonly version_file="containers/trigger-code-reference/data/tes-version.txt"
+          if git ls-remote --exit-code --heads origin "$BRANCH_NAME"; then
+            # A previous run can push the branch and then fail before creating
+            # its PR. Reuse it only when its sole change is the expected marker.
+            git fetch --no-tags origin \
+              "refs/heads/$BRANCH_NAME:refs/remotes/origin/$BRANCH_NAME"
+            mapfile -t changed_files < <(
+              git diff --name-only "HEAD...origin/$BRANCH_NAME"
+            )
+            branch_version="$(
+              git show "origin/$BRANCH_NAME:$version_file" |
+                tr -d '[:space:]'
+            )"
+            if [[ "${#changed_files[@]}" -ne 1 ]] ||
+              [[ "${changed_files[0]}" != "$version_file" ]] ||
+              [[ "$branch_version" != "$LATEST_VERSION" ]]; then
+              echo "::error::Existing branch $BRANCH_NAME is not a reusable automation branch."
+              exit 1
+            fi
+            echo "Reusing automation branch $BRANCH_NAME from the previous run."
+            exit 0
+          fi
+
+          git switch --create "$BRANCH_NAME"
+          # On the update PR this marker is the target version. The PR remains a
+          # draft until a newly generated database contains the same version.
+          printf '%s\n' "$LATEST_VERSION" > "$version_file"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$version_file"
+          git commit \
+            --message "chore: prepare trigger code reference update $LATEST_VERSION"
+          git push --set-upstream origin "$BRANCH_NAME"
+
+      - name: Create pull request
+        id: create-pr
+        if: steps.existing-pr.outputs.url == ''
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          body_file="$RUNNER_TEMP/trigger-code-reference-update.md"
+          cp ".github/trigger-code-reference-update-pr.md" "$body_file"
+          sed -i \
+            -e "s/__CURRENT_VERSION__/$CURRENT_VERSION/g" \
+            -e "s/__LATEST_VERSION__/$LATEST_VERSION/g" \
+            -e "s|__BRANCH_NAME__|$BRANCH_NAME|g" \
+            "$body_file"
+
+          pr_url="$(
+            gh pr create \
+              --base "$BASE_BRANCH" \
+              --draft \
+              --head "$BRANCH_NAME" \
+              --title "chore: Update trigger code reference data to $LATEST_VERSION" \
+              --body-file "$body_file"
+          )"
+          echo "url=$pr_url" >> "$GITHUB_OUTPUT"
+
+      - name: Summarize update PR
+        env:
+          CREATED_URL: ${{ steps.create-pr.outputs.url }}
+          EXISTING_URL: ${{ steps.existing-pr.outputs.url }}
+        shell: bash
+        run: |
+          pr_url="${CREATED_URL:-$EXISTING_URL}"
+          {
+            echo "## Trigger code reference update PR"
+            echo
+            echo "- Current version: \`$CURRENT_VERSION\`"
+            echo "- Target version: \`$LATEST_VERSION\`"
+            echo "- Pull request: $pr_url"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  process-update-pr:
+    name: Process file and generate DB
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      startsWith(
+        github.event.pull_request.head.ref,
+        'automation/trigger-code-reference-'
+      )
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+      PR_URL: ${{ github.event.pull_request.html_url }}
+    steps:
+      # Never run Python or dependency definitions from the PR branch while the
+      # TES_API_KEY secret is available. This checkout contains trusted code
+      # from the exact base commit against which the PR was opened.
+      - name: Check out trusted automation code
+        uses: actions/checkout@v7
+        with:
+          path: trusted
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.base.sha }}
+
+      # The second checkout contains only the proposed update inputs and is also
+      # where generated artifacts will be committed.
+      - name: Check out update PR
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          path: update
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Validate update inputs
+        id: update-inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          readonly version_file="update/containers/trigger-code-reference/data/tes-version.txt"
+          readonly database_file="update/containers/trigger-code-reference/data/tes.db"
+          readonly assets_dir="containers/trigger-code-reference/assets"
+
+          target_version="$(tr -d '[:space:]' < "$version_file")"
+          if [[ ! "$target_version" =~ ^[0-9]{8}$ ]]; then
+            echo "::error file=${version_file}::TES version must use YYYYMMDD format."
+            exit 1
+          fi
+          if [[ "$HEAD_BRANCH" != "automation/trigger-code-reference-$target_version" ]]; then
+            echo "::error::PR branch does not match target TES version $target_version."
+            exit 1
+          fi
+
+          workbooks=()
+          # Historical source workbooks may remain in the repository. Select
+          # only the workbook added or updated by this PR.
+          while IFS= read -r -d '' changed_file; do
+            case "$changed_file" in
+              "$assets_dir"/RCKMS\ Condition\ Codes*.xlsx)
+                workbooks+=("update/$changed_file")
+                ;;
+            esac
+          done < <(
+            git -C update diff \
+              --diff-filter=AM \
+              --name-only \
+              --no-renames \
+              -z \
+              "$BASE_SHA...HEAD" \
+              -- "$assets_dir"
+          )
+          if [[ "${#workbooks[@]}" -eq 0 ]]; then
+            echo "::error::Commit the downloaded RCKMS Condition Codes workbook to update/$assets_dir."
+            exit 1
+          elif [[ "${#workbooks[@]}" -ne 1 ]]; then
+            echo "::error::Expected one RCKMS Condition Codes workbook; found ${#workbooks[@]}."
+            exit 1
+          fi
+
+          mapfile -t database_versions < <(
+            sqlite3 "$database_file" \
+              'select distinct version from condition order by version;'
+          )
+          # A bot-generated commit triggers this workflow once more. Skip the
+          # expensive rebuild when that commit's database already matches.
+          if [[ "${#database_versions[@]}" -eq 1 ]] &&
+            [[ "${database_versions[0]}" == "$target_version" ]]; then
+            build_needed=false
+          else
+            build_needed=true
+          fi
+
+          {
+            echo "build-needed=$build_needed"
+            echo "source-workbook=${workbooks[0]}"
+            echo "target-version=$target_version"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Set up Python
+        if: steps.update-inputs.outputs.build-needed == 'true'
+        uses: actions/setup-python@v7
+        with:
+          cache: pip
+          cache-dependency-path: trusted/containers/trigger-code-reference/automation-requirements.txt
+          python-version: "3.13"
+
+      - name: Install trusted dependencies
+        if: steps.update-inputs.outputs.build-needed == 'true'
+        shell: bash
+        run: |
+          python -m pip install \
+            --require-hashes \
+            --only-binary :all: \
+            --requirement "trusted/containers/trigger-code-reference/automation-requirements.txt"
+
+      - name: Extract condition codes worksheet
+        if: steps.update-inputs.outputs.build-needed == 'true'
+        env:
+          SOURCE_WORKBOOK: ${{ steps.update-inputs.outputs.source-workbook }}
+        shell: bash
+        run: |
+          python \
+            "trusted/containers/trigger-code-reference/data/extract_rckms_condition_codes.py" \
+            "$SOURCE_WORKBOOK" \
+            "trusted/containers/trigger-code-reference/assets/RCKMS Condition Codes.csv"
+
+      - name: Generate TES database
+        if: steps.update-inputs.outputs.build-needed == 'true'
+        env:
+          TARGET_VERSION: ${{ steps.update-inputs.outputs.target-version }}
+          TES_API_KEY: ${{ secrets.TES_API_KEY }}
+        shell: bash
+        working-directory: trusted/containers/trigger-code-reference/data
+        run: |
+          set -euo pipefail
+          if [[ -z "$TES_API_KEY" ]]; then
+            echo "::error::The TES_API_KEY Actions secret is required."
+            exit 1
+          fi
+          # The seed script creates tables if they are absent, so remove the old
+          # database to guarantee that this is a clean build.
+          rm -f "tes.db"
+          python seed_tes_data.py "$TARGET_VERSION"
+
+      - name: Validate generated artifacts
+        if: steps.update-inputs.outputs.build-needed == 'true'
+        env:
+          TARGET_VERSION: ${{ steps.update-inputs.outputs.target-version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          readonly root="trusted/containers/trigger-code-reference"
+          readonly database_file="$root/data/tes.db"
+          readonly csv_file="$root/assets/RCKMS Condition Codes.csv"
+
+          # Check both file integrity and the business assumptions needed before
+          # these generated artifacts are safe to commit.
+          test "$(sqlite3 "$database_file" 'pragma integrity_check;')" = "ok"
+          test "$(
+            sqlite3 "$database_file" \
+              'select group_concat(distinct version) from condition;'
+          )" = "$TARGET_VERSION"
+          test "$(sqlite3 "$database_file" 'select count(*) from condition;')" -gt 0
+          test "$(sqlite3 "$database_file" 'select count(*) from concept;')" -gt 0
+          test "$(wc -l < "$csv_file")" -gt 1
+
+      - name: Copy generated artifacts to update branch
+        if: steps.update-inputs.outputs.build-needed == 'true'
+        env:
+          TARGET_VERSION: ${{ steps.update-inputs.outputs.target-version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          readonly trusted_root="trusted/containers/trigger-code-reference"
+          readonly update_root="update/containers/trigger-code-reference"
+
+          # Only generated outputs cross from the trusted build workspace back
+          # into the PR checkout. The untouched workbook is already there.
+          cp \
+            "$trusted_root/assets/RCKMS Condition Codes.csv" \
+            "$update_root/assets/RCKMS Condition Codes.csv"
+          cp "$trusted_root/data/tes.db" "$update_root/data/tes.db"
+          printf '%s\n' "$TARGET_VERSION" > "$update_root/data/tes-version.txt"
+
+      - name: Commit generated artifacts
+        if: steps.update-inputs.outputs.build-needed == 'true'
+        env:
+          TARGET_VERSION: ${{ steps.update-inputs.outputs.target-version }}
+        shell: bash
+        working-directory: update
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            "containers/trigger-code-reference/assets/RCKMS Condition Codes.csv" \
+            "containers/trigger-code-reference/data/tes-version.txt" \
+            "containers/trigger-code-reference/data/tes.db"
+
+          if git diff --cached --quiet; then
+            echo "Generated artifacts are already current."
+            exit 0
+          fi
+
+          git commit \
+            --message "chore: update trigger code reference data to $TARGET_VERSION"
+          git push origin "HEAD:$HEAD_BRANCH"
+
+      - name: Mark pull request ready for review
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$(gh pr view "$PR_URL" --json isDraft --jq '.isDraft')" == "true" ]]; then
+            gh pr ready "$PR_URL"
+          fi
+
+      - name: Summarize PR processing
+        env:
+          BUILD_NEEDED: ${{ steps.update-inputs.outputs.build-needed }}
+          TARGET_VERSION: ${{ steps.update-inputs.outputs.target-version }}
+        shell: bash
+        run: |
+          {
+            echo "## Trigger code reference PR"
+            echo
+            echo "- Target TES version: \`$TARGET_VERSION\`"
+            echo "- Database build needed: \`$BUILD_NEEDED\`"
+            if [[ "$BUILD_NEEDED" == "true" ]]; then
+              echo "- Generated artifacts were validated and committed to the PR branch."
+            else
+              echo "- The committed database already matches the target version."
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
