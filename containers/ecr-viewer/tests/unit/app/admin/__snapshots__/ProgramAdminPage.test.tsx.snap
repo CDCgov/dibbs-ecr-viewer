@@ -70,7 +70,9 @@ exports[`Program Admin Page Creating programs should render a create program pag
           class="dibbs-fieldset"
         >
           <legend>
-            Name program area
+            <span>
+              Name program area
+            </span>
           </legend>
           <span>
             Required fields are marked with an asterisk (

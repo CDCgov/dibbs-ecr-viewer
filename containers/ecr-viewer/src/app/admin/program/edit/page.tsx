@@ -2,11 +2,12 @@ import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 
 import { ProgramForm } from "@/app/admin/program/ProgramForm";
-import { listConditionReferences } from "@/app/services/listConditionsService";
+import { listAdminConditionReferences } from "@/app/services/listConditionsService";
 import { getProgramArea } from "@/app/services/programAreaService";
 import { updateProgramAreaAction } from "@/app/services/serverActionService";
-import { notFoundUnlessAdmin } from "@/app/services/userService";
+import { isAdmin, notFoundUnlessAnyAdmin } from "@/app/services/userService";
 import { PageSearchParams } from "@/app/utils/search-param-utils";
+import { getLoggedInUser } from "@/app/services/loggedInUserService";
 
 /**
  * @param props page props
@@ -18,7 +19,8 @@ const EditProgramPage = async ({
 }: {
   searchParams: Promise<PageSearchParams>;
 }) => {
-  await notFoundUnlessAdmin();
+  await notFoundUnlessAnyAdmin();
+  const currentUser = await getLoggedInUser();
   const { uuid } = await searchParams;
 
   // nothing to edit here
@@ -31,7 +33,7 @@ const EditProgramPage = async ({
   if (!prog) {
     notFound();
   }
-  const conditions = (await listConditionReferences()).map((c) =>
+  const conditions = (await listAdminConditionReferences()).map((c) =>
     c.program_area_uuid === prog.uuid ? { ...c, checked: true } : c,
   );
 
@@ -45,6 +47,7 @@ const EditProgramPage = async ({
         revalidatePath("/ecr-viewer/admin/program");
         return await updateProgramAreaAction({ uuid, name, conditions });
       }}
+      isLoggedInUserAdmin={isAdmin(currentUser)}
     />
   );
 };

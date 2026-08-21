@@ -480,19 +480,22 @@ test.describe("user management page", () => {
 
 const getRandomProgramArea = async (page: Page, notThese: string[] = []) => {
   await page.goto("/ecr-viewer/admin/program");
+  const adminProgramTestProgram =
+    /^Prog admin-program-(?:chromium|firefox|webkit)-\d+$/;
 
-  const rows = await page.getByRole("row").all();
-  for (const row of rows) {
-    const cell = row.getByRole("cell").first();
-    const program = (await cell.allInnerTexts()).join(" ");
-    // avoid program reuse and don't touch the programs from the `admin-program` tests
-    // as those get deleted during testing (vs teardown)
-    if (
-      !!program &&
-      !notThese.includes(program) &&
-      !program.match(/^Program \d+/)
-    ) {
-      return program;
+  // A fresh program is required when excluding programs. Reusing an existing
+  // program can race with admin-program tests, which assign their fixtures to
+  // the shared program-admin user.
+  if (notThese.length === 0) {
+    const rows = await page.getByRole("row").all();
+    for (const row of rows) {
+      const cell = row.getByRole("cell").first();
+      const program = (await cell.allInnerTexts()).join(" ");
+      // avoid program reuse and don't touch the programs from the `admin-program` tests
+      // as those get deleted during testing (vs teardown)
+      if (!!program && !adminProgramTestProgram.test(program)) {
+        return program;
+      }
     }
   }
 
@@ -509,7 +512,7 @@ const getRandomProgramArea = async (page: Page, notThese: string[] = []) => {
 
   // Read the value BEFORE clicking it, avoiding any DOM-blocking modal issues
   const conditionName = await checkboxCond.inputValue();
-  const programName = `Test Program ${conditionName}`;
+  const programName = `Test Program ${conditionName}-${Math.floor(Math.random() * 10000)}`;
 
   await checkboxCond.dispatchEvent("click");
 

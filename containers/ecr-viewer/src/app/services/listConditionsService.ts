@@ -1,7 +1,13 @@
 import { NO_CONDITIONS_REPORTED_OPTION, USER_TYPE } from "@/app/constants";
 import { getDb } from "@/app/data/metadataDb/database";
-import { ConditionReference, Core } from "@/app/data/metadataDb/types/core";
+import {
+  ConditionReference,
+  Core,
+  User,
+} from "@/app/data/metadataDb/types/core";
+import { Kysely } from "kysely";
 
+import { getCheckAnyAdmin } from "./userService";
 import { getLoggedInUser } from "./loggedInUserService";
 
 /**
@@ -92,4 +98,60 @@ export const listConditionReferences = async (): Promise<ListedCondition[]> => {
     console.error({ message, error });
     throw new Error(message);
   }
+};
+
+/**
+ * List condition references visible to an admin. Admins see all conditions;
+ * program admins see only conditions assigned to one of their program areas.
+ */
+export const listAdminConditionReferences = async (): Promise<
+  ListedCondition[]
+> => {
+  const user = await getCheckAnyAdmin("list condition references");
+
+  try {
+    return await listAdminConditionReferencesQuery(user, getDb<Core>());
+  } catch (error: unknown) {
+    const message = "Failed to list accessible condition references";
+    console.error({ message, error });
+    throw new Error(message);
+  }
+};
+
+/**
+ * Lists condition references accessible to a user.
+ * @param user User whose access determines the returned condition references.
+ * @param db Database connection used to query condition references.
+ * @param codes Optional condition codes used to filter the results.
+ * @returns Condition references accessible to the user.
+ */
+export const listAdminConditionReferencesQuery = async (
+  user: User,
+  db: Kysely<Core>,
+  codes?: string[],
+): Promise<ListedCondition[]> => {
+  const query = db
+    .selectFrom("condition_reference")
+    .leftJoin(
+      "program_area",
+      "condition_reference.program_area_uuid",
+      "program_area.uuid",
+    )
+    .selectAll("condition_reference")
+    .select("program_area.name as program_area_name")
+    .$if(user.user_type !== "admin", (qb) =>
+      qb
+        .innerJoin(
+          "user_program_area",
+          "user_program_area.program_area_uuid",
+          "condition_reference.program_area_uuid",
+        )
+        .where("user_program_area.user_uuid", "=", user.uuid),
+    )
+    .$if(!!codes, (qb) =>
+      qb.where("condition_reference.code", "in", codes ?? []),
+    )
+    .orderBy("condition_reference.code");
+
+  return await query.execute();
 };

@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { test, expect } from "@playwright/test";
+import { test, expect, Page } from "@playwright/test";
 
 import { logIn } from "../utils";
 
@@ -34,7 +34,6 @@ test.describe("program management page", () => {
       .getByRole("table")
       .getByRole("row")
       .filter({ has: page.getByRole("cell") });
-    await expect(programRows).toHaveCount(1);
     await expect(
       programRows.getByRole("cell", { name: "COVID", exact: true }),
     ).toBeVisible();
@@ -222,4 +221,177 @@ test.describe("program management page", () => {
       await expect(el).not.toBeVisible();
     }
   });
+
+  test("as a program admin, should not be able to create program area", async ({
+    page,
+  }) => {
+    await page.context().clearCookies();
+    await logIn(page, { userType: "PROGRAM_ADMIN", useCookies: false });
+    await page.goto("/ecr-viewer/admin/program");
+
+    await expect(
+      page.getByRole("heading", { name: "Program management" }),
+    ).toBeVisible();
+    await expect(page.getByText("Create program area")).not.toBeVisible();
+
+    const response = await page.goto("/ecr-viewer/admin/program/create");
+    expect(response?.status()).toBe(404);
+  });
+
+  test("as a program admin, should not be able to delete a program area", async ({
+    page,
+  }) => {
+    await page.context().clearCookies();
+    await logIn(page, { userType: "PROGRAM_ADMIN", useCookies: false });
+    await page.goto("/ecr-viewer/admin/program");
+
+    await page.getByRole("button", { name: "COVID" }).click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog.getByText("Program area information")).toBeVisible();
+    await expect(
+      dialog.getByRole("button", { name: "Remove program area" }),
+    ).not.toBeVisible();
+  });
+
+  test("as a program admin, should be able to switch conditions between accessible programs", async ({
+    page,
+    browserName,
+  }) => {
+    const targetProgram = await createRandomProgramArea(page, browserName, [
+      "covid",
+    ]);
+    const sourceProgram = await createRandomProgramArea(page, browserName, [
+      targetProgram.conditionName,
+      "covid",
+    ]);
+
+    // Assign both programs to program admin
+    await page.goto("/ecr-viewer/admin/user");
+    await page
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("25");
+    const rowProgramAdmin = await page.getByRole("button", {
+      name: process.env.AUTH_PROGRAM_ADMIN_USER!,
+    });
+    await rowProgramAdmin.scrollIntoViewIfNeeded();
+    await rowProgramAdmin.dispatchEvent("click");
+    await page.getByRole("dialog").getByText("Edit user").click();
+    await page.waitForURL(/\/ecr-viewer\/admin\/user\/edit\?uuid=.*/);
+    const checkboxTarget = await page.getByLabel(
+      `Select ${targetProgram.name}`,
+      { exact: true },
+    );
+    await checkboxTarget.scrollIntoViewIfNeeded();
+    await checkboxTarget.dispatchEvent("click");
+    const checkboxSource = await page.getByLabel(
+      `Select ${sourceProgram.name}`,
+      { exact: true },
+    );
+    await checkboxSource.scrollIntoViewIfNeeded();
+    await checkboxSource.dispatchEvent("click");
+    await page.getByRole("button", { name: "Save user" }).first().click();
+    await page.waitForURL("/ecr-viewer/admin/user");
+
+    // As a program admin, editing program area
+    await page.context().clearCookies();
+    await logIn(page, { userType: "PROGRAM_ADMIN", useCookies: false });
+    await page.goto("/ecr-viewer/admin/program");
+    await page.getByRole("button", { name: targetProgram.name }).click();
+    await page.getByRole("dialog").getByText("Edit program area").click();
+    await page.waitForURL(/\/ecr-viewer\/admin\/program\/edit\?uuid=.*/);
+
+    await expect(page.getByLabel("Program area name")).toBeDisabled();
+
+    // Can move a condition from source to target program
+    await page
+      .getByPlaceholder("Search condition or category")
+      .fill(sourceProgram.conditionName);
+    const sourceConditionInSource = page
+      .getByText(`Condition in ${sourceProgram.name}`)
+      .first();
+    await expect(sourceConditionInSource).toBeVisible();
+    const sourceConditionCheckbox = await page.getByLabel(
+      sourceProgram.conditionName,
+      { exact: true },
+    );
+    await sourceConditionCheckbox.scrollIntoViewIfNeeded();
+    await sourceConditionCheckbox.dispatchEvent("click");
+
+    await expect(page.getByText(/Are you sure you want to add/)).toBeVisible();
+    await page.getByRole("button", { name: "Yes, add condition" }).click();
+    await page
+      .getByRole("button", { name: "Save program area" })
+      .first()
+      .click();
+    await page.waitForURL("/ecr-viewer/admin/program");
+
+    // The reassigned condition is in target
+    const sourceProgramRow = page.getByRole("row").filter({
+      has: page.getByRole("button", { name: sourceProgram.name }),
+    });
+    await expect(
+      sourceProgramRow.getByRole("cell", { name: "0 conditions", exact: true }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: targetProgram.name }).click();
+    await expect(
+      page.getByText(sourceProgram.conditionName).first(),
+    ).toBeVisible();
+  });
 });
+
+const createRandomProgramArea = async (
+  page: Page,
+  browserName: string,
+  conditionNamesToAvoid: string[] = [],
+) => {
+  const random = Math.floor(Math.random() * 10000);
+  const name = `Prog admin-program-${browserName}-${random}`;
+
+  await page.goto("/ecr-viewer/admin/program/create");
+  await page.getByLabel("Program area name").fill(name);
+
+  const triedConditionNames = new Set(conditionNamesToAvoid);
+  let conditionName: string | undefined;
+
+  while (!conditionName) {
+    const checkboxes = await page.getByRole("checkbox").all();
+    if (triedConditionNames.size >= checkboxes.length) {
+      throw new Error("Could not find an unassigned condition");
+    }
+
+    const checkbox = checkboxes[Math.floor(Math.random() * checkboxes.length)];
+    const selectedConditionName = await checkbox
+      .locator("..")
+      .locator("p")
+      .first()
+      .innerText();
+    if (triedConditionNames.has(selectedConditionName)) continue;
+
+    triedConditionNames.add(selectedConditionName);
+    const conditionIsAssigned =
+      (await checkbox
+        .locator("..")
+        .getByText(/Condition in /)
+        .count()) > 0;
+    if (conditionIsAssigned) continue;
+
+    await checkbox.scrollIntoViewIfNeeded();
+    await checkbox.evaluate((element) => (element as HTMLInputElement).click());
+
+    const reassignmentModal = page
+      .getByRole("dialog")
+      .filter({ hasText: "Are you sure you want to add" });
+    if (await reassignmentModal.isVisible()) {
+      await reassignmentModal
+        .getByRole("button", { name: "Close this window" })
+        .click();
+    } else {
+      conditionName = selectedConditionName;
+    }
+  }
+
+  await page.getByRole("button", { name: "Save program area" }).first().click();
+  await page.waitForURL("/ecr-viewer/admin/program");
+
+  return { name, conditionName };
+};

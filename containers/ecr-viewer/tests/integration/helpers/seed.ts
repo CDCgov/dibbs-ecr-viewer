@@ -1,5 +1,5 @@
 import { getDb } from "@/app/data/metadataDb/database";
-import { Core } from "@/app/data/metadataDb/types/core";
+import { Core, User } from "@/app/data/metadataDb/types/core";
 import { createProgramArea } from "@/app/services/programAreaService";
 import { createInitialAdminUser, createUser } from "@/app/services/userService";
 
@@ -43,4 +43,22 @@ export const seedUserProgramData = async () => {
     userType: "prog_admin",
     programs: [progId],
   });
+};
+
+/**
+ * Retrieve a seeded user by email address.
+ *
+ * @param email - The email address of the seeded user.
+ * @returns The matching seeded user.
+ * @throws {Error} If no seeded user matches the email address.
+ */
+export const getSeededUser = async (email: string): Promise<User> => {
+  const user = await getDb<Core>()
+    .selectFrom("user")
+    .selectAll()
+    .where("email", "=", email)
+    .executeTakeFirst();
+
+  if (!user) throw new Error(`Could not find seeded user ${email}`);
+  return user;
 };
