@@ -320,6 +320,55 @@ describe("listEcrData - core", () => {
     });
   });
 
+  it("should return populated data when version number is missing", async () => {
+    const missingVersionEcr = {
+      ...coreTemplate,
+      eicr_id: "missing-version-eicr-id",
+      set_id: "missing-version-set-id",
+      eicr_version_number: undefined,
+    };
+
+    await createCoreEcr(missingVersionEcr);
+    await createEcrCondition({
+      uuid: "missing-version-condition",
+      eicr_id: "missing-version-eicr-id",
+      condition: "Condition1",
+    });
+    await createEcrRule({
+      uuid: "missing-version-rule",
+      ecr_rr_conditions_id: "missing-version-condition",
+      rule_summary: "Rule1",
+    });
+
+    const actual: EcrDisplay[] = await listEcrData({
+      startIndex: 0,
+      itemsPerPage: 25,
+      sortColumn: "date_created",
+      sortDirection: "DESC",
+      filterDates,
+    });
+
+    expect(actual).toHaveLength(1);
+    expect(actual[0].ecrId).toEqual("missing-version-eicr-id");
+    expect(actual[0].eicr_set_id).toEqual("missing-version-set-id");
+    expect(actual[0].eicr_version_number).toBeFalsy();
+    expect(actual[0].patient_first_name).toEqual("Billy");
+    expect(actual[0].patient_last_name).toEqual("Bob");
+    expect(actual[0].patient_date_of_birth).toEqual("12/01/2024");
+    expect(actual[0].date_created).toEqual("12/02/2024 7:00\u00A0AM\u00A0EST");
+    expect(actual[0].patient_report_date).toEqual(
+      "12/02/2024 7:00\u00A0AM\u00A0EST"
+    );
+    expect(actual[0].facility_name).toEqual("Hospital A");
+    expect(actual[0].reportable_conditions).toEqual(["Condition1"]);
+    expect(actual[0].rule_summaries).toEqual([
+      { condition: "Condition1", rule_summaries: ["Rule1"] },
+    ]);
+    expect(actual[0].related_ecrs).toEqual([]);
+
+    await clearEcrCore();
+  });
+
   it("should return no data when no user", async () => {
     (getLoggedInUserSession as jest.Mock).mockResolvedValue(undefined);
     await createListEcrFixture({ conditionCode: "123" });

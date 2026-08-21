@@ -87,6 +87,10 @@ export const listEcrData = audit(
   },
 );
 
+// Used to treat missing version_number values as 1 for comparison logic without changing the stored/displayed metadata.
+const versionForComparison = (ref: string) =>
+  sql<number>`COALESCE(CAST(NULLIF(${sql.ref(ref)}, '') AS integer), 1)`;
+
 const executeSearchQuery = async (
   db: Transaction<Core>,
   startIndex: number,
@@ -102,11 +106,11 @@ const executeSearchQuery = async (
     db
       .selectFrom("ecr_data")
       .$call((qb) => limitEcrDataToUser(user, qb))
-      .select(({ eb }) => [
+      .select([
         "ecr_data.set_id",
-        eb.fn
-          .max(eb.cast<number>("ecr_data.eicr_version_number", "integer"))
-          .as("max_version_number"),
+        sql<number>`MAX(${versionForComparison("ecr_data.eicr_version_number")})`.as(
+          "max_version_number",
+        ),
       ])
       .groupBy(["ecr_data.set_id"])
       .where((eb) =>
@@ -126,8 +130,8 @@ const executeSearchQuery = async (
       .leftJoin("ecr_data", (join) =>
         join
           .onRef("ecr_data.set_id", "=", "ecr_sets.set_id")
-          .on("ecr_sets.max_version_number", "=", (eb) =>
-            eb.cast<number>("ecr_data.eicr_version_number", "integer"),
+          .on("ecr_sets.max_version_number", "=", () =>
+            versionForComparison("ecr_data.eicr_version_number"),
           ),
       )
       .select([
@@ -208,7 +212,7 @@ const groupSummariesByCondition = (
     if (!condition) continue;
     if (!summaries.has(condition)) summaries.set(condition, new Set());
     if (rule_summary) summaries.get(condition)!.add(rule_summary);
-    const v = Number(eicr_version_number ?? 0);
+    const v = Number(eicr_version_number || 1);
     if (v > (maxVersion.get(condition) ?? 0)) maxVersion.set(condition, v);
   }
   // Sort descending by max version so the most recently added condition appears first
@@ -243,9 +247,9 @@ const getMetaModelData = async (
         .onRef("ecr_data.set_id", "=", "ecrs.set_id")
         .on((eb) =>
           eb(
-            eb.cast<number>("ecr_data.eicr_version_number", "integer"),
+            versionForComparison("ecr_data.eicr_version_number"),
             "<=",
-            eb.cast<number>("ecrs.eicr_version_number", "integer"),
+            versionForComparison("ecrs.eicr_version_number"),
           ),
         ),
     )
@@ -265,9 +269,9 @@ const getMetaModelData = async (
         .onRef("ecr_data.set_id", "=", "ecrs.set_id")
         .on((eb) =>
           eb(
-            eb.cast<number>("ecr_data.eicr_version_number", "integer"),
+            versionForComparison("ecr_data.eicr_version_number"),
             "<=",
-            eb.cast<number>("ecrs.eicr_version_number", "integer"),
+            versionForComparison("ecrs.eicr_version_number"),
           ),
         ),
     )
@@ -299,15 +303,12 @@ const getMetaModelData = async (
       "ecr_data.eicr_version_number",
       "ecr_data.date_created",
     ])
-    .orderBy(
-      (eb) => eb.cast<number>("ecr_data.eicr_version_number", "integer"),
-      "desc",
-    )
+    .orderBy(() => versionForComparison("ecr_data.eicr_version_number"), "desc")
     .where((eb) =>
       eb(
         "ecr_sets.max_version_number",
         "!=",
-        eb.cast<number>("ecr_data.eicr_version_number", "integer"),
+        versionForComparison("ecr_data.eicr_version_number"),
       ),
     )
     .execute();
