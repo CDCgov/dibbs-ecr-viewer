@@ -17,17 +17,6 @@ describe("UserMenu component", () => {
     date_created: new Date(),
     author_uuid: "",
   };
-  const mockProgramAdminUser: User = {
-    status: "",
-    uuid: "",
-    email: "phillip.phillip@fakestarwarsemail.bananas.com",
-    date_of_last_login: new Date(),
-    name: "Phillip Phillip",
-    user_type: "prog_admin",
-    date_created: new Date(),
-    author_uuid: "",
-  };
-
   function renderWithSession(ui: React.ReactNode) {
     return render(<SessionProvider session={null}>{ui}</SessionProvider>);
   }
@@ -50,14 +39,19 @@ describe("UserMenu component", () => {
     expect(screen.getByText(/vTest/i)).toBeInTheDocument();
   });
 
-  it("shows Program admin in the user menu when the current user is a program admin", () => {
-    renderWithSession(<UserMenu user={mockProgramAdminUser} version="vTest" />);
-    const button = screen.getByRole("button");
-    fireEvent.click(button);
+  it.each([
+    ["admin", "Admin"],
+    ["prog_admin", "Program admin"],
+    ["standard", "Standard user"],
+  ] as const)("shows the correct title for a %s user", (userType, title) => {
+    renderWithSession(
+      <UserMenu
+        user={{ ...mockAdminUser, user_type: userType }}
+        version="vTest"
+      />,
+    );
+    fireEvent.click(screen.getByRole("button"));
 
-    expect(
-      screen.getByText("phillip.phillip@fakestarwarsemail.bananas.com"),
-    ).toBeInTheDocument();
-    expect(screen.getByText("Program admin")).toBeInTheDocument();
+    expect(screen.getByText(title)).toBeInTheDocument();
   });
 });

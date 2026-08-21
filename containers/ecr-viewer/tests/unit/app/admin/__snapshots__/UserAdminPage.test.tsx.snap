@@ -156,7 +156,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
               class="usa-radio__label"
               for="userType-prog_admin"
             >
-              Program Admin
+              Program admin
               <span
                 class="usa-checkbox__label-description"
               >
@@ -181,7 +181,7 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
               class="usa-radio__label"
               for="userType-standard"
             >
-              Standard
+              Standard user
               <span
                 class="usa-checkbox__label-description"
               >
@@ -578,7 +578,7 @@ exports[`User Admin Page Creating users should render a create user page with no
               class="usa-radio__label"
               for="userType-prog_admin"
             >
-              Program Admin
+              Program admin
               <span
                 class="usa-checkbox__label-description"
               >
@@ -603,7 +603,7 @@ exports[`User Admin Page Creating users should render a create user page with no
               class="usa-radio__label"
               for="userType-standard"
             >
-              Standard
+              Standard user
               <span
                 class="usa-checkbox__label-description"
               >
@@ -705,7 +705,7 @@ exports[`User Admin Page Creating users should render a create user page with no
 </div>
 `;
 
-exports[`User Admin Page should list users when available 1`] = `
+exports[`User Admin Page for an admin, should list all users and program areas 1`] = `
 <div>
   <main
     class="main-container"
@@ -990,7 +990,7 @@ exports[`User Admin Page should list users when available 1`] = `
                   </button>
                 </td>
                 <td>
-                  Prog_admin
+                  Program admin
                 </td>
                 <td>
                   Program Area Two
@@ -1012,7 +1012,7 @@ exports[`User Admin Page should list users when available 1`] = `
                   </button>
                 </td>
                 <td>
-                  Standard
+                  Standard user
                 </td>
                 <td>
                   Program Area Three, Program Area Two
@@ -1034,7 +1034,7 @@ exports[`User Admin Page should list users when available 1`] = `
                   </button>
                 </td>
                 <td>
-                  Standard
+                  Standard user
                 </td>
                 <td>
                   Program Area Three

@@ -1,4 +1,4 @@
-import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
+import { NO_CONDITIONS_REPORTED_OPTION, USER_TYPE } from "@/app/constants";
 import { getDb } from "@/app/data/metadataDb/database";
 import { ConditionReference, Core } from "@/app/data/metadataDb/types/core";
 
@@ -20,7 +20,7 @@ export const getAllConditions = async (): Promise<string[]> => {
         .select("condition")
         .distinct()
         .orderBy("condition")
-        .$if(user.user_type !== "admin", (qb) =>
+        .$if(user.user_type !== USER_TYPE.ADMIN, (qb) =>
           qb
             .innerJoin(
               "condition_reference",
@@ -43,7 +43,7 @@ export const getAllConditions = async (): Promise<string[]> => {
 
       const actualConditions = conditionsResult.map((row) => row.condition);
 
-      if (user.user_type === "admin") {
+      if (user.user_type === USER_TYPE.ADMIN) {
         const hasNoConditionsResult = await transaction
           .selectFrom("ecr_data")
           .leftJoin(

@@ -10,6 +10,7 @@ import {
 } from "@trussworks/react-uswds";
 
 import { ExpandCollapseAccordionControlled } from "@/app/components/ExpandCollapseAccordion";
+import { USER_TYPE, USER_TYPE_DISPLAY } from "@/app/constants";
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
 import { ToastContext } from "@/app/components/toast/ToastProvider";
@@ -69,7 +70,7 @@ export const UserForm = ({
 }) => {
   const [email, setEmail] = useState(initValues.email || "");
   const [userType, setUserType] = useState<UserType>(
-    initValues.userType || "standard",
+    initValues.userType || USER_TYPE.STANDARD,
   );
   const [programs, setPrograms] = useState(
     [...initValues.programs].sort((a, b) => stringSort(a.name, b.name)),
@@ -88,14 +89,15 @@ export const UserForm = ({
     .filter((e) => e !== initValues.email?.toLowerCase())
     .includes(email.toLowerCase());
 
-  const isValidUserType = isLoggedInUserAdmin
-    ? ["admin", "prog_admin", "standard"].includes(userType)
-    : ["prog_admin", "standard"].includes(userType);
+  const allowedUserTypes: UserType[] = isLoggedInUserAdmin
+    ? Object.values(USER_TYPE)
+    : [USER_TYPE.PROG_ADMIN, USER_TYPE.STANDARD];
+  const isValidUserType = allowedUserTypes.includes(userType);
   const valid = !!email && isValidUserType && !emailIsDupe;
 
   const touched =
     (email && email !== initValues.email) ||
-    userType !== (initValues.userType || "standard") ||
+    userType !== (initValues.userType || USER_TYPE.STANDARD) ||
     numProgramsSelected !== initSelectedPrograms.length ||
     selectedPrograms.some((uuid, i) => uuid !== initSelectedPrograms[i]);
 
@@ -112,7 +114,7 @@ export const UserForm = ({
         const res = await submitAction(
           email.trim(),
           userType,
-          userType === "admin" ? [] : selectedPrograms, // admins should not be saved with assigned programs
+          userType === USER_TYPE.ADMIN ? [] : selectedPrograms, // admins should not be saved with assigned programs
         );
         if (!res.error)
           createToast(`${email.trim()} successfully saved`, "success");
@@ -193,22 +195,22 @@ const UserTypeFieldSet = ({
         ...(isLoggedInUserAdmin
           ? [
               {
-                label: "Admin",
-                value: "admin",
+                label: USER_TYPE_DISPLAY[USER_TYPE.ADMIN],
+                value: USER_TYPE.ADMIN,
                 description:
                   "Admins have full access to user management, program management, and the eCR Library",
               },
             ]
           : []),
         {
-          label: "Program Admin",
-          value: "prog_admin",
+          label: USER_TYPE_DISPLAY[USER_TYPE.PROG_ADMIN],
+          value: USER_TYPE.PROG_ADMIN,
           description:
             "Program Admins have limited access to user management, program management, and the eCR Library",
         },
         {
-          label: "Standard",
-          value: "standard",
+          label: USER_TYPE_DISPLAY[USER_TYPE.STANDARD],
+          value: USER_TYPE.STANDARD,
           description:
             "Standard users can only use the eCR Library with limited access to program area(s)",
         },
@@ -246,7 +248,7 @@ export const ProgramFieldSet = ({
     Record<string, boolean>
   >(valsToBoolean(programs, false));
   const isProgramLevelUser =
-    userType === "prog_admin" || userType === "standard";
+    userType === USER_TYPE.PROG_ADMIN || userType === USER_TYPE.STANDARD;
 
   const accordionItems: AccordionItem[] = programs.map((program) => {
     const { name, conditions } = program;

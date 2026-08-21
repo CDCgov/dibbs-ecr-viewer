@@ -326,6 +326,64 @@ test.describe("user management page", () => {
     await expect(standardRow.getByText("COVID")).toBeVisible();
   });
 
+  test("program admin: sees permitted users, restricted filters, and complete user details", async ({
+    page,
+    browserName,
+  }) => {
+    await logIn(page);
+    const otherProgram = await getRandomProgramArea(page, ["COVID"]);
+    const sharedUser = await createRandomUser(browserName, page, "standard", [
+      "COVID",
+      otherProgram,
+    ]);
+    const restrictedUser = await createRandomUser(
+      browserName,
+      page,
+      "standard",
+      [otherProgram],
+    );
+    const unassignedUser = await createRandomUser(
+      browserName,
+      page,
+      "standard",
+      [],
+    );
+
+    await page.context().clearCookies();
+    await logIn(page, { userType: "PROGRAM_ADMIN", useCookies: false });
+    await page.goto("/ecr-viewer/admin/user");
+    await page
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("100");
+
+    await expect(page.getByText(sharedUser)).toBeVisible();
+    await expect(page.getByText(restrictedUser)).not.toBeVisible();
+    await expect(page.getByText(unassignedUser)).not.toBeVisible(); // TODO ANGELA: Left off here
+
+    // Should not see Filter by Admin user type
+    await page.getByLabel("Filter by user type").click();
+    await expect(page.getByLabel(/^Admin\b/)).not.toBeVisible();
+    await page.keyboard.press("Escape");
+
+    // Should only be able to filter by accessible program areas
+    await page.getByLabel("Filter by program area").click();
+    await expect(page.getByText("All program areas (Admin)")).not.toBeVisible();
+    await expect(
+      page.getByText("No program areas (Standard)"),
+    ).not.toBeVisible();
+    const covidFilter = page.getByLabel("COVID", { exact: true });
+    await covidFilter.dispatchEvent("click");
+    await expect(page.getByText(sharedUser)).not.toBeVisible();
+    await covidFilter.dispatchEvent("click");
+    await page.keyboard.press("Escape");
+
+    // Should see all program areas (& conditions) of user in their program area
+    await page.getByRole("button", { name: sharedUser }).click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog.getByText("COVID", { exact: true })).toBeVisible();
+    await expect(dialog.getByText(otherProgram, { exact: true })).toBeVisible();
+  });
+
   test("should not show to standard user", async ({ page }) => {
     await logIn(page, { userType: "STANDARD" });
     await page.goto("/ecr-viewer/admin/user");

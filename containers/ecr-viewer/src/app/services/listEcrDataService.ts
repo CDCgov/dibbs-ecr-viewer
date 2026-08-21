@@ -7,7 +7,7 @@ import {
   sql,
 } from "kysely";
 
-import { NO_CONDITIONS_REPORTED_OPTION } from "@/app/constants";
+import { NO_CONDITIONS_REPORTED_OPTION, USER_TYPE } from "@/app/constants";
 import { getDb } from "@/app/data/metadataDb/database";
 import { getSql } from "@/app/data/metadataDb/dialects/common";
 import { ecr_data, Core, User } from "@/app/data/metadataDb/types/core";
@@ -115,7 +115,7 @@ const executeSearchQuery = async (
           filterDates,
           searchTerm,
           filterConditions,
-          user?.user_type === "admin",
+          user?.user_type === USER_TYPE.ADMIN,
         ),
       ),
   );
@@ -159,7 +159,7 @@ const limitEcrDataToUser = (
   qb: SelectQueryBuilder<Core, "ecr_data", {}>,
 ) => {
   if (!user) return qb.where((eb) => falseStmt(eb));
-  if (user.user_type === "admin") return qb;
+  if (user.user_type === USER_TYPE.ADMIN) return qb;
 
   return qb
     .innerJoin(
@@ -381,7 +381,7 @@ export const getTotalEcrCount = async (
         filterDates,
         searchTerm,
         filterConditions,
-        user?.user_type === "admin",
+        user?.user_type === USER_TYPE.ADMIN,
       ),
     )
     .executeTakeFirst();

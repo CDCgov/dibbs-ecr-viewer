@@ -3,17 +3,25 @@ import { randomUUID } from "node:crypto";
 
 import { Transaction } from "kysely";
 
+import { USER_TYPE } from "@/app/constants";
 import { getDb } from "@/app/data/metadataDb/database";
 import {
   ConditionReference,
   Core,
   ProgramArea,
+  User,
 } from "@/app/data/metadataDb/types/core";
 import { stringSort } from "@/app/utils/format-utils";
 
 import { audit } from "./auditLogService";
 import { UserFacingError } from "./errorService";
-import { getCheckAdmin, getCheckAnyAdmin, isProgramAdmin } from "./userService";
+import {
+  getCheckAdmin,
+  getCheckAnyAdmin,
+  isAdmin,
+  isProgramAdmin,
+  listUserProgramAreasQuery,
+} from "./userService";
 
 /**
  * Create a program area with the given name. The currently logged in user
@@ -209,55 +217,78 @@ export type ListedProgramArea = ProgramArea & {
 
 /**
  * List program areas. The logged in user must be an admin or a program admin.
- * If program admin, will only list program areas they have access to.
+ * @param options Function options
+ * @param options.userUuids If provided, list program areas for these visible users
  * @returns list of all program areas
  */
-export const listProgramAreas = async (): Promise<ListedProgramArea[]> => {
+export const listProgramAreas = async (
+  options: { userUuids?: string[] } = {},
+): Promise<ListedProgramArea[]> => {
   const user = await getCheckAnyAdmin("list program areas");
 
   try {
     return await getDb<Core>()
       .transaction()
       .execute(async (db) => {
-        const programAreas = isProgramAdmin(user)
-          ? await db
-              .selectFrom("program_area")
-              .innerJoin(
-                "user_program_area",
-                "program_area.uuid",
-                "user_program_area.program_area_uuid",
-              )
-              .selectAll("program_area")
-              .where("user_program_area.user_uuid", "=", user.uuid)
-              .execute()
-          : await db.selectFrom("program_area").selectAll().execute();
-        const conditionRefs = await db
-          .selectFrom("condition_reference")
-          .selectAll()
-          .execute();
-
-        const conditions = conditionRefs
-          .map((c) => ({
-            ...c,
-            is_duplicate: conditionRefs.some(
-              ({ condition_name, code }) =>
-                c.condition_name === condition_name && c.code !== code,
-            ),
-          }))
-          .sort((a, b) => stringSort(a.condition_name, b.condition_name));
-
-        return programAreas
-          .map((pa) => ({
-            ...pa,
-            conditions: conditions.filter(
-              ({ program_area_uuid }) => program_area_uuid === pa.uuid,
-            ),
-          }))
-          .sort((a, b) => stringSort(a.name, b.name));
+        const programAreas =
+          options.userUuids !== undefined
+            ? await getProgramAreasForUserDetails(db, options.userUuids)
+            : user.user_type === USER_TYPE.ADMIN
+              ? await db.selectFrom("program_area").selectAll().execute()
+              : await listUserProgramAreasQuery(db, user.uuid);
+        return addConditionsToProgramAreas(db, programAreas);
       });
   } catch (error: unknown) {
     const message = "Failed to list program areas";
     console.error({ message, error });
     throw new UserFacingError(message);
   }
+};
+
+const getProgramAreasForUserDetails = async (
+  db: Transaction<Core>,
+  userUuids: string[],
+): Promise<ProgramArea[]> => {
+  if (userUuids.length === 0) return [];
+
+  return db
+    .selectFrom("program_area")
+    .innerJoin(
+      "user_program_area",
+      "program_area.uuid",
+      "user_program_area.program_area_uuid",
+    )
+    .selectAll("program_area")
+    .where("user_program_area.user_uuid", "in", userUuids)
+    .distinct()
+    .execute();
+};
+
+const addConditionsToProgramAreas = async (
+  db: Transaction<Core>,
+  programAreas: ProgramArea[],
+): Promise<ListedProgramArea[]> => {
+  const conditionRefs = await db
+    .selectFrom("condition_reference")
+    .selectAll()
+    .execute();
+
+  const conditions = conditionRefs
+    .map((c) => ({
+      ...c,
+      is_duplicate: conditionRefs.some(
+        ({ condition_name, code }) =>
+          c.condition_name === condition_name && c.code !== code,
+      ),
+    }))
+    .sort((a, b) => stringSort(a.condition_name, b.condition_name));
+
+  return programAreas
+    .map((pa) => ({
+      ...pa,
+      conditions: conditions.filter(
+        ({ program_area_uuid }) => program_area_uuid === pa.uuid,
+      ),
+    }))
+    .sort((a, b) => stringSort(a.name, b.name));
 };

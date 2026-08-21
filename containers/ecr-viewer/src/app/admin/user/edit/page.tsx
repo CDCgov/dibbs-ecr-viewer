@@ -2,6 +2,7 @@ import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 
 import { UserForm } from "@/app/admin/user/UserForm";
+import { USER_TYPE } from "@/app/constants";
 import { isAdmin, UserType } from "@/app/services/userService";
 import { listProgramAreas } from "@/app/services/programAreaService";
 import { updateUserAction } from "@/app/services/serverActionService";
@@ -47,7 +48,7 @@ const EditUserPage = async ({
   );
 
   const isValidUserType = (value: string): value is UserType => {
-    return value === "admin" || value === "standard";
+    return value === USER_TYPE.ADMIN || value === USER_TYPE.STANDARD;
   };
 
   const users = await listUsers();

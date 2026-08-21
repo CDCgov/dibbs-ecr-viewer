@@ -513,6 +513,39 @@ describe("User Service", () => {
     });
   });
 
+  it("listUsers only returns users who share a program area with a program admin", async () => {
+    programAreaUnauthorizedId = await createProgramArea(
+      programAreaUnauthorized,
+    );
+    const unauthorizedUserEmail = "unauthorized@standard.com";
+    const unauthorizedUserId = await createUser({
+      email: unauthorizedUserEmail,
+      userType: "standard",
+      programs: [programAreaUnauthorizedId],
+    });
+
+    try {
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        name: "Program Admin",
+        email: programAdminEmail,
+      });
+
+      const users = await listUsers();
+
+      // Should not return admin or unauthorized users
+      expect(users.map(({ email }) => email)).toStrictEqual([
+        programAdminEmail,
+        standardUserEmail,
+      ]);
+    } finally {
+      (getLoggedInUserSession as jest.Mock).mockResolvedValue({
+        name: "Adam Admin",
+        email: adminUserEmail,
+      });
+      await deleteUser({ uuid: unauthorizedUserId });
+    }
+  });
+
   describe("deleteUser", () => {
     it("as an admin, should delete a user", async () => {
       const beforeUsers = await listUsers();
@@ -663,10 +696,6 @@ describe("User Service", () => {
       ).rejects.toThrow(UserFacingError);
     });
     it("should prevent program admins from managing users outside of their accessible program areas", async () => {
-      // Create unauthorized program area
-      programAreaUnauthorizedId = await createProgramArea(
-        programAreaUnauthorized,
-      );
       expect(programAreaUnauthorizedId).toMatch(UUID_REGEX);
 
       await expect(

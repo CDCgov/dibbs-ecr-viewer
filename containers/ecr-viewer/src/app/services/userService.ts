@@ -13,26 +13,28 @@ import {
   UserUpdate,
   UserProgramArea,
 } from "@/app/data/metadataDb/types/core";
+import { USER_TYPE } from "@/app/constants";
+import type { UserType } from "@/app/constants";
 
 import { audit } from "./auditLogService";
 import { UserFacingError } from "./errorService";
 import { getLoggedInUser, getUserByEmail } from "./loggedInUserService";
 
-export type UserType = "admin" | "prog_admin" | "standard";
+export type { UserType } from "@/app/constants";
 
 /**
  * @param user User to check is an admin
  * @returns true is the user both exists and is an admin, false otherwise
  */
 export const isAdmin = (user: User | undefined): user is User =>
-  !!user && user.user_type === "admin" && user.status === "active";
+  !!user && user.user_type === USER_TYPE.ADMIN && user.status === "active";
 
 /**
  * @param user User to check is a program admin
  * @returns true if the user both exists and is a program admin, false otherwise
  */
 export const isProgramAdmin = (user: User | undefined): user is User =>
-  !!user && user.user_type === "prog_admin" && user.status === "active";
+  !!user && user.user_type === USER_TYPE.PROG_ADMIN && user.status === "active";
 
 /**
  * @param user User to check is any admin (admin or prog_admin)
@@ -113,13 +115,13 @@ export const hasRelevantProgramAreaAccess = async (
     return true;
   }
 
-  if (targetUser.user_type === "admin") {
+  if (targetUser.user_type === USER_TYPE.ADMIN) {
     return true;
   }
 
   if (
-    targetUser.user_type === "prog_admin" ||
-    targetUser.user_type === "standard"
+    targetUser.user_type === USER_TYPE.PROG_ADMIN ||
+    targetUser.user_type === USER_TYPE.STANDARD
   ) {
     const res = await getDb<Core>()
       .selectFrom("user_program_area")
@@ -159,7 +161,7 @@ export async function validateAdminUserPermissions(
 ) {
   if (isAdmin(loggedInUser)) return;
 
-  if (userType === "admin") {
+  if (userType === USER_TYPE.ADMIN) {
     throw new UserFacingError("Program admins cannot create new admins.");
   }
 
@@ -181,7 +183,7 @@ export const isLoggedInUserEcrAuthed = async (
 ): Promise<boolean> => {
   const user = await getLoggedInUser();
   if (!user) return false;
-  if (user.user_type === "admin") return true;
+  if (user.user_type === USER_TYPE.ADMIN) return true;
 
   // check standard users permissions
   return await isUserEcrAuthed(user.uuid, ecrId);
@@ -282,14 +284,14 @@ export const createInitialAdminUser = audit(
     trx: Transaction<Core>,
   ): Promise<string | undefined> => {
     const users = await listActiveUsersQuery(getDb<Core>());
-    if (users.some(({ user_type }) => user_type === "admin")) {
+    if (users.some(({ user_type }) => user_type === USER_TYPE.ADMIN)) {
       console.warn("Active admin user already exists. Skipping user creation.");
       return;
     }
 
     try {
       const uuid = randomUUID();
-      return await createUserQuery(trx, email, "admin", uuid, uuid);
+      return await createUserQuery(trx, email, USER_TYPE.ADMIN, uuid, uuid);
     } catch (error: unknown) {
       const message = "Failed to create initial admin user";
       console.error({ message, error });
@@ -427,7 +429,7 @@ export const listUserProgramAreas = async (
   uuid: string,
 ): Promise<ProgramArea[]> => {
   await getCheckAdmin("list user program areas");
-  return listUserProgramAreasQuery(uuid);
+  return listUserProgramAreasQuery(getDb<Core>(), uuid);
 };
 
 /**
@@ -438,14 +440,15 @@ export const listLoggedInUserProgramAreas = async (): Promise<
   ProgramArea[]
 > => {
   const user = await getLoggedInUser();
-  return user ? await listUserProgramAreasQuery(user.uuid) : [];
+  return user ? await listUserProgramAreasQuery(getDb<Core>(), user.uuid) : [];
 };
 
-const listUserProgramAreasQuery = async (
+export const listUserProgramAreasQuery = async (
+  db: Kysely<Core>,
   uuid: string,
 ): Promise<ProgramArea[]> => {
   try {
-    return await getDb<Core>()
+    return await db
       .selectFrom(["user_program_area", "program_area"])
       .selectAll(["program_area"])
       .where("user_uuid", "=", uuid)
@@ -513,11 +516,11 @@ export type NamedUserProgramArea = UserProgramArea & { name: string };
 export type ListedUser = User & { program_areas: NamedUserProgramArea[] };
 
 /**
- * List all active users. The logged in user must be an admin.
- * @returns list of all active users
+ * List active users visible to the logged in admin.
+ * @returns list of visible active users
  */
 export const listUsers = async (): Promise<ListedUser[]> => {
-  await getCheckAnyAdmin("list users");
+  const loggedInUser = await getCheckAnyAdmin("list users");
 
   try {
     return await getDb<Core>()
@@ -538,12 +541,32 @@ export const listUsers = async (): Promise<ListedUser[]> => {
           ])
           .execute();
 
-        return users.map((user) => ({
+        const listedUsers = users.map((user) => ({
           ...user,
           program_areas: userProgramAreas.filter(
             ({ user_uuid }) => user_uuid === user.uuid,
           ),
         }));
+
+        const loggedInUserUuid = loggedInUser.uuid;
+
+        // Admins will see all users
+        if (isAdmin(loggedInUser)) return listedUsers;
+
+        // Program admins can only see non-admin users who share at least one
+        // of their program areas.
+        const accessibleProgramAreaUuids = new Set(
+          userProgramAreas
+            .filter(({ user_uuid }) => user_uuid === loggedInUserUuid)
+            .map(({ program_area_uuid }) => program_area_uuid),
+        );
+        return listedUsers.filter(
+          ({ user_type, program_areas }) =>
+            user_type !== USER_TYPE.ADMIN &&
+            program_areas.some(({ program_area_uuid }) =>
+              accessibleProgramAreaUuids.has(program_area_uuid),
+            ),
+        );
       });
   } catch (error: unknown) {
     const message = "Failed to list users";
