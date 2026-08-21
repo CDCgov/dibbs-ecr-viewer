@@ -6,6 +6,7 @@ import _BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
 import _BundleLabInvalidResultsDiv from "../../../../../../../test-data/fhir/BundleLabInvalidResultsDiv.json";
 import _BundleLabNoLabIds from "../../../../../../../test-data/fhir/BundleLabNoLabIds.json";
 import { AccordionItem } from "@/app/types";
+import { HtmlTableJson } from "@/app/services/htmlTableService";
 import { noData } from "@/app/utils/data-utils";
 import { evaluateAllAndCheck, evaluateOneAndCheck } from "@/app/utils/evaluate";
 import {
@@ -24,6 +25,7 @@ import {
   getJsonLab,
   getAllLabJsonObjects,
   getObservations,
+  matchesResultId,
   LabInterpretationTag,
 } from "@/app/view-data/services/labsService";
 import {
@@ -185,6 +187,7 @@ const jsonLabs = getAllLabJsonObjects(fhirIndexBundleLab);
 const labReportAbnormalJsonObject = getJsonLab(
   jsonLabs,
   getObservations(labReportAbnormal!, fhirIndexBundleLab),
+  labReportAbnormal!,
 );
 
 const pathLabOrganismsTableAndNarr =
@@ -249,9 +252,41 @@ describe("LabsService tests", () => {
         const result = getJsonLab(
           jsonLabs,
           getObservations(labReportNormal!, fhirIndexBundleLab),
+          labReportNormal!,
         );
 
         expect(result).toEqual(expectedResult);
+      });
+
+      it("falls back to a report's second identifier when the first doesn't match the narrative item", () => {
+        const jsonLabs: HtmlTableJson[] = [
+          {
+            resultId: "Result.1.2.840.114350.2.478.2.798268.2.612310420.1",
+            resultName: "X-ray report",
+            tables: [],
+          },
+        ];
+        const report: DiagnosticReport = {
+          resourceType: "DiagnosticReport",
+          code: {},
+          status: "final",
+          identifier: [
+            // Short local order number - not a suffix of the narrative ID above.
+            {
+              system: "urn:oid:1.2.840.114350.1.13.478.2.7.2.798268",
+              value: "612310420",
+            },
+            // Fuller value that does match the narrative ID's trailing segment.
+            {
+              system: "urn:oid:1.2.840.10008.6.1.535.110180",
+              value: "612310420.1",
+            },
+          ],
+        };
+
+        const result = getJsonLab(jsonLabs, [], report);
+
+        expect(result?.resultName).toBe("X-ray report");
       });
 
       it("returns undefined for table without data-id", () => {
@@ -265,6 +300,7 @@ describe("LabsService tests", () => {
         const result = getJsonLab(
           jsonLabs,
           getObservations(labReportWithoutIds!, fhirIndexBundleLabNoLabIds),
+          labReportWithoutIds!,
         );
 
         expect(result).toBeUndefined();
@@ -278,9 +314,75 @@ describe("LabsService tests", () => {
             labReportNormal!,
             fhirIndexBundleLabInvalidResultsDiv,
           ),
+          { resourceType: "DiagnosticReport", code: {}, status: "final" },
         );
 
         expect(result).toBeUndefined();
+      });
+
+      it("does not cross-match a different report whose ID merely contains the resultId as a substring", () => {
+        const jsonLabs: HtmlTableJson[] = [
+          // Unrelated report; its ID happens to contain "111.42" as a
+          // substring, but isn't actually delimited the same way.
+          {
+            resultId: "Result.9111.429",
+            resultName: "Wrong report",
+            tables: [],
+          },
+          {
+            resultId: "Result.111.42",
+            resultName: "Correct report",
+            tables: [],
+          },
+        ];
+        const observations: Observation[] = [
+          {
+            resourceType: "Observation",
+            status: "final",
+            code: {},
+            extension: [
+              {
+                url: "observation entry reference value",
+                valueString: "#Result.111.42Comp1",
+              },
+            ],
+          },
+        ];
+
+        const result = getJsonLab(jsonLabs, observations, {
+          resourceType: "DiagnosticReport",
+          code: {},
+          status: "final",
+        });
+
+        expect(result?.resultName).toBe("Correct report");
+      });
+    });
+
+    describe("matchesResultId", () => {
+      it("matches when resultId is the entire item ID", () => {
+        expect(matchesResultId("111.42", "111.42")).toBe(true);
+      });
+
+      it("matches when resultId is a dot-delimited segment within the item ID", () => {
+        expect(matchesResultId("Result.1.2.840.114350.111.42", "111.42")).toBe(
+          true,
+        );
+      });
+
+      it("does not match when resultId is only a bare substring, not a delimited segment", () => {
+        expect(matchesResultId("Result.9111.429", "111.42")).toBe(false);
+      });
+
+      it("matches any candidate in a comma-separated resultId list", () => {
+        expect(matchesResultId("Result.111.42", "999.99, 111.42")).toBe(true);
+      });
+
+      it("does not match a short resultId that only coincides with a middle segment of an unrelated item ID", () => {
+        // "22" is dot-delimited on both sides here, but it's the middle of an
+        // unrelated ID, not the item's actual trailing identifying number.
+        expect(matchesResultId("Result.99.22.5", "22")).toBe(false);
+        expect(matchesResultId("Result.22", "22")).toBe(true);
       });
     });
 
