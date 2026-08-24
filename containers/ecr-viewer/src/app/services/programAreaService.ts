@@ -147,18 +147,18 @@ export const validateAdminProgramAreaConditionAccess = async ({
 
   const accessibleProgramAreas = await listUserProgramAreas(userUuid);
   const currentProgramArea = accessibleProgramAreas.find(
-    ({ uuid }) => uuid === targetProgramAreaUuid
+    ({ uuid }) => uuid === targetProgramAreaUuid,
   );
 
   if (!currentProgramArea) {
     throw new UserFacingError(
-      "Program admins cannot manage program areas they are not assigned to."
+      "Program admins cannot manage program areas they are not assigned to.",
     );
   }
 
   if (!!targetName && currentProgramArea.name !== targetName) {
     throw new UserFacingError(
-      "Program admins cannot update program area names."
+      "Program admins cannot update program area names.",
     );
   }
 
@@ -169,7 +169,7 @@ export const validateAdminProgramAreaConditionAccess = async ({
   const accessibleCodes = new Set(accessibleConditions.map(({ code }) => code));
   if (targetConditions.some((code) => !accessibleCodes.has(code))) {
     throw new UserFacingError(
-      "Program admins cannot manage conditions outside of their program areas."
+      "Program admins cannot manage conditions outside of their program areas.",
     );
   }
 };

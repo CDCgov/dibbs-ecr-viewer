@@ -480,7 +480,7 @@ export const updateUser = audit(
         (await updateUserQuery(trx, uuid, updates));
 
       let programsToUpdate = programs;
-        
+
       // Preserve user's program areas that program admin doesn't have access to
       if (isProgramAdmin(updatingUser)) {
         const [targetUserPrograms, updatingUserPrograms] = await Promise.all([
