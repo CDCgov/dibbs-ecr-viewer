@@ -148,6 +148,9 @@
     "eslint-plugin-react": {
       "eslint": "$eslint"
     },
+    "eslint-plugin-jsx-a11y": {
+      "eslint": "$eslint"
+    },
     "fast-xml-parser": "5.3.6",
     "test-exclude": "7.0.1"
   },
@@ -155,7 +158,7 @@
     "allowScripts": {
       "@lavamoat/preinstall-always-fail#3.0.0": false,
       "@parcel/watcher#2.5.6": true,
-      "eslint-config-next>eslint-import-resolver-typescript>unrs-resolver#1.11.2": true,
+      "eslint-config-next>eslint-import-resolver-typescript>unrs-resolver#1.11.1": true,
       "fhirpath#5.1.1": false,
       "next>sharp#0.34.5": true,
       "sharp#0.34.5": true
