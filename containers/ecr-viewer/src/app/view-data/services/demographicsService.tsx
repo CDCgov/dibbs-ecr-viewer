@@ -1,11 +1,12 @@
 import "server-only"; // FHIR evaluation should be done server side
 
-import { Bundle, Encounter, Patient, RelatedPerson } from "fhir/r4";
+import { Bundle, Coding, Encounter, Patient, RelatedPerson } from "fhir/r4";
 import { DateTime } from "luxon";
 
 import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import {
   formatAddressList,
+  formatCoding,
   formatContactPoint,
   formatName,
   formatNameList,
@@ -256,19 +257,22 @@ export const evaluatePatientRace = (patient: Patient | undefined) => {
 /**
  * Evaluates the patients ethnicity from the FHIR bundle and formats for display.
  * @param fhirBundle - The FHIR bundle containing patient contact info.
- * @returns - The patient's ethnicity information, including additional ethnicity extension (if available).
+ * @returns - The patient's ethnicity information, including all ombCategory and detailed extensions (if available).
  */
 export const evaluatePatientEthnicity = (patient: Patient | undefined) => {
-  const ethnicity: string = evaluateValue(
+  const ethnicities = evaluateAll(
     patient,
     fhirPathMappings.patientEthnicity,
-  );
-  const ethnicityDetailed = evaluateValue(
+  ) as Coding[];
+  const ethnicitiesDetailed = evaluateAll(
     patient,
     fhirPathMappings.patientEthnicityDetailed,
-  );
+  ) as Coding[];
 
-  return [ethnicity, ethnicityDetailed].filter(Boolean).join("\n");
+  return [...ethnicities, ...ethnicitiesDetailed]
+    .map(formatCoding)
+    .filter(Boolean)
+    .join("\n");
 };
 
 /**
