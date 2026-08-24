@@ -428,6 +428,13 @@ describe("Evaluate Patient Info: Demographics", () => {
     expect(actual).toEqual("Hispanic or Latino\nWhite");
   });
 
+  it("should return all ethnicity categories and extensions when multiple are available", () => {
+    const actual = evaluatePatientEthnicity(patientMultiple);
+    expect(actual).toEqual(
+      "Hispanic or Latino\nNot Hispanic or Latino\nWhite\nOther Pacific Islander",
+    );
+  });
+
   it("should return Tribal Affiliation if available", () => {
     const actual = evaluateDemographicsData(
       BundleWithPatient,

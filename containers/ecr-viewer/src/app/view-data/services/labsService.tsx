@@ -102,7 +102,7 @@ export const evaluateLabInfoData = (
 
   for (const report of labReports) {
     const obs = getObservations(report, fhirIndex);
-    const labReportJson = getJsonLab(jsonLabs, obs);
+    const labReportJson = getJsonLab(jsonLabs, obs, report);
     ensureReportHasDateTime(report, obs);
     const content = getLabsContent(report, obs, fhirIndex, labReportJson);
     const organizationId = (report.performer?.[0].reference ?? "").replace(
@@ -209,7 +209,10 @@ const ensureReportHasDateTime = (
   }
 };
 
-const getReportResultId = (observations: Observation[]): string | undefined => {
+const getReportResultId = (
+  observations: Observation[],
+  report: DiagnosticReport,
+): string | undefined => {
   // Get reference value (result ID) from Observations
   const observationRefValsArray = observations.flatMap((observation) => {
     const refVal = evaluateAll(
@@ -218,24 +221,71 @@ const getReportResultId = (observations: Observation[]): string | undefined => {
     );
     return extractNumbersAndPeriods(refVal);
   });
-  return [...new Set(observationRefValsArray)].join(", "); // should only be 1
+  const resultId = [...new Set(observationRefValsArray)].join(", "); // should only be 1
+  if (resultId) return resultId;
+
+  // Some observations don't carry the "observation entry reference value"
+  // extension the lookup above relies
+  // on, so nothing gets matched and every HTML-string-sourced field for
+  // this report silently comes up empty. Fall back to the DiagnosticReport's
+  // own identifier(s), which share the same numeric value used in the
+  // narrative's <item ID="Result...">.
+  const identifierResultIds = evaluateAll(
+    report,
+    fhirPathMappings.diagnosticReportIdentifierValue,
+  ).filter(Boolean);
+  if (identifierResultIds.length === 0) return undefined;
+  return identifierResultIds.join(", ");
+};
+
+/**
+ * Checks whether `resultId` is the trailing identifying number of `itemId`,
+ * rather than a substring. A plain `itemId.includes(resultId)`
+ * can misattribute narrative data to the wrong report: e.g. a resultId of
+ * "111.42" is a substring of the unrelated ID "9111.429".
+ * @param itemId - The narrative `<item>` ID to search within.
+ * @param resultId - The candidate ID to look for, possibly a
+ *   comma-separated list of multiple candidate IDs.
+ * @returns Whether any candidate in `resultId` matches `itemId`.
+ */
+export const matchesResultId = (itemId: string, resultId: string): boolean => {
+  return resultId
+    .split(", ")
+    .filter(Boolean)
+    .some((candidate) => {
+      // Replace "." with "\." - otherwise "111.42" could wrongly match
+      // something like "111X42"
+      const escaped = candidate.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      // (^|\.) matches either the start of itemId or a literal dot, and the
+      // trailing $ requires the match to run all the way to the end of
+      // itemId. So this only matches candidate as the item's trailing
+      // identifying number, not a segment buried in the middle - e.g. with
+      // candidate "111.42", "Result.1.2.840.114350.111.42" matches, but
+      // "Result.9111.429" doesn't (it ends in "429", not "111.42").
+      return new RegExp(`(^|\\.)${escaped}$`).test(itemId);
+    });
 };
 
 /**
  * Retrieves the JSON representation of all lab reports from the labs HTML string.
  * @param jsonLabs - All json lab reports from the HTML
  * @param observations - The DiagnosticReport's observation resources.
+ * @param report - The DiagnosticReport itself, used as a fallback match key
+ *   when none of its observations carry the reference-value extension.
  * @returns The JSON representation of the lab reports.
  */
 export const getJsonLab = (
   jsonLabs: HtmlTableJson[],
   observations: Observation[],
+  report: DiagnosticReport,
 ): HtmlTableJson | undefined => {
-  const resultId = getReportResultId(observations);
+  const resultId = getReportResultId(observations, report);
   if (!resultId) return;
 
   // Get specified lab report (by reference value)
-  return jsonLabs.filter((obj) => obj.resultId?.includes(resultId))?.[0];
+  return jsonLabs.filter(
+    (obj) => obj.resultId && matchesResultId(obj.resultId, resultId),
+  )?.[0];
 };
 
 /**
@@ -765,6 +815,14 @@ const getLabsContent = (
     {
       title: "Analysis Time",
       value: returnAnalysisTime(labReportJson, "Analysis Time"),
+      className: "lab-text-content",
+    },
+    {
+      title: "Anatomical Region",
+      value: returnFieldValueFromLabHtmlString(
+        labReportJson,
+        "Anatomical Region",
+      ),
       className: "lab-text-content",
     },
     // With no specimen to attribute these fields to, fall back to showing

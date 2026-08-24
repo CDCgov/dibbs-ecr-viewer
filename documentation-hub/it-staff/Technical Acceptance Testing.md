@@ -127,7 +127,7 @@ You should receive the following response:
 
 If you are running the NBS-integrated version of the Viewer, you can skip this step.
 
-If you are running the viewer with a metadata database (standalone or dual boot), you will need to run database migrations upon the first install of the application or anytime there is an update to the database schema. If migrations need to be applied, you will see an error when trying to use the viewer.
+If you are running the viewer with a metadata database (standalone or dual boot), you will need to run database migrations upon the first install of the application or anytime there is an update to the database schema or Trigger Code Reference TES database. If migrations need to be applied, you will see an error when trying to use the viewer.
 
 ![Screenshot of the DIBBs eCR Viewer with an error message "eCR Viewer setup is incomplete"](./assets/setup-incomplete.png)
 

@@ -46,7 +46,7 @@
     "@trussworks/react-uswds": "^10.0.2",
     "@uswds/uswds": "^3.13.0",
     "classnames": "^2.5.1",
-    "fhirpath": "^4.6.0",
+    "fhirpath": "^5.1.1",
     "focus-trap-react": "^11.0.4",
     "html-react-parser": "^5.2.6",
     "jose": "6.1.0",
@@ -156,7 +156,7 @@
       "@lavamoat/preinstall-always-fail#3.0.0": false,
       "@parcel/watcher#2.5.6": true,
       "eslint-config-next>eslint-import-resolver-typescript>unrs-resolver#1.11.2": true,
-      "fhirpath#4.8.5": false,
+      "fhirpath#5.1.1": false,
       "next>sharp#0.34.5": true,
       "sharp#0.34.5": true
     }
