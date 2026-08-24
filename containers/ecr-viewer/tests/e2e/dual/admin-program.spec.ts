@@ -281,13 +281,13 @@ test.describe("program management page", () => {
     // Swap program from one
     const checkboxTarget = await page.getByLabel(
       `Select ${targetProgram.name}`,
-      { exact: true }
+      { exact: true },
     );
     await checkboxTarget.scrollIntoViewIfNeeded();
     await checkboxTarget.dispatchEvent("click");
     const checkboxSource = await page.getByLabel(
       `Select ${sourceProgram.name}`,
-      { exact: true }
+      { exact: true },
     );
     await checkboxSource.scrollIntoViewIfNeeded();
     await checkboxSource.dispatchEvent("click");
@@ -304,7 +304,7 @@ test.describe("program management page", () => {
 
     // Run axe scans on program admin view of Edit program area page
     await expect(
-      page.getByRole("heading", { name: "Edit program area" })
+      page.getByRole("heading", { name: "Edit program area" }),
     ).toBeVisible();
     const axe = new AxeBuilder({ page });
 
@@ -323,7 +323,7 @@ test.describe("program management page", () => {
     await expect(sourceConditionInSource).toBeVisible();
     const sourceConditionCheckbox = await page.getByLabel(
       sourceProgram.conditionName,
-      { exact: true }
+      { exact: true },
     );
     await sourceConditionCheckbox.scrollIntoViewIfNeeded();
     await sourceConditionCheckbox.dispatchEvent("click");
@@ -341,11 +341,11 @@ test.describe("program management page", () => {
       has: page.getByRole("button", { name: sourceProgram.name }),
     });
     await expect(
-      sourceProgramRow.getByRole("cell", { name: "0 conditions", exact: true })
+      sourceProgramRow.getByRole("cell", { name: "0 conditions", exact: true }),
     ).toBeVisible();
     await page.getByRole("button", { name: targetProgram.name }).click();
     await expect(
-      page.getByText(sourceProgram.conditionName).first()
+      page.getByText(sourceProgram.conditionName).first(),
     ).toBeVisible();
   });
 });
