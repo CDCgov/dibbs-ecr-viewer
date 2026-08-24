@@ -357,7 +357,7 @@ describe("listEcrData - core", () => {
     expect(actual[0].patient_date_of_birth).toEqual("12/01/2024");
     expect(actual[0].date_created).toEqual("12/02/2024 7:00\u00A0AM\u00A0EST");
     expect(actual[0].patient_report_date).toEqual(
-      "12/02/2024 7:00\u00A0AM\u00A0EST"
+      "12/02/2024 7:00\u00A0AM\u00A0EST",
     );
     expect(actual[0].facility_name).toEqual("Hospital A");
     expect(actual[0].reportable_conditions).toEqual(["Condition1"]);
