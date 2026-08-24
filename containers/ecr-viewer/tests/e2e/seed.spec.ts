@@ -88,7 +88,7 @@ test("seed standard and program admin user. seed covid program", async ({
 
     await page.getByLabel("Email").fill(process.env.AUTH_PROGRAM_ADMIN_USER!);
 
-    const adminRadio = page.getByLabel("Program Admin");
+    const adminRadio = page.getByLabel("Program admin");
     await adminRadio.scrollIntoViewIfNeeded();
     await adminRadio.dispatchEvent("click");
 

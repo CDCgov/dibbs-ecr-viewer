@@ -340,13 +340,13 @@ test.describe("user management page", () => {
       browserName,
       page,
       "standard",
-      [otherProgram],
+      [otherProgram]
     );
     const unassignedUser = await createRandomUser(
       browserName,
       page,
       "standard",
-      [],
+      []
     );
 
     await page.context().clearCookies();
@@ -369,7 +369,7 @@ test.describe("user management page", () => {
     await page.getByLabel("Filter by program area").click();
     await expect(page.getByText("All program areas (Admin)")).not.toBeVisible();
     await expect(
-      page.getByText("No program areas (Standard)"),
+      page.getByText("No program areas (Standard)")
     ).not.toBeVisible();
     const covidFilter = page.getByLabel("COVID", { exact: true });
     await covidFilter.dispatchEvent("click");
@@ -406,6 +406,16 @@ test.describe("user management page", () => {
     await dialog.getByText("Edit user").click();
     await page.waitForURL(/\/ecr-viewer\/admin\/user\/edit\?uuid=.*/);
 
+    // axe struggles with the modal background, but all manual testing
+    // points to contrast being fine
+    await expect(
+      page.getByRole("heading", { name: "Edit user" })
+    ).toBeVisible();
+    const axeScanProgramAdminEditUser = await new AxeBuilder({
+      page,
+    }).analyze();
+    expect(axeScanProgramAdminEditUser.violations).toEqual([]);
+
     // Program admin cannot modify user's email or user type
     await expect(page.getByLabel("Email")).toBeDisabled();
     await expect(page.locator('input[name="userType"]')).toHaveCount(2);
@@ -415,10 +425,10 @@ test.describe("user management page", () => {
 
     // Program admin should only be able to modify COVID
     await expect(
-      page.getByLabel("Select COVID", { exact: true }),
+      page.getByLabel("Select COVID", { exact: true })
     ).toBeVisible();
     await expect(
-      page.getByLabel(`Select ${otherProgram}`, { exact: true }),
+      page.getByLabel(`Select ${otherProgram}`, { exact: true })
     ).not.toBeVisible();
 
     await page
