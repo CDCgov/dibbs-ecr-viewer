@@ -433,5 +433,37 @@ describe("program area service", () => {
         consoleError.mockRestore();
       }
     });
+
+    it.each([
+      { scenario: "an empty condition list", conditions: [] },
+      { scenario: "an accessible condition", conditions: ["123"] },
+    ])(
+      "should not update an inaccessible program area with $scenario",
+      async ({ scenario, conditions }) => {
+        const accessibleProgramAreaId = await createProgramArea({
+          name: `Program Admin Accessible Area ${scenario}`,
+          conditions: ["123"],
+        });
+        const inaccessibleProgramAreaId = await createProgramArea({
+          name: `Program Admin Inaccessible Area ${scenario}`,
+          conditions: ["456"],
+        });
+        await logInAsProgramAdmin([accessibleProgramAreaId]);
+
+        const consoleError = jest.spyOn(console, "error").mockImplementation();
+        try {
+          await expect(
+            updateProgramArea({
+              uuid: inaccessibleProgramAreaId,
+              conditions,
+            }),
+          ).rejects.toThrow(
+            "Failed to update program area. Program admins cannot manage program areas they are not assigned to.",
+          );
+        } finally {
+          consoleError.mockRestore();
+        }
+      },
+    );
   });
 });

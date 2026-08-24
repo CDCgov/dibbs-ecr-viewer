@@ -170,8 +170,24 @@ export const updateProgramArea = audit(
     trx: Transaction<Core>,
   ): Promise<void> => {
     const updatingUser = await getCheckAnyAdmin("update program areas");
+    const updatingUserUuid = updatingUser.uuid;
 
     try {
+      if (!isAdmin(updatingUser)) {
+        const accessibleProgramArea = await trx
+          .selectFrom("user_program_area")
+          .select("program_area_uuid")
+          .where("user_uuid", "=", updatingUserUuid)
+          .where("program_area_uuid", "=", uuid)
+          .executeTakeFirst();
+
+        if (!accessibleProgramArea) {
+          throw new UserFacingError(
+            "Program admins cannot manage program areas they are not assigned to.",
+          );
+        }
+      }
+
       if (!!name) {
         if (!isAdmin(updatingUser)) {
           const currentProgramArea = await trx
