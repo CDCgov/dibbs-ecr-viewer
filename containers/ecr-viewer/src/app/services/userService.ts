@@ -73,7 +73,7 @@ export const getCheckAdmin = async (actionDesc: string): Promise<User> => {
   const loggedInUser = await getLoggedInUser();
   if (!isAdmin(loggedInUser)) {
     throw new UserFacingError(
-      `Standard user cannot & program admins cannot ${actionDesc}`,
+      `Standard users & program admins cannot ${actionDesc}`,
     );
   }
 
@@ -89,7 +89,7 @@ export const getCheckAdmin = async (actionDesc: string): Promise<User> => {
 export const getCheckAnyAdmin = async (actionDesc: string): Promise<User> => {
   const loggedInUser = await getLoggedInUser();
   if (!isAnyAdmin(loggedInUser)) {
-    throw new UserFacingError(`Standard user cannot ${actionDesc}`);
+    throw new UserFacingError(`Standard users cannot ${actionDesc}`);
   }
 
   return loggedInUser;
@@ -480,7 +480,8 @@ export const updateUser = audit(
         (await updateUserQuery(trx, uuid, updates));
 
       let programsToUpdate = programs;
-
+        
+      // Preserve user's program areas that program admin doesn't have access to
       if (isProgramAdmin(updatingUser)) {
         const [targetUserPrograms, updatingUserPrograms] = await Promise.all([
           listUserProgramAreasQuery(trx, uuid),

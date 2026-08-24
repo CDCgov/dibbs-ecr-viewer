@@ -696,7 +696,7 @@ describe("User Service", () => {
       });
 
       await expect(deleteUser({ uuid: unauthorizedUserId! })).rejects.toThrow(
-        "Standard user cannot & program admins cannot delete users",
+        "Standard users & program admins cannot delete users",
       );
     });
   });

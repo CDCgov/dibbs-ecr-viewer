@@ -173,7 +173,7 @@ describe("listAdminConditionReferences", () => {
     });
 
     await expect(listAdminConditionReferences()).rejects.toThrow(
-      "Standard user cannot list condition references",
+      "Standard users cannot list condition references",
     );
   });
 });

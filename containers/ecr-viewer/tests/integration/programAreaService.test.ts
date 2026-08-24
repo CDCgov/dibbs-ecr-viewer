@@ -353,10 +353,10 @@ describe("program area service", () => {
           conditions: ["456"],
         }),
       ).rejects.toThrow(
-        "Standard user cannot & program admins cannot create program areas",
+        "Standard users & program admins cannot create program areas",
       );
       await expect(deleteProgramArea({ uuid: programAreaId })).rejects.toThrow(
-        "Standard user cannot & program admins cannot delete program areas",
+        "Standard users & program admins cannot delete program areas",
       );
     });
 
