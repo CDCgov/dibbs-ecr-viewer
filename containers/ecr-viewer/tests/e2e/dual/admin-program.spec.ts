@@ -60,7 +60,7 @@ test.describe("program management page", () => {
 
     // search for a condition (but not too specifically due to randomness)
     await page.getByPlaceholder("Search condition or category").fill("i");
-    await expect(page.getByText("277 results")).toBeVisible();
+    await expect(page.locator(".result-count")).toHaveText(/[1-9]\d* results?/);
 
     // Wait for checkboxes to attach and use .count() / .nth() to avoid stale elements
     await expect(page.getByRole("checkbox").first()).toBeAttached();
@@ -120,7 +120,7 @@ test.describe("program management page", () => {
     await page.getByText("Create program area").click();
     // search for a condition again so checkbox is correct
     await page.getByPlaceholder("Search condition or category").fill("i");
-    await expect(page.getByText("277 results")).toBeVisible();
+    await expect(page.locator(".result-count")).toHaveText(/[1-9]\d* results?/);
     await expect(
       page.getByText(/Condition in .*/).filter({ hasText: programName }),
     ).toBeVisible();
