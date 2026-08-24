@@ -14,11 +14,12 @@ import { stringSort } from "@/app/utils/format-utils";
 
 import { audit } from "./auditLogService";
 import { UserFacingError } from "./errorService";
-import { listAdminConditionReferencesQuery } from "./listConditionsService";
+import { listAdminConditionReferences } from "./listConditionsService";
 import {
   getCheckAdmin,
   getCheckAnyAdmin,
   isAdmin,
+  listUserProgramAreas,
   listUserProgramAreasQuery,
 } from "./userService";
 
@@ -117,31 +118,58 @@ export const getProgramArea = async (
 };
 
 /**
- * Validate admins permissions to manage conditions.
- * Full admins and empty condition lists pass validation by default.
+ * Validate an admin's permissions to update a program area's conditions.
+ * Full admins pass validation by default. Program admins must be assigned to
+ * the program area, cannot change its name, and can only manage conditions in
+ * their assigned program areas.
  *
- * @param user User whose access should be validated.
- * @param conditions Condition codes the user is attempting to manage.
- * @param trx Transaction used to query the user's accessible conditions.
- * @throws {UserFacingError} If an admin includes an inaccessible condition.
+ * @param props Validation properties.
+ * @param props.user User whose access should be validated.
+ * @param props.programAreaUuid Program area being updated.
+ * @param props.name Proposed program area name.
+ * @param props.conditions Proposed condition codes.
+ * @param props.trx Transaction used for validation queries.
+ * @throws {UserFacingError} If a program admin attempts an unauthorized update.
  */
-export const validateAdminConditionAccess = async (
-  user: Awaited<ReturnType<typeof getCheckAnyAdmin>>,
-  conditions: string[],
-  trx: Transaction<Core>,
-): Promise<void> => {
-  if (isAdmin(user) || conditions.length === 0) return;
+export const validateAdminProgramAreaConditionAccess = async ({
+  user,
+  targetProgramAreaUuid,
+  targetName,
+  targetConditions,
+}: {
+  user: Awaited<ReturnType<typeof getCheckAnyAdmin>>;
+  targetProgramAreaUuid: string;
+  targetName?: string;
+  targetConditions?: string[];
+}): Promise<void> => {
+  const userUuid = user.uuid;
+  if (isAdmin(user)) return;
 
-  const accessibleConditions = await listAdminConditionReferencesQuery(
-    user,
-    trx,
-    conditions,
+  const accessibleProgramAreas = await listUserProgramAreas(userUuid);
+  const currentProgramArea = accessibleProgramAreas.find(
+    ({ uuid }) => uuid === targetProgramAreaUuid
   );
 
-  const accessibleCodes = new Set(accessibleConditions.map(({ code }) => code));
-  if (conditions.some((code) => !accessibleCodes.has(code))) {
+  if (!currentProgramArea) {
     throw new UserFacingError(
-      "Program admins cannot manage conditions outside of their program areas.",
+      "Program admins cannot manage program areas they are not assigned to."
+    );
+  }
+
+  if (!!targetName && currentProgramArea.name !== targetName) {
+    throw new UserFacingError(
+      "Program admins cannot update program area names."
+    );
+  }
+
+  if (!targetConditions || targetConditions.length === 0) return;
+
+  const accessibleConditions = await listAdminConditionReferences();
+
+  const accessibleCodes = new Set(accessibleConditions.map(({ code }) => code));
+  if (targetConditions.some((code) => !accessibleCodes.has(code))) {
+    throw new UserFacingError(
+      "Program admins cannot manage conditions outside of their program areas."
     );
   }
 };
@@ -170,39 +198,15 @@ export const updateProgramArea = audit(
     trx: Transaction<Core>,
   ): Promise<void> => {
     const updatingUser = await getCheckAnyAdmin("update program areas");
-    const updatingUserUuid = updatingUser.uuid;
+    await validateAdminProgramAreaConditionAccess({
+      user: updatingUser,
+      targetProgramAreaUuid: uuid,
+      targetName: name,
+      targetConditions: conditions,
+    });
 
     try {
-      if (!isAdmin(updatingUser)) {
-        const accessibleProgramArea = await trx
-          .selectFrom("user_program_area")
-          .select("program_area_uuid")
-          .where("user_uuid", "=", updatingUserUuid)
-          .where("program_area_uuid", "=", uuid)
-          .executeTakeFirst();
-
-        if (!accessibleProgramArea) {
-          throw new UserFacingError(
-            "Program admins cannot manage program areas they are not assigned to.",
-          );
-        }
-      }
-
       if (!!name) {
-        if (!isAdmin(updatingUser)) {
-          const currentProgramArea = await trx
-            .selectFrom("program_area")
-            .select("name")
-            .where("uuid", "=", uuid)
-            .executeTakeFirst();
-
-          if (currentProgramArea?.name !== name) {
-            throw new UserFacingError(
-              "Program admins cannot update program area names.",
-            );
-          }
-        }
-
         await checkDupeName(trx, name, uuid);
         await trx
           .updateTable("program_area")
@@ -212,7 +216,6 @@ export const updateProgramArea = audit(
       }
 
       if (!!conditions) {
-        await validateAdminConditionAccess(updatingUser, conditions, trx);
         await trx
           .updateTable("condition_reference")
           .set({ program_area_uuid: null })

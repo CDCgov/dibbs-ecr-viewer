@@ -1,10 +1,10 @@
 import { User } from "@/app/data/metadataDb/types/core";
-import { listAdminConditionReferencesQuery } from "@/app/services/listConditionsService";
-import { validateAdminConditionAccess } from "@/app/services/programAreaService";
-import { isAdmin } from "@/app/services/userService";
+import { listAdminConditionReferences } from "@/app/services/listConditionsService";
+import { validateAdminProgramAreaConditionAccess } from "@/app/services/programAreaService";
+import { isAdmin, listUserProgramAreas } from "@/app/services/userService";
 
 jest.mock("@/app/services/listConditionsService", () => ({
-  listAdminConditionReferencesQuery: jest.fn(),
+  listAdminConditionReferences: jest.fn(),
 }));
 
 jest.mock("@/app/services/auditLogService", () => ({
@@ -13,6 +13,7 @@ jest.mock("@/app/services/auditLogService", () => ({
 
 jest.mock("@/app/services/userService", () => ({
   isAdmin: jest.fn(),
+  listUserProgramAreas: jest.fn(),
 }));
 
 const programAdmin: User = {
@@ -31,12 +32,23 @@ const transaction = {} as never;
 beforeEach(() => {
   jest.clearAllMocks();
   (isAdmin as unknown as jest.Mock).mockReturnValue(false);
-  (listAdminConditionReferencesQuery as jest.Mock).mockResolvedValue([
+  (listAdminConditionReferences as jest.Mock).mockResolvedValue([
     { code: "accessible" },
+  ]);
+  (listUserProgramAreas as jest.Mock).mockResolvedValue([
+    { uuid: "accessible-program", name: "Current program" },
   ]);
 });
 
-describe("validateAdminConditionAccess", () => {
+describe("validateAdminProgramAreaConditionAccess", () => {
+  const validate = (props: { name?: string; conditions?: string[] } = {}) =>
+    validateAdminProgramAreaConditionAccess({
+      user: programAdmin,
+      targetProgramAreaUuid: "accessible-program",
+      targetName: props.name,
+      targetConditions: props.conditions,
+    });
+
   it.each([
     { scenario: "an empty condition list", conditions: [] },
     {
@@ -44,28 +56,46 @@ describe("validateAdminConditionAccess", () => {
       conditions: ["accessible"],
     },
   ])("allows $scenario", async ({ conditions }) => {
-    await expect(
-      validateAdminConditionAccess(programAdmin, conditions, transaction),
-    ).resolves.toBeUndefined();
+    await expect(validate({ conditions })).resolves.toBeUndefined();
   });
 
-  it("for admins, can manage any conditions", async () => {
+  it("allows admins to manage any program area and conditions", async () => {
     (isAdmin as unknown as jest.Mock).mockReturnValue(true);
 
     await expect(
-      validateAdminConditionAccess(programAdmin, ["inaccessible"], transaction),
+      validateAdminProgramAreaConditionAccess({
+        user: programAdmin,
+        targetProgramAreaUuid: "inaccessible-program",
+        targetName: "Renamed program",
+        targetConditions: ["inaccessible"],
+      }),
     ).resolves.toBeUndefined();
 
-    expect(listAdminConditionReferencesQuery).not.toHaveBeenCalled();
+    expect(listUserProgramAreas).not.toHaveBeenCalled();
+    expect(listAdminConditionReferences).not.toHaveBeenCalled();
+  });
+
+  it("rejects a program area the program admin is not assigned to", async () => {
+    await expect(
+      validateAdminProgramAreaConditionAccess({
+        user: programAdmin,
+        targetProgramAreaUuid: "inaccessible-program",
+        targetConditions: [],
+      }),
+    ).rejects.toThrow(
+      "Program admins cannot manage program areas they are not assigned to.",
+    );
+  });
+
+  it("rejects a program area name change", async () => {
+    await expect(validate({ name: "Renamed program" })).rejects.toThrow(
+      "Program admins cannot update program area names.",
+    );
   });
 
   it("for a program admin, rejects when a condition is inaccessible from their program areas", async () => {
     await expect(
-      validateAdminConditionAccess(
-        programAdmin,
-        ["accessible", "inaccessible"],
-        transaction,
-      ),
+      validate({ conditions: ["accessible", "inaccessible"] }),
     ).rejects.toThrow(
       "Program admins cannot manage conditions outside of their program areas.",
     );

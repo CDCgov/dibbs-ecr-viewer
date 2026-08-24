@@ -367,19 +367,12 @@ describe("program area service", () => {
       });
       await logInAsProgramAdmin([programAreaId]);
 
-      const consoleError = jest.spyOn(console, "error").mockImplementation();
-      try {
-        await expect(
-          updateProgramArea({
-            uuid: programAreaId,
-            name: "program area renamed",
-          }),
-        ).rejects.toThrow(
-          "Failed to update program area. Program admins cannot update program area names.",
-        );
-      } finally {
-        consoleError.mockRestore();
-      }
+      await expect(
+        updateProgramArea({
+          uuid: programAreaId,
+          name: "program area renamed",
+        }),
+      ).rejects.toThrow("Program admins cannot update program area names.");
     });
 
     it("should update a program area with an accessible condition", async () => {
@@ -419,19 +412,14 @@ describe("program area service", () => {
       });
       await logInAsProgramAdmin([accessibleProgramAreaId, targetProgramAreaId]);
 
-      const consoleError = jest.spyOn(console, "error").mockImplementation();
-      try {
-        await expect(
-          updateProgramArea({
-            uuid: targetProgramAreaId,
-            conditions: ["123", "456"],
-          }),
-        ).rejects.toThrow(
-          "Failed to update program area. Program admins cannot manage conditions outside of their program areas.",
-        );
-      } finally {
-        consoleError.mockRestore();
-      }
+      await expect(
+        updateProgramArea({
+          uuid: targetProgramAreaId,
+          conditions: ["123", "456"],
+        }),
+      ).rejects.toThrow(
+        "Program admins cannot manage conditions outside of their program areas.",
+      );
     });
 
     it.each([
@@ -450,19 +438,14 @@ describe("program area service", () => {
         });
         await logInAsProgramAdmin([accessibleProgramAreaId]);
 
-        const consoleError = jest.spyOn(console, "error").mockImplementation();
-        try {
-          await expect(
-            updateProgramArea({
-              uuid: inaccessibleProgramAreaId,
-              conditions,
-            }),
-          ).rejects.toThrow(
-            "Failed to update program area. Program admins cannot manage program areas they are not assigned to.",
-          );
-        } finally {
-          consoleError.mockRestore();
-        }
+        await expect(
+          updateProgramArea({
+            uuid: inaccessibleProgramAreaId,
+            conditions,
+          }),
+        ).rejects.toThrow(
+          "Program admins cannot manage program areas they are not assigned to.",
+        );
       },
     );
   });
