@@ -17,7 +17,7 @@ import {
   AccordionSubSection,
 } from "@/app/view-data/utils/component-utils";
 
-import { DataDisplay, DisplayDataProps } from "./DataDisplay";
+import { DataDisplay, DataTableDisplay, DisplayDataProps } from "./DataDisplay";
 import { ToolTipElement } from "./ToolTipElement";
 
 interface EcrMetadataProps {
@@ -107,7 +107,11 @@ const EcrMetadata = ({
 
       <AccordionSubSection title="eICR Details">
         {eicrDetails.map((item, index) => {
-          return <DataDisplay item={item} key={index} />;
+          return item.fullWidthContent ? (
+            <DataTableDisplay item={item} key={index} />
+          ) : (
+            <DataDisplay item={item} key={index} />
+          );
         })}
       </AccordionSubSection>
 

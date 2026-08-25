@@ -30,6 +30,7 @@ import {
   evaluateRRInfo,
   ReportableConditions,
 } from "@/app/view-data/services/reportabilityService";
+import EvaluateTable, { ColumnInfoInput } from "../components/EvaluateTable";
 
 interface EcrMetadata {
   eicrDetails: CompleteData;
@@ -170,13 +171,10 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
       value: eicrReleaseVersion(fhirBundle),
     },
     {
-      title: "EHR Manufacturer Model Name",
-      value: evaluateOne(fhirBundle, fhirPathMappings.ehrManufacturerModel),
-    },
-    {
-      title: "EHR Software Name",
-      value: evaluateValue(fhirBundle, fhirPathMappings.ehrSoftware),
-    },
+      title: "EHR Information",
+      fullWidthContent: true,
+      value: evaluateEhrInformation(fhirBundle),
+    }
   ];
 
   const ecrCustodianDetails: DisplayDataProps[] = [
@@ -209,6 +207,44 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
       evaluateData(details),
     ),
   };
+};
+
+/**
+ * Builds one EHR information row per software Device in the bundle.
+ * @param fhirBundle - The FHIR bundle containing EHR Device resources.
+ * @returns A table of EHR manufacturer/model and software names, or undefined.
+ */
+const evaluateEhrInformation = (
+  fhirBundle: Bundle,
+): React.JSX.Element | undefined => {
+  const ehrDevices = evaluateAll(
+    fhirBundle,
+    fhirPathMappings.ehrDevices,
+  ).filter(
+    ({ manufacturer, version }) =>
+      manufacturer || version?.some(({ value }) => value),
+  );
+
+  if (ehrDevices.length === 0) return undefined;
+
+  const columnInfo: ColumnInfoInput[] = [
+    {
+      columnName: "EHR Manufacturer Model Name",
+      infoPath: "ehrManufacturerModel",
+    },
+    {
+      columnName: "EHR Software Name",
+      infoPath: "ehrSoftware",
+    },
+  ];
+
+  return (
+    <EvaluateTable
+      resources={ehrDevices}
+      columns={columnInfo}
+      caption="EHR Information"
+    />
+  );
 };
 
 const evaluateEcrAuthorDetails = (fhirBundle: Bundle): DisplayDataProps[][] => {
