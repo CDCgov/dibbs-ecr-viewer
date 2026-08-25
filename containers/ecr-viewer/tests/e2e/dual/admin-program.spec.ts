@@ -238,6 +238,29 @@ test.describe("program management page", () => {
     expect(response?.status()).toBe(404);
   });
 
+  test("as a program admin, cannot directly edit an inaccessible program area", async ({
+    page,
+    browserName,
+  }) => {
+    const restrictedProgram = await createRandomProgramArea(page, browserName, [
+      "covid",
+    ]);
+
+    await page.getByRole("button", { name: restrictedProgram.name }).click();
+    await page.getByRole("dialog").getByText("Edit program area").click();
+    await page.waitForURL(/\/ecr-viewer\/admin\/program\/edit\?uuid=.*/);
+    const restrictedProgramEditUrl = page.url();
+
+    await page.context().clearCookies();
+    await logIn(page, { userType: "PROGRAM_ADMIN", useCookies: false });
+    const response = await page.goto(restrictedProgramEditUrl);
+
+    expect(response?.status()).toBe(404);
+    await expect(
+      page.getByRole("heading", { name: "Page not found" }),
+    ).toBeVisible();
+  });
+
   test("as a program admin, should not be able to delete a program area", async ({
     page,
   }) => {

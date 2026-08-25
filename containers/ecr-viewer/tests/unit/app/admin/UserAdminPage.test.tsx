@@ -10,6 +10,7 @@ import { listProgramAreas } from "@/app/services/programAreaService";
 import {
   isAdmin,
   getUser,
+  hasRelevantUserAccess,
   ListedUser,
   listUsers,
   listUserProgramAreas,
@@ -303,6 +304,7 @@ describe("User Admin Page", () => {
         mockProgramAdmin,
       );
       (isAdmin as unknown as jest.Mock).mockReturnValue(false);
+      (hasRelevantUserAccess as jest.Mock).mockResolvedValue(true);
       (getUser as jest.Mock).mockResolvedValue(mockUsers[2]);
       (listUserProgramAreas as jest.Mock).mockResolvedValue([mockPrograms[0]]);
       (listProgramAreas as jest.Mock).mockResolvedValue(mockPrograms);
@@ -325,6 +327,7 @@ describe("User Admin Page", () => {
       (notFoundUnlessAnyAdmin as unknown as jest.Mock).mockResolvedValue(true);
       (getLoggedInUser as jest.Mock).mockResolvedValue(mockProgramAdmin);
       (isAdmin as unknown as jest.Mock).mockReturnValue(false);
+      (hasRelevantUserAccess as jest.Mock).mockResolvedValue(true);
       (getUser as jest.Mock).mockResolvedValue(mockUsers[2]);
       (listUserProgramAreas as jest.Mock).mockResolvedValue([mockPrograms[0]]);
       (listProgramAreas as jest.Mock).mockResolvedValue(mockPrograms);
@@ -341,6 +344,25 @@ describe("User Admin Page", () => {
       screen
         .getAllByRole("radio")
         .forEach((radio) => expect(radio).toBeDisabled());
+    });
+
+    it("as a program admin, cannot directly access an unrelated user's edit page", async () => {
+      (notFoundUnlessAnyAdmin as jest.Mock).mockResolvedValue(undefined);
+      (getLoggedInUser as jest.Mock).mockResolvedValue(mockProgramAdmin);
+      (isAdmin as unknown as jest.Mock).mockReturnValue(false);
+      (getUser as jest.Mock).mockResolvedValue(mockUsers[3]);
+      (hasRelevantUserAccess as jest.Mock).mockResolvedValue(false);
+      (notFound as unknown as jest.Mock).mockImplementationOnce(() => {
+        throw new Error("Not found");
+      });
+
+      await expect(
+        EditUserPage({
+          searchParams: Promise.resolve({ uuid: "345" }),
+        }),
+      ).rejects.toThrow("Not found");
+      expect(hasRelevantUserAccess).toHaveBeenCalledWith("345");
+      expect(notFound).toHaveBeenCalled();
     });
   });
 });

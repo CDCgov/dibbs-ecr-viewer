@@ -4,10 +4,19 @@ import { axe } from "jest-axe";
 import { notFound } from "next/navigation";
 
 import ProgramCreatePage from "@/app/admin/program/create/page";
+import EditProgramPage from "@/app/admin/program/edit/page";
 import ProgramAdminPage from "@/app/admin/program/page";
 import { listConditionReferences } from "@/app/services/listConditionsService";
-import { listProgramAreas } from "@/app/services/programAreaService";
-import { isAdmin, notFoundUnlessAnyAdmin } from "@/app/services/userService";
+import {
+  getProgramArea,
+  listProgramAreas,
+} from "@/app/services/programAreaService";
+import {
+  hasRelevantProgramAreaAccess,
+  isAdmin,
+  notFoundUnlessAnyAdmin,
+} from "@/app/services/userService";
+import { getLoggedInUser } from "@/app/services/loggedInUserService";
 
 jest.mock("@/app/data/metadataDb/database");
 jest.mock("@/app/utils/auth-utils", () => ({
@@ -138,6 +147,33 @@ describe("Program Admin Page", () => {
         results = await axe(container);
       });
       expect(results).toHaveNoViolations();
+    });
+  });
+
+  describe("Editing programs", () => {
+    it("as a program admin, cannot directly access an unrelated program's edit page", async () => {
+      const currentUser = { uuid: "program-admin" };
+      (notFoundUnlessAnyAdmin as jest.Mock).mockResolvedValue(undefined);
+      (getLoggedInUser as jest.Mock).mockResolvedValue(currentUser);
+      (getProgramArea as jest.Mock).mockResolvedValue({
+        uuid: "restricted-program",
+        name: "Restricted Program",
+      });
+      (hasRelevantProgramAreaAccess as jest.Mock).mockResolvedValue(false);
+      (notFound as unknown as jest.Mock).mockImplementationOnce(() => {
+        throw new Error("Not found");
+      });
+
+      await expect(
+        EditProgramPage({
+          searchParams: Promise.resolve({ uuid: "restricted-program" }),
+        }),
+      ).rejects.toThrow("Not found");
+
+      expect(hasRelevantProgramAreaAccess).toHaveBeenCalledWith(currentUser, [
+        "restricted-program",
+      ]);
+      expect(notFound).toHaveBeenCalled();
     });
   });
 });

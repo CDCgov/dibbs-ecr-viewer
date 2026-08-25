@@ -5,7 +5,11 @@ import { ProgramForm } from "@/app/admin/program/ProgramForm";
 import { listAdminConditionReferences } from "@/app/services/listConditionsService";
 import { getProgramArea } from "@/app/services/programAreaService";
 import { updateProgramAreaAction } from "@/app/services/serverActionService";
-import { isAdmin, notFoundUnlessAnyAdmin } from "@/app/services/userService";
+import {
+  hasRelevantProgramAreaAccess,
+  isAdmin,
+  notFoundUnlessAnyAdmin,
+} from "@/app/services/userService";
 import { PageSearchParams } from "@/app/utils/search-param-utils";
 import { getLoggedInUser } from "@/app/services/loggedInUserService";
 
@@ -33,6 +37,12 @@ const EditProgramPage = async ({
   if (!prog) {
     notFound();
   }
+
+  // If user does not have authorization over target program area, 404
+  if (!(await hasRelevantProgramAreaAccess(currentUser, [uuid]))) {
+    notFound();
+  }
+
   const conditions = (await listAdminConditionReferences()).map((c) =>
     c.program_area_uuid === prog.uuid ? { ...c, checked: true } : c,
   );

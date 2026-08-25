@@ -451,6 +451,34 @@ test.describe("user management page", () => {
     await expect(row.getByText("COVID", { exact: true })).not.toBeVisible();
   });
 
+  test("program admin: cannot edit a user outside their program areas", async ({
+    page,
+    browserName,
+  }) => {
+    await logIn(page);
+    const otherProgram = await getRandomProgramArea(page, ["COVID"]);
+    const restrictedUser = await createRandomUser(
+      browserName,
+      page,
+      "standard",
+      [otherProgram],
+    );
+
+    await page.getByRole("button", { name: restrictedUser }).click();
+    await page.getByRole("dialog").getByText("Edit user").click();
+    await page.waitForURL(/\/ecr-viewer\/admin\/user\/edit\?uuid=.*/);
+    const restrictedUserEditUrl = page.url();
+
+    await page.context().clearCookies();
+    await logIn(page, { userType: "PROGRAM_ADMIN", useCookies: false });
+    const response = await page.goto(restrictedUserEditUrl);
+
+    expect(response?.status()).toBe(404);
+    await expect(
+      page.getByRole("heading", { name: "Page not found" }),
+    ).toBeVisible();
+  });
+
   test("program admin: should not be able to delete a user", async ({
     page,
     browserName,

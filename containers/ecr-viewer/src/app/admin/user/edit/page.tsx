@@ -10,6 +10,7 @@ import {
   notFoundUnlessAnyAdmin,
   UserType,
   getUser,
+  hasRelevantUserAccess,
   listUserProgramAreas,
   listUsers,
 } from "@/app/services/userService";
@@ -39,6 +40,11 @@ const EditUserPage = async ({
   // Get the user, if it doesn't exist, 404
   const user = await getUser(uuid);
   if (!user) {
+    notFound();
+  }
+
+  // If user does not have authorization over target user, 404
+  if (!isAdmin(currentUser) && !(await hasRelevantUserAccess(uuid))) {
     notFound();
   }
 
