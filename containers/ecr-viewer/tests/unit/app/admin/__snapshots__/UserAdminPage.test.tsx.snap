@@ -290,7 +290,28 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
                   hidden=""
                   id="program-area-three"
                 >
-                  condition, condition
+                  <ul
+                    class="add-list-reset"
+                  >
+                    <li
+                      class="border-bottom border-base-lightest padding-y-1"
+                    >
+                      <p
+                        class="margin-0"
+                      >
+                        condition
+                      </p>
+                    </li>
+                    <li
+                      class="border-bottom border-base-lightest padding-y-1"
+                    >
+                      <p
+                        class="margin-0"
+                      >
+                        condition
+                      </p>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -345,7 +366,19 @@ exports[`User Admin Page Creating users should render a create user page 1`] = `
                   hidden=""
                   id="program-area-two"
                 >
-                  condition
+                  <ul
+                    class="add-list-reset"
+                  >
+                    <li
+                      class="border-bottom border-base-lightest padding-y-1"
+                    >
+                      <p
+                        class="margin-0"
+                      >
+                        condition
+                      </p>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>

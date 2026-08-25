@@ -9,6 +9,7 @@ import {
   RadioDateOptions,
   SelectDeselectAllButton,
 } from "@/app/components/BaseFilter";
+import { ConditionList } from "@/app/components/ConditionList";
 import {
   DetailsSidePanel,
   DetailsTrigger,
@@ -328,24 +329,26 @@ const ProgramAreaContent = ({
       multiselectable={true}
       className="accordion-dibbs"
       items={user.program_areas.map((pa) => {
-        const conditionNames =
-          programAreas
-            .find(({ uuid }) => pa.program_area_uuid === uuid)
-            ?.conditions.map(({ condition_name }) => condition_name) || [];
+        const conditions =
+          programAreas.find(({ uuid }) => pa.program_area_uuid === uuid)
+            ?.conditions || [];
 
         return {
           title: (
             <div className="display-flex flex-justify text-normal">
               <span>{pa.name}</span>
               <span className="display-flex flex-align-center margin-left-2 text-no-wrap">
-                {conditionNames.length} condition
-                {makePlural(conditionNames.length)}
+                {conditions.length} condition
+                {makePlural(conditions.length)}
               </span>
             </div>
           ),
-          content:
-            conditionNames?.join(", ") ||
-            "No conditions assigned to program area",
+          content: (
+            <ConditionList
+              conditions={conditions}
+              emptyText="No conditions assigned to program area"
+            />
+          ),
           id: pa.program_area_uuid,
           expanded: false,
           headingLevel: "h4",
