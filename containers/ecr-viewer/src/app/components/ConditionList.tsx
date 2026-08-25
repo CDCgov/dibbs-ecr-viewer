@@ -22,19 +22,21 @@ export const ConditionList = ({
 
   return (
     <ul className="add-list-reset">
-      {conditions.map(({ condition_name, code, is_duplicate, concept_name }) => (
-        <li
-          key={code}
-          className="border-bottom border-base-lightest padding-y-1"
-        >
-          <p className="margin-0">{condition_name}</p>
-          {is_duplicate && (
-            <p className="margin-0">
-              <i className="text-base">{concept_name || `SNOMED ${code}`}</i>
-            </p>
-          )}
-        </li>
-      ))}
+      {conditions.map(
+        ({ condition_name, code, is_duplicate, concept_name }) => (
+          <li
+            key={code}
+            className="border-bottom border-base-lightest padding-y-1"
+          >
+            <p className="margin-0">{condition_name}</p>
+            {is_duplicate && (
+              <p className="margin-0">
+                <i className="text-base">{concept_name || `SNOMED ${code}`}</i>
+              </p>
+            )}
+          </li>
+        ),
+      )}
     </ul>
   );
 };
