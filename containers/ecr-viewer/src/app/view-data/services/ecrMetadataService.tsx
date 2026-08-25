@@ -174,7 +174,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
       title: "EHR Information",
       fullWidthContent: true,
       value: evaluateEhrInformation(fhirBundle),
-    }
+    },
   ];
 
   const ecrCustodianDetails: DisplayDataProps[] = [
