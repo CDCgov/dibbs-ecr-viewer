@@ -415,7 +415,15 @@ const createRandomProgramArea = async (
     const reassignmentModal = page
       .getByRole("dialog")
       .filter({ hasText: "Are you sure you want to add" });
-    if (await reassignmentModal.isVisible()) {
+    let requiresReassignment = false;
+    try {
+      await reassignmentModal.waitFor({ state: "visible", timeout: 1000 });
+      requiresReassignment = true;
+    } catch {
+      // No reassignment modal appeared, so this condition is unassigned.
+    }
+
+    if (requiresReassignment) {
       await reassignmentModal
         .getByRole("button", { name: "Close this window" })
         .click();

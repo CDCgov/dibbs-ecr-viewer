@@ -464,6 +464,9 @@ test.describe("user management page", () => {
       [otherProgram],
     );
 
+    await page
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("100");
     await page.getByRole("button", { name: restrictedUser }).click();
     await page.getByRole("dialog").getByText("Edit user").click();
     await page.waitForURL(/\/ecr-viewer\/admin\/user\/edit\?uuid=.*/);
