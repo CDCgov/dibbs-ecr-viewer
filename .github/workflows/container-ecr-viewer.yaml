@@ -14,6 +14,8 @@ on:
   push:
     branches:
       - main
+      # TODO ANGELA: Remove before merging to main
+      - 1614-add-admin-hierarchy
     paths-ignore:
       - pyproject.toml
   workflow_dispatch:
@@ -147,6 +149,8 @@ jobs:
           sed -i 's/AUTH_ISSUER=.*$/AUTH_ISSUER=${{ secrets.AZURE_AD_ISSUER }}/' .env.local
           sed -i 's/AUTH_ADMIN_USER=.*$/AUTH_ADMIN_USER=${{ secrets.AZURE_ADMIN_USER }}/' .env.local
           sed -i 's/AUTH_ADMIN_PASSWORD=.*$/AUTH_ADMIN_PASSWORD=${{ secrets.AZURE_ADMIN_PASSWORD }}/' .env.local
+          sed -i 's/AUTH_PROGRAM_ADMIN_USER=.*$/AUTH_PROGRAM_ADMIN_USER=${{ secrets.AZURE_PROGRAM_ADMIN_USER }}/' .env.local
+          sed -i 's/AUTH_PROGRAM_ADMIN_PASSWORD=.*$/AUTH_PROGRAM_ADMIN_PASSWORD=${{ secrets.AZURE_PROGRAM_ADMIN_PASSWORD }}/' .env.local
           sed -i 's/AUTH_STANDARD_USER=.*$/AUTH_STANDARD_USER=${{ secrets.AZURE_STANDARD_USER }}/' .env.local
           sed -i 's/AUTH_STANDARD_PASSWORD=.*$/AUTH_STANDARD_PASSWORD=${{ secrets.AZURE_STANDARD_PASSWORD }}/' .env.local
 
@@ -209,7 +213,7 @@ jobs:
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check ${{ !matrix.azure_ad  && 'localhost:8071/health/ready' || '' }}
 
-      - name: Seed standard user and COVID program
+      - name: Seed standard and program admin users, and COVID program
         working-directory: ./containers/${{env.CONTAINER}}
         run: $PLAYWRIGHT_DOCKER npm run test:e2e:seed-user-prog
 
