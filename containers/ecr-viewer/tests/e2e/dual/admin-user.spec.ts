@@ -62,7 +62,7 @@ test.describe("user management page", () => {
     expect(accessibilityScanResultsSidePanel.violations).toEqual([]);
   });
 
-  test("should create, edit, and delete a new user", async ({
+  test("admin: should create, edit, and delete a new user", async ({
     page,
     browserName,
   }) => {
@@ -157,7 +157,10 @@ test.describe("user management page", () => {
     await page.goto("/ecr-viewer/admin/program");
   });
 
-  test("filter by user type or program area", async ({ page, browserName }) => {
+  test("admin: filter by user type or program area", async ({
+    page,
+    browserName,
+  }) => {
     await logIn(page);
 
     // Create programs
@@ -168,7 +171,7 @@ test.describe("user management page", () => {
     await page.goto("/ecr-viewer/admin/user");
     await page
       .getByRole("combobox", { name: "Users per page" })
-      .selectOption("50"); // Increase user table pagination for testing
+      .selectOption("100"); // Increase user table pagination for testing
     const userAdmin = await createRandomUser(browserName, page, "admin", []);
     const userStandard1 = await createRandomUser(
       browserName,
@@ -192,7 +195,7 @@ test.describe("user management page", () => {
     // filter by user type
     await page.getByLabel("Filter by user type").click();
     await expect(page.getByText("Filter by user type")).toBeVisible();
-    await page.getByLabel("Admin").dispatchEvent("click");
+    await page.getByLabel(/^Admin\b/).dispatchEvent("click");
     await expect(
       page.getByRole("table").getByText("Standard"),
     ).not.toBeVisible();
@@ -278,7 +281,232 @@ test.describe("user management page", () => {
     await expect(page.getByText(userStandard3)).toBeVisible();
   });
 
-  test("it should not show to non-admin", async ({ page }) => {
+  test("program admin: has restricted user creation permissions", async ({
+    page,
+    browserName,
+  }) => {
+    // Admin creates random program
+    await logIn(page);
+    const program1 = await getRandomProgramArea(page, ["COVID"]);
+
+    // Log in as program admin.
+    await page.context().clearCookies();
+    await logIn(page, {
+      userType: "PROGRAM_ADMIN",
+    });
+
+    await page.goto("/ecr-viewer/admin/user/create");
+    expect(page.getByRole("heading", { name: "Create user" }));
+
+    // Program admins can only create program-restricted users
+    await expect(page.locator("#userType-admin")).not.toBeVisible();
+    await expect(page.getByLabel("Program Admin")).toBeVisible();
+    await expect(page.getByLabel("Standard")).toBeVisible();
+
+    // Program admins can only create users for their program areas
+    await expect(
+      page.getByLabel(`Select ${program1}`, { exact: true }),
+    ).not.toBeVisible();
+    await expect(
+      page.getByLabel(`Select COVID`, { exact: true }),
+    ).toBeVisible();
+
+    // Program admin successfully creates standard user
+    const standardUser = await createRandomUser(browserName, page, "standard", [
+      "COVID",
+    ]);
+    await page.waitForURL("/ecr-viewer/admin/user");
+    await page
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("50"); // Increase user table pagination for testing
+    const standardRow = page
+      .getByRole("row")
+      .filter({ has: page.getByRole("cell", { name: standardUser }) });
+    await expect(standardRow.getByText("Standard")).toBeVisible();
+    await expect(standardRow.getByText("COVID")).toBeVisible();
+  });
+
+  test("program admin: sees permitted users, restricted filters, and complete user details", async ({
+    page,
+    browserName,
+  }) => {
+    await logIn(page);
+    const otherProgram = await getRandomProgramArea(page, ["COVID"]);
+    const sharedUser = await createRandomUser(browserName, page, "standard", [
+      "COVID",
+      otherProgram,
+    ]);
+    const restrictedUser = await createRandomUser(
+      browserName,
+      page,
+      "standard",
+      [otherProgram],
+    );
+    const unassignedUser = await createRandomUser(
+      browserName,
+      page,
+      "standard",
+      [],
+    );
+
+    await page.context().clearCookies();
+    await logIn(page, { userType: "PROGRAM_ADMIN", useCookies: false });
+    await page.goto("/ecr-viewer/admin/user");
+    await page
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("100");
+
+    await expect(page.getByText(sharedUser)).toBeVisible();
+    await expect(page.getByText(restrictedUser)).not.toBeVisible();
+    await expect(page.getByText(unassignedUser)).not.toBeVisible();
+
+    // Should not see Filter by Admin user type
+    await page.getByLabel("Filter by user type").click();
+    await expect(page.getByLabel(/^Admin\b/)).not.toBeVisible();
+    await page.keyboard.press("Escape");
+
+    // Should only be able to filter by accessible program areas
+    await page.getByLabel("Filter by program area").click();
+    await expect(page.getByText("All program areas (Admin)")).not.toBeVisible();
+    await expect(
+      page.getByText("No program areas (Standard)"),
+    ).not.toBeVisible();
+    const covidFilter = page.getByLabel("COVID", { exact: true });
+    await covidFilter.dispatchEvent("click");
+    await expect(page.getByText(sharedUser)).not.toBeVisible();
+    await covidFilter.dispatchEvent("click");
+    await page.keyboard.press("Escape");
+
+    // Should see all program areas (& conditions) of user in their program area
+    await page.getByRole("button", { name: sharedUser }).click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog.getByText("COVID", { exact: true })).toBeVisible();
+    await expect(dialog.getByText(otherProgram, { exact: true })).toBeVisible();
+  });
+
+  test("program admin: can only edit accessible program areas", async ({
+    page,
+    browserName,
+  }) => {
+    await logIn(page);
+    const otherProgram = await getRandomProgramArea(page, ["COVID"]);
+    const user = await createRandomUser(browserName, page, "standard", [
+      "COVID",
+      otherProgram,
+    ]);
+
+    await page.context().clearCookies();
+    await logIn(page, { userType: "PROGRAM_ADMIN", useCookies: false });
+    await page.goto("/ecr-viewer/admin/user");
+    await page
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("100");
+    await page.getByRole("button", { name: user }).click();
+    const dialog = page.getByRole("dialog");
+    await dialog.getByText("Edit user").click();
+    await page.waitForURL(/\/ecr-viewer\/admin\/user\/edit\?uuid=.*/);
+
+    // axe struggles with the modal background, but all manual testing
+    // points to contrast being fine
+    await expect(
+      page.getByRole("heading", { name: "Edit user" }),
+    ).toBeVisible();
+    const axeScanProgramAdminEditUser = await new AxeBuilder({
+      page,
+    }).analyze();
+    expect(axeScanProgramAdminEditUser.violations).toEqual([]);
+
+    // Program admin cannot modify user's email or user type
+    await expect(page.getByLabel("Email")).toBeDisabled();
+    await expect(page.locator('input[name="userType"]')).toHaveCount(2);
+    for (const userType of await page.locator('input[name="userType"]').all()) {
+      await expect(userType).toBeDisabled();
+    }
+
+    // Program admin should only be able to modify COVID
+    await expect(
+      page.getByLabel("Select COVID", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByLabel(`Select ${otherProgram}`, { exact: true }),
+    ).not.toBeVisible();
+
+    await page
+      .getByLabel("Select COVID", { exact: true })
+      .dispatchEvent("click");
+    await page.getByRole("button", { name: "Save user" }).first().click();
+    await page.waitForURL("/ecr-viewer/admin/user");
+
+    // Standard user should only have other program area
+    await page.context().clearCookies();
+    await logIn(page);
+    await page.goto("/ecr-viewer/admin/user");
+    await page
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("100");
+    const row = page.getByRole("row").filter({
+      has: page.getByRole("cell", { name: user }),
+    });
+    await expect(row.getByText(otherProgram)).toBeVisible();
+    await expect(row.getByText("COVID", { exact: true })).not.toBeVisible();
+  });
+
+  test("program admin: cannot edit a user outside their program areas", async ({
+    page,
+    browserName,
+  }) => {
+    await logIn(page);
+    const otherProgram = await getRandomProgramArea(page, ["COVID"]);
+    const restrictedUser = await createRandomUser(
+      browserName,
+      page,
+      "standard",
+      [otherProgram],
+    );
+
+    await page
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("100");
+    await page.getByRole("button", { name: restrictedUser }).click();
+    await page.getByRole("dialog").getByText("Edit user").click();
+    await page.waitForURL(/\/ecr-viewer\/admin\/user\/edit\?uuid=.*/);
+    const restrictedUserEditUrl = page.url();
+
+    await page.context().clearCookies();
+    await logIn(page, { userType: "PROGRAM_ADMIN", useCookies: false });
+    const response = await page.goto(restrictedUserEditUrl);
+
+    expect(response?.status()).toBe(404);
+    await expect(
+      page.getByRole("heading", { name: "Page not found" }),
+    ).toBeVisible();
+  });
+
+  test("program admin: should not be able to delete a user", async ({
+    page,
+    browserName,
+  }) => {
+    await logIn(page);
+    const user = await createRandomUser(browserName, page, "standard", [
+      "COVID",
+    ]);
+
+    await page.context().clearCookies();
+    await logIn(page, { userType: "PROGRAM_ADMIN", useCookies: false });
+    await page.goto("/ecr-viewer/admin/user");
+    await page
+      .getByRole("combobox", { name: "Users per page" })
+      .selectOption("100");
+
+    await page.getByRole("button", { name: user }).click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog.getByText("User information")).toBeVisible();
+    await expect(
+      dialog.getByRole("button", { name: "Remove user" }),
+    ).not.toBeVisible();
+  });
+
+  test("should not show to standard user", async ({ page }) => {
     await logIn(page, { userType: "STANDARD" });
     await page.goto("/ecr-viewer/admin/user");
 
@@ -293,19 +521,22 @@ test.describe("user management page", () => {
 
 const getRandomProgramArea = async (page: Page, notThese: string[] = []) => {
   await page.goto("/ecr-viewer/admin/program");
+  const adminProgramTestProgram =
+    /^Prog admin-program-(?:chromium|firefox|webkit)-\d+$/;
 
-  const rows = await page.getByRole("row").all();
-  for (const row of rows) {
-    const cell = row.getByRole("cell").first();
-    const program = (await cell.allInnerTexts()).join(" ");
-    // avoid program reuse and don't touch the programs from the `admin-program` tests
-    // as those get deleted during testing (vs teardown)
-    if (
-      !!program &&
-      !notThese.includes(program) &&
-      !program.match(/^Program \d+/)
-    ) {
-      return program;
+  // A fresh program is required when excluding programs. Reusing an existing
+  // program can race with admin-program tests, which assign their fixtures to
+  // the shared program-admin user.
+  if (notThese.length === 0) {
+    const rows = await page.getByRole("row").all();
+    for (const row of rows) {
+      const cell = row.getByRole("cell").first();
+      const program = (await cell.allInnerTexts()).join(" ");
+      // avoid program reuse and don't touch the programs from the `admin-program` tests
+      // as those get deleted during testing (vs teardown)
+      if (!!program && !adminProgramTestProgram.test(program)) {
+        return program;
+      }
     }
   }
 
@@ -322,7 +553,7 @@ const getRandomProgramArea = async (page: Page, notThese: string[] = []) => {
 
   // Read the value BEFORE clicking it, avoiding any DOM-blocking modal issues
   const conditionName = await checkboxCond.inputValue();
-  const programName = `Test Program ${conditionName}`;
+  const programName = `Test Program ${conditionName}-${Math.floor(Math.random() * 10000)}`;
 
   await checkboxCond.dispatchEvent("click");
 
@@ -348,7 +579,7 @@ const getRandomProgramArea = async (page: Page, notThese: string[] = []) => {
 const createRandomUser = async (
   browserName: string,
   page: Page,
-  userType: string = "standard",
+  userType: "admin" | "prog_admin" | "standard" = "standard",
   programAreas: string[],
 ) => {
   await page.goto("/ecr-viewer/admin/user");
@@ -363,16 +594,18 @@ const createRandomUser = async (
   await page.getByLabel("Email").fill(email);
 
   if (userType === "admin") {
-    const adminRadio = page.getByLabel("Admin");
+    const adminRadio = page.locator("#userType-admin");
     await adminRadio.dispatchEvent("click");
   }
 
-  if (userType === "standard") {
-    for (const program of programAreas) {
-      const standardRadio = page.getByLabel("Standard");
-      await standardRadio.scrollIntoViewIfNeeded();
-      await standardRadio.dispatchEvent("click");
+  if (userType === "prog_admin" || userType === "standard") {
+    const userTypeRadio = page.getByLabel(
+      userType === "prog_admin" ? "Program Admin" : "Standard",
+    );
+    await userTypeRadio.scrollIntoViewIfNeeded();
+    await userTypeRadio.dispatchEvent("click");
 
+    for (const program of programAreas) {
       const checkbox = page.getByLabel(`Select ${program}`, {
         exact: true,
       });

@@ -14,10 +14,12 @@ const ErrorPage = ({
   title,
   subTitle,
   children,
+  showBackButton = true,
 }: {
   title: string;
   subTitle?: string;
   children: React.ReactNode;
+  showBackButton?: boolean;
 }) => (
   <div className="height-viewport-header-footer width-viewport display-flex flex-column">
     <main className="display-flex flex-justify-center height-full">
@@ -36,7 +38,9 @@ const ErrorPage = ({
         <div className="bg-primary-lighter border border-info-light radius-md font-sans-md line-height-sans-4 padding-3 margin-top-2 width-tablet error-message-content">
           {children}
         </div>
-        <BackButton className="margin-top-3 font-sans-md text-primary" />
+        {showBackButton && (
+          <BackButton className="margin-top-3 font-sans-md text-primary" />
+        )}
       </div>
     </main>
   </div>
@@ -87,13 +91,27 @@ export const MetadataDbInvalid = () => (
 );
 
 /**
- * @returns The metadata db invalid error page JSX component.
+ * @returns The incomplete user setup error page for viewing the eCR Library without program areas.
+ * Relevant to standard users and program admins.
  */
-export const StandardUserNoPrograms = () => (
+export const LibraryWithoutProgramAreas = () => (
   <ErrorPage title="Your user setup is incomplete">
     <p>
       To be able to view eCRs, you must be added to at least one program area.
-      Reach out out to your eCR Viewer admin to complete setup.
+      Reach out to your eCR Viewer admin to complete setup.
+    </p>
+  </ErrorPage>
+);
+
+/**
+ * @returns The incomplete user setup error page for managing programs without program areas.
+ * Relevant to program admins.
+ */
+export const ProgramManagementWithoutProgramAreas = () => (
+  <ErrorPage title="Your user setup is incomplete" showBackButton={false}>
+    <p>
+      To manage a program, you must be assigned to at least one program area.
+      Reach out to your eCR Viewer admin to complete setup.
     </p>
   </ErrorPage>
 );

@@ -48,6 +48,7 @@ describe("ProgramForm", () => {
           ],
         }}
         submitAction={async () => ({})}
+        isLoggedInUserAdmin={true}
       />,
     );
 
@@ -194,6 +195,7 @@ describe("ProgramForm", () => {
           ],
         }}
         submitAction={async () => ({})}
+        isLoggedInUserAdmin={true}
       />,
     );
 
@@ -260,5 +262,33 @@ describe("ProgramForm", () => {
     expect(checkboxes[1]).toBeChecked();
     expect(checkboxes[2]).not.toBeChecked();
     expect(checkboxes[3]).not.toBeChecked();
+  });
+
+  it("should disable name editing when isLoggedInUserAdmin is false", () => {
+    render(
+      <ProgramForm
+        action="Edit"
+        initValues={{
+          name: "I have a name",
+          conditions: [
+            {
+              code: "456",
+              concept_name: null,
+              condition_name: "condition 1",
+              condition_category: "first category",
+              program_area_uuid: "789",
+              program_area_name: "I have a name",
+              checked: true,
+            },
+          ],
+        }}
+        submitAction={async () => ({})}
+        isLoggedInUserAdmin={false}
+      />,
+    );
+
+    const nameInput = screen.getByLabelText("Program area name");
+    expect(nameInput).toHaveValue("I have a name");
+    expect(nameInput).toBeDisabled();
   });
 });
