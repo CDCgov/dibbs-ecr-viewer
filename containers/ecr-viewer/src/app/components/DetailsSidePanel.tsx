@@ -88,6 +88,7 @@ interface Detail {
  * @returns Side Panel component
  */
 export const DetailsSidePanel = ({
+  isLoggedInUserAdmin,
   detailsRef,
   details,
   title,
@@ -99,6 +100,7 @@ export const DetailsSidePanel = ({
   deleteModalTitle,
   deleteModalBody,
 }: {
+  isLoggedInUserAdmin: boolean;
   detailsRef: RefObject<ModalRef | null>;
   details: Detail[];
   title: string;
@@ -162,55 +164,61 @@ export const DetailsSidePanel = ({
             </dl>
           </section>
         </div>
-        <ModalFooter className="border-top border-base-lighter display-flex flex-justify padding-top-3 gap-1">
-          <div>
-            <h3 className="margin-top-0">Remove {itemType}</h3>
-            <p>{deleteExplainerText}</p>
-          </div>
-          <div>
-            <ModalToggleButton
-              type="button"
-              outline={true}
-              modalRef={confirmRef}
-              className="text-no-wrap"
-              opener={true}
-              closer={false}
-            >
-              Remove {itemType}
-            </ModalToggleButton>
-          </div>
-        </ModalFooter>
+        {/* Program admins can't delete users or program areas */}
+        {isLoggedInUserAdmin && (
+          <ModalFooter className="border-top border-base-lighter display-flex flex-justify padding-top-3 gap-1">
+            <div>
+              <h3 className="margin-top-0">Remove {itemType}</h3>
+              <p>{deleteExplainerText}</p>
+            </div>
+            <div>
+              <ModalToggleButton
+                type="button"
+                outline={true}
+                modalRef={confirmRef}
+                className="text-no-wrap"
+                opener={true}
+                closer={false}
+              >
+                Remove {itemType}
+              </ModalToggleButton>
+            </div>
+          </ModalFooter>
+        )}
       </Modal>
 
       {/* NOTE: order is important here so the confirmation goes on top of the side panel*/}
-      <Modal
-        id={`delete-confirm-${id}`}
-        className="delete-confirm-modal"
-        ref={confirmRef}
-        aria-labelledby={`delete-confirm-${id}-heading`}
-        aria-describedby={`delete-confirm-${id}-description`}
-      >
-        <ModalHeading id={`delete-confirm-${id}-heading`}>
-          {deleteModalTitle}
-        </ModalHeading>
-        {deleteModalBody}
-
-        <ConfirmationFooter
-          modalRef={confirmRef}
-          onConfirm={async () => {
-            const res = await deleteAction();
-            detailsRef.current?.toggleModal(undefined, false);
-            if (res.error) {
-              createToast(res.error, "error");
-            } else {
-              createToast(`${title} successfully removed`, "success");
-            }
-            router.refresh();
-          }}
+      {/* Program admins should never reach the delete confirmation modal */}
+      {isLoggedInUserAdmin && (
+        <Modal
+          id={`delete-confirm-${id}`}
+          className="delete-confirm-modal"
+          ref={confirmRef}
+          aria-labelledby={`delete-confirm-${id}-heading`}
+          aria-describedby={`delete-confirm-${id}-description`}
         >
-          Yes, remove {itemType}
-        </ConfirmationFooter>
-      </Modal>
+          <ModalHeading id={`delete-confirm-${id}-heading`}>
+            {deleteModalTitle}
+          </ModalHeading>
+          {deleteModalBody}
+
+          <ConfirmationFooter
+            modalRef={confirmRef}
+            onConfirm={async () => {
+              const res = await deleteAction();
+              detailsRef.current?.toggleModal(undefined, false);
+              if (res.error) {
+                createToast(res.error, "error");
+              } else {
+                createToast(`${title} successfully removed`, "success");
+              }
+              router.refresh();
+            }}
+          >
+            Yes, remove {itemType}
+          </ConfirmationFooter>
+        </Modal>
+      )}
     </>
   );
 };

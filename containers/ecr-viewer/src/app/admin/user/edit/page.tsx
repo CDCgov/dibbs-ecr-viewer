@@ -1,16 +1,21 @@
 import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 
-import { UserForm, UserType } from "@/app/admin/user/UserForm";
+import { UserForm } from "@/app/admin/user/UserForm";
+import { USER_TYPE } from "@/app/constants";
 import { listProgramAreas } from "@/app/services/programAreaService";
 import { updateUserAction } from "@/app/services/serverActionService";
 import {
+  isAdmin,
+  notFoundUnlessAnyAdmin,
+  UserType,
   getUser,
+  hasRelevantUserAccess,
   listUserProgramAreas,
   listUsers,
-  notFoundUnlessAdmin,
 } from "@/app/services/userService";
 import { PageSearchParams } from "@/app/utils/search-param-utils";
+import { getLoggedInUser } from "@/app/services/loggedInUserService";
 
 /**
  * Edit a user
@@ -23,7 +28,8 @@ const EditUserPage = async ({
 }: {
   searchParams: Promise<PageSearchParams>;
 }) => {
-  await notFoundUnlessAdmin();
+  await notFoundUnlessAnyAdmin();
+  const currentUser = await getLoggedInUser();
   const { uuid } = await searchParams;
 
   // nothing to edit here
@@ -37,6 +43,11 @@ const EditUserPage = async ({
     notFound();
   }
 
+  // If user does not have authorization over target user, 404
+  if (!isAdmin(currentUser) && !(await hasRelevantUserAccess(uuid))) {
+    notFound();
+  }
+
   const userPrograms = await listUserProgramAreas(uuid);
   const userProgramUUIDs = new Set(userPrograms.map((up) => up.uuid));
   const initPrograms = (await listProgramAreas()).map((p) =>
@@ -44,7 +55,11 @@ const EditUserPage = async ({
   );
 
   const isValidUserType = (value: string): value is UserType => {
-    return value === "admin" || value === "standard";
+    return (
+      value === USER_TYPE.ADMIN ||
+      value === USER_TYPE.PROG_ADMIN ||
+      value === USER_TYPE.STANDARD
+    );
   };
 
   const users = await listUsers();
@@ -66,13 +81,13 @@ const EditUserPage = async ({
         const res = await updateUserAction({
           uuid,
           updates: {
-            email,
-            user_type: userType,
+            ...(isAdmin(currentUser) ? { email, user_type: userType } : {}),
           },
           programs,
         });
         return { error: res.error };
       }}
+      isLoggedInUserAdmin={isAdmin(currentUser)}
     />
   );
 };
