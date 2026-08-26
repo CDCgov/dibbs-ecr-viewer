@@ -28,6 +28,7 @@ const SidePanel = (
         Click me
       </DetailsTrigger>
       <DetailsSidePanel
+        isLoggedInUserAdmin={true}
         detailsRef={detailsRef}
         title="Title"
         subtitle="Subtitle"
