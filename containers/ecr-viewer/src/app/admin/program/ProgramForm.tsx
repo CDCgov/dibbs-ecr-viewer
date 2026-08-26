@@ -81,6 +81,7 @@ export const ProgramForm = ({
   progUuid,
   submitAction,
   formTouchedMsg,
+  isLoggedInUserAdmin,
 }: {
   action: string;
   initValues: FormValues;
@@ -90,6 +91,7 @@ export const ProgramForm = ({
     conditions: string[],
   ) => Promise<ServerActionResult<string | void>>;
   formTouchedMsg?: string;
+  isLoggedInUserAdmin: boolean;
 }) => {
   const [name, setName] = useState(initValues.name || "");
   const [conditionCategories, setConditionCategories] = useState(
@@ -133,7 +135,12 @@ export const ProgramForm = ({
         return res;
       }}
     >
-      <NameFieldSet name={name} setName={setName} nameIsDupe={nameIsDupe} />
+      <NameFieldSet
+        name={name}
+        setName={setName}
+        nameIsDupe={nameIsDupe}
+        isDisabled={!isLoggedInUserAdmin}
+      />
       <ConditionFieldSet
         progUuid={progUuid}
         conditionCategories={conditionCategories}
@@ -148,20 +155,28 @@ const NameFieldSet = ({
   name,
   setName,
   nameIsDupe,
+  isDisabled,
 }: {
   name: string;
   setName: (n: string) => void;
   nameIsDupe: boolean;
+  isDisabled: boolean;
 }) => {
+  const disabledTextClass = isDisabled ? "text-base" : undefined;
+
   return (
-    <FieldSet legend="Name program area">
-      <span>
-        Required fields are marked with an asterisk (<RequiredMarker />)
-      </span>
-      <FormGroup error={nameIsDupe}>
+    <FieldSet
+      legend={<span className={disabledTextClass}>Name program area</span>}
+    >
+      {!isDisabled && (
+        <span className={disabledTextClass}>
+          Required fields are marked with an asterisk (<RequiredMarker />)
+        </span>
+      )}
+      <FormGroup error={nameIsDupe} className={disabledTextClass}>
         <label className="usa-label maxw-full">
           Program area name
-          <RequiredMarker />
+          {!isDisabled && <RequiredMarker />}
           {nameIsDupe && (
             <p className="usa-error-message margin-0">
               Please pick a different program name. This program name already
@@ -174,6 +189,7 @@ const NameFieldSet = ({
             id="name"
             name="name"
             value={name}
+            disabled={isDisabled}
             onChange={(e) => setName(e.target.value)}
           />
         </label>

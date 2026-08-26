@@ -7,7 +7,7 @@ import UserMenu from "@/app/components/UserMenu";
 import { User } from "@/app/data/metadataDb/types/core";
 
 describe("UserMenu component", () => {
-  const mockUser: User = {
+  const mockAdminUser: User = {
     status: "",
     uuid: "",
     email: "kyle.katarn@fakestarwarsemail.bananas.com",
@@ -17,20 +17,19 @@ describe("UserMenu component", () => {
     date_created: new Date(),
     author_uuid: "",
   };
-
   function renderWithSession(ui: React.ReactNode) {
     return render(<SessionProvider session={null}>{ui}</SessionProvider>);
   }
 
   it("renders the profile image with correct alt text", () => {
-    renderWithSession(<UserMenu user={mockUser} version="vTest" />);
+    renderWithSession(<UserMenu user={mockAdminUser} version="vTest" />);
     const profileImage = screen.getByRole("img");
     expect(profileImage).toBeInTheDocument();
     expect(profileImage.getAttribute("aria-label")).toContain("User Menu");
   });
 
   it("toggles the menu when button is clicked and displays user info", () => {
-    renderWithSession(<UserMenu user={mockUser} version="vTest" />);
+    renderWithSession(<UserMenu user={mockAdminUser} version="vTest" />);
     const button = screen.getByRole("button");
     fireEvent.click(button);
     expect(
@@ -38,5 +37,21 @@ describe("UserMenu component", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("Admin")).toBeInTheDocument();
     expect(screen.getByText(/vTest/i)).toBeInTheDocument();
+  });
+
+  it.each([
+    ["admin", "Admin"],
+    ["prog_admin", "Program admin"],
+    ["standard", "Standard user"],
+  ] as const)("shows the correct title for a %s user", (userType, title) => {
+    renderWithSession(
+      <UserMenu
+        user={{ ...mockAdminUser, user_type: userType }}
+        version="vTest"
+      />,
+    );
+    fireEvent.click(screen.getByRole("button"));
+
+    expect(screen.getByText(title)).toBeInTheDocument();
   });
 });
