@@ -1,5 +1,5 @@
 import { getLoggedInUser } from "@/app/services/loggedInUserService";
-import { isAdmin } from "@/app/services/userService";
+import { isAnyAdmin } from "@/app/services/userService";
 import { getLoggedInUserSession } from "@/app/utils/auth-utils";
 
 import NavLink from "./NavLink";
@@ -19,7 +19,7 @@ const NavLinks = async () => {
 
   return (
     <div className="display-flex flex-row">
-      {isAdmin(dbUser) && (
+      {isAnyAdmin(dbUser) && (
         <>
           <NavLink href="/">eCR library</NavLink>
           <NavLink href="/admin/user">User management</NavLink>

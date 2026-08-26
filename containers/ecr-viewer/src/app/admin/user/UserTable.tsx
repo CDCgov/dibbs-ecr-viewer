@@ -21,21 +21,22 @@ import {
   PaginatedSortableTable,
   TableColumn,
 } from "@/app/components/table/PaginatedSortableTable";
+import { USER_TYPE, USER_TYPE_DISPLAY } from "@/app/constants";
 import { ServerActionResult } from "@/app/services/errorService";
 import { formatDateTime } from "@/app/services/formatDateService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
 import { ListedUser, NamedUserProgramArea } from "@/app/services/userService";
-import {
-  makePlural,
-  stringSort,
-  toSentenceCase,
-} from "@/app/utils/format-utils";
+import { makePlural, stringSort } from "@/app/utils/format-utils";
 import { ForceClient } from "@/app/view-data/components/ForceClient";
 
-const USER_TYPE_OPTIONS: Record<string, string> = {
+const ADMIN_USER_TYPE_FILTER_OPTIONS: Record<string, string> = {
   all: "All users",
-  admin: "Admin",
-  standard: "Standard",
+  ...USER_TYPE_DISPLAY,
+};
+const PROGRAM_ADMIN_USER_TYPE_FILTER_OPTIONS: Record<string, string> = {
+  all: "All users",
+  [USER_TYPE.PROG_ADMIN]: USER_TYPE_DISPLAY[USER_TYPE.PROG_ADMIN],
+  [USER_TYPE.STANDARD]: USER_TYPE_DISPLAY[USER_TYPE.STANDARD],
 };
 const NO_PROGRAM_AREA_OPTION: string = "No program areas (Standard)";
 const ALL_PROGRAM_AREAS_OPTION: string = "All program areas (Admin)";
@@ -47,21 +48,31 @@ type FilterProgramAreasType = Record<string, boolean>;
  * @param props React props
  * @param props.users listed users
  * @param props.programAreas listed program areas
+ * @param props.detailProgramAreas program areas available in user details side panel
+ * @param props.isLoggedInUserAdmin whether the logged-in user is an admin
  * @param props.deleteAction action to do upon delete confirmation
  * @returns paginated, sorted table of users
  */
 export const UserTable = ({
   users,
   programAreas,
+  detailProgramAreas,
+  isLoggedInUserAdmin,
   deleteAction,
 }: {
   users: ListedUser[];
   programAreas: ListedProgramArea[];
+  detailProgramAreas: ListedProgramArea[];
+  isLoggedInUserAdmin: boolean;
   deleteAction: (uuid: string) => Promise<ServerActionResult<void>>;
 }) => {
   const initFilterProgramAreaState: FilterProgramAreasType = {
-    [ALL_PROGRAM_AREAS_OPTION]: true,
-    [NO_PROGRAM_AREA_OPTION]: true,
+    ...(isLoggedInUserAdmin
+      ? {
+          [ALL_PROGRAM_AREAS_OPTION]: true,
+          [NO_PROGRAM_AREA_OPTION]: true,
+        }
+      : {}),
     ...programAreas.reduce((acc, program) => {
       acc[program.name] = true;
       return acc;
@@ -87,13 +98,17 @@ export const UserTable = ({
       return false;
     }
 
-    // Standard users not assigned to any program areas
-    if (user_type === "standard" && program_areas.length === 0) {
+    // Standard users or program admins not assigned to any program areas
+    if (
+      (user_type === USER_TYPE.STANDARD ||
+        user_type === USER_TYPE.PROG_ADMIN) &&
+      program_areas.length === 0
+    ) {
       return filterProgramAreas[NO_PROGRAM_AREA_OPTION];
     }
 
     // Admin users must have All program areas (Admin) selected
-    if (user_type === "admin") {
+    if (user_type === USER_TYPE.ADMIN) {
       return filterProgramAreas[ALL_PROGRAM_AREAS_OPTION];
     }
 
@@ -122,7 +137,7 @@ export const UserTable = ({
       value: "User type",
       dataSortable: true,
       sortDirection: "",
-      formatter: toSentenceCase,
+      formatter: (userType: string) => USER_TYPE_DISPLAY[userType],
     },
     {
       id: "program_areas",
@@ -130,7 +145,7 @@ export const UserTable = ({
       dataSortable: false,
       sortDirection: "",
       formatter: (pas: NamedUserProgramArea[], user) =>
-        user.user_type === "admin"
+        user.user_type === USER_TYPE.ADMIN
           ? "All program areas"
           : pas
               .map(({ name }) => name)
@@ -153,6 +168,7 @@ export const UserTable = ({
   return (
     <div>
       <DetailsSidePanel
+        isLoggedInUserAdmin={isLoggedInUserAdmin}
         detailsRef={detailsRef}
         title={selectedUser?.name ? selectedUser?.name : selectedUser?.email!}
         subtitle={`Last logged in: ${
@@ -182,14 +198,16 @@ export const UserTable = ({
           },
           {
             title: "User Type",
-            value: toSentenceCase(selectedUser?.user_type),
+            value:
+              selectedUser?.user_type &&
+              USER_TYPE_DISPLAY[selectedUser.user_type],
           },
           {
             title: "Program Area Access",
             value: (
               <ProgramAreaContent
                 user={selectedUser}
-                programAreas={programAreas}
+                programAreas={detailProgramAreas}
               />
             ),
           },
@@ -205,6 +223,7 @@ export const UserTable = ({
         <FilterByUserType
           filterUserTypeOption={filterUserTypeOption}
           setFilterUserTypeOption={setFilterUserTypeOption}
+          isLoggedInUserAdmin={isLoggedInUserAdmin}
         />
         <FilterByProgramArea
           isAllSelected={isAllSelected}
@@ -224,22 +243,28 @@ export const UserTable = ({
 const FilterByUserType = ({
   filterUserTypeOption,
   setFilterUserTypeOption,
+  isLoggedInUserAdmin,
 }: {
   filterUserTypeOption: string;
   setFilterUserTypeOption: (v: string) => void;
+  isLoggedInUserAdmin: boolean;
 }) => {
+  const options = isLoggedInUserAdmin
+    ? ADMIN_USER_TYPE_FILTER_OPTIONS
+    : PROGRAM_ADMIN_USER_TYPE_FILTER_OPTIONS;
+
   return (
     <Filter
       isActive={true}
       type="user type"
-      title={USER_TYPE_OPTIONS[filterUserTypeOption]}
+      title={options[filterUserTypeOption]}
       resetHandler={() => {}}
       icon={Person}
     >
       <div className="display-flex flex-column">
         <RadioDateOptions
           groupName="user-type"
-          optionsMap={USER_TYPE_OPTIONS}
+          optionsMap={options}
           onChange={setFilterUserTypeOption}
           currentOption={filterUserTypeOption}
           classNames="padding-bottom-1"
@@ -316,7 +341,7 @@ const ProgramAreaContent = ({
   user: ListedUser | null;
   programAreas: ListedProgramArea[];
 }) => {
-  if (user?.user_type === "admin") {
+  if (user?.user_type === USER_TYPE.ADMIN) {
     return "All program areas";
   }
 

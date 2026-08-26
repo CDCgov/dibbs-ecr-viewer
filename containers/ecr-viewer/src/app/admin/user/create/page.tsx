@@ -4,13 +4,19 @@ import { revalidatePath } from "next/cache";
 import { UserForm } from "@/app/admin/user/UserForm";
 import { listProgramAreas } from "@/app/services/programAreaService";
 import { createUserAction } from "@/app/services/serverActionService";
-import { notFoundUnlessAdmin, listUsers } from "@/app/services/userService";
+import {
+  notFoundUnlessAnyAdmin,
+  listUsers,
+  isAdmin,
+} from "@/app/services/userService";
+import { getLoggedInUser } from "@/app/services/loggedInUserService";
 
 /**
  * @returns Page to create a new user
  */
 const CreateUserPage = async () => {
-  await notFoundUnlessAdmin();
+  await notFoundUnlessAnyAdmin();
+  const loggedInUser = await getLoggedInUser();
 
   const programs = await listProgramAreas();
   const users = await listUsers();
@@ -43,6 +49,7 @@ const CreateUserPage = async () => {
           </Alert>
         )
       }
+      isLoggedInUserAdmin={isAdmin(loggedInUser)}
     />
   );
 };

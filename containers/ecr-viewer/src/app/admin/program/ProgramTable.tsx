@@ -27,9 +27,11 @@ import { makePlural } from "@/app/utils/format-utils";
 export const ProgramTable = ({
   programAreas,
   deleteAction,
+  isLoggedInUserAdmin,
 }: {
   programAreas: ListedProgramArea[];
   deleteAction: (uuid: string) => Promise<ServerActionResult<void>>;
+  isLoggedInUserAdmin: boolean;
 }) => {
   const detailsRef = useDetailsRef();
   const [selectedProgramArea, setSelectedProgramArea] =
@@ -64,6 +66,7 @@ export const ProgramTable = ({
   return (
     <div>
       <DetailsSidePanel
+        isLoggedInUserAdmin={isLoggedInUserAdmin}
         detailsRef={detailsRef}
         title={selectedProgramArea?.name!}
         subtitle={`Created on ${formatDateTime(
