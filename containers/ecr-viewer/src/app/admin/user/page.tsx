@@ -1,9 +1,14 @@
 import { revalidatePath } from "next/cache";
 import Link from "next/link";
 
+import { getLoggedInUser } from "@/app/services/loggedInUserService";
 import { listProgramAreas } from "@/app/services/programAreaService";
 import { deleteUserAction } from "@/app/services/serverActionService";
-import { listUsers, notFoundUnlessAdmin } from "@/app/services/userService";
+import {
+  isAdmin,
+  listUsers,
+  notFoundUnlessAnyAdmin,
+} from "@/app/services/userService";
 
 import { UserTable } from "./UserTable";
 
@@ -12,10 +17,16 @@ import { UserTable } from "./UserTable";
  * @returns user admin page
  */
 const UserAdminPage = async () => {
-  await notFoundUnlessAdmin();
+  await notFoundUnlessAnyAdmin();
+  const loggedInUser = await getLoggedInUser();
 
   const users = await listUsers();
   const programAreas = await listProgramAreas();
+  const isLoggedInUserAdmin = isAdmin(loggedInUser);
+
+  const detailProgramAreas = isLoggedInUserAdmin
+    ? programAreas
+    : await listProgramAreas({ userUuids: users.map(({ uuid }) => uuid) });
 
   return (
     <>
@@ -32,6 +43,8 @@ const UserAdminPage = async () => {
           <UserTable
             users={users}
             programAreas={programAreas}
+            detailProgramAreas={detailProgramAreas}
+            isLoggedInUserAdmin={isLoggedInUserAdmin}
             deleteAction={async (uuid) => {
               "use server";
               revalidatePath("/ecr-viewer/admin/user");

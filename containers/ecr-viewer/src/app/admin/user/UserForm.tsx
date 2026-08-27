@@ -10,22 +10,17 @@ import {
 } from "@trussworks/react-uswds";
 
 import { ExpandCollapseAccordionControlled } from "@/app/components/ExpandCollapseAccordion";
+import { USER_TYPE, USER_TYPE_DISPLAY } from "@/app/constants";
 import { FieldSet } from "@/app/components/forms/FieldSet";
 import { FormPageContent } from "@/app/components/forms/FormPageContent";
 import { ToastContext } from "@/app/components/toast/ToastProvider";
 import { ServerActionResult } from "@/app/services/errorService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
-import { ListedUser } from "@/app/services/userService";
+import { UserType, ListedUser } from "@/app/services/userService";
 import { AccordionItem } from "@/app/types";
 import { notEmpty } from "@/app/utils/data-utils";
-import {
-  makePlural,
-  stringSort,
-  toKebabCase,
-  toTitleCase,
-} from "@/app/utils/format-utils";
-
-export type UserType = "admin" | "standard";
+import { makePlural, stringSort, toKebabCase } from "@/app/utils/format-utils";
+import classNames from "classnames";
 
 export interface FormProgram extends ListedProgramArea {
   checked?: boolean;
@@ -61,6 +56,7 @@ export const UserForm = ({
   submitAction,
   banner,
   formTouchedMsg,
+  isLoggedInUserAdmin,
 }: {
   action: string;
   initValues: FormValues;
@@ -71,10 +67,11 @@ export const UserForm = ({
   ) => Promise<ServerActionResult<void>>;
   banner?: ReactNode;
   formTouchedMsg?: string;
+  isLoggedInUserAdmin: boolean;
 }) => {
   const [email, setEmail] = useState(initValues.email || "");
   const [userType, setUserType] = useState<UserType>(
-    initValues.userType || "standard",
+    initValues.userType || USER_TYPE.STANDARD,
   );
   const [programs, setPrograms] = useState(
     [...initValues.programs].sort((a, b) => stringSort(a.name, b.name)),
@@ -93,13 +90,15 @@ export const UserForm = ({
     .filter((e) => e !== initValues.email?.toLowerCase())
     .includes(email.toLowerCase());
 
-  const valid =
-    !!email &&
-    (userType === "admin" || userType === "standard") &&
-    !emailIsDupe;
+  const allowedUserTypes: UserType[] = isLoggedInUserAdmin
+    ? Object.values(USER_TYPE)
+    : [USER_TYPE.PROG_ADMIN, USER_TYPE.STANDARD];
+  const isValidUserType = allowedUserTypes.includes(userType);
+  const valid = !!email && isValidUserType && !emailIsDupe;
+
   const touched =
     (email && email !== initValues.email) ||
-    userType !== (initValues.userType || "standard") ||
+    userType !== (initValues.userType || USER_TYPE.STANDARD) ||
     numProgramsSelected !== initSelectedPrograms.length ||
     selectedPrograms.some((uuid, i) => uuid !== initSelectedPrograms[i]);
 
@@ -116,7 +115,7 @@ export const UserForm = ({
         const res = await submitAction(
           email.trim(),
           userType,
-          userType === "admin" ? [] : selectedPrograms, // admins should not be saved with assigned programs
+          userType === USER_TYPE.ADMIN ? [] : selectedPrograms, // admins should not be saved with assigned programs
         );
         if (!res.error)
           createToast(`${email.trim()} successfully saved`, "success");
@@ -127,8 +126,14 @@ export const UserForm = ({
         email={email}
         setEmail={setEmail}
         emailIsDupe={emailIsDupe}
+        isDisabled={action === "Edit" && !isLoggedInUserAdmin}
       />
-      <UserTypeFieldSet userType={userType} setUserType={setUserType} />
+      <UserTypeFieldSet
+        userType={userType}
+        setUserType={setUserType}
+        isLoggedInUserAdmin={isLoggedInUserAdmin}
+        isDisabled={action === "Edit" && !isLoggedInUserAdmin}
+      />
       <ProgramFieldSet
         programs={programs}
         setPrograms={setPrograms}
@@ -143,18 +148,24 @@ const EmailFieldSet = ({
   email,
   setEmail,
   emailIsDupe,
+  isDisabled,
 }: {
   email: string;
   setEmail: (n: string) => void;
   emailIsDupe?: boolean;
+  isDisabled: boolean;
 }) => {
+  const disabledTextClass = isDisabled ? "text-base" : undefined;
+
   return (
-    <FieldSet legend="Email">
-      <span>Add the new user by their login email</span>
+    <FieldSet legend={<span className={disabledTextClass}>Email</span>}>
+      {!isDisabled && <span>Add the new user by their login email</span>}
       <FormGroup error={emailIsDupe}>
-        <label className="usa-label maxw-full">
+        <label
+          className={classNames("usa-label", "maxw-full", disabledTextClass)}
+        >
           Email
-          <RequiredMarker />
+          {!isDisabled && <RequiredMarker />}
           {emailIsDupe && (
             <p className="usa-error-message margin-0">
               This email already exists. Please add a different email.
@@ -166,6 +177,7 @@ const EmailFieldSet = ({
             id="email"
             name="email"
             value={email}
+            disabled={isDisabled}
             onChange={(e) => setEmail(e.target.value)}
           />
         </label>
@@ -177,38 +189,59 @@ const EmailFieldSet = ({
 const UserTypeFieldSet = ({
   userType,
   setUserType,
+  isLoggedInUserAdmin,
+  isDisabled,
 }: {
   userType: UserType;
   setUserType: (n: UserType) => void;
+  isLoggedInUserAdmin: boolean;
+  isDisabled: boolean;
 }) => {
+  const disabledTextClass = isDisabled ? "text-base" : undefined;
+
   return (
-    <FieldSet legend="User type">
-      <span>
-        Select the user type
-        <RequiredMarker />
-      </span>
+    <FieldSet legend={<span className={disabledTextClass}>User type</span>}>
+      {!isDisabled && (
+        <span>
+          Select the user type
+          <RequiredMarker />
+        </span>
+      )}
       {[
+        ...(isLoggedInUserAdmin
+          ? [
+              {
+                label: USER_TYPE_DISPLAY[USER_TYPE.ADMIN],
+                value: USER_TYPE.ADMIN,
+                description:
+                  "Admins have full access to user management, program management, and the eCR Library",
+              },
+            ]
+          : []),
         {
-          name: "admin",
+          label: USER_TYPE_DISPLAY[USER_TYPE.PROG_ADMIN],
+          value: USER_TYPE.PROG_ADMIN,
           description:
-            "Admins have full access to user management, program management, and the eCR Library",
+            "Program Admins have limited access to user management, program management, and the eCR Library",
         },
         {
-          name: "standard",
+          label: USER_TYPE_DISPLAY[USER_TYPE.STANDARD],
+          value: USER_TYPE.STANDARD,
           description:
             "Standard users can only use the eCR Library with limited access to program area(s)",
         },
       ].map((option) => (
         <Radio
-          key={option.name}
-          label={toTitleCase(option.name)}
+          key={option.value}
+          label={option.label}
           labelDescription={option.description}
           type="radio"
           required={true}
           name="userType"
-          id={`userType-${option.name}`}
-          value={option.name}
-          checked={userType === option.name}
+          id={`userType-${option.value}`}
+          value={option.value}
+          checked={userType === option.value}
+          disabled={isDisabled}
           onChange={(e) => setUserType(e.target.value as UserType)}
         />
       ))}
@@ -231,7 +264,8 @@ export const ProgramFieldSet = ({
   const [expandedPrograms, setExpandedPrograms] = useState<
     Record<string, boolean>
   >(valsToBoolean(programs, false));
-  const isStandardUser = userType === "standard";
+  const isProgramLevelUser =
+    userType === USER_TYPE.PROG_ADMIN || userType === USER_TYPE.STANDARD;
 
   const accordionItems: AccordionItem[] = programs.map((program) => {
     const { name, conditions } = program;
@@ -253,7 +287,7 @@ export const ProgramFieldSet = ({
       checkboxGroup: "program",
       checkboxLabel: `Select ${program.name}`,
       isChecked: program.checked === true,
-      onChecked: isStandardUser
+      onChecked: isProgramLevelUser
         ? (checked: boolean) => {
             setPrograms(
               programs.map((c) =>
@@ -268,14 +302,14 @@ export const ProgramFieldSet = ({
   return (
     <FieldSet legend="Program area access">
       <span>
-        {isStandardUser ? (
+        {isProgramLevelUser ? (
           <>Select one or more program areas</>
         ) : (
           <>Admins will be able to see all program areas and conditions</>
         )}
       </span>
 
-      {isStandardUser && (
+      {isProgramLevelUser && (
         <>
           <p className="text-bold font-size-md">
             {numProgramsSelected} program area{makePlural(numProgramsSelected)}{" "}

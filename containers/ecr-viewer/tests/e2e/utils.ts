@@ -1,7 +1,7 @@
 import { DefaultAzureCredential } from "@azure/identity";
 import { Page, expect, APIRequestContext, Cookie } from "@playwright/test";
 
-type UserType = "ADMIN" | "STANDARD";
+type UserType = "ADMIN" | "STANDARD" | "PROGRAM_ADMIN";
 
 // Instead of going to IDP to log in on every page, store the cookies
 // globally and re-use once logged in
