@@ -98,13 +98,15 @@ test.describe("program management page", () => {
       page.getByRole("heading", { name: "Program management" }),
     ).toBeVisible();
 
-    await expect(page.getByRole("cell", { name: programName })).toBeVisible();
+    await expect(
+      page.getByRole("cell", { name: programName, exact: true }),
+    ).toBeVisible();
     await expect(
       page.getByText(`${programName} successfully saved`),
     ).toBeVisible();
 
     // open up side panel
-    await page.getByRole("button", { name: programName }).click();
+    await page.getByRole("button", { name: programName, exact: true }).click();
     await expect(page.getByText("Program area information")).toBeVisible();
 
     // axe struggles with the modal background, but all manual testing
@@ -157,7 +159,7 @@ test.describe("program management page", () => {
     await page.waitForURL("/ecr-viewer/admin/program");
 
     // open up side panel to edit the condition
-    await page.getByRole("button", { name: programName }).click();
+    await page.getByRole("button", { name: programName, exact: true }).click();
     await expect(page.getByText("Program area information")).toBeVisible();
     await page.getByText("Edit program area").click();
 
