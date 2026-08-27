@@ -178,6 +178,7 @@ jobs:
           # -e CI=true                     : Propagates CI status so playwright.config.ts uses workers:1 and retries:1
           # -v ...:/work & -w /work        : Mounts our code into the container and sets the working directory
           CMD="docker run --rm --network host --ipc=host --security-opt seccomp=unconfined -e HOME=/tmp -e CI=true --user 1001:1001 -v ${{ github.workspace }}/containers/${{ env.CONTAINER }}:/work -w /work mcr.microsoft.com/playwright:v1.58.2-jammy"
+          echo "PLAYWRIGHT_DOCKER=$CMD" >> $GITHUB_ENV
 
       - name: Run Playwright tests - Migrations
         working-directory: ./containers/${{env.CONTAINER}}
