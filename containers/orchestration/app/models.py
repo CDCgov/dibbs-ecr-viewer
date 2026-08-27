@@ -101,6 +101,14 @@ class OrchestrationResponse(BaseModel):
         description="A set of key:value pairs or XML-formatted string containing the "
         "values extracted from the message."
     )
+    message_in_timestamp: str = Field(
+        description="ISO 8601 UTC timestamp of when the message was received and "
+        "processing began."
+    )
+    message_out_timestamp: str = Field(
+        description="ISO 8601 UTC timestamp of when processing of the message "
+        "completed."
+    )
 
 
 class ListConfigsResponse(BaseModel):

@@ -114,6 +114,12 @@ def test_process_message_success(patched_post_request, client):
 
     actual_response = client.post("/process-message", json=request)
     assert actual_response.status_code == 200
+    response_body = actual_response.json()
+    assert "message_in_timestamp" in response_body
+    assert "message_out_timestamp" in response_body
+    assert (
+        response_body["message_in_timestamp"] <= response_body["message_out_timestamp"]
+    )
 
 
 @mock.patch("app.main.call_apis", side_effect=Exception("Fake Exception"))
@@ -128,10 +134,11 @@ def test_process_message_orchestration_error(patched_call_apis, client):
 
     actual_response = client.post("/process-message", json=request)
     assert actual_response.status_code == 500
-    assert actual_response.json() == {
-        "message": "Orchestration service error: Fake Exception",
-        "processed_values": {},
-    }
+    response_body = actual_response.json()
+    assert response_body["message"] == "Orchestration service error: Fake Exception"
+    assert response_body["processed_values"] == {}
+    assert "message_in_timestamp" in response_body
+    assert "message_out_timestamp" in response_body
 
 
 @mock.patch("app.services.post_request")
@@ -146,10 +153,14 @@ def test_process_message_orchestration_bad_config(patched_call_apis, client):
 
     actual_response = client.post("/process-message", json=request)
     assert actual_response.status_code == 400
-    assert actual_response.json() == {
-        "message": "A config with the name 'integrated-i-do-not-exist.json' could not be found.",
-        "processed_values": {},
-    }
+    response_body = actual_response.json()
+    assert (
+        response_body["message"]
+        == "A config with the name 'integrated-i-do-not-exist.json' could not be found."
+    )
+    assert response_body["processed_values"] == {}
+    assert "message_in_timestamp" in response_body
+    assert "message_out_timestamp" in response_body
 
 
 @mock.patch("app.services.post_request")
@@ -180,6 +191,9 @@ def test_process_message_fhir_data(patched_post_request, client):
     ]
     actual_response = client.post("/process-message", json=request)
     assert actual_response.status_code == 200
+    response_body = actual_response.json()
+    assert "message_in_timestamp" in response_body
+    assert "message_out_timestamp" in response_body
 
 
 def test_process_message_input_validation(client):
@@ -201,10 +215,14 @@ def test_process_message_invalid_config(client):
 
     actual_response = client.post("/process-message", json=request)
     assert actual_response.status_code == 400
-    assert actual_response.json() == {
-        "message": "A config with the name 'non_existent_schema.json' could not be found.",  # noqa
-        "processed_values": {},
-    }
+    response_body = actual_response.json()
+    assert (
+        response_body["message"]
+        == "A config with the name 'non_existent_schema.json' could not be found."  # noqa
+    )
+    assert response_body["processed_values"] == {}
+    assert "message_in_timestamp" in response_body
+    assert "message_out_timestamp" in response_body
 
 
 def test_process_message_mismatched_data_types_ecr(client):
@@ -340,6 +358,9 @@ def test_process_zip_success(patched_post_request, client):
 
         actual_response = client.post("/process-zip", data=form_data, files=files)
         assert actual_response.status_code == 200
+        response_body = actual_response.json()
+        assert "message_in_timestamp" in response_body
+        assert "message_out_timestamp" in response_body
 
 
 def test_process_zip_with_empty_zip(client):
@@ -374,7 +395,11 @@ def test_process_zip_invalid_config(client):
 
         actual_response = client.post("/process-zip", data=form_data, files=files)
         assert actual_response.status_code == 400
-        assert actual_response.json() == {
-            "message": "A config with the name 'non_existent_schema.json' could not be found.",  # noqa
-            "processed_values": {},
-        }
+        response_body = actual_response.json()
+        assert (
+            response_body["message"]
+            == "A config with the name 'non_existent_schema.json' could not be found."  # noqa
+        )
+        assert response_body["processed_values"] == {}
+        assert "message_in_timestamp" in response_body
+        assert "message_out_timestamp" in response_body
