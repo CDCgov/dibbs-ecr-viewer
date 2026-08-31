@@ -8,6 +8,8 @@ interface ProcessEcrResponse {
   message: string;
   erorors?: string[];
   bundle?: Bundle<FhirResource>;
+  message_in_timestamp?: string;
+  message_out_timestamp?: string;
 }
 
 // Partial for returning the fhir bundle, used in both schema

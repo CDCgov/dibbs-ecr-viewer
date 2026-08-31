@@ -27,11 +27,15 @@ interface OrchestrationRawResponse {
       }?,
     ];
   };
+  message_in_timestamp: string;
+  message_out_timestamp: string;
 }
 
 interface BundleInfo {
   ecr: Bundle;
   metadata: BundleMetadata | BundleExtendedMetadata | undefined;
+  messageInTimestamp: string;
+  messageOutTimestamp: string;
 }
 
 /**
@@ -130,6 +134,8 @@ export const getOrchestrationResponse = async (
       ecr: resp.processed_values.responses[0].stamped_ecr.extended_bundle,
       metadata:
         resp.processed_values.responses?.[1]?.metadata_values.parsed_values,
+      messageInTimestamp: resp.message_in_timestamp,
+      messageOutTimestamp: resp.message_out_timestamp,
     };
   }
 };
@@ -197,7 +203,13 @@ export const orchestrationRequest = async (
   }
 
   const promises: [
-    Promise<{ message: string; status: number; bundle?: Bundle }>,
+    Promise<{
+      message: string;
+      status: number;
+      bundle?: Bundle;
+      message_in_timestamp?: string;
+      message_out_timestamp?: string;
+    }>,
     Promise<void>?,
   ] = [
     (async () => {
@@ -218,10 +230,14 @@ export const orchestrationRequest = async (
         orchestrationResp.ecr,
         orchestrationResp.metadata,
       );
+      const timestamps = {
+        message_in_timestamp: orchestrationResp.messageInTimestamp,
+        message_out_timestamp: orchestrationResp.messageOutTimestamp,
+      };
       if (returnBundle) {
-        return { ...res, bundle: orchestrationResp.ecr };
+        return { ...res, ...timestamps, bundle: orchestrationResp.ecr };
       }
-      return res;
+      return { ...res, ...timestamps };
     })(),
   ];
 

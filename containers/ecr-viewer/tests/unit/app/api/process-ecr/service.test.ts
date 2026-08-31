@@ -73,6 +73,8 @@ describe("orchestrationRequest", () => {
             { metadata_values: { parsed_values: mockMetadata } },
           ],
         },
+        message_in_timestamp: "2026-08-28T18:00:00.000Z",
+        message_out_timestamp: "2026-08-28T18:00:01.000Z",
       });
 
     (saveWithMetadata as jest.Mock).mockResolvedValue({
@@ -86,7 +88,12 @@ describe("orchestrationRequest", () => {
       mockAgent as unknown as Agent,
     );
 
-    expect(response).toStrictEqual({ status: 200, message: "Success" });
+    expect(response).toStrictEqual({
+      status: 200,
+      message: "Success",
+      message_in_timestamp: "2026-08-28T18:00:00.000Z",
+      message_out_timestamp: "2026-08-28T18:00:01.000Z",
+    });
     expect(saveWithMetadata).toHaveBeenCalledWith(
       mockEcr,
       "hello^world",
@@ -105,6 +112,8 @@ describe("orchestrationRequest", () => {
         processed_values: {
           responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
         },
+        message_in_timestamp: "2026-08-28T18:00:00.000Z",
+        message_out_timestamp: "2026-08-28T18:00:01.000Z",
       });
 
     (saveToStorage as jest.Mock).mockResolvedValue({
@@ -118,7 +127,12 @@ describe("orchestrationRequest", () => {
       mockAgent as unknown as Agent,
     );
 
-    expect(response).toStrictEqual({ status: 200, message: "Success" });
+    expect(response).toStrictEqual({
+      status: 200,
+      message: "Success",
+      message_in_timestamp: "2026-08-28T18:00:00.000Z",
+      message_out_timestamp: "2026-08-28T18:00:01.000Z",
+    });
     expect(saveToStorage).toHaveBeenCalledWith(
       mockEcr,
       "hello^world",
@@ -137,6 +151,8 @@ describe("orchestrationRequest", () => {
         processed_values: {
           responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
         },
+        message_in_timestamp: "2026-08-28T18:00:00.000Z",
+        message_out_timestamp: "2026-08-28T18:00:01.000Z",
       });
 
     (saveToStorage as jest.Mock).mockResolvedValue({
@@ -154,6 +170,8 @@ describe("orchestrationRequest", () => {
       status: 200,
       message: "Success",
       bundle: mockEcr,
+      message_in_timestamp: "2026-08-28T18:00:00.000Z",
+      message_out_timestamp: "2026-08-28T18:00:01.000Z",
     });
     expect(saveToStorage).toHaveBeenCalledWith(
       mockEcr,
