@@ -30,3 +30,5 @@ The workflow will then:
 The generated commit may cause one final approval-required workflow run. That run verifies that the committed database already matches the target version.
 
 **Do not merge this PR until all checks pass - it is also recommended to test the branch locally to confirm everything works as expected.**
+
+**Database migrations must be run in the eCR Viewer after installing the release that includes this PR. The migration process will update program area data for new or updated conditions. Include a notice in the release notes for the installer.**
