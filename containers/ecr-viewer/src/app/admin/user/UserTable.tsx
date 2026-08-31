@@ -118,6 +118,7 @@ export const UserTable = ({
     {
       id: "email",
       value: "Email",
+      className: "minw-23",
       dataSortable: true,
       sortDirection: "",
       formatter: (v: string, user: ListedUser) => (
@@ -134,6 +135,7 @@ export const UserTable = ({
     {
       id: "user_type",
       value: "User type",
+      className: "minw-20",
       dataSortable: true,
       sortDirection: "",
       formatter: (userType: string) => USER_TYPE_DISPLAY[userType],
@@ -141,6 +143,7 @@ export const UserTable = ({
     {
       id: "program_areas",
       value: "Program areas",
+      className: "minw-28",
       dataSortable: false,
       sortDirection: "",
       formatter: (pas: NamedUserProgramArea[], user) =>
@@ -154,6 +157,7 @@ export const UserTable = ({
     {
       id: "date_of_last_login",
       value: "Last logged in",
+      className: "minw-23",
       dataSortable: true,
       sortDirection: "",
       formatter: (d: Date | null) => (

@@ -1207,6 +1207,7 @@ exports[`User Admin Page for an admin, should list all users and program areas 1
             <thead>
               <tr>
                 <th
+                  class="minw-23"
                   data-sortable="true"
                   id="email-header"
                   role="columnheader"
@@ -1242,6 +1243,7 @@ exports[`User Admin Page for an admin, should list all users and program areas 1
                   </button>
                 </th>
                 <th
+                  class="minw-20"
                   data-sortable="true"
                   id="user_type-header"
                   role="columnheader"
@@ -1277,6 +1279,7 @@ exports[`User Admin Page for an admin, should list all users and program areas 1
                   </button>
                 </th>
                 <th
+                  class="minw-28"
                   data-sortable="false"
                   id="program_areas-header"
                   role="columnheader"
@@ -1290,6 +1293,7 @@ exports[`User Admin Page for an admin, should list all users and program areas 1
                   </div>
                 </th>
                 <th
+                  class="minw-23"
                   data-sortable="true"
                   id="date_of_last_login-header"
                   role="columnheader"
