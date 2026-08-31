@@ -15,7 +15,7 @@ concurrency:
 
 permissions:
   contents: read
-  security-events: write   # Required for SARIF upload to Security tab
+  security-events: write # Required for SARIF upload to Security tab
 
 jobs:
   # Reuse the existing list-containers workflow to discover all container dirs
