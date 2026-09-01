@@ -9,10 +9,8 @@ import { updateConditions } from "./updateConditions";
 
 const schema = z.object({
   migration_secret: z.string({
-    errorMap: () => ({
-      message:
-        "migration secret is required. Check the server logs for the value",
-    }),
+    error:
+      "migration secret is required. Check the server logs for the value",
   }),
   direction: z.string().default("up"),
   skip_condition_update: z
@@ -107,7 +105,7 @@ export async function POST(
       return NextResponse.json(
         {
           message: "Validation error",
-          errors: error.errors,
+          errors: error.issues,
         },
         { status: 400 },
       );
