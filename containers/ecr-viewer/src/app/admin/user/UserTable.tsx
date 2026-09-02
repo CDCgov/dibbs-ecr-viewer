@@ -307,6 +307,20 @@ const FilterByProgramArea = ({
     });
   };
 
+  const isSpecialOption = (name: string) =>
+    name === ALL_PROGRAM_AREAS_OPTION || name === NO_PROGRAM_AREA_OPTION;
+
+  const specialProgramAreas = Object.fromEntries(
+    Object.entries(filterProgramAreas).filter(([name]) =>
+      isSpecialOption(name),
+    ),
+  );
+  const regularProgramAreas = Object.fromEntries(
+    Object.entries(filterProgramAreas).filter(
+      ([name]) => !isSpecialOption(name),
+    ),
+  );
+
   return (
     <Filter
       isActive={!isAllSelected}
@@ -316,22 +330,46 @@ const FilterByProgramArea = ({
       icon={Folder}
       tag={`${numSelected}`}
     >
-      <div className="display-flex flex-column">
-        {/* Select All button */}
-        <SelectDeselectAllButton
-          groupName="program area"
-          onToggle={handleSelectDeselectAll}
-          numSelected={numSelected}
-          numOptions={numProgramAreas}
-        />
-        <div className="border-top-1px border-base-lighter margin-bottom-1"></div>
+      <div className="display-flex flex-column height-full">
+        <div className="flex-0">
+          {/* Select All button */}
+          <SelectDeselectAllButton
+            groupName="program area"
+            onToggle={handleSelectDeselectAll}
+            numSelected={numSelected}
+            numOptions={numProgramAreas}
+          />
+          <div className="border-top-1px border-base-lighter margin-bottom-1"></div>
+        </div>
 
-        {/* Filter by Program Area checkboxes */}
-        <CheckboxOptions
-          groupName="program area"
-          filterItems={filterProgramAreas}
-          onChange={handleCheckboxChange}
-        />
+        <div className="flex-1 overflow-y-auto">
+          {/* All/No program areas (Admin/Standard) checkboxes */}
+          {Object.keys(specialProgramAreas).length > 0 && (
+            <CheckboxOptions
+              groupName="program area"
+              filterItems={specialProgramAreas}
+              onChange={handleCheckboxChange}
+            />
+          )}
+
+          {/* border line between if both present */}
+          {Object.keys(specialProgramAreas).length > 0 &&
+            Object.keys(regularProgramAreas).length > 0 && (
+              <div
+                className="border-top-1px border-base-lighter margin-x-105 margin-y-1"
+                data-testid="program-area-divider"
+              ></div>
+            )}
+
+          {/* Filter by Program Area checkboxes */}
+          {Object.keys(regularProgramAreas).length > 0 && (
+            <CheckboxOptions
+              groupName="program area"
+              filterItems={regularProgramAreas}
+              onChange={handleCheckboxChange}
+            />
+          )}
+        </div>
       </div>
     </Filter>
   );
