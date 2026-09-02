@@ -7,18 +7,20 @@ import { createInitialAdminUser } from "@/app/services/userService";
 import { migrateDown, migrateUp } from "./migrate";
 import { updateConditions } from "./updateConditions";
 
-const schema = z.object({
-  migration_secret: z.string({
-    error:
-      "migration secret is required. Check the server logs for the value",
-  }),
-  direction: z.string().default("up"),
-  skip_condition_update: z
-    .string()
-    .optional()
-    .transform((v) => v?.toLowerCase()),
-  init_admin_email: z.string().optional(),
-});
+const schema = z.compile(
+  z.object({
+    migration_secret: z.string({
+      error:
+        "migration secret is required. Check the server logs for the value",
+    }),
+    direction: z.string().default("up"),
+    skip_condition_update: z
+      .string()
+      .optional()
+      .transform((v) => v?.toLowerCase()),
+    init_admin_email: z.string().optional(),
+  })
+);
 
 interface MigrationResponse {
   message: string;

@@ -18,30 +18,33 @@ const returnBundle = {
     .transform((v) => v?.toLowerCase()),
 };
 
-const schema = z.object({
-  ecr: z.union([z.string(), z.instanceof(File)]),
-  rr: z.union([z.string(), z.instanceof(File)]).optional(),
-  ...returnBundle,
-});
-
-const processZipSchema = z
-  .object({
-    upload_file: z
-      .instanceof(File)
-      .refine(
-        (file) =>
-          file.type === "application/zip" ||
-          file.type === "application/octet-stream",
-        {
-          message: "File must be a zip",
-        },
-      ),
+const schema = z.compile(
+  z.object({
+    ecr: z.union([z.string(), z.instanceof(File)]),
+    rr: z.union([z.string(), z.instanceof(File)]).optional(),
     ...returnBundle,
   })
-  .transform((input) => ({
-    ...input,
-    ecr: input.upload_file,
-  }));
+);
+
+const processZipSchema = z.compile(
+  z.object({
+      upload_file: z
+        .instanceof(File)
+        .refine(
+          (file) =>
+            file.type === "application/zip" ||
+            file.type === "application/octet-stream",
+          {
+            message: "File must be a zip",
+          },
+        ),
+      ...returnBundle,
+    })
+    .transform((input) => ({
+      ...input,
+      ecr: input.upload_file,
+    }))
+);
 
 /**
  * Handles POST requests and saves the FHIR Bundle to the database.
