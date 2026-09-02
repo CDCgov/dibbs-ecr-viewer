@@ -162,9 +162,9 @@ export const getOrchestrationResponse = async (
 
     try {
       const json = JSON.parse(text);
-      // Orchestration puts its error text under "message", not "detail" —
-      // keeping the "detail" check around too just in case something else
-      // in the chain uses that convention.
+      // "message" is orchestration's own error text. "detail" shows up
+      // instead when the API failed validation before it ever reaches
+      // orchestration's own error handling.
       message = json?.message || json?.detail || text;
     } catch {
       message = text;
