@@ -9,9 +9,7 @@
             "message": "Processing succeeded!",
             "content": {
               "foo": "bar"
-            },
-            "message_in_timestamp": "2026-08-26T14:32:01.123456+00:00",
-            "message_out_timestamp": "2026-08-26T14:32:03.654321+00:00"
+            }
           }
         },
         "all.json": {
@@ -20,9 +18,7 @@
             "message": "Processing succeeded!",
             "content": {
               "foo": "bar"
-            },
-            "message_in_timestamp": "2026-08-26T14:32:01.123456+00:00",
-            "message_out_timestamp": "2026-08-26T14:32:03.654321+00:00"
+            }
           }
         }
       }

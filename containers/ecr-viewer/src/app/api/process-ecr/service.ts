@@ -27,8 +27,6 @@ interface OrchestrationRawResponse {
       }?,
     ];
   };
-  message_in_timestamp: string;
-  message_out_timestamp: string;
 }
 
 interface BundleInfo {
@@ -41,10 +39,9 @@ interface BundleInfo {
 /**
  * Thrown when the orchestration request fails — either orchestration itself
  * responded with an error, or we never got a response at all (timeout,
- * connection drop, etc). We attach message-in/out timestamps so a failed or
- * slow request is still traceable: we use orchestration's own timestamps if
- * its error response has them, and otherwise fall back to whenever we
- * started and gave up on the request ourselves.
+ * connection drop, etc). Carries message-in/out timestamps (whenever we
+ * started and gave up on the request) so a failed or slow request is still
+ * traceable.
  */
 export class OrchestrationError extends Error {
   messageInTimestamp: string;
@@ -165,36 +162,26 @@ export const getOrchestrationResponse = async (
       body: text,
     });
 
-    // If orchestration managed to send back an error response, its own
-    // timestamps are more accurate than ours — only fall back to what we
-    // tracked locally if it didn't include any.
-    let orchestrationInTimestamp: string | undefined;
-    let orchestrationOutTimestamp: string | undefined;
     try {
       const json = JSON.parse(text);
       // Orchestration puts its error text under "message", not "detail" —
       // keeping the "detail" check around too just in case something else
       // in the chain uses that convention.
       message = json?.message || json?.detail || text;
-      orchestrationInTimestamp = json?.message_in_timestamp;
-      orchestrationOutTimestamp = json?.message_out_timestamp;
     } catch {
       message = text;
     }
 
-    throw new OrchestrationError(
-      message,
-      orchestrationInTimestamp ?? messageInTimestamp,
-      orchestrationOutTimestamp ?? messageOutTimestamp,
-    );
+    throw new OrchestrationError(message, messageInTimestamp, messageOutTimestamp);
   } else {
     const resp = (await response.json()) as OrchestrationRawResponse;
+    const messageOutTimestamp = new Date().toISOString();
     return {
       ecr: resp.processed_values.responses[0].stamped_ecr.extended_bundle,
       metadata:
         resp.processed_values.responses?.[1]?.metadata_values.parsed_values,
-      messageInTimestamp: resp.message_in_timestamp,
-      messageOutTimestamp: resp.message_out_timestamp,
+      messageInTimestamp,
+      messageOutTimestamp,
     };
   }
 };

@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-from datetime import UTC, datetime
 from pathlib import Path
 from typing import Annotated
 
@@ -255,22 +254,18 @@ async def apply_workflow_to_message(
     :return: Response of whether the workflow succeeded and what its outputs
       were.
     """
-    # Capture the message-in timestamp as soon as processing begins, so it
-    # reflects total time spent in the pipeline regardless of outcome.
-    message_in_timestamp = datetime.now(UTC).isoformat()
-    logger.info(f"Message received, processing started at {message_in_timestamp}")
-
     # Load the config file and fail fast if we can't find it
     try:
         processing_config = load_processing_config(config_file_name)
 
     except FileNotFoundError as error:
-        return _finish_processing(
-            {
-                "message": error.__str__(),
-                "processed_values": {},
-            },
-            message_in_timestamp,
+        return Response(
+            content=json.dumps(
+                {
+                    "message": error.__str__(),
+                    "processed_values": {},
+                }
+            ),
             status_code=status.HTTP_400_BAD_REQUEST,
         )
     # Compile the input to the other service endpoints and call them
@@ -290,43 +285,35 @@ async def apply_workflow_to_message(
         raise error
     except Exception as error:
         # Handle internal exceptions
-        return _finish_processing(
-            {
-                "message": f"Orchestration service error: {error.__str__()}",
-                "processed_values": {},
-            },
-            message_in_timestamp,
+        return Response(
+            content=json.dumps(
+                {
+                    "message": f"Orchestration service error: {error.__str__()}",
+                    "processed_values": {},
+                }
+            ),
+            media_type="application/json",
             status_code=500,
         )
     # if not 200, return status code and any error messaging
     if response.status_code != 200:
-        return _finish_processing(
-            {
-                "message": "Request failed with status code "
-                + f"{response.status_code}",
-                "responses": _filter_failed_responses(responses),
-                "processed_values": "",
-            },
-            message_in_timestamp,
+        return Response(
+            content=json.dumps(
+                {
+                    "message": "Request failed with status code "
+                    + f"{response.status_code}",
+                    "responses": _filter_failed_responses(responses),
+                    "processed_values": "",
+                }
+            ),
+            media_type="application/json",
             status_code=response.status_code,
         )
     # determine how to process/return 200 data for json and xml
     content_type = response.headers.get("content-type", "")
-    message_out_timestamp = datetime.now(UTC).isoformat()
-    logger.info(f"Message processing completed at {message_out_timestamp}")
     match content_type:
         case "application/xml" | "text/xml":
-            # The body is a raw pass-through bundle from a downstream service,
-            # so the timestamps can't be embedded in it without corrupting the
-            # XML; surface them as headers instead.
-            return Response(
-                content=response.content,
-                media_type=content_type,
-                headers={
-                    "X-Message-In-Timestamp": message_in_timestamp,
-                    "X-Message-Out-Timestamp": message_out_timestamp,
-                },
-            )
+            workflow_content = response.content
         case "application/json":
             workflow_content = json.dumps(
                 {
@@ -334,37 +321,11 @@ async def apply_workflow_to_message(
                     "processed_values": _combine_response_bundles(
                         response, responses, processing_config
                     ),
-                    "message_in_timestamp": message_in_timestamp,
-                    "message_out_timestamp": message_out_timestamp,
                 }
             )
         case _:
             workflow_content = response.text
     return Response(content=workflow_content, media_type=content_type)
-
-
-def _finish_processing(
-    body: dict, message_in_timestamp: str, status_code: int
-) -> Response:
-    """
-    Stamps a response body with the message-in/message-out timestamps for the
-    request and logs the message-out event, then builds the JSON response.
-
-    :param body: The response body to stamp with timestamps.
-    :param message_in_timestamp: The ISO 8601 timestamp captured when
-      processing began for this request.
-    :param status_code: The HTTP status code to return.
-    :return: A Response containing the stamped body.
-    """
-    message_out_timestamp = datetime.now(UTC).isoformat()
-    logger.info(f"Message processing completed at {message_out_timestamp}")
-    body["message_in_timestamp"] = message_in_timestamp
-    body["message_out_timestamp"] = message_out_timestamp
-    return Response(
-        content=json.dumps(body),
-        media_type="application/json",
-        status_code=status_code,
-    )
 
 
 def _filter_failed_responses(responses):

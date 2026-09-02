@@ -73,8 +73,6 @@ describe("orchestrationRequest", () => {
             { metadata_values: { parsed_values: mockMetadata } },
           ],
         },
-        message_in_timestamp: "2026-08-28T18:00:00.000Z",
-        message_out_timestamp: "2026-08-28T18:00:01.000Z",
       });
 
     (saveWithMetadata as jest.Mock).mockResolvedValue({
@@ -91,8 +89,8 @@ describe("orchestrationRequest", () => {
     expect(response).toStrictEqual({
       status: 200,
       message: "Success",
-      message_in_timestamp: "2026-08-28T18:00:00.000Z",
-      message_out_timestamp: "2026-08-28T18:00:01.000Z",
+      message_in_timestamp: expect.any(String),
+      message_out_timestamp: expect.any(String),
     });
     expect(saveWithMetadata).toHaveBeenCalledWith(
       mockEcr,
@@ -112,8 +110,6 @@ describe("orchestrationRequest", () => {
         processed_values: {
           responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
         },
-        message_in_timestamp: "2026-08-28T18:00:00.000Z",
-        message_out_timestamp: "2026-08-28T18:00:01.000Z",
       });
 
     (saveToStorage as jest.Mock).mockResolvedValue({
@@ -130,8 +126,8 @@ describe("orchestrationRequest", () => {
     expect(response).toStrictEqual({
       status: 200,
       message: "Success",
-      message_in_timestamp: "2026-08-28T18:00:00.000Z",
-      message_out_timestamp: "2026-08-28T18:00:01.000Z",
+      message_in_timestamp: expect.any(String),
+      message_out_timestamp: expect.any(String),
     });
     expect(saveToStorage).toHaveBeenCalledWith(
       mockEcr,
@@ -151,8 +147,6 @@ describe("orchestrationRequest", () => {
         processed_values: {
           responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
         },
-        message_in_timestamp: "2026-08-28T18:00:00.000Z",
-        message_out_timestamp: "2026-08-28T18:00:01.000Z",
       });
 
     (saveToStorage as jest.Mock).mockResolvedValue({
@@ -170,8 +164,8 @@ describe("orchestrationRequest", () => {
       status: 200,
       message: "Success",
       bundle: mockEcr,
-      message_in_timestamp: "2026-08-28T18:00:00.000Z",
-      message_out_timestamp: "2026-08-28T18:00:01.000Z",
+      message_in_timestamp: expect.any(String),
+      message_out_timestamp: expect.any(String),
     });
     expect(saveToStorage).toHaveBeenCalledWith(
       mockEcr,
@@ -207,35 +201,7 @@ describe("orchestrationRequest", () => {
     });
   });
 
-  it("uses orchestration's own message_in/out timestamps when its error response includes them", async () => {
-    mockPool
-      .intercept({
-        path: "/process-zip",
-        method: "POST",
-      })
-      .reply(500, {
-        message: "Orchestration service error: timed out",
-        message_in_timestamp: "2026-09-02T18:00:00.000Z",
-        message_out_timestamp: "2026-09-02T18:15:00.000Z",
-      });
-
-    jest.spyOn(console, "error").mockImplementation(() => {});
-
-    const response = await orchestrationRequest(
-      { ecr: mockFile },
-      false,
-      mockAgent as unknown as Agent,
-    );
-
-    expect(response).toEqual({
-      message: "Orchestration service error: timed out",
-      status: 500,
-      message_in_timestamp: "2026-09-02T18:00:00.000Z",
-      message_out_timestamp: "2026-09-02T18:15:00.000Z",
-    });
-  });
-
-  it("falls back to its own message_in/out timestamps when the request to orchestration never gets a response", async () => {
+  it("reports its own message_in/out timestamps when the request to orchestration never gets a response", async () => {
     mockPool
       .intercept({
         path: "/process-zip",
@@ -391,7 +357,12 @@ describe("orchestrationRequest", () => {
         mockAgent as unknown as Agent,
       );
 
-      expect(response).toEqual({ status: 200, message: "Success" });
+      expect(response).toEqual({
+        status: 200,
+        message: "Success",
+        message_in_timestamp: expect.any(String),
+        message_out_timestamp: expect.any(String),
+      });
     });
 
     it("skips the check and proceeds when no DB is configured", async () => {
@@ -416,7 +387,12 @@ describe("orchestrationRequest", () => {
         mockAgent as unknown as Agent,
       );
 
-      expect(response).toEqual({ status: 200, message: "Success" });
+      expect(response).toEqual({
+        status: 200,
+        message: "Success",
+        message_in_timestamp: expect.any(String),
+        message_out_timestamp: expect.any(String),
+      });
       expect(getDb).not.toHaveBeenCalled();
     });
   });
@@ -562,6 +538,8 @@ describe("orchestrationRequest", () => {
       expect(response).toEqual({
         ecr: mockEcr,
         metadata: undefined,
+        messageInTimestamp: expect.any(String),
+        messageOutTimestamp: expect.any(String),
       });
     });
 
@@ -585,6 +563,8 @@ describe("orchestrationRequest", () => {
       expect(response).toEqual({
         ecr: mockEcr,
         metadata: undefined,
+        messageInTimestamp: expect.any(String),
+        messageOutTimestamp: expect.any(String),
       });
     });
 
@@ -611,6 +591,8 @@ describe("orchestrationRequest", () => {
       expect(response).toEqual({
         ecr: mockEcr,
         metadata: undefined,
+        messageInTimestamp: expect.any(String),
+        messageOutTimestamp: expect.any(String),
       });
     });
 
@@ -637,6 +619,8 @@ describe("orchestrationRequest", () => {
       expect(response).toEqual({
         ecr: mockEcr,
         metadata: undefined,
+        messageInTimestamp: expect.any(String),
+        messageOutTimestamp: expect.any(String),
       });
     });
   });
