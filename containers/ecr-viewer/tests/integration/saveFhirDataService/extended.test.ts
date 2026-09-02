@@ -39,7 +39,7 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
     {
       ehr_manufacturer_model: "EHR Manufacturer Model",
       ehr_software: "EHR Software",
-    }
+    },
   ],
   provider_id: "12345",
   facility_id: "12345",
@@ -163,7 +163,9 @@ describe("saveFhirData - extended", () => {
 
     expect(savedDevices).toHaveLength(1);
     expect(savedDevices[0].ehr_software).toEqual("EHR Software");
-    expect(savedDevices[0].ehr_manufacturer_model).toEqual("EHR Manufacturer Model");
+    expect(savedDevices[0].ehr_manufacturer_model).toEqual(
+      "EHR Manufacturer Model",
+    );
 
     // check audit log
     const log = await getLastAuditLog();

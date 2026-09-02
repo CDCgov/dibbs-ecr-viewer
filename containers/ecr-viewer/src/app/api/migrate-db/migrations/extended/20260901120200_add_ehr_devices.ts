@@ -52,12 +52,7 @@ async function backfillEhrDevices(db: Kysely<AnyDb>): Promise<void> {
 async function restoreEhrDeviceColumns(db: Kysely<AnyDb>): Promise<void> {
   const ehrDevices = await db
     .selectFrom("ecr_ehr_devices")
-    .select([
-      "uuid",
-      "eicr_id",
-      "ehr_software",
-      "ehr_manufacturer_model",
-    ])
+    .select(["uuid", "eicr_id", "ehr_software", "ehr_manufacturer_model"])
     .execute();
 
   const oneDevicePerEcr = new Map<string, (typeof ehrDevices)[number]>();

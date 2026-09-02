@@ -212,21 +212,21 @@ This table stores patient address information. Note that the primary key for thi
 
 This table stores specimen information for eCR labs.
 
-| Column Name      | Data Type      | Nullability | Default Value | Description                                                                                      |
-| :--------------- | :------------- | :---------- | :------------ | :----------------------------------------------------------------------------------------------- |
-| `uuid`                     | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], unique identifier for the specimen record |
+| Column Name                | Data Type      | Nullability | Default Value | Description                                                                                                          |
+| :------------------------- | :------------- | :---------- | :------------ | :------------------------------------------------------------------------------------------------------------------- |
+| `uuid`                     | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], unique identifier for the specimen record                         |
 | `eicr_id`                  | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], Foreign key, references `ecr_data.eicr_id` and `ecr_labs.eicr_id` |
-| `lab_uuid`                 | `varchar(200)` | NOT NULL    |               | Foreign key, references `ecr_labs.uuid` |
-| `specimen_type`            | `varchar(255)` | NULL        |               | Type of specimen |
-| `specimen_collection_date` | `date`         | NULL        |               | Date of specimen collection | 
+| `lab_uuid`                 | `varchar(200)` | NOT NULL    |               | Foreign key, references `ecr_labs.uuid`                                                                              |
+| `specimen_type`            | `varchar(255)` | NULL        |               | Type of specimen                                                                                                     |
+| `specimen_collection_date` | `date`         | NULL        |               | Date of specimen collection                                                                                          |
 
 ### `ecr_ehr_devices` Table
 
 This table stores EHR device information associated with eCRs.
 
-| Column Name      | Data Type      | Nullability | Default Value | Description                                                                                      |
-| :--------------- | :------------- | :---------- | :------------ | :----------------------------------------------------------------------------------------------- |
+| Column Name              | Data Type      | Nullability | Default Value | Description                                                                                    |
+| :----------------------- | :------------- | :---------- | :------------ | :--------------------------------------------------------------------------------------------- |
 | `uuid`                   | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], unique identifier for the EHR device record |
-| `eicr_id`                | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], Foreign key, references `ecr_data.eicr_id`    |
-| `ehr_manufacturer_model` | `varchar(255)` | NULL        |               | EHR manufacturer model                                                                   |
-| `ehr_software`           | `varchar(255)` | NULL        |               | EHR software                                                                             |
+| `eicr_id`                | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], Foreign key, references `ecr_data.eicr_id`  |
+| `ehr_manufacturer_model` | `varchar(255)` | NULL        |               | EHR manufacturer model                                                                         |
+| `ehr_software`           | `varchar(255)` | NULL        |               | EHR software                                                                                   |
