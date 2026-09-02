@@ -170,7 +170,11 @@ export const getOrchestrationResponse = async (
       message = text;
     }
 
-    throw new OrchestrationError(message, messageInTimestamp, messageOutTimestamp);
+    throw new OrchestrationError(
+      message,
+      messageInTimestamp,
+      messageOutTimestamp,
+    );
   } else {
     const resp = (await response.json()) as OrchestrationRawResponse;
     const messageOutTimestamp = new Date().toISOString();
