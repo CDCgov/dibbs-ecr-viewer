@@ -173,8 +173,9 @@ jobs:
           # --network host                 : Allows the container to hit our local docker compose (localhost:3000)
           # --ipc=host & --security-opt    : Prevents Firefox/Chromium from crashing due to sandbox restrictions
           # -e HOME=/tmp & --user 1001     : Runs as the GitHub runner user to prevent root file permission errors
+          # -e CI=true                     : Propagates CI status so playwright.config.ts uses workers:1 and retries:1
           # -v ...:/work & -w /work        : Mounts our code into the container and sets the working directory
-          CMD="docker run --rm --network host --ipc=host --security-opt seccomp=unconfined -e HOME=/tmp --user 1001:1001 -v ${{ github.workspace }}/containers/${{ env.CONTAINER }}:/work -w /work mcr.microsoft.com/playwright:v1.58.2-jammy"
+          CMD="docker run --rm --network host --ipc=host --security-opt seccomp=unconfined -e HOME=/tmp -e CI=true --user 1001:1001 -v ${{ github.workspace }}/containers/${{ env.CONTAINER }}:/work -w /work mcr.microsoft.com/playwright:v1.58.2-jammy"
           echo "PLAYWRIGHT_DOCKER=$CMD" >> $GITHUB_ENV
 
       - name: Run Playwright tests - Migrations
