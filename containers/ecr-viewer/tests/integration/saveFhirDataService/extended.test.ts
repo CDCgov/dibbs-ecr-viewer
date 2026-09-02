@@ -35,8 +35,12 @@ const baseExtendedMetadata: BundleExtendedMetadata = {
   eicr_id: "eicr-12345",
   eicr_version_number: "1",
   authoring_date: "2024-01-01",
-  ehr_manufacturer_model: "EHR Manufacturer Model",
-  ehr_software: "EHR Software",
+  ehr_devices: [
+    {
+      ehr_manufacturer_model: "EHR Manufacturer Model",
+      ehr_software: "EHR Software",
+    }
+  ],
   provider_id: "12345",
   facility_id: "12345",
   facility_name: "Hospital A",
@@ -150,6 +154,16 @@ describe("saveFhirData - extended", () => {
     expect(savedSpecimens[0].lab_uuid).toEqual(savedLab.uuid);
     expect(savedSpecimens[0].specimen_type).toEqual("Blood");
     expect(savedSpecimens[0].specimen_collection_date).toBeInstanceOf(Date);
+
+    const savedDevices = await getDb<Extended>()
+      .selectFrom("ecr_ehr_devices")
+      .select(["uuid", "eicr_id", "ehr_software", "ehr_manufacturer_model"])
+      .where("eicr_id", "=", "1-2-3-4")
+      .execute();
+
+    expect(savedDevices).toHaveLength(1);
+    expect(savedDevices[0].ehr_software).toEqual("EHR Software");
+    expect(savedDevices[0].ehr_manufacturer_model).toEqual("EHR Manufacturer Model");
 
     // check audit log
     const log = await getLastAuditLog();
