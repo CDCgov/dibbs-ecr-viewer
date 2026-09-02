@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 # Download FHIR-Converter
 
-RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch 8.8.2 --depth 1 /App
+RUN git clone https://github.com/CDCgov/dibbs-FHIR-Converter.git --branch resolve-entry-references --depth 1 /App
 
 WORKDIR /App
 
@@ -13,8 +13,6 @@ RUN dotnet publish \
   -r linux-x64 \
   --self-contained true \
   -o output
-
-RUN apt-get update && apt-get install -y curl
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /App
