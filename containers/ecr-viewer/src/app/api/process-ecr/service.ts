@@ -39,6 +39,30 @@ interface BundleInfo {
 }
 
 /**
+ * Thrown when the orchestration request fails — either orchestration itself
+ * responded with an error, or we never got a response at all (timeout,
+ * connection drop, etc). We attach message-in/out timestamps so a failed or
+ * slow request is still traceable: we use orchestration's own timestamps if
+ * its error response has them, and otherwise fall back to whenever we
+ * started and gave up on the request ourselves.
+ */
+export class OrchestrationError extends Error {
+  messageInTimestamp: string;
+  messageOutTimestamp: string;
+
+  constructor(
+    message: string,
+    messageInTimestamp: string,
+    messageOutTimestamp: string,
+  ) {
+    super(message);
+    this.name = "OrchestrationError";
+    this.messageInTimestamp = messageInTimestamp;
+    this.messageOutTimestamp = messageOutTimestamp;
+  }
+}
+
+/**
  * Determines the orchestration config to use based on set env variables
  * @returns name of the orchestration config
  */
@@ -103,14 +127,35 @@ export const getOrchestrationResponse = async (
     headers.append("content-type", "application/json");
   }
 
-  const response = await fetch(`${process.env.ORCHESTRATION_URL}/${endpoint}`, {
-    method: "post",
-    body,
-    headers,
-    dispatcher: fetchAgent,
-  });
+  // Grab this before firing off the request — if it times out or the
+  // connection just dies, we still want a message-in time to report.
+  const messageInTimestamp = new Date().toISOString();
+
+  let response: Awaited<ReturnType<typeof fetch>>;
+  try {
+    response = await fetch(`${process.env.ORCHESTRATION_URL}/${endpoint}`, {
+      method: "post",
+      body,
+      headers,
+      dispatcher: fetchAgent,
+    });
+  } catch (error) {
+    const messageOutTimestamp = new Date().toISOString();
+    console.error({
+      message: "Error thrown from orchestration",
+      error,
+    });
+    throw new OrchestrationError(
+      error instanceof Error
+        ? error.message
+        : "Failed to reach orchestration",
+      messageInTimestamp,
+      messageOutTimestamp,
+    );
+  }
 
   if (response.status !== 200) {
+    const messageOutTimestamp = new Date().toISOString();
     let message = "";
     const text = await response.text();
 
@@ -120,14 +165,28 @@ export const getOrchestrationResponse = async (
       body: text,
     });
 
+    // If orchestration managed to send back an error response, its own
+    // timestamps are more accurate than ours — only fall back to what we
+    // tracked locally if it didn't include any.
+    let orchestrationInTimestamp: string | undefined;
+    let orchestrationOutTimestamp: string | undefined;
     try {
       const json = JSON.parse(text);
-      message = json?.detail || text;
+      // Orchestration puts its error text under "message", not "detail" —
+      // keeping the "detail" check around too just in case something else
+      // in the chain uses that convention.
+      message = json?.message || json?.detail || text;
+      orchestrationInTimestamp = json?.message_in_timestamp;
+      orchestrationOutTimestamp = json?.message_out_timestamp;
     } catch {
       message = text;
     }
 
-    throw new Error(message);
+    throw new OrchestrationError(
+      message,
+      orchestrationInTimestamp ?? messageInTimestamp,
+      orchestrationOutTimestamp ?? messageOutTimestamp,
+    );
   } else {
     const resp = (await response.json()) as OrchestrationRawResponse;
     return {
@@ -223,6 +282,12 @@ export const orchestrationRequest = async (
           message:
             error instanceof Error && error.message ? error.message : message,
           status: 500,
+          ...(error instanceof OrchestrationError
+            ? {
+                message_in_timestamp: error.messageInTimestamp,
+                message_out_timestamp: error.messageOutTimestamp,
+              }
+            : {}),
         };
       }
 
@@ -255,11 +320,13 @@ export const orchestrationRequest = async (
       await deleteFromStorage(ecrId, process.env.SOURCE, "xml");
     }
 
-    const errMsg =
-      orchestrationResult.status === "rejected"
-        ? String(orchestrationResult.reason)
-        : orchestrationResult.value.message;
-    return { message: errMsg, status: 500 };
+    if (orchestrationResult.status === "rejected") {
+      return { message: String(orchestrationResult.reason), status: 500 };
+    }
+
+    const { message, message_in_timestamp, message_out_timestamp } =
+      orchestrationResult.value;
+    return { message, message_in_timestamp, message_out_timestamp, status: 500 };
   }
 
   return orchestrationResult.value;

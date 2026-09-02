@@ -202,6 +202,60 @@ describe("orchestrationRequest", () => {
     expect(response).toEqual({
       message: "Error",
       status: 500,
+      message_in_timestamp: expect.any(String),
+      message_out_timestamp: expect.any(String),
+    });
+  });
+
+  it("uses orchestration's own message_in/out timestamps when its error response includes them", async () => {
+    mockPool
+      .intercept({
+        path: "/process-zip",
+        method: "POST",
+      })
+      .reply(500, {
+        message: "Orchestration service error: timed out",
+        message_in_timestamp: "2026-09-02T18:00:00.000Z",
+        message_out_timestamp: "2026-09-02T18:15:00.000Z",
+      });
+
+    jest.spyOn(console, "error").mockImplementation(() => {});
+
+    const response = await orchestrationRequest(
+      { ecr: mockFile },
+      false,
+      mockAgent as unknown as Agent,
+    );
+
+    expect(response).toEqual({
+      message: "Orchestration service error: timed out",
+      status: 500,
+      message_in_timestamp: "2026-09-02T18:00:00.000Z",
+      message_out_timestamp: "2026-09-02T18:15:00.000Z",
+    });
+  });
+
+  it("falls back to its own message_in/out timestamps when the request to orchestration never gets a response", async () => {
+    mockPool
+      .intercept({
+        path: "/process-zip",
+        method: "POST",
+      })
+      .replyWithError(new Error("fetch failed"));
+
+    jest.spyOn(console, "error").mockImplementation(() => {});
+
+    const response = await orchestrationRequest(
+      { ecr: mockFile },
+      false,
+      mockAgent as unknown as Agent,
+    );
+
+    expect(response).toEqual({
+      message: "fetch failed",
+      status: 500,
+      message_in_timestamp: expect.any(String),
+      message_out_timestamp: expect.any(String),
     });
   });
 
@@ -226,6 +280,8 @@ describe("orchestrationRequest", () => {
     expect(response).toEqual({
       message: '{"somethingElse":"Error"}',
       status: 500,
+      message_in_timestamp: expect.any(String),
+      message_out_timestamp: expect.any(String),
     });
   });
 
@@ -248,6 +304,8 @@ describe("orchestrationRequest", () => {
     expect(response).toEqual({
       message: "error",
       status: 500,
+      message_in_timestamp: expect.any(String),
+      message_out_timestamp: expect.any(String),
     });
   });
 
@@ -270,6 +328,8 @@ describe("orchestrationRequest", () => {
     expect(response).toEqual({
       message: "Failed to process orchestration response",
       status: 500,
+      message_in_timestamp: expect.any(String),
+      message_out_timestamp: expect.any(String),
     });
   });
 
