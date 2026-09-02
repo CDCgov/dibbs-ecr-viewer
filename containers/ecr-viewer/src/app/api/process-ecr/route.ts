@@ -23,11 +23,12 @@ const schema = z.compile(
     ecr: z.union([z.string(), z.instanceof(File)]),
     rr: z.union([z.string(), z.instanceof(File)]).optional(),
     ...returnBundle,
-  })
+  }),
 );
 
 const processZipSchema = z.compile(
-  z.object({
+  z
+    .object({
       upload_file: z
         .instanceof(File)
         .refine(
@@ -43,7 +44,7 @@ const processZipSchema = z.compile(
     .transform((input) => ({
       ...input,
       ecr: input.upload_file,
-    }))
+    })),
 );
 
 /**

@@ -19,7 +19,7 @@ const schema = z.compile(
       .optional()
       .transform((v) => v?.toLowerCase()),
     init_admin_email: z.string().optional(),
-  })
+  }),
 );
 
 interface MigrationResponse {
