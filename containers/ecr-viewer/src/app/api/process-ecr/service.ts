@@ -143,9 +143,7 @@ export const getOrchestrationResponse = async (
       error,
     });
     throw new OrchestrationError(
-      error instanceof Error
-        ? error.message
-        : "Failed to reach orchestration",
+      error instanceof Error ? error.message : "Failed to reach orchestration",
       messageInTimestamp,
       messageOutTimestamp,
     );
@@ -313,7 +311,12 @@ export const orchestrationRequest = async (
 
     const { message, message_in_timestamp, message_out_timestamp } =
       orchestrationResult.value;
-    return { message, message_in_timestamp, message_out_timestamp, status: 500 };
+    return {
+      message,
+      message_in_timestamp,
+      message_out_timestamp,
+      status: 500,
+    };
   }
 
   return orchestrationResult.value;
