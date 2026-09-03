@@ -99,7 +99,12 @@ const standardUserUnassigned = makeUser(
   [],
 );
 
-const renderTable = (isLoggedInUserAdmin: boolean) =>
+const renderTable = (
+  isLoggedInUserAdmin: boolean,
+  programAreas: ListedProgramArea[] = isLoggedInUserAdmin
+    ? [programA, programB]
+    : [programA],
+) =>
   render(
     <UserTable
       users={[
@@ -109,7 +114,7 @@ const renderTable = (isLoggedInUserAdmin: boolean) =>
         standardUserRestricted,
         standardUserUnassigned,
       ]}
-      programAreas={isLoggedInUserAdmin ? [programA, programB] : [programA]}
+      programAreas={programAreas}
       detailProgramAreas={[programA, programB]}
       isLoggedInUserAdmin={isLoggedInUserAdmin}
       deleteAction={jest.fn().mockResolvedValue({})}
@@ -134,6 +139,30 @@ describe("UserTable", () => {
           name: "No program areas (Standard)",
         }),
       ).toBeInTheDocument();
+    });
+
+    it("shows a divider between the All/No program area checkboxes and the program areas when program areas exist", async () => {
+      const user = userEvent.setup();
+      renderTable(true, [programA, programB]);
+
+      await user.click(screen.getByLabelText(/Filter by program area/));
+      expect(screen.getByTestId("program-area-divider")).toBeInTheDocument();
+      expect(
+        screen.getByRole("checkbox", { name: "Program A" }),
+      ).toBeInTheDocument();
+    });
+
+    it("does not show a divider when no program areas exist to filter on", async () => {
+      const user = userEvent.setup();
+      renderTable(true, []);
+
+      await user.click(screen.getByLabelText(/Filter by program area/));
+      expect(
+        screen.getByRole("checkbox", { name: "All program areas (Admin)" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByTestId("program-area-divider"),
+      ).not.toBeInTheDocument();
     });
   });
 
