@@ -25,11 +25,17 @@ BEGIN TRY
   DELETE FROM ecr_viewer.ecr_rr_conditions;
 
   -- Extended schema tables (only present when METADATA_DATABASE_SCHEMA=extended)
+  IF OBJECT_ID('ecr_viewer.ecr_lab_specimens', 'U') IS NOT NULL
+    DELETE FROM ecr_viewer.ecr_lab_specimens;
+
   IF OBJECT_ID('ecr_viewer.ecr_labs', 'U') IS NOT NULL
     DELETE FROM ecr_viewer.ecr_labs;
 
   IF OBJECT_ID('ecr_viewer.ecr_immunizations', 'U') IS NOT NULL
     DELETE FROM ecr_viewer.ecr_immunizations;
+
+  IF OBJECT_ID('ecr_viewer.ecr_ehr_devices', 'U') IS NOT NULL
+    DELETE FROM ecr_viewer.ecr_ehr_devices;
 
   IF OBJECT_ID('ecr_viewer.patient_address', 'U') IS NOT NULL
     DELETE FROM ecr_viewer.patient_address;
