@@ -140,8 +140,12 @@ const makeExtendedMetadata = (
   processing_status: "new",
   eicr_id: "metadata-ecr-id",
   authoring_date: "2026-07-14",
-  ehr_software: "EHR",
-  ehr_manufacturer_model: "EHR Model",
+  ehr_devices: [
+    {
+      ehr_software: "EHR",
+      ehr_manufacturer_model: "EHR Model",
+    },
+  ],
   provider_id: "provider-1",
   facility_id: "facility-1",
   facility_name: "Facility",

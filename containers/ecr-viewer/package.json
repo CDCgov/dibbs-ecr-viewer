@@ -7,7 +7,6 @@
     "npm": "^11"
   },
   "scripts": {
-    "docs": "typedoc --customCss guides/assets/styles.css",
     "dev": "next dev",
     "local-dev": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./docker-compose.yaml --profile ${CONFIG_NAME} up -d && allow-scripts && npm run dev'",
     "local-docker": "npx @dotenvx/dotenvx run -f .env.local -- sh -c 'docker compose -f ./docker-compose.yaml --profile ${CONFIG_NAME} --profile ecr-viewer up ${FLAGS}'",
@@ -73,7 +72,7 @@
     "tarn": "^3.0.2",
     "tedious": "^20.0.0",
     "undici": "^8.10.0",
-    "zod": "^3.24.1"
+    "zod": "4.5.4"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.1",
@@ -106,7 +105,7 @@
     "@typescript-eslint/parser": "8.67.0",
     "autoprefixer": "^10.4.21",
     "aws-sdk-client-mock": "^4.1.0",
-    "concurrently": "^10.0.3",
+    "concurrently": "^10.0.5",
     "eslint": "10.8.1",
     "eslint-config-next": "16.1.6",
     "eslint-config-prettier": "^10.1.8",
@@ -128,8 +127,6 @@
     "prettier": "3.6.2",
     "react-is": "^19.0.0",
     "sass": "^1.94.0",
-    "typedoc": "^0.28.13",
-    "typedoc-plugin-mermaid": "^1.12.0",
     "typescript": "^5.8.3"
   },
   "overrides": {

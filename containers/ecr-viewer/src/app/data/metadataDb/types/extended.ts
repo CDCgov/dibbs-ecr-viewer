@@ -21,8 +21,6 @@ export interface extended_ecr_data extends ecr_data {
   eicr_version_number: string | undefined;
   authoring_date: Date | undefined;
   authoring_provider: string | undefined;
-  ehr_software: string | undefined;
-  ehr_manufacturer_model: string | undefined;
   provider_id: string | undefined;
   facility_id: string | undefined;
   encounter_type: string | undefined;
@@ -87,6 +85,13 @@ export interface ecr_immunizations {
   status_reason: string | undefined;
 }
 
+export interface ecr_ehr_devices {
+  uuid: Generated<string>;
+  eicr_id: string;
+  ehr_software: string | undefined;
+  ehr_manufacturer_model: string | undefined;
+}
+
 export type ExtendedECR = Selectable<extended_ecr_data>;
 export type NewExtendedECR = Insertable<extended_ecr_data>;
 
@@ -102,10 +107,14 @@ export type NewECRLabSpecimens = Insertable<ecr_lab_specimens>;
 export type ECRImmunizations = Selectable<ecr_immunizations>;
 export type NewECRImmunizations = Insertable<ecr_immunizations>;
 
+export type EcrEhrDevices = Selectable<ecr_ehr_devices>;
+export type NewEcrEhrDevices = Insertable<ecr_ehr_devices>;
+
 export interface Extended extends Core {
   ecr_data: extended_ecr_data;
   patient_address: patient_address;
   ecr_labs: ecr_labs;
   ecr_lab_specimens: ecr_lab_specimens;
   ecr_immunizations: ecr_immunizations;
+  ecr_ehr_devices: ecr_ehr_devices;
 }
