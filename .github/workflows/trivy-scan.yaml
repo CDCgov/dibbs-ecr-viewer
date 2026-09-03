@@ -1,0 +1,66 @@
+name: "Trivy Container Scan"
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    # Weekly scan — Thursdays at 21:00 UTC
+    - cron: "0 21 * * 4"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  security-events: write # Required for SARIF upload to Security tab
+
+jobs:
+  # Reuse the existing list-containers workflow to discover all container dirs
+  list-containers:
+    uses: ./.github/workflows/list-containers.yaml
+
+  trivy-scan:
+    name: Scan ${{ matrix.container }}
+    needs: list-containers
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        container: ${{ fromJson(needs.list-containers.outputs.all-containers) }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Build container image
+        run: |
+          docker build \
+            -t dibbs/${{ matrix.container }}:scan \
+            containers/${{ matrix.container }}
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: "dibbs/${{ matrix.container }}:scan"
+          format: "sarif"
+          output: "trivy-${{ matrix.container }}.sarif"
+          severity: "HIGH,CRITICAL"
+          ignore-unfixed: true
+          exit-code: "0"
+
+      - name: Upload Trivy SARIF to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v4
+        if: always()
+        with:
+          sarif_file: "trivy-${{ matrix.container }}.sarif"
+          category: "trivy-${{ matrix.container }}"
+
+      - name: Upload SARIF as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: trivy-sarif-${{ matrix.container }}
+          path: "trivy-${{ matrix.container }}.sarif"
+          retention-days: 30
