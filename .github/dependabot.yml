@@ -7,75 +7,62 @@ multi-ecosystem-groups:
     schedule:
       interval: "weekly"
       day: "sunday"
+    open-pull-requests-limit: 1
 
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
-    open-pull-requests-limit: 1
     patterns: ["*"]
     multi-ecosystem-group: "all-updates"
   - package-ecosystem: "npm"
     directory: "/containers/ecr-viewer"
-    open-pull-requests-limit: 1
     patterns: ["*"]
     multi-ecosystem-group: "all-updates"
   - package-ecosystem: "docker"
     directory: "/containers/ecr-viewer"
-    open-pull-requests-limit: 1
     patterns: ["*"]
     multi-ecosystem-group: "all-updates"
   - package-ecosystem: "pip"
     directory: "/containers/orchestration"
-    open-pull-requests-limit: 1
     patterns: ["*"]
     multi-ecosystem-group: "all-updates"
   - package-ecosystem: "docker"
     directory: "/containers/orchestration"
-    open-pull-requests-limit: 1
     patterns: ["*"]
     multi-ecosystem-group: "all-updates"
   - package-ecosystem: "pip"
     directory: "/containers/fhir-converter"
-    open-pull-requests-limit: 1
     patterns: ["*"]
     multi-ecosystem-group: "all-updates"
   - package-ecosystem: "docker"
     directory: "/containers/fhir-converter"
-    open-pull-requests-limit: 1
     patterns: ["*"]
     multi-ecosystem-group: "all-updates"
   - package-ecosystem: "pip"
     directory: "/containers/ingestion"
-    open-pull-requests-limit: 1
     patterns: ["*"]
     multi-ecosystem-group: "all-updates"
   - package-ecosystem: "docker"
     directory: "/containers/ingestion"
-    open-pull-requests-limit: 1
     patterns: ["*"]
     multi-ecosystem-group: "all-updates"
   - package-ecosystem: "pip"
     directory: "/containers/message-parser"
-    open-pull-requests-limit: 1
     patterns: ["*"]
     multi-ecosystem-group: "all-updates"
   - package-ecosystem: "docker"
     directory: "/containers/message-parser"
-    open-pull-requests-limit: 1
     patterns: ["*"]
     multi-ecosystem-group: "all-updates"
   - package-ecosystem: "pip"
     directory: "/containers/trigger-code-reference"
-    open-pull-requests-limit: 1
     patterns: ["*"]
     multi-ecosystem-group: "all-updates"
   - package-ecosystem: "docker"
     directory: "/containers/trigger-code-reference"
-    open-pull-requests-limit: 1
     patterns: ["*"]
     multi-ecosystem-group: "all-updates"
   - package-ecosystem: "docker"
     directory: "/containers/fhir-converter-proxy"
-    open-pull-requests-limit: 1
     patterns: ["*"]
     multi-ecosystem-group: "all-updates"
