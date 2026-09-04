@@ -44,6 +44,13 @@ BEGIN TRY
   -- Extended schema tables (only present when METADATA_DATABASE_SCHEMA=extended).
   -- Each block checks for the table before attempting deletion, so this script
   -- is safe to run against both core and extended schema deployments.
+  IF OBJECT_ID('ecr_viewer.ecr_lab_specimens', 'U') IS NOT NULL
+  BEGIN
+    DELETE els
+    FROM ecr_viewer.ecr_lab_specimens els
+    WHERE els.eicr_id = @target_ecr_id;
+  END
+
   IF OBJECT_ID('ecr_viewer.ecr_labs', 'U') IS NOT NULL
   BEGIN
     DELETE el
@@ -56,6 +63,13 @@ BEGIN TRY
     DELETE ei
     FROM ecr_viewer.ecr_immunizations ei
     WHERE ei.eicr_id = @target_ecr_id;
+  END
+
+  IF OBJECT_ID('ecr_viewer.ecr_ehr_devices', 'U') IS NOT NULL
+  BEGIN
+    DELETE eed
+    FROM ecr_viewer.ecr_ehr_devices eed
+    WHERE eed.eicr_id = @target_ecr_id;
   END
 
   IF OBJECT_ID('ecr_viewer.patient_address', 'U') IS NOT NULL

@@ -9,6 +9,7 @@ import {
   RadioDateOptions,
   SelectDeselectAllButton,
 } from "@/app/components/BaseFilter";
+import { ConditionList } from "@/app/components/ConditionList";
 import {
   DetailsSidePanel,
   DetailsTrigger,
@@ -118,6 +119,7 @@ export const UserTable = ({
     {
       id: "email",
       value: "Email",
+      className: "minw-23",
       dataSortable: true,
       sortDirection: "",
       formatter: (v: string, user: ListedUser) => (
@@ -134,6 +136,7 @@ export const UserTable = ({
     {
       id: "user_type",
       value: "User type",
+      className: "minw-20",
       dataSortable: true,
       sortDirection: "",
       formatter: (userType: string) => USER_TYPE_DISPLAY[userType],
@@ -141,6 +144,7 @@ export const UserTable = ({
     {
       id: "program_areas",
       value: "Program areas",
+      className: "minw-28",
       dataSortable: false,
       sortDirection: "",
       formatter: (pas: NamedUserProgramArea[], user) =>
@@ -154,6 +158,7 @@ export const UserTable = ({
     {
       id: "date_of_last_login",
       value: "Last logged in",
+      className: "minw-23",
       dataSortable: true,
       sortDirection: "",
       formatter: (d: Date | null) => (
@@ -303,6 +308,20 @@ const FilterByProgramArea = ({
     });
   };
 
+  const isSpecialOption = (name: string) =>
+    name === ALL_PROGRAM_AREAS_OPTION || name === NO_PROGRAM_AREA_OPTION;
+
+  const specialProgramAreas = Object.fromEntries(
+    Object.entries(filterProgramAreas).filter(([name]) =>
+      isSpecialOption(name),
+    ),
+  );
+  const regularProgramAreas = Object.fromEntries(
+    Object.entries(filterProgramAreas).filter(
+      ([name]) => !isSpecialOption(name),
+    ),
+  );
+
   return (
     <Filter
       isActive={!isAllSelected}
@@ -312,22 +331,46 @@ const FilterByProgramArea = ({
       icon={Folder}
       tag={`${numSelected}`}
     >
-      <div className="display-flex flex-column">
-        {/* Select All button */}
-        <SelectDeselectAllButton
-          groupName="program area"
-          onToggle={handleSelectDeselectAll}
-          numSelected={numSelected}
-          numOptions={numProgramAreas}
-        />
-        <div className="border-top-1px border-base-lighter margin-bottom-1"></div>
+      <div className="display-flex flex-column height-full">
+        <div className="flex-0">
+          {/* Select All button */}
+          <SelectDeselectAllButton
+            groupName="program area"
+            onToggle={handleSelectDeselectAll}
+            numSelected={numSelected}
+            numOptions={numProgramAreas}
+          />
+          <div className="border-top-1px border-base-lighter margin-bottom-1"></div>
+        </div>
 
-        {/* Filter by Program Area checkboxes */}
-        <CheckboxOptions
-          groupName="program area"
-          filterItems={filterProgramAreas}
-          onChange={handleCheckboxChange}
-        />
+        <div className="flex-1 overflow-y-auto">
+          {/* All/No program areas (Admin/Standard) checkboxes */}
+          {Object.keys(specialProgramAreas).length > 0 && (
+            <CheckboxOptions
+              groupName="program area"
+              filterItems={specialProgramAreas}
+              onChange={handleCheckboxChange}
+            />
+          )}
+
+          {/* border line between if both present */}
+          {Object.keys(specialProgramAreas).length > 0 &&
+            Object.keys(regularProgramAreas).length > 0 && (
+              <div
+                className="border-top-1px border-base-lighter margin-x-105 margin-y-1"
+                data-testid="program-area-divider"
+              ></div>
+            )}
+
+          {/* Filter by Program Area checkboxes */}
+          {Object.keys(regularProgramAreas).length > 0 && (
+            <CheckboxOptions
+              groupName="program area"
+              filterItems={regularProgramAreas}
+              onChange={handleCheckboxChange}
+            />
+          )}
+        </div>
       </div>
     </Filter>
   );
@@ -353,24 +396,26 @@ const ProgramAreaContent = ({
       multiselectable={true}
       className="accordion-dibbs"
       items={user.program_areas.map((pa) => {
-        const conditionNames =
-          programAreas
-            .find(({ uuid }) => pa.program_area_uuid === uuid)
-            ?.conditions.map(({ condition_name }) => condition_name) || [];
+        const conditions =
+          programAreas.find(({ uuid }) => pa.program_area_uuid === uuid)
+            ?.conditions || [];
 
         return {
           title: (
             <div className="display-flex flex-justify text-normal">
               <span>{pa.name}</span>
               <span className="display-flex flex-align-center margin-left-2 text-no-wrap">
-                {conditionNames.length} condition
-                {makePlural(conditionNames.length)}
+                {conditions.length} condition
+                {makePlural(conditions.length)}
               </span>
             </div>
           ),
-          content:
-            conditionNames?.join(", ") ||
-            "No conditions assigned to program area",
+          content: (
+            <ConditionList
+              conditions={conditions}
+              emptyText="No conditions assigned to program area"
+            />
+          ),
           id: pa.program_area_uuid,
           expanded: false,
           headingLevel: "h4",

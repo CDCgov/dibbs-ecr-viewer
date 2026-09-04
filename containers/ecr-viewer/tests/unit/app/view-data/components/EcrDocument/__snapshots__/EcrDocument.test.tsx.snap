@@ -2158,26 +2158,7 @@ exports[`Tests for eCR Document Given no data, info message for empty sections s
                         <div
                           class="data-title padding-right-1"
                         >
-                          EHR Manufacturer Model Name
-                        </div>
-                        <div
-                          class="grid-col maxw7 text-pre-line p-list text-italic text-base"
-                        >
-                          No data
-                        </div>
-                      </div>
-                      <div
-                        class="section__line_gray"
-                      />
-                    </div>
-                    <div>
-                      <div
-                        class="grid-row"
-                      >
-                        <div
-                          class="data-title padding-right-1"
-                        >
-                          EHR Software Name
+                          EHR Information
                         </div>
                         <div
                           class="grid-col maxw7 text-pre-line p-list text-italic text-base"

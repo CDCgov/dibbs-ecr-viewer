@@ -14,8 +14,6 @@ on:
   push:
     branches:
       - main
-      # TODO ANGELA: Remove before merging to main
-      - 1614-add-admin-hierarchy
     paths-ignore:
       - pyproject.toml
   workflow_dispatch:
