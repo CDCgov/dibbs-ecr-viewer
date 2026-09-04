@@ -189,3 +189,4 @@ docker logs dibbs-ecr-viewer -f
 
 - VM deployment docker compose, scripts and wizard: [`deployment/vm/README.md`](../deployment/vm/README.md)
 - Environment variable documentation: [BaseRequired](https://cdcgov.github.io/dibbs-ecr-viewer/interfaces/environment.EnvironmentVariables.BaseRequired.html)
+- Cloud Deployment Guides ([AWS](https://github.com/CDCgov/dibbs-ecr-viewer/blob/main/documentation-hub/it-staff/AWS%20Deployment%20Guide.md), [Azure](https://github.com/CDCgov/dibbs-ecr-viewer/blob/main/documentation-hub/it-staff/Azure%20Deployment%20Guide.md), [GCP](https://github.com/CDCgov/dibbs-ecr-viewer/blob/main/documentation-hub/it-staff/GCP%20Deployment%20Guide.md))
