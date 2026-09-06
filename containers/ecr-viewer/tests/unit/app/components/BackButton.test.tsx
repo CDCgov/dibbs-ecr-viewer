@@ -53,7 +53,7 @@ describe("Back button", () => {
       "some-icon-class",
     );
   });
-    it("should have display-inline-block class to prevent focus ring clipping", () => {
+  it("should have display-inline-block class to prevent focus ring clipping", () => {
     (useIsLoggedInUser as jest.Mock).mockReturnValue(true);
     render(<BackButton />);
 
