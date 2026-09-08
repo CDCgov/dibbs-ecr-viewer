@@ -102,7 +102,9 @@
 }
 
 .maxh-6205 {
-  max-height: 31.25rem;
+  // Capped at 31.25rem normally, but shrinks on short viewports so
+  // they don't run off to the bottom of the screen past the footer.
+  max-height: min(31.25rem, 55vh);
 }
 
 .maxw7 {

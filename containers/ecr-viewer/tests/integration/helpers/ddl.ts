@@ -60,6 +60,7 @@ export const clearExtended = async () => {
   await db.deleteFrom("ecr_lab_specimens").execute();
   await db.deleteFrom("ecr_labs").execute();
   await db.deleteFrom("ecr_immunizations").execute();
+  await db.deleteFrom("ecr_ehr_devices").execute();
   await clearCore();
 };
 
@@ -72,5 +73,6 @@ export const clearEcrExtended = async () => {
   await db.deleteFrom("ecr_lab_specimens").execute();
   await db.deleteFrom("ecr_labs").execute();
   await db.deleteFrom("ecr_immunizations").execute();
+  await db.deleteFrom("ecr_ehr_devices").execute();
   await clearEcrCore();
 };

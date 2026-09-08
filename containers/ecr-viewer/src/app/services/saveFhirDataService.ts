@@ -84,6 +84,11 @@ interface Immunization {
   status_reason: string | undefined;
 }
 
+interface EhrDevices {
+  ehr_software: string | undefined;
+  ehr_manufacturer_model: string | undefined;
+}
+
 interface ruleSummary {
   rule_summary: string;
 }
@@ -113,8 +118,7 @@ export interface BundleExtendedMetadata extends BundleMetadata {
   processing_status: string | undefined;
   eicr_id: string;
   authoring_date: string | undefined;
-  ehr_software: string | undefined;
-  ehr_manufacturer_model: string | undefined;
+  ehr_devices: EhrDevices[] | undefined;
   provider_id: string | undefined;
   facility_id: string | undefined;
   encounter_type: string | undefined;
@@ -368,8 +372,6 @@ const saveExtendedMetadata = async (
       eicr_version_number: metadata.eicr_version_number,
       authoring_date: asDate(metadata.authoring_date),
       authoring_provider: metadata.provider_id,
-      ehr_software: metadata.ehr_software,
-      ehr_manufacturer_model: metadata.ehr_manufacturer_model,
       provider_id: metadata.provider_id,
       facility_id: metadata.facility_id,
       facility_name: metadata.facility_name,
@@ -467,6 +469,20 @@ const saveExtendedMetadata = async (
           name: immunization.name,
           status: immunization.status,
           status_reason: immunization.status_reason,
+        })
+        .execute();
+    }
+  }
+
+  if (metadata.ehr_devices) {
+    for (const ehr of metadata.ehr_devices) {
+      await trx
+        .insertInto("ecr_ehr_devices")
+        .values({
+          uuid: randomUUID(),
+          eicr_id: ecrId,
+          ehr_software: ehr.ehr_software,
+          ehr_manufacturer_model: ehr.ehr_manufacturer_model,
         })
         .execute();
     }

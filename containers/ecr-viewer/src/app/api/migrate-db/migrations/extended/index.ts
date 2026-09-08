@@ -9,4 +9,5 @@ export default {
   "20260723173756_remove_unused_cols": require("./20260723173756_remove_unused_cols"),
   "20260812173622_ethnicity_varchar_max.ts": require("./20260812173622_ethnicity_varchar_max"),
   "20260731091200_add_lab_specimens": require("./20260731091200_add_lab_specimens"),
+  "20260901120200_add_ehr_devices": require("./20260901120200_add_ehr_devices"),
 };

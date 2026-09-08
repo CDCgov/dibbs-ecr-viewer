@@ -92,8 +92,12 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
             "eicr_id": "db734647-fc99-424c-a864-7e3cda82e704",
             "eicr_version_number": "2",
             "authoring_date": "2020-11-07T09:44:21-05:00",
-            "ehr_software": "Epic - Version 10.5",  # Synthetic
-            "ehr_manufacturer_model": "Epic - Version 10.5",  # Synthetic
+            "ehr_devices": [
+                {
+                    "ehr_software": "Epic - Version 10.5",  # Synthetic
+                    "ehr_manufacturer_model": "Epic - Version 10.5",  # Synthetic
+                }
+            ],
             "provider_id": "6666666666666",
             "facility_id": "2.16.840.1.113883.4.6",
             "facility_name": "Good Health Hospital",

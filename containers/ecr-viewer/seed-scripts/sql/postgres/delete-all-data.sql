@@ -21,7 +21,8 @@
 DO $$
 BEGIN
   -- ECR records and all child tables (ecr_rr_conditions, ecr_rr_rule_summaries,
-  -- and extended schema tables ecr_labs, ecr_immunizations, patient_address if present).
+  -- and extended schema tables ecr_lab_specimens, ecr_labs, ecr_immunizations,
+  -- ecr_ehr_devices, and patient_address if present).
   TRUNCATE ecr_viewer.ecr_data CASCADE;
 
   -- Audit log (no FK dependencies)

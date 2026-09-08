@@ -7,6 +7,7 @@ import {
   Condition,
   ContactPoint,
   Dosage,
+  Device,
   EncounterParticipant,
   Extension,
   HumanName,
@@ -96,6 +97,7 @@ export type PathTypes = {
   eicrReleaseVersion: ValueX;
   eicrCustodianRef: string;
   dateTimeEcrCreated: string;
+  ehrDevices: Device;
   ehrSoftware: ValueX;
   ehrManufacturerModel: string;
   eICRProcessingStatus: string;
@@ -443,13 +445,17 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     type: "string",
     path: "entry.resource.Composition.custodian.reference",
   },
+  ehrDevices: {
+    type: "Device",
+    path: "entry.resource.Device.where(property.type.coding.exists(system = 'http://hl7.org/fhir/device-category' and code = 'software'))",
+  },
   ehrSoftware: {
     type: "ValueX",
-    path: "entry.resource.Device.where(property.type.coding.exists(system = 'http://hl7.org/fhir/device-category' and code = 'software')).version.value",
+    path: "version.value",
   },
   ehrManufacturerModel: {
     type: "string",
-    path: "entry.resource.Device.where(property.type.coding.exists(system = 'http://hl7.org/fhir/device-category' and code = 'software')).manufacturer",
+    path: "manufacturer",
   },
   eICRProcessingStatus: {
     type: "string",

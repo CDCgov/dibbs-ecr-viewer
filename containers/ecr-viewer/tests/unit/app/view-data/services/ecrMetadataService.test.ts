@@ -1,4 +1,7 @@
-import { Bundle } from "fhir/r4";
+import { ReactElement } from "react";
+
+import { render, screen } from "@testing-library/react";
+import { Bundle, Device } from "fhir/r4";
 
 import BundleWithEcrMetadata from "../../../../../../../test-data/fhir/BundleEcrMetadata.json";
 import BundleErsdWarningNoDetail from "../../../../../../../test-data/fhir/BundleErsdWarningNoDetail.json";
@@ -26,7 +29,7 @@ describe("Evaluate Ecr Metadata", () => {
       BundleWithEcrMetadata as unknown as Bundle,
     );
 
-    expect(actual.eicrDetails.availableData).toEqual([
+    expect(actual.eicrDetails.availableData.slice(0, 3)).toEqual([
       {
         title: "eICR ID",
         toolTip:
@@ -38,13 +41,35 @@ describe("Evaluate Ecr Metadata", () => {
         value: "02/04/2000 9:01\u00A0AM\u00A0EST",
       },
       { title: "eICR Release Version", value: "12/12/2016" },
-      { title: "EHR Manufacturer Model Name", value: "Epic - Version 10.1" },
-      {
-        title: "EHR Software Name",
-        value: "Epic - Version 10.1",
-      },
     ]);
-    expect(actual.eicrDetails.unavailableData).toBeEmpty();
+    const ehrInformation = actual.eicrDetails.availableData[3];
+    render(ehrInformation.value as ReactElement);
+    expect(screen.getAllByText("Epic - Version 10.1")).toHaveLength(2);
+  });
+  it("should display multiple EHR manufacturer and software names", () => {
+    const bundle = JSON.parse(
+      JSON.stringify(BundleWithEcrMetadata),
+    ) as unknown as Bundle;
+    const firstDevice = bundle.entry?.find(
+      ({ resource }) => resource?.resourceType === "Device",
+    )?.resource as Device;
+    const secondDevice: Device = {
+      ...JSON.parse(JSON.stringify(firstDevice)),
+      id: "second-ehr-device",
+      manufacturer: "Acme EHR Model 2",
+      version: [{ value: "Acme Software 2.5" }],
+    };
+    bundle.entry?.push({ resource: secondDevice });
+
+    const actual = evaluateEcrMetadata(bundle);
+    const ehrInformation = actual.eicrDetails.availableData.find(
+      ({ title }) => title === "EHR Information",
+    );
+
+    render(ehrInformation?.value as ReactElement);
+    expect(screen.getAllByRole("row")).toHaveLength(3);
+    expect(screen.getByText("Acme EHR Model 2")).toBeInTheDocument();
+    expect(screen.getByText("Acme Software 2.5")).toBeInTheDocument();
   });
   it("should have eicr Custodian Details", () => {
     const actual = evaluateEcrMetadata(

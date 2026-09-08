@@ -144,8 +144,6 @@ The following columns are added to the `ecr_data` table in the extended schema:
 | `processing_status`        | `varchar(255)` | NULL        |               | Processing status of the eCR                                                             |
 | `authoring_date`           | `datetime`     | NULL        |               | Date of authoring                                                                        |
 | `authoring_provider`       | `varchar(255)` | NULL        |               | Authoring provider                                                                       |
-| `ehr_manufacturer_model`   | `varchar(255)` | NULL        |               | EHR manufacturer model                                                                   |
-| `ehr_software`             | `varchar(255)` | NULL        |               | EHR software                                                                             |
 | `provider_id`              | `varchar(255)` | NULL        |               | Provider ID                                                                              |
 | `facility_id`              | `varchar(255)` | NULL        |               | Facility ID                                                                              |
 | `encounter_type`           | `varchar(255)` | NULL        |               | Type of encounter                                                                        |
@@ -177,8 +175,6 @@ This table stores laboratory results associated with eCRs. Note that the primary
 | `test_result_reference_range_low_units`  | `varchar(50)`  | NULL        |               | Units for the lower bound of the reference range                                              |
 | `test_result_reference_range_high_value` | `numeric`      | NULL        |               | Upper bound of the reference range                                                            |
 | `test_result_reference_range_high_units` | `varchar(50)`  | NULL        |               | Units for the upper bound of the reference range                                              |
-| `specimen_type`                          | `varchar(255)` | NULL        |               | Type of specimen                                                                              |
-| `specimen_collection_date`               | `date`         | NULL        |               | Date of specimen collection                                                                   |
 | `performing_lab`                         | `varchar(255)` | NULL        |               | Performing laboratory                                                                         |
 
 ### `ecr_immunizations` Table
@@ -211,3 +207,26 @@ This table stores patient address information. Note that the primary key for thi
 | `period_start` | `datetime`     | NULL        |               | Start date of the address's validity period                                                   |
 | `period_end`   | `datetime`     | NULL        |               | End date of the address's validity period                                                     |
 | `eicr_id`      | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], Foreign key, references `ecr_data.eicr_id` |
+
+### `ecr_lab_specimens` Table
+
+This table stores specimen information for eCR labs.
+
+| Column Name                | Data Type      | Nullability | Default Value | Description                                                                                                          |
+| :------------------------- | :------------- | :---------- | :------------ | :------------------------------------------------------------------------------------------------------------------- |
+| `uuid`                     | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], unique identifier for the specimen record                         |
+| `eicr_id`                  | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], Foreign key, references `ecr_data.eicr_id` and `ecr_labs.eicr_id` |
+| `lab_uuid`                 | `varchar(200)` | NOT NULL    |               | Foreign key, references `ecr_labs.uuid`                                                                              |
+| `specimen_type`            | `varchar(255)` | NULL        |               | Type of specimen                                                                                                     |
+| `specimen_collection_date` | `date`         | NULL        |               | Date of specimen collection                                                                                          |
+
+### `ecr_ehr_devices` Table
+
+This table stores EHR device information associated with eCRs.
+
+| Column Name              | Data Type      | Nullability | Default Value | Description                                                                                    |
+| :----------------------- | :------------- | :---------- | :------------ | :--------------------------------------------------------------------------------------------- |
+| `uuid`                   | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], unique identifier for the EHR device record |
+| `eicr_id`                | `varchar(200)` | NOT NULL    |               | Part of the composite primary key [uuid, eicr_id], Foreign key, references `ecr_data.eicr_id`  |
+| `ehr_manufacturer_model` | `varchar(255)` | NULL        |               | EHR manufacturer model                                                                         |
+| `ehr_software`           | `varchar(255)` | NULL        |               | EHR software                                                                                   |

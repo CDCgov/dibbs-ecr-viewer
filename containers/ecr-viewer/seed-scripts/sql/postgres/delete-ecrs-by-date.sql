@@ -36,10 +36,22 @@ BEGIN
     WHERE date_created < cutoff_date
   );
 
-  -- Extended schema tables (ecr_labs, ecr_immunizations, patient_address).
+  -- Extended schema tables (ecr_lab_specimens, ecr_labs, ecr_immunizations,
+  -- ecr_ehr_devices, patient_address).
   -- These tables only exist when METADATA_DATABASE_SCHEMA=extended.
   -- Each block checks for the table before attempting deletion, so this script
   -- is safe to run against both core and extended schema deployments.
+  IF EXISTS (
+    SELECT FROM information_schema.tables
+    WHERE table_schema = 'ecr_viewer' AND table_name = 'ecr_lab_specimens'
+  ) THEN
+    DELETE FROM ecr_viewer.ecr_lab_specimens
+    WHERE eicr_id IN (
+      SELECT eicr_id FROM ecr_viewer.ecr_data
+      WHERE date_created < cutoff_date
+    );
+  END IF;
+
   IF EXISTS (
     SELECT FROM information_schema.tables
     WHERE table_schema = 'ecr_viewer' AND table_name = 'ecr_labs'
@@ -56,6 +68,17 @@ BEGIN
     WHERE table_schema = 'ecr_viewer' AND table_name = 'ecr_immunizations'
   ) THEN
     DELETE FROM ecr_viewer.ecr_immunizations
+    WHERE eicr_id IN (
+      SELECT eicr_id FROM ecr_viewer.ecr_data
+      WHERE date_created < cutoff_date
+    );
+  END IF;
+
+  IF EXISTS (
+    SELECT FROM information_schema.tables
+    WHERE table_schema = 'ecr_viewer' AND table_name = 'ecr_ehr_devices'
+  ) THEN
+    DELETE FROM ecr_viewer.ecr_ehr_devices
     WHERE eicr_id IN (
       SELECT eicr_id FROM ecr_viewer.ecr_data
       WHERE date_created < cutoff_date

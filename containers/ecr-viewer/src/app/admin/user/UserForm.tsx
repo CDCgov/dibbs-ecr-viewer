@@ -9,6 +9,7 @@ import {
   Radio,
 } from "@trussworks/react-uswds";
 
+import { ConditionList } from "@/app/components/ConditionList";
 import { ExpandCollapseAccordionControlled } from "@/app/components/ExpandCollapseAccordion";
 import { USER_TYPE, USER_TYPE_DISPLAY } from "@/app/constants";
 import { FieldSet } from "@/app/components/forms/FieldSet";
@@ -280,7 +281,7 @@ export const ProgramFieldSet = ({
           </span>
         </div>
       ),
-      content: conditions.map((c) => c.condition_name).join(", "),
+      content: <ConditionList conditions={conditions} />,
       id: toKebabCase(name),
       expanded: !!expandedPrograms[toKebabCase(name)],
       headingLevel: "h3",
