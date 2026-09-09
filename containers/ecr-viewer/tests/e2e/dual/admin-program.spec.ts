@@ -406,7 +406,7 @@ const createRandomProgramArea = async (
     triedConditionNames.add(selectedConditionName);
     const conditionIsAssigned =
       (await checkbox
-        .locator("..")
+        .locator("../..")
         .getByText(/Condition in /)
         .count()) > 0;
     if (conditionIsAssigned) continue;
