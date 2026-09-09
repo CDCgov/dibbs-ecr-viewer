@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { TextEncoder } from "util";
+import { TextDecoder, TextEncoder } from "util";
 
 import { toHaveNoViolations } from "jest-axe";
 import * as matchers from "jest-extended";
@@ -9,6 +9,7 @@ import router from "next-router-mock";
 import { clearEvaluateCache } from "./src/app/utils/evaluate";
 
 global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
 
 failOnConsole();
 
