@@ -118,12 +118,18 @@ def _process_files():
 
     print(f"Sending {len(requests)} ZIP files...")
 
-    # Send requests asynchronously
+    # Send requests asynchronously. Cap concurrency at WEB_CONCURRENCY so we
+    # don't send more requests at once than the downstream conversion
+    # services (fhir-converter, ingestion, message-parser) can actually
+    # handle in parallel.
     n = 0
     failed = []
     duplicates = []
     num_requests = len(requests)
-    for index, response in grequests.imap_enumerated(requests, size=8):
+    upload_concurrency = int(os.getenv("WEB_CONCURRENCY", "3"))
+    for index, response in grequests.imap_enumerated(
+        requests, size=upload_concurrency
+    ):
         n += 1
         folder_path = folder_paths[index]
         if response is None:
