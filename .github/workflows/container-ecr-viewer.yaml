@@ -208,36 +208,9 @@ jobs:
         env:
           SEED_DATA_DIRECTORIES: star-wars
 
-      # TEMPORARY DIAGNOSTIC: checking whether the sqlserver container (which has
-      # no persistent volume - see docker-compose.yaml) survives the transition
-      # between the seed-data-conversion compose stack and the main e2e stack,
-      # or gets silently recreated (losing the uploaded eCRs) in between.
-      - name: Diagnostic - sqlserver state after seed data conversion
-        if: ${{ !cancelled() }}
-        working-directory: ./containers/${{env.CONTAINER}}
-        continue-on-error: true
-        run: |
-          echo "=== sqlserver container(s) after seed data conversion ==="
-          docker ps -a --format '{{.ID}} {{.CreatedAt}} {{.Status}} {{.Names}}' | grep -i sqlserver || echo "no sqlserver container found"
-          echo "=== ecr_data row count ==="
-          docker exec ecr-viewer-sqlserver-1 /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${SQL_SERVER_PASSWORD:-Password1!}" -C -Q "SELECT COUNT(*) AS ecr_data_count FROM ecr_viewer.ecr_data" || echo "query failed (container may not exist for this config)"
-
       - name: Run local docker and wait for it to be ready
         working-directory: ./containers/${{env.CONTAINER}}
         run: npm run local-docker:silent && ./tests/e2e/waitForUrl.sh localhost:3000/ecr-viewer/api/health-check ${{ !matrix.azure_ad  && 'localhost:8071/health/ready' || '' }}
-
-      # TEMPORARY DIAGNOSTIC: same check, after the main stack comes back up, to
-      # see if the container ID changed (recreated) and whether the row count
-      # dropped to zero.
-      - name: Diagnostic - sqlserver state after main stack restart
-        if: ${{ !cancelled() }}
-        working-directory: ./containers/${{env.CONTAINER}}
-        continue-on-error: true
-        run: |
-          echo "=== sqlserver container(s) after main stack restart ==="
-          docker ps -a --format '{{.ID}} {{.CreatedAt}} {{.Status}} {{.Names}}' | grep -i sqlserver || echo "no sqlserver container found"
-          echo "=== ecr_data row count ==="
-          docker exec ecr-viewer-sqlserver-1 /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "${SQL_SERVER_PASSWORD:-Password1!}" -C -Q "SELECT COUNT(*) AS ecr_data_count FROM ecr_viewer.ecr_data" || echo "query failed (container may not exist for this config)"
 
       - name: Seed standard and program admin users, and COVID program
         working-directory: ./containers/${{env.CONTAINER}}
