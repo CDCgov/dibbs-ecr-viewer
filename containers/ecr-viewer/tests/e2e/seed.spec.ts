@@ -35,6 +35,9 @@ test("seed standard and program admin user. seed covid program", async ({
 
     await page.getByPlaceholder("Search condition or category").fill("covid");
     await page.getByRole("button", { name: "Select all", exact: true }).click();
+    // Wait for the click to actually land in React state before saving -
+    // otherwise "Save" can fire before the checkboxes are marked checked.
+    await expect(page.getByRole("checkbox").first()).toBeChecked();
 
     await page
       .getByRole("button", { name: "Save program area" })
@@ -66,6 +69,9 @@ test("seed standard and program admin user. seed covid program", async ({
     await adminRadio.dispatchEvent("click");
 
     await page.getByRole("button", { name: "Select all", exact: true }).click();
+    // Wait for the click to actually land in React state before saving -
+    // otherwise "Save" can fire before the checkboxes are marked checked.
+    await expect(page.getByRole("checkbox").first()).toBeChecked();
 
     await page.getByRole("button", { name: "Save user" }).first().click();
 
@@ -97,6 +103,9 @@ test("seed standard and program admin user. seed covid program", async ({
     });
     await covidCheckbox.scrollIntoViewIfNeeded();
     await covidCheckbox.dispatchEvent("click");
+    // Wait for the click to actually land in React state before saving -
+    // otherwise "Save" can fire before the checkbox is marked checked.
+    await expect(covidCheckbox).toBeChecked();
 
     await page.getByRole("button", { name: "Save user" }).first().click();
 
