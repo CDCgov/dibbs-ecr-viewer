@@ -127,9 +127,7 @@ def _process_files():
     duplicates = []
     num_requests = len(requests)
     upload_concurrency = int(os.getenv("WEB_CONCURRENCY", "3"))
-    for index, response in grequests.imap_enumerated(
-        requests, size=upload_concurrency
-    ):
+    for index, response in grequests.imap_enumerated(requests, size=upload_concurrency):
         n += 1
         folder_path = folder_paths[index]
         if response is None:
