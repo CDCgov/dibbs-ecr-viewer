@@ -35,6 +35,6 @@ const customJestConfig = {
 module.exports = async () => ({
   ...(await createJestConfig(customJestConfig)()),
   transformIgnorePatterns: [
-    "<rootDir>/node_modules/(?!(jose|@azure|@typespec|sanitize-html|htmlparser2)/)",
+    "<rootDir>/node_modules/(?!(jose|@azure|@typespec|sanitize-html|htmlparser2|uuid)/)",
   ],
 });
