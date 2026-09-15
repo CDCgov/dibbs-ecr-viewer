@@ -1,7 +1,7 @@
+# Explicit security floor retained for CVE-2026-48710.
 fastapi>=0.141.1
 fhirpathpy>=2.2.4
-pathlib
-pydantic>=2.13.5
-requests>=2.32.4
-uvicorn[standard]>=0.34.3
-starlette>=1.6.0
+pydantic>=2.13.5 # Transitive dependency, version pinned for security reasons
+requests>=2.34.2
+starlette>=1.6.0 # Transitive dependency, version pinned for security reasons
+uvicorn[standard]>=0.53.0
