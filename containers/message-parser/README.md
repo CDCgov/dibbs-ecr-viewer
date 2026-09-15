@@ -154,6 +154,7 @@ To prevent the execution of malicious `setup.py` scripts during installation, ou
 5. To allow pip to build the package from source safely, you must add it to the `--no-binary` flag in the Dockerfile.
    - Locate the pip install command in the Dockerfile.
    - Add the base name of the package to the comma-separated `--no-binary list` (no spaces, no version numbers). **Example:** Change `--no-binary google-crc32c` to `--no-binary google-crc32c,your-new-package`
+   - Keep build tools such as setuptools pinned to reviewed versions in `build-constraints.txt`; pip applies this file only inside isolated source-build environments.
 6. You should be able to use your new package now!
 
 ### The API
