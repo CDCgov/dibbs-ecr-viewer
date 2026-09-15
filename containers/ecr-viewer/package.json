@@ -156,7 +156,7 @@
     "allowScripts": {
       "@lavamoat/preinstall-always-fail#3.0.0": false,
       "@parcel/watcher#2.6.0": true,
-      "eslint-config-next>eslint-import-resolver-typescript>unrs-resolver#1.11.1": true,
+      "eslint-config-next>eslint-import-resolver-typescript>unrs-resolver#1.12.2": true,
       "fhirpath#5.2.0": false,
       "next>sharp#0.34.5": true,
       "sharp#0.34.5": true
