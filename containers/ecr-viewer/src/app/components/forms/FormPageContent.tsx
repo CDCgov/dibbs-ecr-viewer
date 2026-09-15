@@ -1,7 +1,7 @@
 "use client";
 import { ReactNode, useId, useState } from "react";
 
-import { Alert, Button } from "@trussworks/react-uswds";
+import { Alert, AlertHeading, AlertText, Button } from "@trussworks/react-uswds";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -71,21 +71,19 @@ export const FormPageContent = <T,>({
                 type="warning"
                 slim={true}
                 noIcon={true}
-                headingLevel="h4"
                 aria-live="polite"
               >
-                {formTouchedMsg ?? "You have unsaved changes."}
+                <AlertText>{formTouchedMsg ?? "You have unsaved changes."}</AlertText>
               </Alert>
             )}
             {error && (
               <Alert
                 type="error"
-                heading="Submission failed"
-                headingLevel="h4"
                 className="margin-bottom-3"
                 aria-live="polite"
               >
-                {error}
+                <AlertHeading level="h4">Submission failed</AlertHeading>
+                <AlertText>{error}</AlertText>
               </Alert>
             )}
           </div>
