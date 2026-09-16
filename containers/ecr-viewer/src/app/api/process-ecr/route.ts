@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { orchestrationRequest } from "./service";
-import { Bundle } from "../../types";
+import { Bundle } from "@/app/types";
 
 interface ProcessEcrResponse {
   message: string;
