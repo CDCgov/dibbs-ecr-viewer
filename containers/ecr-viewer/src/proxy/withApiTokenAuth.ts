@@ -1,4 +1,9 @@
-import { createLocalJWKSet, createRemoteJWKSet, jwtVerify, type JWTVerifyGetKey } from "jose";
+import {
+  createLocalJWKSet,
+  createRemoteJWKSet,
+  jwtVerify,
+  type JWTVerifyGetKey,
+} from "jose";
 import { NextRequest } from "next/server";
 
 import { providerMap } from "@/app/api/auth/providers";
