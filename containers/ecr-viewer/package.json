@@ -48,7 +48,7 @@
     "fhirpath": "^5.1.1",
     "focus-trap-react": "^11.0.4",
     "html-react-parser": "^5.2.6",
-    "jose": "6.1.0",
+    "jose": "^6.2.12",
     "js-cookie": "^3.0.7",
     "jszip": "^3.10.1",
     "kysely": "^0.29.5",

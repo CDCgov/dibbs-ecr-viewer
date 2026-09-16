@@ -1,10 +1,16 @@
-import { createLocalJWKSet, createRemoteJWKSet, jwtVerify } from "jose";
+import { createLocalJWKSet, createRemoteJWKSet, jwtVerify, type JWTVerifyGetKey } from "jose";
 import { NextRequest } from "next/server";
 
 import { providerMap } from "@/app/api/auth/providers";
 import { ChainableProxy, ProxyFactory } from "@/proxy";
 
-const providerCache = { wellKnown: "", key: createLocalJWKSet({ keys: [] }) };
+const providerCache: {
+  wellKnown: string;
+  key: JWTVerifyGetKey;
+} = {
+  wellKnown: "",
+  key: createLocalJWKSet({ keys: [] }),
+};
 
 // update the public key info
 const updateProviderCache = async () => {
