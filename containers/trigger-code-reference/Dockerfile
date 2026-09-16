@@ -3,12 +3,15 @@ FROM python:3.14.2-alpine
 RUN apk update && \
     apk upgrade --no-cache
 
-RUN pip install --upgrade pip --break-system-packages
-
 WORKDIR /code
 
 COPY ./requirements.txt /code/requirements.txt
-RUN pip install --require-hashes --only-binary :all: -r requirements.txt
+RUN python -m pip install --upgrade --no-cache-dir pip --break-system-packages && \
+    python -m pip install --no-cache-dir --require-hashes --only-binary :all: -r requirements.txt && \
+    python -m pip uninstall --yes setuptools wheel && \
+    python -m pip check && \
+    python -m pip uninstall --yes pip && \
+    rm -rf /root/.cache/pip /usr/local/lib/python3.14/ensurepip
 
 COPY ./data /code/data
 COPY ./app /code/app
