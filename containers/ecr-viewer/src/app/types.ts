@@ -1,8 +1,5 @@
 import { Accordion } from "@trussworks/react-uswds";
-import {
-  Bundle as GenericBundle,
-  FhirResource,
-} from "fhir/r4";
+import { Bundle as GenericBundle, FhirResource } from "fhir/r4";
 
 export type AccordionItem = React.ComponentProps<typeof Accordion>["items"][0];
 

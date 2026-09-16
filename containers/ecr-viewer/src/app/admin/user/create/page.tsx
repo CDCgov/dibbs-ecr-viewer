@@ -35,13 +35,13 @@ const CreateUserPage = async () => {
       formTouchedMsg="You have unsaved changes. To create a user, you must add an email and select a user type."
       banner={
         programs.length === 0 && (
-          <Alert
-            type="warning"
-            noIcon={true}
-          >
-            <AlertHeading level="h4">You haven't made any program areas</AlertHeading>
-            <AlertText>When you create a user, they won't have access to any eCRs until you
-            create a program area.{" "}
+          <Alert type="warning" noIcon={true}>
+            <AlertHeading level="h4">
+              You haven't made any program areas
+            </AlertHeading>
+            <AlertText>
+              When you create a user, they won't have access to any eCRs until
+              you create a program area.{" "}
               <Link href="/ecr-viewer/admin/program/create">
                 Create a program area
               </Link>

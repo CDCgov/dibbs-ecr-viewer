@@ -1,7 +1,12 @@
 "use client";
 import { ReactNode, useId, useState } from "react";
 
-import { Alert, AlertHeading, AlertText, Button } from "@trussworks/react-uswds";
+import {
+  Alert,
+  AlertHeading,
+  AlertText,
+  Button,
+} from "@trussworks/react-uswds";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -73,7 +78,9 @@ export const FormPageContent = <T,>({
                 noIcon={true}
                 aria-live="polite"
               >
-                <AlertText>{formTouchedMsg ?? "You have unsaved changes."}</AlertText>
+                <AlertText>
+                  {formTouchedMsg ?? "You have unsaved changes."}
+                </AlertText>
               </Alert>
             )}
             {error && (
