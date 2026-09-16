@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { Bundle } from "fhir/r4";
 
 import * as _BundleWithPregnancyStatus from "@/../../../test-data/fhir/BundlePregnancyStatus.json";
+import { Bundle } from "@/app/types";
 import PregnancyInfo from "@/app/view-data/components/PregnancyInfo";
 import { evaluatePregnancyData } from "@/app/view-data/services/pregnancyInfoService";
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";

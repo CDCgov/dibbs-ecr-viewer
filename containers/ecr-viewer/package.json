@@ -89,7 +89,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
-    "@types/fhir": "^0.0.41",
+    "@types/fhir": "^0.0.44",
     "@types/jest": "^30.0.0",
     "@types/jest-axe": "^3.5.9",
     "@types/js-cookie": "^3.0.6",
