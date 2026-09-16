@@ -4,7 +4,7 @@ import {
   MigrationInfo,
   MigrationProvider,
   Migration,
-} from "kysely";
+} from "kysely/migration";
 
 import { getDbRaw } from "@/app/data/metadataDb/database";
 import {

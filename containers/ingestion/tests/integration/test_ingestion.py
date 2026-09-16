@@ -1,4 +1,4 @@
-import httpx
+import httpx2
 import pytest
 
 INGESTION_URL = "http://0.0.0.0:8080"
@@ -15,13 +15,13 @@ def fhir_bundle(read_json_from_test_assets):
 
 @pytest.mark.integration
 def test_health_check(setup):
-    health_check_response = httpx.get(INGESTION_URL)
+    health_check_response = httpx2.get(INGESTION_URL)
     assert health_check_response.status_code == 200
 
 
 @pytest.mark.integration
 def test_openapi():
-    actual_response = httpx.get(INGESTION_URL + "/ingestion/openapi.json")
+    actual_response = httpx2.get(INGESTION_URL + "/ingestion/openapi.json")
     assert actual_response.status_code == 200
 
 
@@ -62,7 +62,7 @@ def test_standardize_names(setup, fhir_bundle):
     }
 
     request = {"data": fhir_bundle}
-    parsing_response = httpx.post(NAMES_URL, json=request)
+    parsing_response = httpx2.post(NAMES_URL, json=request)
 
     assert parsing_response.status_code == 200
     assert parsing_response.json() == expected_reference_response
@@ -105,7 +105,7 @@ def test_standardize_phone(setup, fhir_bundle):
     }
 
     request = {"data": fhir_bundle}
-    parsing_response = httpx.post(PHONE_URL, json=request)
+    parsing_response = httpx2.post(PHONE_URL, json=request)
 
     assert parsing_response.status_code == 200
     assert parsing_response.json() == expected_reference_response
@@ -148,7 +148,7 @@ def test_standardize_dob(setup, fhir_bundle):
     }
 
     request = {"data": fhir_bundle}
-    parsing_response = httpx.post(DOB_URL, json=request)
+    parsing_response = httpx2.post(DOB_URL, json=request)
 
     assert parsing_response.status_code == 200
     assert parsing_response.json() == expected_reference_response

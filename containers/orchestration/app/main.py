@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from typing import Annotated
 
-import httpx
+import httpx2
 from fastapi import (
     Body,
     Depends,
@@ -68,9 +68,9 @@ upload_config_response = load_config_assets(
 )
 
 
-async def get_client(request: Request) -> httpx.AsyncClient:
+async def get_client(request: Request) -> httpx2.AsyncClient:
     """
-    Get the httpx client from the request
+    Get the httpx2 client from the request
     """
     return request.state.client
 
@@ -156,7 +156,7 @@ async def process_zip_endpoint(
     data_type: str = Form(None),
     config_file_name: str = Form(None),
     upload_file: UploadFile = File(None),
-    client: httpx.AsyncClient = Depends(get_client),
+    client: httpx2.AsyncClient = Depends(get_client),
 ) -> OrchestrationResponse:
     """
     This endpoint provides a wrapper function for unpacking an uploaded zip
@@ -202,7 +202,7 @@ async def process_zip_endpoint(
 )
 async def process_message_endpoint(
     request: OrchestrationRequest,
-    client: httpx.AsyncClient = Depends(get_client),
+    client: httpx2.AsyncClient = Depends(get_client),
 ) -> OrchestrationResponse:
     """
     This endpoint provides a wrapper function for unpacking a message
@@ -235,7 +235,7 @@ async def apply_workflow_to_message(
     config_file_name: str,
     message: str,
     rr_content: str,
-    client: httpx.AsyncClient,
+    client: httpx2.AsyncClient,
 ) -> Response:
     """
     Main orchestration function that applies a config-defined workflow to an
@@ -339,7 +339,7 @@ def _filter_failed_responses(responses):
 
 @app.get("/conditions", status_code=200, responses=sample_list_conditions_response)
 async def list_conditions_endpoint(
-    client: httpx.AsyncClient = Depends(get_client),
+    client: httpx2.AsyncClient = Depends(get_client),
 ) -> ListConditionsResponse:
     """
     This endpoint gets a list of all of the conditions known to the trigger

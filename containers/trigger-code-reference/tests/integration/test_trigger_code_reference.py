@@ -1,4 +1,4 @@
-import httpx
+import httpx2
 import pytest
 
 TCR_URL = "http://0.0.0.0:8080"
@@ -13,13 +13,13 @@ def fhir_bundle(read_json_from_test_assets):
 
 @pytest.mark.integration
 def test_health_check(setup):
-    health_check_response = httpx.get(TCR_URL)
+    health_check_response = httpx2.get(TCR_URL)
     assert health_check_response.status_code == 200
 
 
 @pytest.mark.integration
 def test_openapi():
-    actual_response = httpx.get(TCR_URL + "/trigger-code-reference/openapi.json")
+    actual_response = httpx2.get(TCR_URL + "/trigger-code-reference/openapi.json")
     assert actual_response.status_code == 200
 
 
@@ -27,7 +27,7 @@ def test_openapi():
 def test_tcr_stamping(setup, fhir_bundle):
     reportable_condition_code = "840539006"
     request = {"bundle": fhir_bundle}
-    stamp_response = httpx.post(STAMP_ENDPOINT, json=request)
+    stamp_response = httpx2.post(STAMP_ENDPOINT, json=request)
     assert stamp_response.status_code == 200
 
     # There are four resources that should be stamped:
@@ -68,7 +68,7 @@ def test_tcr_stamping(setup, fhir_bundle):
 
 @pytest.mark.integration
 def test_get_conditions(setup):
-    resp = httpx.get(CONDITIONS_ENDPOINT)
+    resp = httpx2.get(CONDITIONS_ENDPOINT)
     assert resp.status_code == 200
 
     # sanity check conditions

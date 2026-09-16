@@ -1,4 +1,4 @@
-import httpx
+import httpx2
 import pytest
 
 PARSER_URL = "http://0.0.0.0:8080"
@@ -23,13 +23,13 @@ def test_extended_schema(read_schema_from_default_schemas):
 
 @pytest.mark.integration
 def test_health_check(setup):
-    health_check_response = httpx.get(PARSER_URL)
+    health_check_response = httpx2.get(PARSER_URL)
     assert health_check_response.status_code == 200
 
 
 @pytest.mark.integration
 def test_openapi():
-    actual_response = httpx.get(PARSER_URL + "/message-parser/openapi.json")
+    actual_response = httpx2.get(PARSER_URL + "/message-parser/openapi.json")
     assert actual_response.status_code == 200
 
 
@@ -324,7 +324,7 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
         "parsing_schema": test_core_schema,
         "message": fhir_bundle,
     }
-    parsing_response_core = httpx.post(PARSE_MESSAGE, json=request_core)
+    parsing_response_core = httpx2.post(PARSE_MESSAGE, json=request_core)
 
     assert parsing_response_core.status_code == 200
     assert parsing_response_core.json() == expected_core_response
@@ -335,7 +335,7 @@ def test_parse_message(setup, test_core_schema, test_extended_schema, fhir_bundl
         "parsing_schema": test_extended_schema,
         "message": fhir_bundle,
     }
-    parsing_response_extended = httpx.post(PARSE_MESSAGE, json=request_extended)
+    parsing_response_extended = httpx2.post(PARSE_MESSAGE, json=request_extended)
 
     print(parsing_response_extended.json())
 

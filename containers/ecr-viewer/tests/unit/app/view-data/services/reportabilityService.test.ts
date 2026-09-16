@@ -1,7 +1,8 @@
-import { Bundle, Observation } from "fhir/r4";
+import { Observation } from "fhir/r4";
 
 import BundleEcrMetadata from "@/../../../test-data/fhir/BundleEcrMetadata.json";
 import BundleRRConditionValueString from "@/../../../test-data/fhir/BundleRRConditionValueString.json";
+import { Bundle } from "@/app/types";
 import {
   evaluateRRInfo,
   getReportabilityRulesReasons,

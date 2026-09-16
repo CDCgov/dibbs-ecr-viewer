@@ -2,7 +2,7 @@ import json
 import os
 from pathlib import Path
 
-import httpx
+import httpx2
 import pytest
 
 ORCHESTRATION_URL = "http://localhost:8080"
@@ -26,7 +26,7 @@ def test_health_check(setup):
 
     for port_number in port_number_strings:
         port = os.getenv(port_number)
-        service_response = httpx.get(f"http://0.0.0.0:{port}")
+        service_response = httpx2.get(f"http://0.0.0.0:{port}")
         print(
             "Health check response for",
             port_number.replace("_PORT_NUMBER", ""),
@@ -40,7 +40,7 @@ def test_health_check(setup):
 
 @pytest.mark.integration
 def test_openapi():
-    actual_response = httpx.get(ORCHESTRATION_URL + "/orchestration/openapi.json")
+    actual_response = httpx2.get(ORCHESTRATION_URL + "/orchestration/openapi.json")
     assert actual_response.status_code == 200, (
         f"Expected status code 200, but got {actual_response.status_code}. Response content is {actual_response.content}"
     )
@@ -59,7 +59,7 @@ def test_process_message_endpoint(setup):
         "config_file_name": "test-no-save.json",
         "message": message,
     }
-    orchestration_response = httpx.post(PROCESS_MESSAGE_ENDPOINT, json=request)
+    orchestration_response = httpx2.post(PROCESS_MESSAGE_ENDPOINT, json=request)
     assert orchestration_response.status_code == 200, (
         f"Expected status code 200, but got {orchestration_response.status_code}. Response content is {orchestration_response.content}"
     )
@@ -81,7 +81,7 @@ def test_process_zip_endpoint_with_zip(setup):
             "config_file_name": "test-no-save.json",
         }
         files = {"upload_file": ("file.zip", file)}
-        orchestration_response = httpx.post(
+        orchestration_response = httpx2.post(
             PROCESS_ZIP_ENDPOINT, data=form_data, files=files
         )
         assert orchestration_response.status_code == 200, (
@@ -105,7 +105,7 @@ def test_process_zip_endpoint_with_zip_and_rr_data(setup):
             "config_file_name": "test-no-save.json",
         }
         files = {"upload_file": ("file.zip", file)}
-        orchestration_response = httpx.post(
+        orchestration_response = httpx2.post(
             PROCESS_ZIP_ENDPOINT, data=form_data, files=files, timeout=60
         )
         assert orchestration_response.status_code == 200, (
@@ -131,7 +131,7 @@ def test_success_save_to_ecr_viewer(setup):
             "config_file_name": "bundle-only.json",
         }
         files = {"upload_file": ("file.zip", file)}
-        orchestration_response = httpx.post(
+        orchestration_response = httpx2.post(
             PROCESS_ZIP_ENDPOINT, data=form_data, files=files, timeout=60
         )
 
@@ -156,7 +156,7 @@ def test_previous_response_mapping_for_ecr_viewer(setup):
             "config_file_name": "bundle-metadata-core.json",
         }
         files = {"upload_file": ("file.zip", file)}
-        orchestration_response = httpx.post(
+        orchestration_response = httpx2.post(
             PROCESS_ZIP_ENDPOINT, data=form_data, files=files, timeout=60
         )
 
@@ -178,7 +178,7 @@ def test_process_message_fhir(setup):
         "config_file_name": "sample-fhir-test-config.json",
         "message": message,
     }
-    orchestration_response = httpx.post(PROCESS_MESSAGE_ENDPOINT, json=request)
+    orchestration_response = httpx2.post(PROCESS_MESSAGE_ENDPOINT, json=request)
     assert orchestration_response.status_code == 200, (
         f"Expected status code 200, but got {orchestration_response.status_code}. Response content is {orchestration_response.content}"
     )

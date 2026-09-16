@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import { Bundle } from "fhir/r4";
 
 import * as _BundlePatient from "@/../../../test-data/fhir/BundlePatient.json";
 import * as _BundleWithTravelHistory from "@/../../../test-data/fhir/BundleTravelHistory.json";
@@ -7,6 +6,7 @@ import * as _BundlePatientMultiple from "@/../../../test-data/fhir/BundlePatient
 import * as _BundleWithSDOH from "@/../../../test-data/fhir/BundleSDOH.json";
 import * as _BundleWithSexualOrientation from "@/../../../test-data/fhir/BundleSexualOrientation.json";
 import * as _BundleWithTobaccoUse from "@/../../../test-data/fhir/BundleTobaccoUse.json";
+import { Bundle } from "@/app/types";
 import {
   evaluateTravelHistoryTable,
   returnDisabilityStatusTable,
