@@ -36,7 +36,7 @@ DIBBs updates are released to the Github Container Registry (GCR) according to t
 
 ## eCR Viewer Release Process
 
-Create a new release on [Github](https://github.com/CDCgov/dibbs-ecr-viewer/releases/new). Release candidate versions of deployment should ensure that `Set as a pre-release` is checked. The new release will trigger the [Create New Release action](https://github.com/CDCgov/dibbs-ecr-viewer/blob/main/.github/workflows/createNewRelease.yaml) which will run tests and image deployment.
+Create a new release on [Github](https://github.com/CDCgov/dibbs-ecr-viewer/releases/new). Release candidate versions of deployment should ensure that `Set as a pre-release` is checked. The new release will trigger the [Create New Release action](https://github.com/CDCgov/dibbs-ecr-viewer/blob/main/.github/workflows/create-new-pre-release.yaml) which will run tests and image deployment.
 
 1. **Start draft**: Navigate to the Releases page of the eCR Viewer GitHub repo. Click “Draft New Release”
 2. **Release candidate tag & generate notes**: Create a new release candidate (rc) tag, using semantic versioning, e.g. “3.6.7-rc1” (no “v” in front). After selecting this, you’ll be able to confirm your previous tag and the “Generate release notes” button will become clickable. Click it!
