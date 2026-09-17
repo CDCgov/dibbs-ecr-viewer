@@ -7,12 +7,12 @@ DIBBs updates are released to the Github Container Registry (GCR) according to t
 - **MAJOR** versions introduce breaking changes.
 
   A breaking change breaks backwards-compatibility with previous released versions. In other words, a breaking change is something that may cause a client's implementation to stop working when upgrading from a previous version. Common examples of breaking changes include:
-  - Deleting a package or public functions/methods
-  - Deleting public function parameters
-  - Changing a function name
-  - Changing the name or order of required parameters
+  - Deleting an API endpoint
+  - Deleting API parameters
+  - Changing an API endpoint name
+  - Changing the name of required parameters to an API endpoint
   - Adding new required parameters
-  - Removing, restricting or changing functionality offered by a public function
+  - Removing, restricting or changing functionality offered by an API endpoint
   - Updates to the database schema
   - Updates to the trigger code reference condition database
 
