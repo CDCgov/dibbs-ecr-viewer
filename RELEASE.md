@@ -2,7 +2,7 @@
 
 ## Release Methodology: Semantic Versioning
 
-API documentation is published automatically with Sphinx and hosted via GitHub pages. DIBBs updates are released to the Github Container Registry (GCR) according to the guidelines set out in [Semantic Versioning 2.0.0](https://semver.org/) with each release's version following the pattern of MAJOR.MINOR.PATCH-rc[#]. Release candidate versions will be follwed by rc and a number. The following core tenets describe when each element of a release's version would be updated.
+DIBBs updates are released to the Github Container Registry (GCR) according to the guidelines set out in [Semantic Versioning 2.0.0](https://semver.org/) with each release's version following the pattern of MAJOR.MINOR.PATCH-rc[#]. Release candidate versions will be follwed by rc and a number. The following core tenets describe when each element of a release's version would be updated.
 
 - **MAJOR** versions introduce breaking changes.
 
@@ -13,6 +13,8 @@ API documentation is published automatically with Sphinx and hosted via GitHub p
   - Changing the name or order of required parameters
   - Adding new required parameters
   - Removing, restricting or changing functionality offered by a public function
+  - Updates to the database schema
+  - Updates to the trigger code reference condition database
 
   Major version releases _may_ also include non-breaking enhancements and fixes.
 
