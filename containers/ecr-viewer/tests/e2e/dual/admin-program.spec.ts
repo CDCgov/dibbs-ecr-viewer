@@ -406,7 +406,7 @@ const createRandomProgramArea = async (
     triedConditionNames.add(selectedConditionName);
     const conditionIsAssigned =
       (await checkbox
-        .locator("..")
+        .locator("../..")
         .getByText(/Condition in /)
         .count()) > 0;
     if (conditionIsAssigned) continue;
@@ -429,6 +429,9 @@ const createRandomProgramArea = async (
       await reassignmentModal
         .getByRole("button", { name: "Close this window" })
         .click();
+      // Wait for the close animation to finish so the modal's overlay
+      // doesn't swallow the next iteration's checkbox click.
+      await reassignmentModal.waitFor({ state: "hidden" });
     } else {
       conditionName = selectedConditionName;
     }

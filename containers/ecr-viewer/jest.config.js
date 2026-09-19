@@ -9,6 +9,9 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   testEnvironment: "jest-environment-jsdom",
+  testEnvironmentOptions: {
+    customExportConditions: ["node", "node-addons"],
+  },
   modulePathIgnorePatterns: ["<rootDir>/.next"],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
@@ -31,5 +34,7 @@ const customJestConfig = {
 // eslint-disable-next-line jsdoc/require-jsdoc
 module.exports = async () => ({
   ...(await createJestConfig(customJestConfig)()),
-  transformIgnorePatterns: ["node_modules/(?!(jose|@azure|@typespec)/)"],
+  transformIgnorePatterns: [
+    "<rootDir>/node_modules/(?!(jose|@azure|@typespec|sanitize-html|htmlparser2)/)",
+  ],
 });

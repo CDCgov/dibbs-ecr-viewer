@@ -109,6 +109,7 @@ services:
       - CONFIG_NAME
       - SEED_DATA_DIRECTORIES=${SEED_DATA_DIRECTORIES:-star-wars}
       - UPLOAD_URL=${UPLOAD_URL:-http://host.docker.internal:3000/ecr-viewer/api/process-ecr}
+      - WEB_CONCURRENCY=${WEB_CONCURRENCY:-3}
       - AUTH_PROVIDER
       - AUTH_CLIENT_ID
       - AUTH_CLIENT_SECRET
