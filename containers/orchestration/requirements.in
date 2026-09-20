@@ -1,9 +1,8 @@
 pydantic>=2.13.5
 pydantic-settings>=2.15.0
 fastapi>=0.141.1
+starlette>=1.6.0 # Transitive dependency, minimum version specified for security reasons
 python-multipart>=0.0.32 # required by fastapi
-uvicorn[standard]>=0.52.4
-lxml
+uvicorn[standard]>=0.53.0
 httpx2[http2]>=2.13.0
-python-dotenv
-starlette>=1.6.0
+python-dotenv>=1.2.3

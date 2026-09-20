@@ -1,0 +1,3 @@
+# containers/ecr-viewer/seed-scripts/.snyk
+language-settings:
+  python: "3.14"
