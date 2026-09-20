@@ -9,6 +9,7 @@ google-auth>=2.58.0
 google-cloud-storage>=3.14.1
 h11>=0.16.0 # Transitive dependency, minimum version specified for security reasons
 msal>=1.38.0,<2 # Transitive dependency, minimum version specified for security reasons, maximum version set for azure-identity compatibility
+httpx2>=2.13.0
 phonenumbers>=9.0.39
 polling>=0.3.2
 pydantic>=2.13.5

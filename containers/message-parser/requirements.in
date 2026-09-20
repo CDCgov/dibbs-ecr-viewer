@@ -9,6 +9,7 @@ frozendict>=2.4.7
 google-auth>=2.58.0
 google-cloud-storage>=3.14.1
 msal>=1.38.0,<2 # Transitive dependency, minimum version specified for security reasons, maximum version set for azure-identity compatibility
+httpx2>=2.13.0
 pydantic-settings>=2.15.0
 pydantic>=2.13.5
 requests>=2.34.2 # Transitive dependency, minimum version specified for security reasons

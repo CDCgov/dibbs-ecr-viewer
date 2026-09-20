@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Literal
 
-import httpx
+import httpx2
 from fastapi import FastAPI, Request, Response
 from pydantic import BaseModel
 
@@ -30,10 +30,10 @@ STATUS_OK = {"status": "OK"}
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
-    httpx client used throught the application
+    httpx2 client used throught the application
     """
     # Initialize the Client on startup and add it to the state
-    async with httpx.AsyncClient(timeout=None) as client:
+    async with httpx2.AsyncClient(timeout=None) as client:
         yield {"client": client}
         # The Client closes on shutdown
 

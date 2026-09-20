@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { Bundle } from "fhir/r4";
+import { Bundle } from "@/app/types";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 import { evaluateAll } from "@/app/utils/evaluate";
