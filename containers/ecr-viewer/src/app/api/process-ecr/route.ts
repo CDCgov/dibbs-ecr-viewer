@@ -1,13 +1,13 @@
-import { Bundle, FhirResource } from "fhir/r4";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { orchestrationRequest } from "./service";
+import { Bundle } from "@/app/types";
 
 interface ProcessEcrResponse {
   message: string;
   erorors?: string[];
-  bundle?: Bundle<FhirResource>;
+  bundle?: Bundle;
   message_in_timestamp?: string;
   message_out_timestamp?: string;
 }

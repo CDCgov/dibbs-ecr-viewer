@@ -154,7 +154,6 @@ describe("htmlTableService tests", () => {
           },
         ];
         const result = formatTablesToJSON(htmlString);
-        console.log(result);
         expect(result).toEqual(expectedResult);
       });
 

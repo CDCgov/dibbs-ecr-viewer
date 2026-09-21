@@ -1,7 +1,4 @@
-asyncio
-psycopg2-binary>=2.9.12
+httpx2>=2.13.0 # preferred backend for Starlette's TestClient
 pytest>=9.1.1
-pytest-asyncio>=1.4.0
-pytest-env
-pytest-mock
-testcontainers[compose]>=4.15.0
+pytest-env>=1.7.1
+testcontainers>=4.15.0

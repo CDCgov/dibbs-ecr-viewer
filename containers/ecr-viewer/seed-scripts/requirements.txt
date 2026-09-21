@@ -1,4 +1,7 @@
-azure-identity>=1.16.1
-grequests
-requests>=2.32.4
-gevent>=23.9
+azure-identity>=1.25.3
+cryptography>=50.0.1 # Transitive dependency, minimum version specified for security reasons
+gevent>=26.8.0 # Transitive dependency, minimum version specified for security reasons
+grequests>=0.7.0
+msal>=1.38.0,<2 # Transitive dependency, minimum version specified for security reasons, maximum version set for azure-identity compatibility
+requests>=2.34.2
+urllib3>=2.7.0
