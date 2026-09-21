@@ -60,7 +60,7 @@ describe("POST Process ecr", () => {
     });
 
     it("should return a 200 response when valid ecr and rr", async () => {
-      const request = createRequest({ ecr: mockEcr, rr_data: mockRR });
+      const request = createRequest({ ecr: mockEcr, rr: mockRR });
 
       (orchestrationRequest as jest.Mock).mockResolvedValue({
         message: "ok",
@@ -71,6 +71,12 @@ describe("POST Process ecr", () => {
 
       expect(await response.json()).toEqual({ message: "ok" });
       expect(response.status).toEqual(200);
+      expect(orchestrationRequest).toHaveBeenCalledWith(
+        { ecr: mockEcr, rr: mockRR },
+        false,
+        undefined,
+        false,
+      );
     });
 
     it("should return a 200 response when valid ecr and return fhir bundle flag provided", async () => {
@@ -130,6 +136,27 @@ describe("POST Process ecr", () => {
   }
 
   describe("JSON data only", () => {
+    it("forwards a FHIR XML string unchanged for integration-engine clients", async () => {
+      const fhirXml =
+        '<?xml version="1.0" encoding="UTF-8"?><Bundle xmlns="http://hl7.org/fhir"><type value="document"/></Bundle>';
+      const request = createRequestJSON({ ecr: fhirXml });
+
+      (orchestrationRequest as jest.Mock).mockResolvedValue({
+        message: "ok",
+        status: 200,
+      });
+
+      const response = await POST(request);
+
+      expect(response.status).toEqual(200);
+      expect(orchestrationRequest).toHaveBeenCalledWith(
+        { ecr: fhirXml },
+        false,
+        undefined,
+        false,
+      );
+    });
+
     it("should return a 400 response when ecr is not a string", async () => {
       const request = createRequestJSON({ ecr: 123 });
 

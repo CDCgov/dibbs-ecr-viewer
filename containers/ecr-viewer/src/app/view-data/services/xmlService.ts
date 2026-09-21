@@ -83,8 +83,9 @@ export const getEcrXmls = async (id: string): Promise<EcrXmls> => {
   const buffer = await downloadZipBuffer(id);
   const zip = await JSZip.loadAsync(buffer);
 
-  let ecrFile = zip.file(`${id}-CDA_eICR.xml`);
-  let rrFile = zip.file(`${id}-CDA_RR.xml`);
+  // New archives are format-neutral; continue reading legacy C-CDA names.
+  let ecrFile = zip.file(`${id}-eICR.xml`) ?? zip.file(`${id}-CDA_eICR.xml`);
+  let rrFile = zip.file(`${id}-RR.xml`) ?? zip.file(`${id}-CDA_RR.xml`);
 
   if (!ecrFile || !rrFile) {
     for (const [name, entry] of Object.entries(zip.files)) {

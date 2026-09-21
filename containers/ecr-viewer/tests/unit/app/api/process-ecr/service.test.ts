@@ -57,6 +57,8 @@ describe("orchestrationRequest", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    delete process.env.METADATA_DATABASE_TYPE;
+    delete process.env.METADATA_DATABASE_SCHEMA;
     mockPool = mockAgent.get("http://orchestration-service");
   });
 
@@ -300,8 +302,12 @@ describe("orchestrationRequest", () => {
   });
 
   describe("early duplicate check", () => {
+    const fhirEcrId = "db734647-fc99-424c-a864-7e3cda82e703";
     const xmlBody = {
       ecr: `<ClinicalDocument xmlns="urn:hl7-org:v3"><id root="test-root" extension="test-ext" /></ClinicalDocument>`,
+    };
+    const fhirXmlBody = {
+      ecr: `<Bundle xmlns="http://hl7.org/fhir"><identifier><system value="urn:ietf:rfc:3986"/><value value="urn:uuid:${fhirEcrId}"/></identifier><type value="document"/></Bundle>`,
     };
 
     //mock database query chain, configure how many records query should return
@@ -320,18 +326,94 @@ describe("orchestrationRequest", () => {
       delete process.env.METADATA_DATABASE_TYPE;
     });
 
-    it("returns 409 without calling orchestration when ECR already exists in DB", async () => {
+    it("returns 409 for duplicate C-CDA without calling orchestration", async () => {
       process.env.METADATA_DATABASE_TYPE = "postgres";
-      makeDbMock(1);
+      const dbChain = makeDbMock(1);
 
-      const response = await orchestrationRequest(xmlBody);
+      const response = await orchestrationRequest(
+        xmlBody,
+        false,
+        mockAgent as unknown as Agent,
+        true,
+      );
 
       expect(response).toEqual({
         message: "eCR already loaded: test-root^test-ext",
         status: 409,
       });
+      expect(dbChain.where).toHaveBeenCalledWith(
+        "ecr_data.eicr_id",
+        "=",
+        "test-root^test-ext",
+      );
       expect(saveWithMetadata).not.toHaveBeenCalled();
       expect(saveToStorage).not.toHaveBeenCalled();
+    });
+
+    it("returns 409 for duplicate FHIR XML without calling orchestration", async () => {
+      process.env.METADATA_DATABASE_TYPE = "postgres";
+      const dbChain = makeDbMock(1);
+
+      const response = await orchestrationRequest(
+        fhirXmlBody,
+        false,
+        mockAgent as unknown as Agent,
+        true,
+      );
+
+      expect(response).toEqual({
+        message: `eCR already loaded: ${fhirEcrId}`,
+        status: 409,
+      });
+      expect(dbChain.where).toHaveBeenCalledWith(
+        "ecr_data.eicr_id",
+        "=",
+        fhirEcrId,
+      );
+      expect(saveWithMetadata).not.toHaveBeenCalled();
+      expect(saveToStorage).not.toHaveBeenCalled();
+    });
+
+    it("uses the same normalized FHIR identifier for lookup and persistence", async () => {
+      process.env.METADATA_DATABASE_TYPE = "postgres";
+      const dbChain = makeDbMock(0);
+      const convertedEcr = {
+        ...mockEcr,
+        identifier: {
+          system: "urn:ietf:rfc:3986",
+          value: `urn:uuid:${fhirEcrId}`,
+        },
+      };
+
+      mockPool
+        .intercept({ path: "/process-message", method: "POST" })
+        .reply(200, {
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: convertedEcr } }],
+          },
+        });
+      (saveToStorage as jest.Mock).mockResolvedValue({
+        status: 200,
+        message: "Success",
+      });
+
+      await orchestrationRequest(
+        fhirXmlBody,
+        false,
+        mockAgent as unknown as Agent,
+      );
+
+      expect(dbChain.where).toHaveBeenCalledWith(
+        "ecr_data.eicr_id",
+        "=",
+        fhirEcrId,
+      );
+      expect(saveToStorage).toHaveBeenCalledWith(
+        convertedEcr,
+        fhirEcrId,
+        S3_SOURCE,
+        "fhir",
+      );
     });
 
     it("proceeds with orchestration when ECR does not exist in DB", async () => {
@@ -397,6 +479,80 @@ describe("orchestrationRequest", () => {
     });
   });
 
+  describe("FHIR XML input", () => {
+    const fhirXml =
+      '<Bundle xmlns="http://hl7.org/fhir"><identifier><system value="source-system"/><value value="source-value"/></identifier><type value="document"/></Bundle>';
+
+    afterEach(() => {
+      delete process.env.METADATA_DATABASE_TYPE;
+    });
+
+    it("processes a FHIR XML string using the returned Bundle identifier", async () => {
+      mockPool
+        .intercept({ path: "/process-message", method: "POST" })
+        .reply(200, {
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        });
+      (saveToStorage as jest.Mock).mockResolvedValue({
+        status: 200,
+        message: "Success",
+      });
+
+      const response = await orchestrationRequest(
+        { ecr: fhirXml },
+        false,
+        mockAgent as unknown as Agent,
+      );
+
+      expect(response).toEqual({
+        status: 200,
+        message: "Success",
+        message_in_timestamp: expect.any(String),
+        message_out_timestamp: expect.any(String),
+      });
+      expect(saveToStorage).toHaveBeenCalledWith(
+        mockEcr,
+        "hello^world",
+        S3_SOURCE,
+        "fhir",
+      );
+    });
+
+    it("processes an application/fhir+xml File", async () => {
+      mockPool
+        .intercept({ path: "/process-message", method: "POST" })
+        .reply(200, {
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        });
+      (saveToStorage as jest.Mock).mockResolvedValue({
+        status: 200,
+        message: "Success",
+      });
+
+      const response = await orchestrationRequest(
+        {
+          ecr: new File([fhirXml], "ecr.xml", {
+            type: "application/fhir+xml",
+          }),
+        },
+        false,
+        mockAgent as unknown as Agent,
+      );
+
+      expect(response.status).toBe(200);
+      expect(saveToStorage).toHaveBeenCalledWith(
+        mockEcr,
+        "hello^world",
+        S3_SOURCE,
+        "fhir",
+      );
+    });
+  });
+
   describe("XML save coordination", () => {
     const xmlBody = {
       ecr: `<ClinicalDocument xmlns="urn:hl7-org:v3"><id root="xml-root" extension="xml-ext" /></ClinicalDocument>`,
@@ -411,7 +567,7 @@ describe("orchestrationRequest", () => {
       jest.resetAllMocks();
     });
 
-    it("saves XML in parallel with orchestration when shouldSaveXml is true", async () => {
+    it("saves XML in parallel with orchestration using the source document identifier", async () => {
       mockPool
         .intercept({ path: "/process-message", method: "POST" })
         .reply(200, {
@@ -433,7 +589,11 @@ describe("orchestrationRequest", () => {
       );
 
       const calls = (saveToStorage as jest.Mock).mock.calls;
-      expect(calls.some(([, , , type]) => type === "xml")).toBe(true);
+      expect(
+        calls.some(
+          ([, id, , type]) => id === "xml-root^xml-ext" && type === "xml",
+        ),
+      ).toBe(true);
     });
 
     it("deletes XML when orchestration fails and XML save succeeded", async () => {
@@ -441,8 +601,48 @@ describe("orchestrationRequest", () => {
         .intercept({ path: "/process-message", method: "POST" })
         .reply(500, { detail: "fail" });
 
-      (saveToStorage as jest.Mock).mockResolvedValue(undefined);
+      (saveToStorage as jest.Mock).mockResolvedValue({
+        status: 200,
+        message: "XML saved",
+      });
       jest.spyOn(console, "error").mockImplementation(() => {});
+
+      const result = await orchestrationRequest(
+        xmlBody,
+        false,
+        mockAgent as unknown as Agent,
+        true,
+      );
+
+      expect(saveToStorage).toHaveBeenCalledWith(
+        expect.any(Buffer),
+        "xml-root^xml-ext",
+        S3_SOURCE,
+        "xml",
+      );
+      expect(deleteFromStorage).toHaveBeenCalledWith(
+        "xml-root^xml-ext",
+        S3_SOURCE,
+        "xml",
+      );
+      expect(result.status).toBe(500);
+    });
+
+    it("deletes newly saved XML when FHIR persistence fails", async () => {
+      mockPool
+        .intercept({ path: "/process-message", method: "POST" })
+        .reply(200, {
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        });
+
+      (saveToStorage as jest.Mock).mockImplementation(
+        async (_contents, _id, _source, type) =>
+          type === "fhir"
+            ? { status: 500, message: "FHIR storage failure" }
+            : { status: 200, message: "XML saved" },
+      );
 
       const result = await orchestrationRequest(
         xmlBody,
@@ -456,18 +656,50 @@ describe("orchestrationRequest", () => {
         S3_SOURCE,
         "xml",
       );
-      expect(result.status).toBe(500);
+      expect(result).toEqual({
+        message: "FHIR storage failure",
+        status: 500,
+        message_in_timestamp: expect.any(String),
+        message_out_timestamp: expect.any(String),
+      });
     });
 
-    it("does not delete XML when XML save also failed", async () => {
+    it("does not delete XML when orchestration and XML saves both fail", async () => {
       mockPool
         .intercept({ path: "/process-message", method: "POST" })
         .reply(500, { detail: "fail" });
 
       (saveToStorage as jest.Mock).mockRejectedValue(
-        new Error("storage failure"),
+        new Error("XML storage failure"),
       );
       jest.spyOn(console, "error").mockImplementation(() => {});
+
+      const result = await orchestrationRequest(
+        xmlBody,
+        false,
+        mockAgent as unknown as Agent,
+        true,
+      );
+
+      expect(deleteFromStorage).not.toHaveBeenCalled();
+      expect(result.status).toBe(500);
+    });
+
+    it("does not delete a pre-existing XML archive", async () => {
+      mockPool
+        .intercept({ path: "/process-message", method: "POST" })
+        .reply(200, {
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        });
+
+      (saveToStorage as jest.Mock).mockImplementation(
+        async (_contents, _id, _source, type) =>
+          type === "fhir"
+            ? { status: 500, message: "FHIR storage failure" }
+            : { status: 409, message: "XML already exists" },
+      );
 
       const result = await orchestrationRequest(
         xmlBody,
@@ -543,6 +775,31 @@ describe("orchestrationRequest", () => {
       });
     });
 
+    it("should call process zip for legacy octet-stream uploads", async () => {
+      mockPool
+        .intercept({
+          path: "/process-zip",
+          method: "POST",
+        })
+        .reply(200, {
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        });
+
+      const octetStreamZip = new File(
+        [await mockFile.arrayBuffer()],
+        "test.zip",
+        { type: "application/octet-stream" },
+      );
+      const response = await getOrchestrationResponse(
+        { ecr: octetStreamZip },
+        mockAgent as unknown as Agent,
+      );
+
+      expect(response.ecr).toEqual(mockEcr);
+    });
+
     it("should handle string contents", async () => {
       mockPool
         .intercept({
@@ -566,6 +823,38 @@ describe("orchestrationRequest", () => {
         messageInTimestamp: expect.any(String),
         messageOutTimestamp: expect.any(String),
       });
+    });
+
+    it("forwards FHIR XML unchanged for converter-side root detection", async () => {
+      const fhirXml = `<?xml version="1.0" encoding="UTF-8"?>
+<Bundle xmlns="http://hl7.org/fhir">
+  <type value="document"/>
+</Bundle>`;
+
+      mockPool
+        .intercept({
+          path: "/process-message",
+          method: "POST",
+          body: JSON.stringify({
+            message_type: "ecr",
+            include_error_types: "[errors]",
+            config_file_name: "bundle-only.json",
+            data_type: "ecr",
+            message: fhirXml,
+          }),
+        })
+        .reply(200, {
+          processed_values: {
+            responses: [{ stamped_ecr: { extended_bundle: mockEcr } }],
+          },
+        });
+
+      const response = await getOrchestrationResponse(
+        { ecr: fhirXml },
+        mockAgent as unknown as Agent,
+      );
+
+      expect(response.ecr).toEqual(mockEcr);
     });
 
     it("should handle File contents", async () => {
@@ -644,8 +933,8 @@ describe("orchestrationRequest", () => {
         });
 
       appendMock = jest.spyOn(FormData.prototype, "append");
-      process.env.METADATA_DATABASE_TYPE = undefined;
-      process.env.METADATA_DATABASE_SCHEMA = undefined;
+      delete process.env.METADATA_DATABASE_TYPE;
+      delete process.env.METADATA_DATABASE_SCHEMA;
 
       const dbChain = {
         selectFrom: jest.fn().mockReturnThis(),
@@ -713,7 +1002,6 @@ describe("orchestrationRequest", () => {
 
   describe("XML saving functions", () => {
     const ecrId = "test-ecr-id";
-    const xmlContent = "<ClinicalDocument>Inside ZIP</ClinicalDocument>";
 
     beforeEach(() => {
       jest.clearAllMocks();
@@ -721,8 +1009,10 @@ describe("orchestrationRequest", () => {
     });
 
     describe("zipAndSaveXml", () => {
-      it("zipAndSaveXml should take in an xml string then call saveToStorage with a zipBuffer", async () => {
-        const body = { ecr: "<ClinicalDocument>Fake XML</ClinicalDocument>" };
+      it("archives a FHIR XML string without changing its content", async () => {
+        const fhirXml =
+          '<Bundle xmlns="http://hl7.org/fhir"><type value="document"/></Bundle>';
+        const body = { ecr: fhirXml };
 
         await zipAndSaveXml(body, ecrId);
 
@@ -740,7 +1030,10 @@ describe("orchestrationRequest", () => {
         expect(zipBuffer.slice(0, 2).toString("hex")).toBe("504b");
 
         const zip = await JSZip.loadAsync(zipBuffer);
-        expect(Object.keys(zip.files)).toContain(`${ecrId}-CDA_eICR.xml`);
+        expect(Object.keys(zip.files)).toContain(`${ecrId}-eICR.xml`);
+        expect(await zip.file(`${ecrId}-eICR.xml`)!.async("string")).toBe(
+          fhirXml,
+        );
       });
 
       it("zipAndSaveXml should include RR xml when ecr and rr are both strings", async () => {
@@ -754,8 +1047,8 @@ describe("orchestrationRequest", () => {
         const [zipBuffer] = (saveToStorage as jest.Mock).mock.calls[0];
         const zip = await JSZip.loadAsync(zipBuffer);
         const files = Object.keys(zip.files);
-        expect(files).toContain(`${ecrId}-CDA_eICR.xml`);
-        expect(files).toContain(`${ecrId}-CDA_RR.xml`);
+        expect(files).toContain(`${ecrId}-eICR.xml`);
+        expect(files).toContain(`${ecrId}-RR.xml`);
       });
 
       it("zipAndSaveXml should take in a zip then call saveToStorage with a zipBuffer", async () => {
@@ -807,35 +1100,47 @@ describe("orchestrationRequest", () => {
         expect(zipBuffer.slice(0, 2).toString("hex")).toBe("504b");
 
         const zip = await JSZip.loadAsync(zipBuffer);
-        expect(Object.keys(zip.files)).toContain(`${ecrId}-CDA_eICR.xml`);
+        expect(Object.keys(zip.files)).toContain(`${ecrId}-eICR.xml`);
       });
     });
 
     describe("unzipXml", () => {
-      it("should extract the xml string from a valid zip", async () => {
-        const fakeZipBuffer = createFakeZip(xmlContent);
-        const mockFile = new File([fakeZipBuffer as BlobPart], "test.zip", {
+      const xmlContent =
+        '<ClinicalDocument xmlns="urn:hl7-org:v3"><id root="zip-root"/></ClinicalDocument>';
+
+      afterEach(() => {
+        jest.restoreAllMocks();
+      });
+
+      it("extracts XML from a valid legacy C-CDA ZIP", async () => {
+        const zip = new JSZip();
+        zip.file("CDA_eICR.xml", xmlContent);
+        const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
+        const zipFile = new File([zipBuffer as BlobPart], "test.zip", {
           type: "application/zip",
         });
 
-        const loadSpy = jest.spyOn(JSZip, "loadAsync").mockResolvedValue({
-          files: {
-            "CDA_eICR.xml": {
-              dir: false,
-              async: jest.fn().mockResolvedValue(xmlContent),
-            },
-          },
-        } as any);
-
-        const result = await unzipXml(mockFile);
-
-        expect(loadSpy).toHaveBeenCalledTimes(1);
-        expect(result).toBe(xmlContent);
+        await expect(unzipXml(zipFile)).resolves.toBe(xmlContent);
       });
 
-      it("should throw when no XML file is found", async () => {
+      it("prefers the eICR when the RR appears first in the ZIP", async () => {
+        const zip = new JSZip();
+        zip.file(
+          "CDA_RR.xml",
+          '<ClinicalDocument><id root="rr"/></ClinicalDocument>',
+        );
+        zip.file("CDA_eICR.xml", xmlContent);
+        const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
+        const zipFile = new File([zipBuffer as BlobPart], "test.zip", {
+          type: "application/zip",
+        });
+
+        await expect(unzipXml(zipFile)).resolves.toBe(xmlContent);
+      });
+
+      it("throws when a ZIP contains no XML document", async () => {
         const fakeZipBuffer = createFakeZip("junk");
-        const mockFile = new File([fakeZipBuffer as BlobPart], "test.zip", {
+        const zipFile = new File([fakeZipBuffer as BlobPart], "test.zip", {
           type: "application/zip",
         });
 
@@ -845,124 +1150,144 @@ describe("orchestrationRequest", () => {
           },
         } as any);
 
-        await expect(unzipXml(mockFile)).rejects.toThrow(
+        await expect(unzipXml(zipFile)).rejects.toThrow(
           "No XML file found in the provided zip.",
         );
-      });
-
-      afterEach(() => {
-        jest.restoreAllMocks(); // restore JSZip.loadAsync for following tests
       });
     });
 
     describe("getEcrIdFromXml", () => {
-      const xmlString = `
-        <ClinicalDocument>
+      const ccdaXml = `
+        <ClinicalDocument xmlns="urn:hl7-org:v3">
           <id root="1234-uuid" extension="bananas" />
         </ClinicalDocument>
       `;
+      const fhirXml = `
+        <Bundle xmlns="http://hl7.org/fhir">
+          <identifier>
+            <system value=" urn:oid:1.2.3.4 " />
+            <value value=" fhir-extension " />
+          </identifier>
+          <type value="document" />
+        </Bundle>
+      `;
 
-      it("extracts ID when ecr is a string", async () => {
-        const result = await getEcrIdFromXml({ ecr: xmlString } as any);
-        expect(result).toBe("1234-uuid^bananas");
+      it("extracts the direct ClinicalDocument ID", async () => {
+        await expect(getEcrIdFromXml({ ecr: ccdaXml })).resolves.toBe(
+          "1234-uuid^bananas",
+        );
       });
 
-      it("extracts ID when ecr is an XML file with application/xml type", async () => {
-        const xmlFile = new File([xmlString], "test.xml", {
-          type: "application/xml",
-        });
-        const result = await getEcrIdFromXml({ ecr: xmlFile } as any);
-        expect(result).toBe("1234-uuid^bananas");
-      });
-
-      it("extracts ID when ecr is an XML file with text/xml type", async () => {
-        const xmlFile = new File([xmlString], "test.xml", {
-          type: "text/xml",
-        });
-        const result = await getEcrIdFromXml({ ecr: xmlFile } as any);
-        expect(result).toBe("1234-uuid^bananas");
-      });
-
-      it("extracts ID when ecr is a zipped XML file", async () => {
-        const zip = new JSZip();
-        zip.file("whatever.xml", xmlString);
-        const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
-
-        const zipFile = new File([zipBuffer as BlobPart], "test.zip", {
-          type: "application/zip",
-        });
-
-        const result = await getEcrIdFromXml({ ecr: zipFile } as any);
-        expect(result).toBe("1234-uuid^bananas");
-      });
-
-      it("extracts ID when ecr is a zipped XML file as octet stream", async () => {
-        const zip = new JSZip();
-        zip.file("whatever.xml", xmlString);
-        const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
-
-        const zipFile = new File([zipBuffer as BlobPart], "test.zip", {
-          type: "application/octet-stream",
-        });
-
-        const result = await getEcrIdFromXml({ ecr: zipFile } as any);
-        expect(result).toBe("1234-uuid^bananas");
-      });
-
-      it("extracts ID when ecr only contains ID root", async () => {
-        const xmlStringOnlyRoot = `
-          <ClinicalDocument>
-            <id root="1234-uuid" />
-          </ClinicalDocument>
-        `;
-        const result = await getEcrIdFromXml({ ecr: xmlStringOnlyRoot } as any);
-        expect(result).toBe("1234-uuid");
-      });
-
-      it("extracts ID when ecr only contains ID extension", async () => {
-        const xmlStringOnlyExtension = `
-          <ClinicalDocument>
-            <id extension="bananas" />
-          </ClinicalDocument>
-        `;
-        const result = await getEcrIdFromXml({
-          ecr: xmlStringOnlyExtension,
-        } as any);
-        expect(result).toBe("bananas");
-      });
-
-      it("extracts ID when nested IDs come first", async () => {
-        const xmlStringNestedId = `
-          <ClinicalDocument>
-            <entry>
-              <id root="wrong-id" />
-            </entry>
+      it("ignores nested C-CDA IDs before the document ID", async () => {
+        const xml = `
+          <ClinicalDocument xmlns="urn:hl7-org:v3">
+            <entry><id root="wrong-id" /></entry>
             <id root="right-id" />
           </ClinicalDocument>
         `;
-        const result = await getEcrIdFromXml({ ecr: xmlStringNestedId } as any);
-        expect(result).toBe("right-id");
+
+        await expect(getEcrIdFromXml({ ecr: xml })).resolves.toBe("right-id");
       });
 
-      it("throws for unsupported upload types", async () => {
+      it("extracts and normalizes the direct FHIR Bundle identifier", async () => {
+        await expect(getEcrIdFromXml({ ecr: fhirXml })).resolves.toBe(
+          "1.2.3.4^fhir-extension",
+        );
+      });
+
+      it("supports namespace-prefixed FHIR XML and ignores nested identifiers", async () => {
+        const xml = `
+          <f:Bundle xmlns:f="http://hl7.org/fhir">
+            <f:id value="technical-resource-id" />
+            <f:entry>
+              <f:resource>
+                <f:Patient>
+                  <f:identifier>
+                    <f:system value="wrong-system" />
+                    <f:value value="wrong-value" />
+                  </f:identifier>
+                </f:Patient>
+              </f:resource>
+            </f:entry>
+            <f:identifier>
+              <f:system value="urn:uuid:right-root" />
+              <f:value value="right-extension" />
+            </f:identifier>
+          </f:Bundle>
+        `;
+
+        await expect(getEcrIdFromXml({ ecr: xml })).resolves.toBe(
+          "right-root^right-extension",
+        );
+      });
+
+      it("extracts an identifier from an application/fhir+xml File", async () => {
+        const xmlFile = new File([fhirXml], "ecr.xml", {
+          type: "application/fhir+xml",
+        });
+
+        await expect(getEcrIdFromXml({ ecr: xmlFile })).resolves.toBe(
+          "1.2.3.4^fhir-extension",
+        );
+      });
+
+      it.each(["application/zip", "application/octet-stream"])(
+        "extracts a C-CDA identifier from a %s ZIP",
+        async (type) => {
+          const zip = new JSZip();
+          zip.file("ecr.xml", ccdaXml);
+          const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
+          const zipFile = new File([zipBuffer as BlobPart], "test.zip", {
+            type,
+          });
+
+          await expect(getEcrIdFromXml({ ecr: zipFile })).resolves.toBe(
+            "1234-uuid^bananas",
+          );
+        },
+      );
+
+      it("rejects a FHIR Bundle without a direct identifier", async () => {
+        const xml = `
+          <Bundle xmlns="http://hl7.org/fhir">
+            <entry>
+              <resource>
+                <Patient>
+                  <identifier>
+                    <system value="nested-system" />
+                    <value value="nested-value" />
+                  </identifier>
+                </Patient>
+              </resource>
+            </entry>
+          </Bundle>
+        `;
+
+        await expect(getEcrIdFromXml({ ecr: xml })).rejects.toThrow(
+          "Missing ECR identifier root and extension.",
+        );
+      });
+
+      it("rejects unsupported XML root elements", async () => {
+        await expect(
+          getEcrIdFromXml({ ecr: '<Patient xmlns="http://hl7.org/fhir"/>' }),
+        ).rejects.toThrow("Unsupported eCR XML root element: Patient.");
+      });
+
+      it("rejects unsupported file types", async () => {
         const invalidFile = new File(["data"], "test.txt", {
           type: "text/plain",
         });
-        await expect(
-          getEcrIdFromXml({ ecr: invalidFile } as any),
-        ).rejects.toThrow(
+
+        await expect(getEcrIdFromXml({ ecr: invalidFile })).rejects.toThrow(
           "Unsupported upload type. eCRs must be an XML string, XML file, or zipped XML file",
         );
       });
 
-      it("throws for malformed XML", async () => {
-        const badXml = `
-          <openTag>
-        `;
-
-        await expect(getEcrIdFromXml({ ecr: badXml } as any)).rejects.toThrow(
-          "3:8: unclosed tag: openTag",
-        );
+      it("rejects malformed XML", async () => {
+        await expect(
+          getEcrIdFromXml({ ecr: "<ClinicalDocument>" }),
+        ).rejects.toThrow("unclosed tag");
       });
     });
   });

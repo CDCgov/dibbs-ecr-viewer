@@ -71,12 +71,12 @@ describe("GET /api/view-xml", () => {
     expect(response.status).toBe(404);
   });
 
-  it("returns 200 with JSON containing ecrXml and rrXml", async () => {
-    const ecrXml = '<?xml version="1.0"?><ClinicalDocument/>';
+  it("returns 200 for archives using neutral eICR and RR filenames", async () => {
+    const ecrXml = '<?xml version="1.0"?><Bundle xmlns="http://hl7.org/fhir"/>';
     const rrXml = '<?xml version="1.0"?><ReportabilityResponse/>';
     const body = await makeZipBody({
-      "abc-CDA_eICR.xml": ecrXml,
-      "abc-CDA_RR.xml": rrXml,
+      "abc-eICR.xml": ecrXml,
+      "abc-RR.xml": rrXml,
     });
     (s3Client.send as jest.Mock).mockResolvedValue({ Body: body });
 
@@ -86,6 +86,21 @@ describe("GET /api/view-xml", () => {
     const data = await response.json();
     expect(data.ecrXml).toBe(ecrXml);
     expect(data.rrXml).toBe(rrXml);
+  });
+
+  it("continues to read archives using legacy CDA filenames", async () => {
+    const ecrXml = '<?xml version="1.0"?><ClinicalDocument/>';
+    const rrXml = '<?xml version="1.0"?><ReportabilityResponse/>';
+    const body = await makeZipBody({
+      "abc-CDA_eICR.xml": ecrXml,
+      "abc-CDA_RR.xml": rrXml,
+    });
+    (s3Client.send as jest.Mock).mockResolvedValue({ Body: body });
+
+    const response = await GET(makeRequest("abc"));
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ ecrXml, rrXml });
   });
 
   it("returns null rrXml when only eICR XML exists", async () => {

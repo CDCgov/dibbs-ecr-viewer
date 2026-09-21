@@ -1,5 +1,5 @@
 import JSZip from "jszip";
-import { SaxesParser } from "saxes";
+import { SaxesParser, type SaxesAttributeNS } from "saxes";
 import { fetch, Agent, FormData } from "undici";
 
 import {
@@ -83,6 +83,9 @@ interface RequestBody {
 const asString = async (v: string | File | undefined) =>
   v instanceof File ? await v.text() : v;
 
+const isZipFile = (file: File) =>
+  file.type === "application/zip" || file.type === "application/octet-stream";
+
 /**
  * Make a request to orchestration /process-zip endpoint
  * @param rawBodyEntries - raw body entries
@@ -95,13 +98,15 @@ export const getOrchestrationResponse = async (
   { ecr, rr }: RequestBody,
   fetchAgent: Agent,
 ): Promise<BundleInfo> => {
+  // These values select the eCR workflow. The converter, not the viewer,
+  // determines whether the XML payload is C-CDA or FHIR from its root element.
   const bodyObj: Record<string, string | File | undefined> = {
     message_type: "ecr",
     include_error_types: "[errors]",
     config_file_name: getOrchestrationConfigName(),
   };
   let endpoint = "process-message";
-  if (ecr instanceof File && ecr.type === "application/zip") {
+  if (ecr instanceof File && isZipFile(ecr)) {
     endpoint = "process-zip";
     bodyObj.data_type = "zip";
     bodyObj.upload_file = ecr;
@@ -225,10 +230,11 @@ export const createOrchestrationAgent = () => {
 };
 
 /**
- * Save the zip via orchestration
+ * Process and save an eCR through orchestration
  * @param body - Parsed body of the request
  * @param returnBundle - whether to return the fhir bundle (default false)
  * @param fetchAgent - the Undici agent that dispatches the request
+ * @param shouldSaveXml - whether to archive the original XML input
  * @returns An object containing the status and message.
  */
 export const orchestrationRequest = async (
@@ -237,16 +243,18 @@ export const orchestrationRequest = async (
   fetchAgent = createOrchestrationAgent(),
   shouldSaveXml: boolean = false,
 ) => {
-  const ecrId = await getEcrIdFromXml(body);
+  // Read only the source identifier before invoking orchestration so a known
+  // eCR can be rejected without paying the cost of C-CDA/FHIR conversion.
+  const inputEcrId = await getEcrIdFromXml(body);
 
   if (dbDialect()) {
     const existing = await getDb<Core>()
       .selectFrom("ecr_data")
       .select((eb) => eb.fn.countAll().as("num_ecr"))
-      .where("ecr_data.eicr_id", "=", ecrId)
+      .where("ecr_data.eicr_id", "=", inputEcrId)
       .executeTakeFirst();
     if (existing && Number(existing.num_ecr) > 0) {
-      return { message: `eCR already loaded: ${ecrId}`, status: 409 };
+      return { message: `eCR already loaded: ${inputEcrId}`, status: 409 };
     }
   }
 
@@ -258,7 +266,7 @@ export const orchestrationRequest = async (
       message_in_timestamp?: string;
       message_out_timestamp?: string;
     }>,
-    Promise<void>?,
+    Promise<{ message: string; status: number }>?,
   ] = [
     (async () => {
       let orchestrationResp: BundleInfo;
@@ -296,17 +304,22 @@ export const orchestrationRequest = async (
   ];
 
   if (shouldSaveXml) {
-    promises.push(zipAndSaveXml(body, ecrId));
+    promises.push(zipAndSaveXml(body, inputEcrId));
   }
 
-  const [orchestrationResult, saveResult] = await Promise.allSettled(promises);
+  const [orchestrationResult, xmlSaveResult] =
+    await Promise.allSettled(promises);
 
   if (
     orchestrationResult.status === "rejected" ||
     orchestrationResult.value.status >= 500
   ) {
-    if (shouldSaveXml && saveResult?.status === "fulfilled") {
-      await deleteFromStorage(ecrId, process.env.SOURCE, "xml");
+    if (
+      shouldSaveXml &&
+      xmlSaveResult?.status === "fulfilled" &&
+      xmlSaveResult.value?.status === 200
+    ) {
+      await deleteFromStorage(inputEcrId, process.env.SOURCE, "xml");
     }
 
     if (orchestrationResult.status === "rejected") {
@@ -327,132 +340,198 @@ export const orchestrationRequest = async (
 };
 
 /**
- * Reaches into the eCR xml to grab root and extension ID values and returns an eCR ID string
+ * Extract the source eCR identifier without performing a full conversion.
+ * C-CDA uses ClinicalDocument/id attributes; FHIR XML uses the direct
+ * Bundle/identifier system and value primitive attributes.
  * @param body - Parsed body of the request
  * @returns The eCR ID as a string
  */
 export const getEcrIdFromXml = async (body: RequestBody): Promise<string> => {
-  // Normalize to an XML string (accepts xml string, application/xml, or zipped)
   let xmlString: string;
 
   if (typeof body.ecr === "string") {
     xmlString = body.ecr;
+  } else if (body.ecr instanceof File && isZipFile(body.ecr)) {
+    xmlString = await unzipXml(body.ecr);
   } else if (
     body.ecr instanceof File &&
-    (body.ecr.type === "application/xml" || body.ecr.type === "text/xml")
+    (body.ecr.type === "application/xml" ||
+      body.ecr.type === "text/xml" ||
+      body.ecr.type.endsWith("+xml"))
   ) {
     xmlString = await body.ecr.text();
-  } else if (
-    body.ecr instanceof File &&
-    (body.ecr.type === "application/zip" ||
-      body.ecr.type === "application/octet-stream")
-  ) {
-    xmlString = await unzipXml(body.ecr);
   } else {
     throw new Error(
       "Unsupported upload type. eCRs must be an XML string, XML file, or zipped XML file",
     );
   }
 
-  class FoundEcrId extends Error {}
+  class FoundEcrId extends Error {
+    constructor(readonly ecrId: string) {
+      super();
+    }
+  }
 
-  const parser = new SaxesParser();
-  const stack: string[] = [];
-  let root = "";
-  let extension = "";
+  const CDA_NAMESPACE = "urn:hl7-org:v3";
+  const FHIR_NAMESPACE = "http://hl7.org/fhir";
+  const parser = new SaxesParser({ xmlns: true });
+  const stack: Array<{ local: string; uri: string }> = [];
+  let documentType: "ccda" | "fhir" | undefined;
+  let documentRoot = "";
+  let fhirSystem = "";
+  let fhirValue = "";
+
+  const attributeValue = (
+    attributes: Record<string, SaxesAttributeNS>,
+    local: string,
+  ) =>
+    Object.values(attributes).find(
+      (attribute) => attribute.local === local && attribute.uri === "",
+    )?.value ?? "";
 
   parser.on("opentag", (node) => {
-    const parent = stack.at(-1);
-
-    // make sure that we are taking the ID from the root element
-    if (node.name === "id" && parent === "ClinicalDocument") {
-      root = String(node.attributes.root ?? "");
-      extension = String(node.attributes.extension ?? "");
-
-      // A bit of a hack but this allows us to exit without reading the rest of the xml
-      throw new FoundEcrId();
+    if (stack.length === 0) {
+      documentRoot = node.name;
+      if (
+        node.local === "ClinicalDocument" &&
+        (node.uri === CDA_NAMESPACE || node.uri === "")
+      ) {
+        documentType = "ccda";
+      } else if (node.local === "Bundle" && node.uri === FHIR_NAMESPACE) {
+        documentType = "fhir";
+      }
+    } else if (
+      documentType === "ccda" &&
+      node.local === "id" &&
+      node.uri === stack[0].uri &&
+      stack.length === 1
+    ) {
+      throw new FoundEcrId(
+        resolveEcrId(
+          attributeValue(node.attributes, "root"),
+          attributeValue(node.attributes, "extension"),
+        ),
+      );
+    } else if (
+      documentType === "fhir" &&
+      node.uri === FHIR_NAMESPACE &&
+      stack.length === 2 &&
+      stack[1].local === "identifier" &&
+      stack[1].uri === FHIR_NAMESPACE
+    ) {
+      if (node.local === "system") {
+        fhirSystem = attributeValue(node.attributes, "value").trim();
+      } else if (node.local === "value") {
+        fhirValue = attributeValue(node.attributes, "value").trim();
+      }
     }
 
-    stack.push(node.name);
+    stack.push({ local: node.local, uri: node.uri });
   });
 
-  parser.on("closetag", () => {
+  parser.on("closetag", (node) => {
+    if (
+      documentType === "fhir" &&
+      node.local === "identifier" &&
+      node.uri === FHIR_NAMESPACE &&
+      stack.length === 2 &&
+      stack[0].local === "Bundle" &&
+      stack[0].uri === FHIR_NAMESPACE
+    ) {
+      throw new FoundEcrId(
+        getEcrIdFromIdentifier({ system: fhirSystem, value: fhirValue }),
+      );
+    }
+
     stack.pop();
   });
 
   try {
     parser.write(xmlString).close();
   } catch (error) {
-    // if we have a real error we throw it
-    if (!(error instanceof FoundEcrId)) {
-      throw error;
+    if (error instanceof FoundEcrId) {
+      return error.ecrId;
     }
+    throw error;
   }
 
-  return resolveEcrId(root, extension);
+  if (!documentType) {
+    throw new Error(
+      `Unsupported eCR XML root element: ${documentRoot || "none"}.`,
+    );
+  }
+
+  throw new Error("Missing ECR identifier root and extension.");
 };
 
 /**
  * Zip an xml if needed then save to storage
  * @param body - Body of the upload containing the XML file(s) to be saved
  * @param ecrId - ID of the uploaded eCR for naming saved files
+ * @returns the status and message from saving
  */
 export const zipAndSaveXml = async (body: RequestBody, ecrId: string) => {
-  if (
-    body.ecr instanceof File &&
-    (body.ecr.type === "application/zip" ||
-      body.ecr.type === "application/octet-stream")
-  ) {
+  if (body.ecr instanceof File && isZipFile(body.ecr)) {
     // Already Zipped
     const arrayBuffer = await body.ecr.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    await saveToStorage(buffer, ecrId, process.env.SOURCE, "xml");
-  } else if (typeof body.ecr === "string") {
+    return await saveToStorage(buffer, ecrId, process.env.SOURCE, "xml");
+  }
+
+  if (typeof body.ecr === "string") {
     // XML String path
     const zip = new JSZip();
-    zip.file(`${ecrId}-CDA_eICR.xml`, body.ecr);
+    zip.file(`${ecrId}-eICR.xml`, body.ecr);
 
     // add RR if exists and is string
     if (typeof body.rr === "string") {
-      zip.file(`${ecrId}-CDA_RR.xml`, body.rr);
+      zip.file(`${ecrId}-RR.xml`, body.rr);
     }
 
     const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
-    await saveToStorage(zipBuffer, ecrId, process.env.SOURCE, "xml");
-  } else if (body.ecr instanceof File) {
-    // XML file path
-    const zip = new JSZip();
-
-    const ecrArrayBuf = await body.ecr.arrayBuffer();
-    zip.file(`${ecrId}-CDA_eICR.xml`, Buffer.from(ecrArrayBuf));
-
-    if (body.rr instanceof File) {
-      const rrArrayBuf = await body.rr.arrayBuffer();
-      zip.file(`${ecrId}-CDA_RR.xml`, Buffer.from(rrArrayBuf));
-    }
-
-    const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
-    await saveToStorage(zipBuffer, ecrId, process.env.SOURCE, "xml");
+    return await saveToStorage(zipBuffer, ecrId, process.env.SOURCE, "xml");
   }
+
+  // XML file path
+  const zip = new JSZip();
+
+  const ecrArrayBuf = await body.ecr.arrayBuffer();
+  zip.file(`${ecrId}-eICR.xml`, Buffer.from(ecrArrayBuf));
+
+  if (body.rr instanceof File) {
+    const rrArrayBuf = await body.rr.arrayBuffer();
+    zip.file(`${ecrId}-RR.xml`, Buffer.from(rrArrayBuf));
+  }
+
+  const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
+  return await saveToStorage(zipBuffer, ecrId, process.env.SOURCE, "xml");
 };
 
 /**
- * Unzip and clean up a zipped XML
+ * Extract the first XML document from a legacy C-CDA ZIP upload.
  * @param file - The zipped file
  * @returns The XML string from inside the zip file
  */
 export const unzipXml = async (file: File) => {
   const arrayBuffer = await file.arrayBuffer();
   const zip = await JSZip.loadAsync(arrayBuffer);
+  const xmlEntries = Object.entries(zip.files).filter(([name, entry]) => {
+    return (
+      !entry.dir &&
+      !name.startsWith("__MACOSX/") &&
+      !name.startsWith("._") &&
+      name.endsWith(".xml")
+    );
+  });
 
-  // Looping through the files in the zip and ignoring junk files added by Mac zipping utils
-  for (const [name, entry] of Object.entries(zip.files)) {
-    if (entry.dir || name.startsWith("__MACOSX/") || name.startsWith("._"))
-      continue;
-    if (name.endsWith(".xml")) {
-      return await entry.async("string");
-    }
+  // Match orchestration's ZIP contract so an RR that appears first cannot be
+  // mistaken for the eICR during the pre-conversion duplicate check.
+  const ecrEntry =
+    xmlEntries.find(([name]) => name.includes("CDA_eICR.xml")) ?? xmlEntries[0];
+  if (ecrEntry) {
+    return await ecrEntry[1].async("string");
   }
+
   throw new Error("No XML file found in the provided zip.");
 };
