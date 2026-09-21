@@ -17,7 +17,6 @@ pycountry>=26.2.16
 pydantic-settings>=2.15.0
 rapidfuzz>=3.14.6
 requests>=2.34.2
-setuptools>=84.0.0
 smartystreets_python_sdk>=8.0.0
 starlette>=1.6.0 # Transitive dependency, minimum version specified for security reasons
 urllib3>=2.7.0
