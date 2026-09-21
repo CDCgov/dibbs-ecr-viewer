@@ -1,7 +1,7 @@
 "use client";
 import React, { ReactNode, useContext, useEffect } from "react";
 
-import { Alert } from "@trussworks/react-uswds";
+import { Alert, AlertText } from "@trussworks/react-uswds";
 
 import { ToastContext, ToastVariant } from "./ToastProvider";
 
@@ -40,12 +40,11 @@ function Toast({
       aria-live="polite"
       aria-label="Notification"
       className="toast"
-      headingLevel="h4"
       type={variant}
       slim={true}
       style={style}
     >
-      {children}
+      <AlertText>{children}</AlertText>
     </Alert>
   );
 }

@@ -1,9 +1,8 @@
-import { Bundle } from "fhir/r4";
-
 import * as _BundleWithPatient from "@/../../../test-data/fhir/BundlePatient.json";
 import * as _BundleWithDeceasedPatient from "@/../../../test-data/fhir/BundlePatientDeceased.json";
 import * as _BundlePatientMultiple from "@/../../../test-data/fhir/BundlePatientMultiple.json";
 import { formatAge } from "@/app/services/formatService";
+import { Bundle } from "@/app/types";
 import { evaluateOne, evaluateValue } from "@/app/utils/evaluate";
 import mappings from "@/app/utils/evaluate/fhir-paths";
 

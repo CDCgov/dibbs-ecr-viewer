@@ -3,16 +3,16 @@ import React, { ReactNode } from "react";
 
 import { HeadingLevel, Tag } from "@trussworks/react-uswds";
 import {
-  Bundle,
+  Coding,
   Composition,
   Device,
   DiagnosticReport,
   Element,
   Observation,
+  ObservationComponent,
   Organization,
   Specimen,
 } from "fhir/r4";
-import { Coding, ObservationComponent } from "fhir/r4b";
 
 import { formatDateTime } from "@/app/services/formatDateService";
 import {

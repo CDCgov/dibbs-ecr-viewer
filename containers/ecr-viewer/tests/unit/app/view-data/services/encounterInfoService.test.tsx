@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import {
-  Bundle,
   BundleEntry,
   Encounter,
   Practitioner,
@@ -14,6 +13,7 @@ import * as _BundleAdmissionMedications from "@/../../../test-data/fhir/BundleAd
 import * as _BundleEcrMetadata from "@/../../../test-data/fhir/BundleEcrMetadata.json";
 import * as _BundlePatientWithCovid from "@/../../../test-data/fhir/BundlePatientWithCovid.json";
 import * as _BundlePractitionerRole from "@/../../../test-data/fhir/BundlePractitionerRole.json";
+import { Bundle } from "@/app/types";
 import {
   evaluatePractitionerRoleReference,
   evaluateEncounterCareTeamTable,

@@ -146,7 +146,7 @@ To prevent the execution of malicious `setup.py` scripts during installation, ou
 2. Make sure you have `pip-tools` installed.
 3. Compile the strict lockfile by running:
    ```bash
-   pip-compile --generate-hashes requirements.in
+   pip-compile --upgrade --generate-hashes --strip-extras requirements.in
    ```
 4. Try to build the Docker container.
    - If it succeeds, the package has a pre-compiled wheel available. You are done!

@@ -1,4 +1,3 @@
-import { Bundle } from "fhir/r4";
 import JSZip from "jszip";
 import { SaxesParser } from "saxes";
 import { fetch, Agent, FormData } from "undici";
@@ -14,6 +13,7 @@ import { getDb } from "@/app/data/metadataDb/database";
 import { Core } from "@/app/data/metadataDb/types/core";
 import { dbDialect, dbSchema } from "@/app/data/metadataDb/utils/db-config";
 import { getEcrIdFromIdentifier, resolveEcrId } from "@/app/utils/ecrid-utils";
+import { Bundle } from "@/app/types";
 
 interface OrchestrationRawResponse {
   message: string;

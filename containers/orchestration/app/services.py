@@ -1,7 +1,7 @@
 import json
 import os
 
-import httpx
+import httpx2
 from fastapi import HTTPException, Response, WebSocket
 
 from app.handlers.request_builders.fhir_converter import build_fhir_converter_request
@@ -62,12 +62,12 @@ ENDPOINT_TO_RESPONSE = {
 }
 
 
-async def post_request(client: httpx.AsyncClient, url: str, payload: dict) -> Response:
+async def post_request(client: httpx2.AsyncClient, url: str, payload: dict) -> Response:
     """
     Helper function to post an API request to a particular endpoint using
-    the `httpx` module.
+    the `httpx2` module.
 
-    :param client: The httpx client to use
+    :param client: The httpx2 client to use
     :param url: The full URL of the endpoint to-hit.
     :param payload: The body of the Request object, as a dictionary.
     :return: A Response object from the posted endpoint.
@@ -117,7 +117,7 @@ async def _send_websocket_dump(
 
 async def call_apis(
     config: dict,
-    client: httpx.AsyncClient,
+    client: httpx2.AsyncClient,
     input: OrchestrationRequest,
     websocket: WebSocket = None,
 ) -> tuple:
