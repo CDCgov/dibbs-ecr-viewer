@@ -405,17 +405,18 @@ const saveExtendedMetadata = async (
       const { specimens, ...lab } = metadata.labs[i];
       const record = {
         ...lab,
+        uuid: lab.uuid || randomUUID(),
         eicr_id: ecrId,
       };
 
       batchToInsert.push(record);
 
-      if (record.uuid && specimens?.length) {
+      if (specimens?.length) {
         specimensToInsert.push(
           ...specimens.map((specimen) => ({
             uuid: randomUUID(),
             eicr_id: ecrId,
-            lab_uuid: record.uuid as string,
+            lab_uuid: record.uuid,
             specimen_type: specimen.specimen_type,
             specimen_collection_date: asDate(specimen.specimen_collection_date),
           })),

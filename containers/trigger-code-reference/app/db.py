@@ -89,16 +89,19 @@ def _get_condition_name_from_snomed_code_tes(condition_code: str) -> str:
 
 def add_human_readable_reportable_condition_name_tes(resource: dict) -> dict:
     """
-    Add a human readable name to the valueCodeableConcept.text field of a condition resource.
+    Add a human-readable condition name to a reportable-condition Observation.
 
-    If the resource is a Condition, get the SNOMED code to look up the human-readable name
+    Get the SNOMED code to look up the human-readable name.
     If we we do not have a human-readable name, we will use the display of the SNOMED code
     If we do not have a SNOMED code in the valueCodeableConcept, we will use the display of the
     first coding, if any.
     None of these fallbacks should be used, however in the situation where data is missing in our
     database and in the FHIR bundle, we still need to be able to handle valid FHIR bundles.
     """
-    if not resource.get("code"):
+    # This enrichment applies only to the eICR reportable-condition Observation.
+    # Other FHIR resources can validly represent `code` as a list (for example,
+    # PractitionerRole), rather than the CodeableConcept used by Observation.
+    if resource.get("resourceType") != "Observation" or not resource.get("code"):
         return resource
 
     # Check if there's a SNOMED "Condition" coding in resource["code"]["coding"]

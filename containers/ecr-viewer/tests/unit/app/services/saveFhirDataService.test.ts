@@ -361,6 +361,35 @@ describe("saveFhirMetadata", () => {
     });
     expect(rollbackFhirData).not.toHaveBeenCalled();
   });
+
+  it("generates an ID for lab metadata without a source resource ID", async () => {
+    const { inserts } = makeMetadataDbMock();
+    const labWithoutUuid = { ...makeLabMetadata(0), uuid: undefined };
+
+    const result = await saveFhirMetadata(
+      ecrId,
+      "extended",
+      makeExtendedMetadata({ labs: [labWithoutUuid] }),
+      successfulFhirSave,
+      jest.fn(),
+    );
+
+    const labInsert = inserts.find((insert) => insert.table === "ecr_labs");
+    const specimenInsert = inserts.find(
+      (insert) => insert.table === "ecr_lab_specimens",
+    );
+    const lab = (
+      labInsert?.values as Array<Record<string, unknown>>
+    )[0];
+    const specimen = (
+      specimenInsert?.values as Array<Record<string, unknown>>
+    )[0];
+
+    expect(result.status).toBe(200);
+    expect(lab.uuid).toEqual(expect.any(String));
+    expect(lab.uuid).not.toBe("");
+    expect(specimen.lab_uuid).toBe(lab.uuid);
+  });
 });
 
 describe("Cloud save and delete", () => {
