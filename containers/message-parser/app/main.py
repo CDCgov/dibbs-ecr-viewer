@@ -24,6 +24,7 @@ from app.utils import (
     get_metadata,
     load_parsing_schema,
     read_json_from_assets,
+    resolve_safe_file_path,
     search_for_required_values,
 )
 
@@ -186,7 +187,14 @@ async def upload_schema(
     existing schema.
     """
 
-    file_path = Path(__file__).parent / "custom_schemas" / parsing_schema_name
+    try:
+        file_path = resolve_safe_file_path(
+            Path(__file__).parent / "custom_schemas", parsing_schema_name
+        )
+    except ValueError as error:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"message": str(error)}
+
     schema_exists = file_path.exists()
     if schema_exists and not input.overwrite:
         response.status_code = status.HTTP_400_BAD_REQUEST

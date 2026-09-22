@@ -11,6 +11,7 @@ from app.utils import (
     _combine_response_bundles,
     load_processing_config,
     replace_env_var_placeholders,
+    resolve_safe_file_path,
     search_for_ecr_data,
 )
 
@@ -54,6 +55,44 @@ def test_load_processing_config_fail():
     assert response == (
         f"A config with the name '{bad_config_name}' could not be found.",
     )
+
+
+def test_load_processing_config_rejects_path_traversal():
+    unsafe_config_name = "../../assets/sample_get_config_response.json"
+    with pytest.raises(FileNotFoundError):
+        load_processing_config(unsafe_config_name)
+
+
+@pytest.mark.parametrize(
+    "filename",
+    ["", "foo\x00bar", "subdir/file.json", "subdir\\file.json", ".", ".."],
+)
+def test_resolve_safe_file_path_rejects_invalid_filenames(tmp_path, filename):
+    safe_directory = tmp_path / "configs"
+    safe_directory.mkdir()
+
+    with pytest.raises(ValueError):
+        resolve_safe_file_path(safe_directory, filename)
+
+
+def test_resolve_safe_file_path_accepts_valid_filename(tmp_path):
+    safe_directory = tmp_path / "configs"
+    safe_directory.mkdir()
+
+    resolved_path = resolve_safe_file_path(safe_directory, "valid.json")
+
+    assert resolved_path == safe_directory / "valid.json"
+
+
+def test_resolve_safe_file_path_rejects_external_symlink(tmp_path):
+    safe_directory = tmp_path / "configs"
+    safe_directory.mkdir()
+    outside_file = tmp_path / "outside.json"
+    outside_file.write_text("{}")
+    (safe_directory / "linked.json").symlink_to(outside_file)
+
+    with pytest.raises(ValueError):
+        resolve_safe_file_path(safe_directory, "linked.json")
 
 
 def test_search_for_ecr_data_with_eicr_present_success():

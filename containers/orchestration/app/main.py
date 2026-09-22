@@ -44,6 +44,7 @@ from app.utils import (
     load_config_assets,
     load_json_from_binary,
     load_processing_config,
+    resolve_safe_file_path,
     unzip_http,
     unzip_ws,
 )
@@ -411,7 +412,14 @@ async def upload_config(
     - :param response: The response object used to modify the response status and body.
     """
 
-    file_path = Path(__file__).parent / "custom_configs" / processing_config_name
+    try:
+        file_path = resolve_safe_file_path(
+            Path(__file__).parent / "custom_configs", processing_config_name
+        )
+    except ValueError as error:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"message": str(error)}
+
     config_exists = file_path.exists()
     if config_exists and not input.overwrite:
         response.status_code = status.HTTP_400_BAD_REQUEST

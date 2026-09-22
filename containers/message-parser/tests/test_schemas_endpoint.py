@@ -1,7 +1,9 @@
+import asyncio
 import json
 import os
 from pathlib import Path
 
+import httpx2
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -43,6 +45,27 @@ def test_schema_not_found():
         "message": "A schema with the name 'some-schema-that-does-not-exist.json' "
         "could not be found.",
         "parsing_schema": {},
+    }
+
+
+def test_upload_schema_rejects_invalid_filename():
+    async def send_request():
+        transport = httpx2.ASGITransport(app=app)
+        async with httpx2.AsyncClient(
+            transport=transport, base_url="http://test"
+        ) as async_client:
+            return await async_client.put(
+                "/schemas/subdir%5Cschema.json",
+                json={"parsing_schema": {}},
+            )
+
+    response = asyncio.run(send_request())
+
+    assert response.status_code == 400
+    assert response.json() == {
+        "message": (
+            "File name must identify a file directly within the configured directory."
+        )
     }
 
 
