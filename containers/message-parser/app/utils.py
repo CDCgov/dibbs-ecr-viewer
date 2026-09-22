@@ -5,19 +5,12 @@ import re
 from collections import defaultdict
 from functools import cache
 from pathlib import Path
-from typing import Literal
 
 import fhirpathpy
-import requests
 from fastapi import status
 from frozendict import frozendict
 
-from app.cloud.azure import AzureCredentialManager
-from app.cloud.core import BaseCredentialManager
-from app.cloud.gcp import GcpCredentialManager
 from app.config import get_settings
-from app.fhir.transport import http_request_with_reauth
-from app.transport.http import http_request_with_retry
 
 FAST_LOOKUP_MISS = object()
 FHIR_PATH_VALUE_PHASE = "value"
@@ -192,87 +185,6 @@ def search_for_required_values(input: dict, required_values: list) -> str:
         )
 
     return message
-
-
-def convert_to_fhir(
-    message: str,
-    message_type: Literal["elr", "vxu", "ecr"],
-    fhir_converter_url: str,
-    headers: dict = {},
-    credential_manager: BaseCredentialManager = None,
-) -> requests.Response:
-    """
-    Convert a message to FHIR by making a request to an instance of the DIBBs FHIR
-    conversion service.
-
-    :param message: The serialized contents of the message to be converted to FHIR.
-    :param message_type: The type of the message.
-    :param fhir_converter_url: The URL of an instance of the FHIR conversion service.
-    :return:
-
-    """
-    conversion_settings = {
-        "elr": {"input_type": "hl7v2", "root_template": "ORU_R01"},
-        "vxu": {"input_type": "hl7v2", "root_template": "VXU_V04"},
-        "ecr": {"input_type": "ecr", "root_template": "EICR"},
-    }
-
-    data = {
-        "input_data": message,
-        "input_type": conversion_settings[message_type]["input_type"],
-        "root_template": conversion_settings[message_type]["root_template"],
-    }
-    fhir_converter_url = fhir_converter_url + "/convert-to-fhir"
-    if credential_manager:
-        access_token = credential_manager.get_access_token()
-        headers["Authorization"] = f"Bearer {access_token}"
-        response = http_request_with_reauth(
-            credential_manager=credential_manager,
-            url=fhir_converter_url,
-            retry_count=3,
-            request_type="POST",
-            allowed_methods=["POST"],
-            headers=headers,
-            data=data,
-        )
-    else:
-        response = http_request_with_retry(
-            url=fhir_converter_url,
-            retry_count=3,
-            request_type="POST",
-            allowed_methods=["POST"],
-            headers=headers,
-            data=data,
-        )
-
-    return response
-
-
-credential_managers = {"azure": AzureCredentialManager, "gcp": GcpCredentialManager}
-
-
-def get_credential_manager(
-    credential_manager: str, location_url: str = None
-) -> BaseCredentialManager:
-    """
-    Return a credential manager for different cloud providers depending upon which
-    one the user requests via the parameter.
-
-    :param credential_manager: A string identifying which cloud credential
-    manager is desired.
-    :return: Either a Google Cloud Credential Manager or an Azure Credential Manager
-    depending upon the value passed in.
-    """
-    credential_manager_class = credential_managers.get(credential_manager)
-    result = None
-    # if the credential_manager_class is not none then instantiate an instance of it
-    if credential_manager_class is not None:
-        if credential_manager == "azure":
-            result = credential_manager_class(resource_location=location_url)
-        else:
-            result = credential_manager_class()
-
-    return result
 
 
 def read_json_from_assets(filename: str) -> dict:

@@ -1,5 +1,4 @@
 from copy import deepcopy
-from unittest import mock
 
 import pytest
 from fastapi.testclient import TestClient
@@ -295,90 +294,6 @@ def test_parse_message_success_referenced_resources(
     actual_response = client.post("/parse_message", json=request)
     assert actual_response.status_code == 200
     assert actual_response.json() == expected_reference_response
-
-
-@mock.patch("app.main.convert_to_fhir")
-@mock.patch("app.main.get_credential_manager")
-def test_parse_message_success_non_fhir(
-    patched_get_credential_manager, patched_convert_to_fhir, fhir_bundle
-):
-    request = {
-        "message_format": "hl7v2",
-        "message_type": "elr",
-        "parsing_schema_name": "test_schema.json",
-        "fhir_converter_url": "some-url",
-        "credential_manager": "azure",
-        "message": "some-hl7v2-elr-message",
-    }
-
-    patched_get_credential_manager.return_value = "some-credential-manager"
-    convert_to_fhir_response = mock.Mock()
-    convert_to_fhir_response.status_code = 200
-    convert_to_fhir_response.json.return_value = {"FhirResource": fhir_bundle}
-    patched_convert_to_fhir.return_value = convert_to_fhir_response
-
-    actual_response = client.post("/parse_message", json=request)
-
-    assert actual_response.status_code == 200
-    assert actual_response.json() == expected_successful_response
-    patched_convert_to_fhir.assert_called_with(
-        message="some-hl7v2-elr-message",
-        message_type="elr",
-        fhir_converter_url="some-url",
-        credential_manager="some-credential-manager",
-    )
-    patched_get_credential_manager.assert_called_with(
-        credential_manager="azure", location_url="some-url"
-    )
-
-
-def test_parse_message_non_fhir_missing_converter_url():
-    request = {
-        "message_format": "hl7v2",
-        "message_type": "elr",
-        "parsing_schema_name": "test_schema.json",
-        "message": "some-hl7v2-elr-message",
-    }
-
-    actual_response = client.post("/parse_message", json=request)
-    assert actual_response.status_code == 400
-    assert actual_response.json() == {
-        "message": "The following values are required, but were not included in the "
-        "request and could not be read from the environment. Please resubmit the "
-        "request including these values or add them as environment variables to this "
-        "service. missing values: fhir_converter_url.",
-        "parsed_values": {},
-    }
-
-
-@mock.patch("app.main.convert_to_fhir")
-def test_parse_message_fhir_conversion_fail(patched_convert_to_fhir):
-    request = {
-        "message_format": "hl7v2",
-        "message_type": "elr",
-        "parsing_schema_name": "test_schema.json",
-        "fhir_converter_url": "some-url",
-        "message": "some-hl7v2-elr-message",
-    }
-
-    convert_to_fhir_response = mock.Mock()
-    convert_to_fhir_response.status_code = 400
-    convert_to_fhir_response.text = "some error message returned by the FHIR converter"
-    patched_convert_to_fhir.return_value = convert_to_fhir_response
-    expected_response = {
-        "message": f"Failed to convert to FHIR: {convert_to_fhir_response.text}",
-        "parsed_values": {},
-    }
-
-    actual_response = client.post("/parse_message", json=request)
-    assert actual_response.status_code == 400
-    assert actual_response.json() == expected_response
-    patched_convert_to_fhir.assert_called_with(
-        message="some-hl7v2-elr-message",
-        message_type="elr",
-        fhir_converter_url="some-url",
-        credential_manager=None,
-    )
 
 
 def test_parse_message_non_fhir_missing_message_type():
