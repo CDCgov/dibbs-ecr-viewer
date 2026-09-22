@@ -22,6 +22,7 @@ from app.utils import (
     get_metadata,
     load_parsing_schema,
     read_json_from_assets,
+    resolve_safe_file_path,
 )
 
 # Read settings immediately to fail fast in case there are invalid values.
@@ -155,7 +156,16 @@ async def upload_schema(
     existing schema.
     """
 
-    file_path = Path(__file__).parent / "custom_schemas" / parsing_schema_name
+    try:
+        file_path = resolve_safe_file_path(
+            Path(__file__).parent / "custom_schemas", parsing_schema_name
+        )
+    except ValueError:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {
+            "message": "File name must identify a file directly within the configured directory."
+        }
+
     schema_exists = file_path.exists()
     if schema_exists and not input.overwrite:
         response.status_code = status.HTTP_400_BAD_REQUEST

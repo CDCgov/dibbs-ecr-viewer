@@ -13,6 +13,7 @@ from app.utils import (
     freeze_parsing_schema_helper,
     get_metadata,
     load_parsing_schema,
+    resolve_safe_file_path,
     search_for_required_values,
 )
 
@@ -35,6 +36,44 @@ def test_load_parsing_schema_fail():
     assert error.value.args == (
         f"A schema with the name '{bad_schema_name}' could not be found.",
     )
+
+
+def test_load_parsing_schema_rejects_path_traversal():
+    unsafe_schema_name = "../../assets/sample_get_schema_response.json"
+    with pytest.raises(FileNotFoundError):
+        load_parsing_schema(unsafe_schema_name)
+
+
+@pytest.mark.parametrize(
+    "filename",
+    ["", "foo\x00bar", "subdir/file.json", "subdir\\file.json", ".", ".."],
+)
+def test_resolve_safe_file_path_rejects_invalid_filenames(tmp_path, filename):
+    safe_directory = tmp_path / "schemas"
+    safe_directory.mkdir()
+
+    with pytest.raises(ValueError):
+        resolve_safe_file_path(safe_directory, filename)
+
+
+def test_resolve_safe_file_path_accepts_valid_filename(tmp_path):
+    safe_directory = tmp_path / "schemas"
+    safe_directory.mkdir()
+
+    resolved_path = resolve_safe_file_path(safe_directory, "valid.json")
+
+    assert resolved_path == safe_directory / "valid.json"
+
+
+def test_resolve_safe_file_path_rejects_external_symlink(tmp_path):
+    safe_directory = tmp_path / "schemas"
+    safe_directory.mkdir()
+    outside_file = tmp_path / "outside.json"
+    outside_file.write_text("{}")
+    (safe_directory / "linked.json").symlink_to(outside_file)
+
+    with pytest.raises(ValueError):
+        resolve_safe_file_path(safe_directory, "linked.json")
 
 
 def test_fhir_parser_parse_success():

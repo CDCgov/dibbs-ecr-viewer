@@ -1,5 +1,6 @@
 import datetime
 import json
+import os
 import pathlib
 import re
 from collections import defaultdict
@@ -41,6 +42,31 @@ LAB_FIELD_ACCESSORS = {
 }
 
 
+def resolve_safe_file_path(directory: Path, filename: str) -> Path:
+    """Resolve a direct child filename without allowing path traversal."""
+    if (
+        not filename
+        or filename != os.path.basename(filename)
+        or "\\" in filename
+        or "\x00" in filename
+    ):
+        raise ValueError(
+            "File name must identify a file directly within the configured directory."
+        )
+
+    safe_directory = os.path.realpath(directory)
+    resolved_path = os.path.realpath(os.path.join(safe_directory, filename))
+    safe_prefix = safe_directory + os.sep
+    if not resolved_path.startswith(safe_prefix) or (
+        os.path.dirname(resolved_path) != safe_directory
+    ):
+        raise ValueError(
+            "File name must identify a file directly within the configured directory."
+        )
+
+    return Path(resolved_path)
+
+
 @cache
 def load_parsing_schema(schema_name: str) -> dict:
     """
@@ -51,23 +77,23 @@ def load_parsing_schema(schema_name: str) -> dict:
     :param path: The path to an extraction schema file.
     :return: A dictionary containing the extraction schema.
     """
-    custom_schema_path = Path(__file__).parent / "custom_schemas" / schema_name
     try:
-        with open(custom_schema_path) as file:
-            parsing_schema = json.load(file)
-    except FileNotFoundError:
         try:
-            default_schema_path = (
-                Path(__file__).parent / "default_schemas" / schema_name
+            custom_schema_path = resolve_safe_file_path(
+                Path(__file__).parent / "custom_schemas", schema_name
+            )
+            with open(custom_schema_path) as file:
+                return freeze_parsing_schema(json.load(file))
+        except FileNotFoundError:
+            default_schema_path = resolve_safe_file_path(
+                Path(__file__).parent / "default_schemas", schema_name
             )
             with open(default_schema_path) as file:
-                parsing_schema = json.load(file)
-        except FileNotFoundError:
-            raise FileNotFoundError(
-                f"A schema with the name '{schema_name}' could not be found."
-            )
-
-    return freeze_parsing_schema(parsing_schema)
+                return freeze_parsing_schema(json.load(file))
+    except (FileNotFoundError, ValueError) as error:
+        raise FileNotFoundError(
+            f"A schema with the name '{schema_name}' could not be found."
+        ) from error
 
 
 def freeze_parsing_schema(parsing_schema: dict) -> frozendict:

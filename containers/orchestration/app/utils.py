@@ -18,6 +18,31 @@ env_path = Path(__file__).resolve().parent.parent / ".env"
 load_dotenv(dotenv_path=env_path)
 
 
+def resolve_safe_file_path(directory: Path, filename: str) -> Path:
+    """Resolve a direct child filename without allowing path traversal."""
+    if (
+        not filename
+        or filename != os.path.basename(filename)
+        or "\\" in filename
+        or "\x00" in filename
+    ):
+        raise ValueError(
+            "File name must identify a file directly within the configured directory."
+        )
+
+    safe_directory = os.path.realpath(directory)
+    resolved_path = os.path.realpath(os.path.join(safe_directory, filename))
+    safe_prefix = safe_directory + os.sep
+    if not resolved_path.startswith(safe_prefix) or (
+        os.path.dirname(resolved_path) != safe_directory
+    ):
+        raise ValueError(
+            "File name must identify a file directly within the configured directory."
+        )
+
+    return Path(resolved_path)
+
+
 @cache
 def load_processing_config(config_name: str) -> dict:
     """
@@ -31,21 +56,23 @@ def load_processing_config(config_name: str) -> dict:
     :param path: The path to an extraction config file.
     :return: A dictionary containing the extraction config.
     """
-    custom_config_path = Path(__file__).parent / "custom_configs" / config_name
     try:
-        with open(custom_config_path) as file:
-            processing_config = json.load(file)
-    except FileNotFoundError:
         try:
-            default_config_path = (
-                Path(__file__).parent / "default_configs" / config_name
+            custom_config_path = resolve_safe_file_path(
+                Path(__file__).parent / "custom_configs", config_name
+            )
+            with open(custom_config_path) as file:
+                processing_config = json.load(file)
+        except FileNotFoundError:
+            default_config_path = resolve_safe_file_path(
+                Path(__file__).parent / "default_configs", config_name
             )
             with open(default_config_path) as file:
                 processing_config = json.load(file)
-        except FileNotFoundError:
-            raise FileNotFoundError(
-                f"A config with the name '{config_name}' could not be found."
-            )
+    except (FileNotFoundError, ValueError) as error:
+        raise FileNotFoundError(
+            f"A config with the name '{config_name}' could not be found."
+        ) from error
 
     # Replace placeholders with environment variable values
     replace_env_var_placeholders(processing_config)
