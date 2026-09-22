@@ -418,7 +418,9 @@ async def upload_config(
         )
     except ValueError:
         response.status_code = status.HTTP_400_BAD_REQUEST
-        return {"message": "File name must identify a file directly within the configured directory."}
+        return {
+            "message": "File name must identify a file directly within the configured directory."
+        }
 
     config_exists = file_path.exists()
     if config_exists and not input.overwrite:
