@@ -191,9 +191,9 @@ async def upload_schema(
         file_path = resolve_safe_file_path(
             Path(__file__).parent / "custom_schemas", parsing_schema_name
         )
-    except ValueError as error:
+    except ValueError:
         response.status_code = status.HTTP_400_BAD_REQUEST
-        return {"message": str(error)}
+        return {"message": "File name must identify a file directly within the configured directory."}
 
     schema_exists = file_path.exists()
     if schema_exists and not input.overwrite:
