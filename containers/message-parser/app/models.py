@@ -74,16 +74,6 @@ class ParseMessageInput(BaseModel):
         " loaded in the service to use to extract fields from the message.",
         default=None,
     )
-    fhir_converter_url: str | None = Field(
-        description="The URL of an instance of the FHIR converter. Required when "
-        "the message is not already in FHIR format.",
-        default=None,
-    )
-    credential_manager: Literal["azure", "gcp"] | None = Field(
-        description="The type of credential manager to use for authentication with a "
-        "FHIR converter when conversion to FHIR is required.",
-        default=None,
-    )
     include_metadata: Literal["true", "false"] | None = Field(
         description="Boolean to include metadata in the response.",
         default=None,

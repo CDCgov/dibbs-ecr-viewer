@@ -1,7 +1,6 @@
 import json
 import os
 from pathlib import Path
-from unittest import mock
 
 import pytest
 from frozendict import frozendict
@@ -9,11 +8,9 @@ from frozendict import frozendict
 from app.config import get_settings
 from app.utils import (
     FhirParser,
-    convert_to_fhir,
     field_metadata,
     freeze_parsing_schema,
     freeze_parsing_schema_helper,
-    get_credential_manager,
     get_metadata,
     load_parsing_schema,
     resolve_safe_file_path,
@@ -153,76 +150,6 @@ def test_search_for_required_values_failure():
         "could not be read from the environment. Please resubmit the request including "
         "these values or add them as environment variables to this service. missing "
         "values: cred_manager."
-    )
-
-
-def test_get_credential_manager_azure():
-    fhir_url = "Some URL"
-    actual_result = get_credential_manager("azure", fhir_url)
-    assert hasattr(actual_result, "__class__")
-    assert hasattr(actual_result, "resource_location")
-    assert hasattr(actual_result, "access_token")
-
-
-def test_get_credential_manager_gcp():
-    actual_result = get_credential_manager("gcp")
-    assert hasattr(actual_result, "__class__")
-    assert hasattr(actual_result, "scoped_credentials")
-
-
-def test_get_credential_manager_invalid():
-    expected_result = None
-    actual_result = get_credential_manager("myown")
-    assert actual_result == expected_result
-
-
-@mock.patch("app.utils.http_request_with_reauth")
-def test_convert_fhir_cred_manager(patched_requests_with_reauth):
-    credential_manager = mock.Mock()
-    credential_manager.get_access_token.return_value = "some-access-token"
-    parameters = {
-        "message": "some message to convert",
-        "message_type": "elr",
-        "fhir_converter_url": "some FHIR converter URL",
-        "headers": {},
-        "credential_manager": credential_manager,
-    }
-    convert_to_fhir(**parameters)
-    patched_requests_with_reauth.assert_called_with(
-        credential_manager=credential_manager,
-        url="some FHIR converter URL/convert-to-fhir",
-        retry_count=3,
-        request_type="POST",
-        allowed_methods=["POST"],
-        headers={"Authorization": "Bearer some-access-token"},
-        data={
-            "input_data": "some message to convert",
-            "input_type": "hl7v2",
-            "root_template": "ORU_R01",
-        },
-    )
-
-
-@mock.patch("app.utils.http_request_with_retry")
-def test_convert_fhir_no_cred_manager(patched_requests_with_retryh):
-    parameters = {
-        "message": "some message to convert",
-        "message_type": "elr",
-        "fhir_converter_url": "some FHIR converter URL",
-        "headers": {},
-    }
-    convert_to_fhir(**parameters)
-    patched_requests_with_retryh.assert_called_with(
-        url="some FHIR converter URL/convert-to-fhir",
-        retry_count=3,
-        request_type="POST",
-        allowed_methods=["POST"],
-        headers={},
-        data={
-            "input_data": "some message to convert",
-            "input_type": "hl7v2",
-            "root_template": "ORU_R01",
-        },
     )
 
 

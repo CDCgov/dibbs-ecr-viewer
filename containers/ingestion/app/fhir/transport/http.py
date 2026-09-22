@@ -63,75 +63,6 @@ def http_request_with_reauth(
     return response
 
 
-def upload_bundle_to_fhir_server(
-    bundle: dict,
-    cred_manager: BaseCredentialManager,
-    fhir_url: str,
-    max_bundle_size: int = 500,
-) -> list[requests.Response]:
-    """
-    Uploads a FHIR resource bundle to the FHIR server.
-
-    :param bundle: A FHIR bundle (type "batch" or "transaction") to post.  Each entry in
-      the bundle must contain a `request` element in addition to a `resource`.
-      The FHIR API provides additional details on creating
-      [FHIR-conformant batch/transaction](https://hl7.org/fhir/http.html#transaction)
-      bundles.
-    :param cred_manager: The credential manager used to authenticate to the FHIR server.
-    :param fhir_url: The url of the FHIR server to upload to.
-    :param max_bundle_size: The maximum number of resources per bundle to upload to
-      the FHIR server.
-    :return: A `requests.Response` object containing the response from the FHIR server.
-    """
-
-    access_token = cred_manager.get_access_token()
-    responses = []
-
-    # ensure that bundles are below the set maximum size of resources
-    split_bundles = _split_bundle_resources(bundle, max_bundle_size)
-
-    for single_bundle in split_bundles:
-        response = http_request_with_reauth(
-            cred_manager=cred_manager,
-            url=fhir_url,
-            retry_count=3,
-            request_type="POST",
-            allowed_methods=["POST"],
-            headers={
-                "Authorization": f"Bearer {access_token}",
-                "Accept": "application/fhir+json",
-                "Content-Type": "application/fhir+json",
-            },
-            data=single_bundle,
-        )
-        # FHIR uploads are sent as a batch.  Although the batch succeeds,
-        # individual entries within the batch may fail, so we log them here
-        if response.status_code == 200:
-            response_json = response.json()
-
-            entries = response_json.get("entry", [])
-            for entry_index, entry in enumerate(entries):
-                entry_response = entry.get("response", {})
-
-                # FHIR bundle.entry.response.status is string type - integer status code
-                # plus may inlude a message
-                if entry_response and entry_response.get("status", "") not in [
-                    "200 OK",
-                    "201 Created",
-                    "200",
-                    "201",
-                ]:
-                    _log_fhir_server_error(
-                        status_code=int(entry_response["status"][0:3]),
-                        batch_entry_index=entry_index,
-                    )
-        else:
-            _log_fhir_server_error(response.status_code)
-        responses.append(response)
-
-    return responses
-
-
 def fhir_server_get(url: str, cred_manager: BaseCredentialManager) -> requests.Response:
     """
     Submits a GET request to a FHIR server given a url and access token for
@@ -203,31 +134,3 @@ def _log_fhir_server_error(status_code: int, batch_entry_index: int = None) -> N
             f"FHIR SERVER ERROR {batch_decorator}- Status code {status_code}"
         )
         logging.error(error_message)
-
-
-def _split_bundle_resources(bundle: dict, max_bundle_size: int = 500) -> list:
-    """
-    Receives a FHIR bundle and splits up the resources in the bundle
-    if there are more than 500 resources.  Otherwise it just returns the
-    orginal bundle unmodified.
-
-    :param bundle: A FHIR bundle containing a number of FHIR resources.
-    :param max_bundle_size: The maximum number of resources per bundle to
-      determine where the split of large FHIR bundles should occur.
-    :return: A list of FHIR bundles; if the bundle has <= 500 resources
-    then the list will have only one element.
-    """
-    resources = bundle.get("entry")
-    resource_count = len(resources)
-    split_bundles = []
-
-    entry_index = 0
-    while entry_index <= resource_count:
-        # grab all the resources and place them in the entry list within
-        # the new bundle dictionary up to the maximum number specified
-        partial_bundle = {"resourceType": "Bundle", "type": "batch", "entry": []}
-        partial_bundle["entry"] = resources[entry_index : entry_index + max_bundle_size]
-        # add the new split bundle to the list to be returned
-        split_bundles.append(partial_bundle)
-        entry_index = entry_index + max_bundle_size
-    return split_bundles

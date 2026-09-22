@@ -18,14 +18,11 @@ from app.models import (
 from app.utils import (
     FhirParser,
     clean_schema,
-    convert_to_fhir,
     freeze_parsing_schema,
-    get_credential_manager,
     get_metadata,
     load_parsing_schema,
     read_json_from_assets,
     resolve_safe_file_path,
-    search_for_required_values,
 )
 
 # Read settings immediately to fail fast in case there are invalid values.
@@ -65,9 +62,9 @@ async def parse_message_endpoint(
     response: Response,
 ) -> ParseMessageResponse:
     """
-    This endpoint extracts the desired values from a message. If the message is
-    not already in FHIR format, convert it to FHIR first. You can either
-    provide a parsing schema or the name of a previously loaded parsing schema.
+    This endpoint extracts the desired values from a message. The message must
+    already be in FHIR format. You can either provide a parsing schema or the
+    name of a previously loaded parsing schema.
     """
     # 1. Load schema.
     if input.parsing_schema:
@@ -79,35 +76,7 @@ async def parse_message_endpoint(
             response.status_code = status.HTTP_400_BAD_REQUEST
             return {"message": error.__str__(), "parsed_values": {}}
 
-    # 2. Convert to FHIR, if necessary.
-    if input.message_format != "fhir":
-        if input.credential_manager is not None:
-            input.credential_manager = get_credential_manager(
-                credential_manager=input.credential_manager,
-                location_url=input.fhir_converter_url,
-            )
-
-        search_result = search_for_required_values(dict(input), ["fhir_converter_url"])
-        if search_result != "All values were found.":
-            response.status_code = status.HTTP_400_BAD_REQUEST
-            return {"message": search_result, "parsed_values": {}}
-
-        fhir_converter_response = convert_to_fhir(
-            message=input.message,
-            message_type=input.message_type,
-            fhir_converter_url=input.fhir_converter_url,
-            credential_manager=input.credential_manager,
-        )
-        if fhir_converter_response.status_code == 200:
-            input.message = fhir_converter_response.json()["FhirResource"]
-        else:
-            response.status_code = status.HTTP_400_BAD_REQUEST
-            return {
-                "message": f"Failed to convert to FHIR: {fhir_converter_response.text}",
-                "parsed_values": {},
-            }
-
-    # 3. Parse the desired values and find metadata, if needed
+    # 2. Parse the desired values and find metadata, if needed
     parser = FhirParser(parsing_schema, input.message, response)
     parsed_values = parser.parse()
     if input.include_metadata == "true":
