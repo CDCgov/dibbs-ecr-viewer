@@ -187,5 +187,5 @@ def get_conditions_list_tes() -> list[dict]:
             for row in result
         ]
     except sqlite3.Error:
-        logger.exception("Unable to retrieve conditions from the TES database")
+        logger.exception(f"An SQL error occurred: {str(e)}")
         return {"error": "An SQL error occurred"}
