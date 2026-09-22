@@ -186,6 +186,6 @@ def get_conditions_list_tes() -> list[dict]:
             }
             for row in result
         ]
-    except sqlite3.Error:
+    except sqlite3.Error as e:
         logger.exception(f"An SQL error occurred: {str(e)}")
         return {"error": "An SQL error occurred"}
