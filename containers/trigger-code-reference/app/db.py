@@ -1,6 +1,9 @@
+import logging
 import sqlite3
 
 from app.utils import format_icd9_crosswalks, get_clean_snomed_code
+
+logger = logging.getLogger(__name__)
 
 _TES_DB_URL = "./data/tes.db"
 
@@ -184,4 +187,5 @@ def get_conditions_list_tes() -> list[dict]:
             for row in result
         ]
     except sqlite3.Error as e:
-        return {"error": f"An SQL error occurred: {str(e)}"}
+        logger.exception(f"An SQL error occurred: {str(e)}")
+        return {"error": "An SQL error occurred"}
