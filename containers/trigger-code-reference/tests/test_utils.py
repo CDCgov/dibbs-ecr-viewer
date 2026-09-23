@@ -13,6 +13,7 @@ from app.utils import (
     add_reportable_condition_extension,
     convert_inputs_to_list,
     find_codes_by_resource_type,
+    find_conditions,
     get_clean_snomed_code,
     get_concepts_dict,
 )
@@ -173,6 +174,37 @@ def test_find_codes_by_resource_type():
     del observation_resource["code"]
     del observation_resource["valueCodeableConcept"]
     assert [] == find_codes_by_resource_type(observation_resource)
+
+
+def test_find_conditions_resolves_relative_reference():
+    message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
+
+    assert find_conditions(message) == {"840539006"}
+
+
+def test_find_conditions_resolves_idless_resource_by_full_url():
+    message = json.load(open(Path(__file__).parent / "assets" / "sample_ecr.json"))
+    target_entry = next(
+        entry
+        for entry in message["entry"]
+        if entry.get("resource", {}).get("id") == "17f6392f-9340-45d3-a1c8-bc0a30d09f53"
+    )
+    target_full_url = target_entry["fullUrl"]
+    target_entry["resource"].pop("id")
+
+    composition = next(
+        entry["resource"]
+        for entry in message["entry"]
+        if entry.get("resource", {}).get("resourceType") == "Composition"
+    )
+    reportability_section = next(
+        section
+        for section in composition["section"]
+        if section.get("title") == "Reportability Response Information Section"
+    )
+    reportability_section["entry"][0]["reference"] = target_full_url
+
+    assert find_conditions(message) == {"840539006"}
 
 
 @patch("app.db._get_condition_name_from_snomed_code_tes")

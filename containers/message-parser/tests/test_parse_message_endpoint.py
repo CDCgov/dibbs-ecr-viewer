@@ -297,6 +297,124 @@ def test_parse_message_success_referenced_resources(
     assert actual_response.json() == expected_reference_response
 
 
+def test_parse_message_resolves_idless_resource_by_full_url(
+    test_reference_schema, reference_bundle
+):
+    bundle = deepcopy(reference_bundle)
+    organization_entry = next(
+        entry
+        for entry in bundle["entry"]
+        if entry.get("resource", {}).get("resourceType") == "Organization"
+    )
+    organization_full_url = "urn:uuid:idu2-jd81-lqpp-172j-nx82"
+    organization_entry["fullUrl"] = organization_full_url
+    organization_entry["resource"].pop("id")
+
+    observation = next(
+        entry["resource"]
+        for entry in bundle["entry"]
+        if entry.get("resource", {}).get("resourceType") == "Observation"
+    )
+    observation["performer"][0]["reference"] = organization_full_url
+
+    request = {
+        "message_format": "fhir",
+        "parsing_schema": test_reference_schema,
+        "message": bundle,
+    }
+    actual_response = client.post("/parse_message", json=request)
+
+    assert actual_response.status_code == 200
+    assert actual_response.json() == expected_reference_response
+
+
+def test_parse_message_resolves_chained_idless_full_url_references():
+    observation_reference = "urn:uuid:observation-1"
+    specimen_reference = "urn:uuid:specimen-1"
+    bundle = {
+        "resourceType": "Bundle",
+        "entry": [
+            {
+                "fullUrl": observation_reference,
+                "resource": {
+                    "resourceType": "Observation",
+                    "category": {"coding": {"code": "laboratory"}},
+                },
+            },
+            {
+                "fullUrl": "urn:uuid:diagnostic-report-1",
+                "resource": {
+                    "resourceType": "DiagnosticReport",
+                    "result": [{"reference": observation_reference}],
+                    "specimen": [{"reference": specimen_reference}],
+                },
+            },
+            {
+                "fullUrl": specimen_reference,
+                "resource": {
+                    "resourceType": "Specimen",
+                    "type": {"coding": [{"display": "Blood"}]},
+                    "collection": {"collectedDateTime": "2025-01-02"},
+                },
+            },
+        ],
+    }
+    specimen_reference_lookup = [
+        "Observation.id",
+        "Bundle.entry.resource.where(resourceType = 'DiagnosticReport')"
+        ".where(result.where(reference.endsWith(%ref)).exists())"
+        ".specimen[0].reference",
+    ]
+    parsing_schema = {
+        "labs": {
+            "fhir_path": "Bundle.entry.resource.where(resourceType='Observation')"
+            ".where(category.coding.code='laboratory')",
+            "data_type": "array",
+            "nullable": True,
+            "secondary_schema": {
+                "specimen_type": {
+                    "fhir_path": "Bundle.entry.resource.where(resourceType = "
+                    "'Specimen' and id = %ref).type.coding.display",
+                    "reference_lookup": specimen_reference_lookup,
+                    "data_type": "string",
+                    "nullable": True,
+                },
+                "specimen_collection_date": {
+                    "fhir_path": "Bundle.entry.resource.where(resourceType = "
+                    "'Specimen' and id = %ref).collection.collectedPeriod.start | "
+                    "Bundle.entry.resource.where(resourceType = 'Specimen' and id "
+                    "= %ref).collection.collectedDateTime",
+                    "reference_lookup": specimen_reference_lookup,
+                    "data_type": "datetime",
+                    "nullable": True,
+                },
+            },
+        }
+    }
+
+    actual_response = client.post(
+        "/parse_message",
+        json={
+            "message_format": "fhir",
+            "parsing_schema": parsing_schema,
+            "message": bundle,
+        },
+    )
+
+    assert actual_response.status_code == 200
+    assert actual_response.json() == {
+        "message": "Parsing succeeded!",
+        "parsed_values": {
+            "labs": [
+                {
+                    "specimen_type": "Blood",
+                    "specimen_collection_date": "2025-01-02",
+                }
+            ]
+        },
+    }
+
+
 @mock.patch("app.main.convert_to_fhir")
 @mock.patch("app.main.get_credential_manager")
 def test_parse_message_success_non_fhir(

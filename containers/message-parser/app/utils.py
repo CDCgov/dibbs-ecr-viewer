@@ -22,7 +22,12 @@ from app.transport.http import http_request_with_retry
 FAST_LOOKUP_MISS = object()
 FHIR_PATH_VALUE_PHASE = "value"
 REFERENCE_LOOKUP_PHASE = "reference_lookup"
-SPECIMENS_FIELD_PATH = "labs.specimens"
+REFERENCE_TARGET_SELECTOR = re.compile(
+    r"Bundle\.entry\.resource"
+    r"\.where\(\s*resourceType\s*=\s*'(?P<resource_type>[^']+)'"
+    r"(?:\s+and\s+id\s*=\s*%ref)?\s*\)"
+    r"(?:\.where\(\s*id\s*=\s*%ref\s*\))?"
+)
 LAB_FIELD_ACCESSORS = {
     "labs.uuid": ["id"],
     "labs.test_type": ["code", "coding", "display"],
@@ -334,8 +339,9 @@ class FhirParser:
         self.message = message
         self.response = response
         self.reference_lookup_cache = {}
-        self.resource_by_type_and_id = None
-        self.specimen_references_by_observation_id = None
+        self.entry_by_reference = None
+        self.reference_by_resource_identity = None
+        self.specimen_references_by_observation = None
 
     def parse(self) -> dict:
         """
@@ -402,40 +408,160 @@ class FhirParser:
             if isinstance(entry, dict) and isinstance(entry.get("resource"), dict)
         ]
 
-    def _resource_index(self):
+    def _reference_index(self):
         """
-        Builds an index of FHIR Bundle resources by resource type and id.
+        Builds indexes for resolving references and identifying Bundle resources.
 
-        The index is created lazily and reused for the life of this `FhirParser`
-        instance.
+        A reference may match an entry's complete ``fullUrl`` (including a
+        ``urn:uuid``) or the conventional ``ResourceType/id`` form. The reverse
+        index records one complete reference for each resource so optimized
+        chained lookups can retain reference identity instead of reducing it to
+        an ID.
 
-        :return: A dictionary keyed by `(resourceType, id)`.
+        :return: A dictionary of Bundle entries keyed by complete references.
         """
-        if self.resource_by_type_and_id is not None:
-            return self.resource_by_type_and_id
+        if self.entry_by_reference is not None:
+            return self.entry_by_reference
 
-        self.resource_by_type_and_id = {}
-        for resource in self._get_bundle_resources():
+        self.entry_by_reference = {}
+        self.reference_by_resource_identity = {}
+        if not isinstance(self.message, dict):
+            return self.entry_by_reference
+
+        for entry in self.message.get("entry", []):
+            if not isinstance(entry, dict):
+                continue
+            resource = entry.get("resource")
+            if not isinstance(resource, dict):
+                continue
+
+            full_url = entry.get("fullUrl")
             resource_type = resource.get("resourceType")
             resource_id = resource.get("id")
-            if resource_type and resource_id:
-                self.resource_by_type_and_id[(resource_type, resource_id)] = resource
-        return self.resource_by_type_and_id
+            relative_reference = (
+                f"{resource_type}/{resource_id}"
+                if resource_type and resource_id
+                else None
+            )
+
+            if isinstance(full_url, str) and full_url:
+                self.entry_by_reference[full_url] = entry
+                self.reference_by_resource_identity[id(resource)] = full_url
+            if relative_reference:
+                self.entry_by_reference[relative_reference] = entry
+                self.reference_by_resource_identity.setdefault(
+                    id(resource), relative_reference
+                )
+
+        return self.entry_by_reference
+
+    def _resolve_reference(self, reference):
+        """
+        Resolve a complete Bundle reference to its resource.
+
+        Both exact ``entry.fullUrl`` and ``ResourceType/id`` references are
+        supported.
+
+        :param reference: A complete FHIR reference.
+        :return: The referenced resource, or ``None`` when it is not in the Bundle.
+        """
+        if reference is None:
+            return None
+        entry = self._reference_index().get(str(reference))
+        return entry.get("resource") if entry else None
+
+    def _reference_for_resource(self, resource):
+        """Return a complete Bundle reference for a resource when available."""
+        self._reference_index()
+        reference = self.reference_by_resource_identity.get(id(resource))
+        if reference:
+            return reference
+
+        # fhirpathpy returns copied dictionaries for selected resources, so an
+        # identity lookup is not always possible. Match that copy back to its
+        # Bundle entry before falling back to ResourceType/id.
+        if isinstance(self.message, dict):
+            for entry in self.message.get("entry", []):
+                if isinstance(entry, dict) and entry.get("resource") == resource:
+                    full_url = entry.get("fullUrl")
+                    if isinstance(full_url, str) and full_url:
+                        return full_url
+
+        resource_type = resource.get("resourceType")
+        resource_id = resource.get("id")
+        if resource_type and resource_id:
+            return f"{resource_type}/{resource_id}"
+        return None
+
+    def _reference_key(self, reference):
+        """Return a stable key that treats equivalent reference forms alike."""
+        resource = self._resolve_reference(reference)
+        if resource is not None:
+            return ("resource", id(resource))
+        return ("reference", str(reference))
+
+    def _referenced_resource_path(self, fhir_path):
+        """
+        Convert a Bundle-level reference path into a resource-relative path.
+
+        Parsing schemas identify a target with either a combined
+        ``where(resourceType = 'Type' and id = %ref)`` or two chained ``where``
+        clauses. Once the reference has selected the Bundle entry, those selectors
+        are replaced with the resource type and the remainder is evaluated against
+        ``entry.resource`` directly.
+
+        :param fhir_path: Bundle-level path from the parsing schema.
+        :return: The expected resource type and relative FHIRPath, or two
+            ``None`` values if the schema path is incompatible.
+        """
+        matches = list(REFERENCE_TARGET_SELECTOR.finditer(fhir_path))
+        resource_types = {match.group("resource_type") for match in matches}
+        if (
+            not matches
+            or len(resource_types) != 1
+            or any("%ref" not in match.group(0) for match in matches)
+        ):
+            return None, None
+
+        resource_type = next(iter(resource_types))
+        resource_path = REFERENCE_TARGET_SELECTOR.sub(
+            resource_type,
+            fhir_path,
+        )
+        return resource_type, resource_path
+
+    def _evaluate_referenced_resource(self, field_parser, reference, field_path):
+        """Resolve a reference, then evaluate its schema path on the resource."""
+        resource_type, resource_path = self._referenced_resource_path(
+            field_parser["fhir_path"]
+        )
+        resource = self._resolve_reference(reference)
+        if resource is None or resource.get("resourceType") != resource_type:
+            return []
+
+        return self._evaluate_fhir_path_value(
+            resource,
+            resource_path,
+            field_path=field_path,
+        )
 
     def _specimen_reference_index(self):
         """
-        Builds an index from lab Observation ids to specimen references.
+        Builds an index from lab Observations to specimen references.
 
         Each DiagnosticReport connects result Observations to all of the report's
         Specimen references. This index lets specimen fields skip the expensive
         FHIRPath search across DiagnosticReports.
 
-        :return: A dictionary keyed by Observation id with Specimen reference lists.
-        """
-        if self.specimen_references_by_observation_id is not None:
-            return self.specimen_references_by_observation_id
+        Equivalent fullUrl and ResourceType/id references resolve to the same
+        Observation key.
 
-        self.specimen_references_by_observation_id = defaultdict(list)
+        :return: A dictionary keyed by Observation identity or reference.
+        """
+        if self.specimen_references_by_observation is not None:
+            return self.specimen_references_by_observation
+
+        self.specimen_references_by_observation = defaultdict(list)
         for resource in self._get_bundle_resources():
             if resource.get("resourceType") != "DiagnosticReport":
                 continue
@@ -452,12 +578,12 @@ class FhirParser:
                 result_reference = result.get("reference")
                 if not result_reference:
                     continue
-                observation_id = result_reference.split("/")[-1]
-                self.specimen_references_by_observation_id[observation_id].extend(
+                observation_key = self._reference_key(result_reference)
+                self.specimen_references_by_observation[observation_key].extend(
                     specimen_references
                 )
 
-        return self.specimen_references_by_observation_id
+        return self.specimen_references_by_observation
 
     def _extract_values(self, value, accessors):
         """
@@ -500,7 +626,12 @@ class FhirParser:
         return self._extract_values(value.get(accessors[0]), accessors[1:])
 
     def _try_get_field_path_without_fhirpath(
-        self, current_message, field_path, evaluation_phase, context=None
+        self,
+        current_message,
+        fhir_path,
+        field_path,
+        evaluation_phase,
+        context=None,
     ):
         """
         Attempts to evaluate supported schema fields without fhirpathpy.
@@ -511,6 +642,7 @@ class FhirParser:
         so the caller can fall back to standard FHIRPath evaluation.
 
         :param current_message: The FHIR message or sub-section to evaluate.
+        :param fhir_path: The FHIRPath expression being evaluated.
         :param field_path: The schema field path being evaluated.
         :param evaluation_phase: Whether this is a field value or reference lookup.
         :param context: Optional FHIRPath context variables.
@@ -527,13 +659,15 @@ class FhirParser:
                 current_message, LAB_FIELD_ACCESSORS[field_path]
             )
 
-        if evaluation_phase == REFERENCE_LOOKUP_PHASE and context is None:
-            if (
-                field_path == SPECIMENS_FIELD_PATH
-                and isinstance(current_message, dict)
-                and current_message.get("resourceType") == "Observation"
-            ):
-                return self._extract_values(current_message, ["id"])
+        if (
+            evaluation_phase == REFERENCE_LOOKUP_PHASE
+            and context is None
+            and isinstance(current_message, dict)
+        ):
+            resource_type = current_message.get("resourceType")
+            if resource_type and fhir_path == f"{resource_type}.id":
+                reference = self._reference_for_resource(current_message)
+                return [reference] if reference else []
 
         if current_message is not self.message or context is None:
             return FAST_LOOKUP_MISS
@@ -541,20 +675,14 @@ class FhirParser:
         reference = context.get("ref")
         if not reference:
             return []
-        reference_id = str(reference).split("/")[-1]
 
         if (
             evaluation_phase == REFERENCE_LOOKUP_PHASE
-            and field_path == SPECIMENS_FIELD_PATH
+            and "DiagnosticReport" in fhir_path
+            and ".specimen" in fhir_path
         ):
-            return list(self._specimen_reference_index().get(reference_id, []))
-
-        if (
-            evaluation_phase == FHIR_PATH_VALUE_PHASE
-            and field_path == SPECIMENS_FIELD_PATH
-        ):
-            specimen = self._resource_index().get(("Specimen", reference_id))
-            return [specimen] if specimen else []
+            reference_key = self._reference_key(reference)
+            return list(self._specimen_reference_index().get(reference_key, []))
 
         if evaluation_phase != FHIR_PATH_VALUE_PHASE:
             return FAST_LOOKUP_MISS
@@ -581,7 +709,7 @@ class FhirParser:
         :return: A list of values from the optimized lookup or fhirpathpy.
         """
         fast_lookup_value = self._try_get_field_path_without_fhirpath(
-            current_message, field_path, evaluation_phase, context
+            current_message, fhir_path, field_path, evaluation_phase, context
         )
         if fast_lookup_value is not FAST_LOOKUP_MISS:
             return fast_lookup_value
@@ -609,14 +737,11 @@ class FhirParser:
                     field_parser, current_message, field_path
                 )
                 value = []
-                for reference_path in reference_paths:
+                for reference in reference_paths:
                     value.extend(
-                        self._evaluate_fhir_path_value(
-                            self.message,
-                            field_parser["fhir_path"],
-                            context={"ref": reference_path},
-                            field_path=field_path,
-                        )  # Evaluate on full message, not current
+                        self._evaluate_referenced_resource(
+                            field_parser, reference, field_path
+                        )
                     )
             elif "fhir_path" in field_parser:
                 value = self._evaluate_fhir_path_value(
@@ -672,7 +797,7 @@ class FhirParser:
         :param current_message: The FHIR message or sub-section at the current level of
             parsing where the reference is located.
         :param field_path: The dot-separated schema path for the field being parsed.
-        :return: The list of final reference IDs to pass as the `%ref` context value.
+        :return: The list of complete final reference values.
         """
         reference_parser = field_parser["reference_lookup"]
         reference = None
@@ -724,9 +849,9 @@ class FhirParser:
                 )
 
             if step == last_step:
-                references = [ref.split("/")[-1] for ref in curr_ref]
+                references = [str(ref) for ref in curr_ref]
             else:
-                reference = curr_ref[0].split("/")[-1]
+                reference = str(curr_ref[0])
 
         # Cache the final references for this message object and reference chain.
         self.reference_lookup_cache[reference_parser_cache_key] = references

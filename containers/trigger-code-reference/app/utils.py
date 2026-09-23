@@ -172,6 +172,28 @@ def read_json_from_assets(filename: str) -> dict:
     return json.load(open(Path(__file__).parent.parent / "assets" / filename))
 
 
+def _entry_reference_index(bundle: dict) -> dict[str, dict]:
+    """Index Bundle entries by exact fullUrl and ResourceType/id reference."""
+    entries = {}
+    for entry in bundle.get("entry", []):
+        if not isinstance(entry, dict):
+            continue
+        resource = entry.get("resource")
+        if not isinstance(resource, dict):
+            continue
+
+        full_url = entry.get("fullUrl")
+        if isinstance(full_url, str) and full_url:
+            entries[full_url] = entry
+
+        resource_type = resource.get("resourceType")
+        resource_id = resource.get("id")
+        if resource_type and resource_id:
+            entries[f"{resource_type}/{resource_id}"] = entry
+
+    return entries
+
+
 def find_conditions(bundle: dict) -> set[str]:
     """
     Extracts the SNOMED codes of reportable conditions from a FHIR bundle.
@@ -184,15 +206,18 @@ def find_conditions(bundle: dict) -> set[str]:
         "Bundle.entry.resource.where(resourceType='Composition').section.where(title = 'Reportability Response Information Section').entry"
     )
     trigger_entries = path_to_reportability_response_info_section(bundle)
-    triggering_IDs = [x["reference"].split("/") for x in trigger_entries]
+    entries_by_reference = _entry_reference_index(bundle)
     codes = set()
-    for type, id in triggering_IDs:
-        result = fhirpathpy.evaluate(
-            bundle,
-            f"Bundle.entry.resource.ofType({type}).where(id='{id}').valueCodeableConcept.coding.where(system = 'http://snomed.info/sct').code",
-        )
+    for trigger_entry in trigger_entries:
+        reference = trigger_entry.get("reference")
+        referenced_entry = entries_by_reference.get(reference)
+        if referenced_entry is None:
+            continue
+        resource = referenced_entry["resource"]
 
-        if result:
-            codes.add(result[0])
+        for coding in resource.get("valueCodeableConcept", {}).get("coding", []):
+            if coding.get("system") == "http://snomed.info/sct" and coding.get("code"):
+                codes.add(coding["code"])
+                break
 
     return codes
