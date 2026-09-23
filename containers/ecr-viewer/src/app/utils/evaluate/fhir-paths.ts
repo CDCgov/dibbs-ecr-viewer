@@ -103,7 +103,6 @@ export type PathTypes = {
   eICRProcessingStatus: string;
   eICRProcessingStatusReason: Observation;
   compositionAuthorRefs: Reference;
-  encounterDiagnosisRef: Reference;
   hospitalEncounterDiagnosisRef: Reference;
   facilityOrgRef: string;
   facilityLocationRef: string;
@@ -113,7 +112,6 @@ export type PathTypes = {
   rrConditions: Observation;
   clinicalReasonForVisit: string;
   patientVitalSigns: Observation;
-  resolve: unknown;
   activeProblems: Condition;
   activeProblemsStatus: string;
   activeProblemsOnsetAge: ValueX;
@@ -385,7 +383,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   pregnancyMedicationAdministrationRefs: {
     type: "Reference",
-    path: "entry.resource.section.where(code.coding.exists(system = 'http://loinc.org' and code = '90767-5')).entry.where(reference.startsWith('MedicationAdministration/'))",
+    path: "entry.resource.section.where(code.coding.exists(system = 'http://loinc.org' and code = '90767-5')).entry",
   },
   pregnancyOutcome: {
     type: "Observation",
@@ -470,11 +468,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
     path: "entry.resource.Composition.author",
   },
 
-  encounterDiagnosisRef: {
-    type: "Reference",
-    path: "entry.resource.Encounter.where(id = %id).diagnosis.condition",
-  },
-
   hospitalEncounterDiagnosisRef: {
     type: "Reference",
     path: "entry.resource.Composition.section.where(code.coding.exists(code = %code)).entry",
@@ -510,11 +503,6 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   patientVitalSigns: {
     type: "Observation",
     path: "entry.resource.Observation.where(category.coding.exists(system = 'http://terminology.hl7.org/CodeSystem/observation-category' and code = 'vital-signs'))",
-  },
-
-  resolve: {
-    type: "unknown",
-    path: "entry.resource.where(resourceType = %resourceType).where(id = %id)",
   },
 
   // Clinical Info
@@ -635,7 +623,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // === Admission Medications ===
   admissionMedicationRefs: {
     type: "Reference",
-    path: "entry.resource.section.where(code.coding.code = '42346-7').entry.where(reference.startsWith('MedicationAdministration/'))",
+    path: "entry.resource.section.where(code.coding.code = '42346-7').entry",
   },
   medicationAdministrationMedicationRef: {
     type: "Reference",
@@ -654,7 +642,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   // === Medications ===
   medicationStatementRefs: {
     type: "Reference",
-    path: "entry.resource.section.where(code.coding.code = '10160-0').entry.where(reference.startsWith('MedicationStatement/'))",
+    path: "entry.resource.section.where(code.coding.code = '10160-0').entry",
   },
   medicationStatementMedicationRef: {
     type: "Reference",
@@ -676,7 +664,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   procedureHistoryRefs: {
     type: "Reference",
-    path: "entry.resource.section.where(code.coding.code = '47519-4').entry.where(reference.startsWith('Observation/'))",
+    path: "entry.resource.section.where(code.coding.code = '47519-4').entry",
   },
 
   // core fields

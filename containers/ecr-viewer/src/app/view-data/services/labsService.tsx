@@ -64,6 +64,7 @@ import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
 import {
   FhirIndex,
   getOneResourceByType,
+  getResourceById,
   getResourcesByType,
 } from "@/app/view-data/services/fhirResourcesIndexService";
 
@@ -80,6 +81,25 @@ export interface LabReportElementData {
     id: string;
   };
 }
+
+const getOrganizationByIdOrReference = (
+  fhirIndex: FhirIndex,
+  idOrReference: string,
+): Organization | undefined => {
+  const referencedResource = evaluateReference2<Resource>(
+    fhirIndex,
+    idOrReference,
+  );
+  if (referencedResource?.resourceType === "Organization") {
+    return referencedResource as Organization;
+  }
+
+  return getResourceById<Organization>(
+    fhirIndex,
+    "Organization",
+    idOrReference,
+  );
+};
 
 type LabResultSource = DiagnosticReport | Observation;
 
@@ -889,9 +909,10 @@ export const combineOrgAndReportData = (
   fhirIndex: FhirIndex,
 ): LabReportElementData[] => {
   return Object.keys(organizationItems).map((key: string) => {
-    const organizationId = key.replace("Organization/", "");
+    const organizationId =
+      getOrganizationByIdOrReference(fhirIndex, key)?.id ?? key;
     const orgData = evaluateLabOrganizationData(
-      organizationId,
+      key,
       fhirIndex,
       organizationItems[key].length,
     );
@@ -934,21 +955,11 @@ export const evaluateLabOrganizationData = (
     fhirIndex,
     "Organization",
   );
-  const referencedResource = evaluateReference2<Resource>(
-    fhirIndex,
-    idOrReference,
-  );
   let matchingOrg =
-    referencedResource?.resourceType === "Organization"
-      ? (referencedResource as Organization)
-      : (orgMappings.find(
-          (organization) =>
-            organization.id === idOrReference.replace(/^Organization\//, ""),
-        ) ??
-        orgMappings.find(
-          (organization) =>
-            getOrganizationGroupKey(organization) === idOrReference,
-        ));
+    getOrganizationByIdOrReference(fhirIndex, idOrReference) ??
+    orgMappings.find(
+      (organization) => getOrganizationGroupKey(organization) === idOrReference,
+    );
   if (matchingOrg) {
     matchingOrg = findIdenticalOrg(orgMappings, matchingOrg);
   }

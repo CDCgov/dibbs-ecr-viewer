@@ -27,8 +27,6 @@ import {
   formatRange,
   formatReference,
 } from "@/app/services/formatService";
-import { notEmpty } from "@/app/utils/data-utils";
-
 import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
 import {
   FhirIndex,
@@ -434,20 +432,50 @@ export const evaluateOneReference = <T extends Resource>(
   return evaluateReference<T>(fhirData, ref);
 };
 
+/** Returns whether a resolved resource has the requested runtime type. */
+export const isResourceType = <T extends Resource>(
+  resource: Resource | undefined,
+  resourceType: T["resourceType"],
+): resource is T => resource?.resourceType === resourceType;
+
 /**
- * Evaluates all references and then fetches the referred to resources
- * @param fhirData - The FHIR resource.
- * @param pathToRef - A fhir path mapping that returns a string reference
- * @param context - Optional context to evaluate the reference with
- * @returns The referred to resource or undefined
+ * Resolves references and keeps only targets of the requested resource type.
+ * Type validation happens after resolution so references without an encoded
+ * type, including urn:uuid fullUrl references, are supported.
  */
-export const evaluateAllReferences = <T extends Resource>(
+export const resolveReferencesByResourceType = <T extends Resource>(
+  fhirData: FhirData,
+  references: (string | Reference)[],
+  resourceType: T["resourceType"],
+): T[] => {
+  return references
+    .map((reference) => evaluateReference<Resource>(fhirData, reference))
+    .filter((resource): resource is T =>
+      isResourceType<T>(resource, resourceType),
+    );
+};
+
+/**
+ * Evaluates references, resolves their targets, and keeps only resources of
+ * the requested type. Unlike filtering the reference string, this also works
+ * for references whose type is not encoded in the value, such as urn:uuid
+ * Bundle.entry.fullUrl references.
+ *
+ * @param fhirData - The FHIR resource containing the references.
+ * @param pathToRef - A FHIRPath mapping that returns references.
+ * @param resourceType - The resource type expected after reference resolution.
+ * @param context - Optional context to evaluate the reference path with.
+ * @returns Resolved resources whose runtime resourceType matches the requested type.
+ */
+export const evaluateAllReferencesByResourceType = <T extends Resource>(
   fhirData: FhirData,
   pathToRef: FhirPath<RefPathTypes>,
+  resourceType: T["resourceType"],
   context?: Context,
 ): T[] => {
-  const refs = evaluateAll(fhirData, pathToRef, context);
-  return refs
-    .map((ref) => evaluateReference<T>(fhirData, ref))
-    .filter(notEmpty);
+  return resolveReferencesByResourceType<T>(
+    fhirData,
+    evaluateAll(fhirData, pathToRef, context),
+    resourceType,
+  );
 };

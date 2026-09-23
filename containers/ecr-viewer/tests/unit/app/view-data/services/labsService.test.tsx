@@ -926,6 +926,34 @@ describe("LabsService tests", () => {
       );
       expect(result[0].organizationDisplayDataProps).toBeArray();
     });
+
+    it("should resolve an idless organization through its URN reference", () => {
+      const bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            fullUrl: "urn:uuid:idless-lab-organization",
+            resource: {
+              resourceType: "Organization",
+              name: "Idless Reference Lab",
+            },
+          },
+        ],
+      } as unknown as Bundle;
+      const fhirIndex = getFhirIndex(bundle);
+      const result = combineOrgAndReportData(
+        {
+          "urn:uuid:idless-lab-organization": [{} as AccordionItem],
+        },
+        fhirIndex,
+      );
+
+      expect(result[0].organizationId).toBe("urn:uuid:idless-lab-organization");
+      expect(result[0].organizationDisplayDataProps[0].value).toBe(
+        "Idless Reference Lab",
+      );
+    });
   });
 
   describe("Evaluate the lab info section", () => {

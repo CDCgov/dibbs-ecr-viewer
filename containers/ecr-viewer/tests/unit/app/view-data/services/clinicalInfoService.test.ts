@@ -1,9 +1,11 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { ReactElement } from "react";
 import { Bundle } from "@/app/types";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 import { evaluateAll } from "@/app/utils/evaluate";
 import {
+  evaluateClinicalData,
   returnMedicationsTable,
   returnProblemsTable,
 } from "@/app/view-data/services/clinicalInfoService";
@@ -121,19 +123,17 @@ describe("Render Medications table", () => {
                 code: {
                   coding: [{ code: "10160-0", system: "http://loinc.org" }],
                 },
-                entry: [
-                  { reference: "MedicationStatement/medication-with-notes" },
-                ],
+                entry: [{ reference: "urn:uuid:medication-with-notes" }],
               },
             ],
           },
         },
         {
+          fullUrl: "urn:uuid:medication-with-notes",
           resource: {
             resourceType: "MedicationStatement",
-            id: "medication-with-notes",
             status: "active",
-            medicationReference: { reference: "Medication/test-medication" },
+            medicationReference: { reference: "urn:uuid:test-medication" },
             subject: {
               reference: "Patient/example",
             },
@@ -144,9 +144,9 @@ describe("Render Medications table", () => {
           },
         },
         {
+          fullUrl: "urn:uuid:test-medication",
           resource: {
             resourceType: "Medication",
-            id: "test-medication",
             code: { text: "Test medication" },
           },
         },
@@ -169,5 +169,69 @@ describe("Render Medications table", () => {
     expect(medicationDetails?.textContent).toContain(
       "First medication note\nSecond medication note",
     );
+  });
+
+  it("resolves idless plan requests by URN and classifies their resource types", () => {
+    const bundle: Bundle = {
+      resourceType: "Bundle",
+      type: "document",
+      entry: [
+        {
+          resource: {
+            resourceType: "CarePlan",
+            status: "active",
+            intent: "plan",
+            subject: { reference: "Patient/example" },
+            activity: [
+              { reference: { reference: "urn:uuid:planned-procedure" } },
+              { reference: { reference: "urn:uuid:planned-medication" } },
+              { reference: { reference: "urn:uuid:not-a-request" } },
+            ],
+          },
+        },
+        {
+          fullUrl: "urn:uuid:planned-procedure",
+          resource: {
+            resourceType: "ServiceRequest",
+            status: "active",
+            intent: "order",
+            subject: { reference: "Patient/example" },
+            code: { text: "URN procedure order" },
+          },
+        },
+        {
+          fullUrl: "urn:uuid:planned-medication",
+          resource: {
+            resourceType: "MedicationRequest",
+            status: "active",
+            intent: "order",
+            subject: { reference: "Patient/example" },
+            medicationCodeableConcept: { text: "URN medication order" },
+          },
+        },
+        {
+          fullUrl: "urn:uuid:not-a-request",
+          resource: {
+            resourceType: "Observation",
+            status: "final",
+            code: { text: "Wrong plan resource type" },
+          },
+        },
+      ],
+    };
+    const planOfTreatment = evaluateClinicalData(
+      bundle,
+      getFhirIndex(bundle),
+    ).treatmentData.availableData.find(
+      ({ title }) => title === "Plan of Treatment",
+    );
+
+    render(planOfTreatment?.value as ReactElement);
+
+    expect(screen.getByText("URN procedure order")).toBeInTheDocument();
+    expect(screen.getByText("URN medication order")).toBeInTheDocument();
+    expect(
+      screen.queryByText("Wrong plan resource type"),
+    ).not.toBeInTheDocument();
   });
 });

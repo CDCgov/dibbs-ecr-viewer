@@ -105,6 +105,88 @@ describe("ecrSummaryService Tests", () => {
       expect(actual).toBeEmpty();
     });
 
+    it.each(["urn", "relative"] as const)(
+      "should find condition-linked reports through %s references",
+      (referenceStyle) => {
+        const observationId =
+          referenceStyle === "relative" ? "condition-result" : undefined;
+        const observationReference =
+          referenceStyle === "relative"
+            ? "Observation/condition-result"
+            : "urn:uuid:condition-result";
+        const bundle = {
+          resourceType: "Bundle",
+          type: "document",
+          entry: [
+            {
+              fullUrl: "urn:uuid:direct-report",
+              resource: {
+                resourceType: "DiagnosticReport",
+                id: referenceStyle === "relative" ? "direct-report" : undefined,
+                status: "final",
+                code: { text: "Directly linked report" },
+                extension: [
+                  {
+                    url: "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+                    valueCoding: { code: "test-snomed" },
+                  },
+                ],
+                result: [{ reference: observationReference }],
+              },
+            },
+            {
+              fullUrl: "urn:uuid:observation-linked-report",
+              resource: {
+                resourceType: "DiagnosticReport",
+                id:
+                  referenceStyle === "relative"
+                    ? "observation-linked-report"
+                    : undefined,
+                status: "final",
+                code: { text: "Observation-linked report" },
+                result: [{ reference: observationReference }],
+              },
+            },
+            {
+              fullUrl: "urn:uuid:condition-result",
+              resource: {
+                resourceType: "Observation",
+                id: observationId,
+                status: "final",
+                code: { text: "Condition-linked result" },
+                valueString: "Detected",
+                extension: [
+                  {
+                    url: "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+                    valueCoding: { code: "test-snomed" },
+                  },
+                ],
+              },
+            },
+          ],
+        } as unknown as Bundle;
+
+        const result = evaluateEcrSummaryRelevantLabResults(
+          bundle,
+          getFhirIndex(bundle),
+          "test-snomed",
+        );
+
+        expect(result).toHaveLength(3); // 2 results, plus last item is divider line
+        render(
+          <>
+            {result.map((item, index) => (
+              <React.Fragment key={index}>{item.value}</React.Fragment>
+            ))}
+          </>,
+        );
+        expect(screen.getByText("Directly linked report")).toBeInTheDocument();
+        expect(
+          screen.getByText("Observation-linked report"),
+        ).toBeInTheDocument();
+      },
+    );
+
     it("should return the correct lab result(s) when the provided SNOMED code matches", () => {
       const result = evaluateEcrSummaryRelevantLabResults(
         BundleLab,

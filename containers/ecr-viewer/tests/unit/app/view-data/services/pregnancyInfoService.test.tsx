@@ -69,6 +69,123 @@ describe("Evaluate Patient Info: Pregnancy Info", () => {
     expect(screen.getAllByText("Pregnancy Status").length).toEqual(1);
   });
 
+  it.each(["urn", "relative"] as const)(
+    "should associate pregnancy outcomes through %s references",
+    (referenceStyle) => {
+      const statusReference =
+        referenceStyle === "relative"
+          ? "Observation/pregnancy-status"
+          : "urn:uuid:pregnancy-status";
+      const pregnancyBundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            fullUrl: "urn:uuid:pregnancy-status",
+            resource: {
+              resourceType: "Observation",
+              id:
+                referenceStyle === "relative" ? "pregnancy-status" : undefined,
+              status: "final",
+              code: {
+                coding: [{ system: "http://loinc.org", code: "82810-3" }],
+              },
+              valueCodeableConcept: { text: "Pregnant" },
+            },
+          },
+          {
+            fullUrl: "urn:uuid:pregnancy-outcome",
+            resource: {
+              resourceType: "Observation",
+              id:
+                referenceStyle === "relative" ? "pregnancy-outcome" : undefined,
+              status: "final",
+              code: {
+                coding: [{ system: "http://loinc.org", code: "63893-2" }],
+              },
+              valueCodeableConcept: { text: "Live birth outcome" },
+              focus: [{ reference: statusReference }],
+            },
+          },
+        ],
+      } as unknown as Bundle;
+
+      const actual = evaluatePregnancyData(
+        pregnancyBundle,
+        getFhirIndex(pregnancyBundle),
+      );
+
+      render(<PregnancyInfo pregnancyData={actual.availableData} />);
+      expect(screen.getByText("Live birth outcome")).toBeVisible();
+    },
+  );
+
+  it("should resolve URN pregnancy section entries and filter by target type", () => {
+    const pregnancyBundle = {
+      resourceType: "Bundle",
+      type: "document",
+      entry: [
+        {
+          fullUrl: "urn:uuid:composition",
+          resource: {
+            resourceType: "Composition",
+            status: "final",
+            type: { text: "Pregnancy document" },
+            date: "2020-01-05",
+            author: [],
+            title: "Pregnancy document",
+            section: [
+              {
+                code: {
+                  coding: [{ system: "http://loinc.org", code: "90767-5" }],
+                },
+                entry: [
+                  { reference: "urn:uuid:medication-administration" },
+                  { reference: "urn:uuid:not-medication-administration" },
+                ],
+              },
+            ],
+          },
+        },
+        {
+          fullUrl: "urn:uuid:medication-administration",
+          resource: {
+            resourceType: "MedicationAdministration",
+            status: "completed",
+            medicationReference: { reference: "urn:uuid:medication" },
+            subject: { reference: "urn:uuid:patient" },
+          },
+        },
+        {
+          fullUrl: "urn:uuid:medication",
+          resource: {
+            resourceType: "Medication",
+            code: { text: "Prenatal vitamin" },
+          },
+        },
+        {
+          fullUrl: "urn:uuid:not-medication-administration",
+          resource: {
+            resourceType: "Observation",
+            status: "final",
+            code: { text: "Not a medication administration" },
+          },
+        },
+      ],
+    } as unknown as Bundle;
+
+    const actual = evaluatePregnancyData(
+      pregnancyBundle,
+      getFhirIndex(pregnancyBundle),
+    );
+
+    expect(
+      actual.availableData.find(
+        ({ title }) => title === "Medications Administered",
+      )?.value,
+    ).toBe("Prenatal vitamin\n");
+  });
+
   it("should display all pregnancy data ", () => {
     const actual = evaluatePregnancyData(
       BundleWithPregnancyStatus,

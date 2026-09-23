@@ -7,6 +7,7 @@ import {
   Element,
   Encounter,
   Location,
+  MedicationAdministration,
   Organization,
   Practitioner,
   PractitionerRole,
@@ -29,11 +30,12 @@ import { HtmlTableJsonRow } from "@/app/services/htmlTableService";
 import { evaluateData, noData, notEmpty } from "@/app/utils/data-utils";
 import {
   evaluateAll,
-  evaluateAllReferences,
+  evaluateAllReferencesByResourceType,
   evaluateOne,
   evaluateOneReference,
   evaluateReference,
   evaluateValue,
+  resolveReferencesByResourceType,
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import {
@@ -61,10 +63,13 @@ export const evaluateEncounterDiagnosis = (
   fhirBundle: Bundle,
   encounter: Encounter | undefined,
 ) => {
-  return evaluateAllReferences<Condition>(
+  const conditionReferences =
+    encounter?.diagnosis?.map((diagnosis) => diagnosis.condition) ?? [];
+
+  return resolveReferencesByResourceType<Condition>(
     fhirBundle,
-    fhirPathMappings.encounterDiagnosisRef,
-    { id: encounter?.id },
+    conditionReferences,
+    "Condition",
   )
     .map((condition) => formatCodeableConcept(condition?.code))
     .filter(Boolean)
@@ -171,9 +176,10 @@ const evaluateEncounterDiagnosisData = (
   code: string,
   caption: string,
 ) => {
-  const dx = evaluateAllReferences<Condition>(
+  const dx = evaluateAllReferencesByResourceType<Condition>(
     fhirBundle,
     fhirPathMappings.hospitalEncounterDiagnosisRef,
+    "Condition",
     { code },
   );
 
@@ -202,10 +208,12 @@ const evaluateEncounterDiagnosisData = (
 export const returnAdmissionMedicationsTable = (
   fhirBundle: Bundle,
 ): React.JSX.Element | undefined => {
-  const admissionMedications = evaluateAllReferences(
-    fhirBundle,
-    fhirPathMappings.admissionMedicationRefs,
-  );
+  const admissionMedications =
+    evaluateAllReferencesByResourceType<MedicationAdministration>(
+      fhirBundle,
+      fhirPathMappings.admissionMedicationRefs,
+      "MedicationAdministration",
+    );
 
   if (admissionMedications.length === 0) {
     return undefined;

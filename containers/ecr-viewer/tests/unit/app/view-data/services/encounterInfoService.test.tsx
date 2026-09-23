@@ -41,12 +41,54 @@ describe("Encounter Info service tests", () => {
 
     describe("Evaluate Encounter Diagnoses", () => {
       it("should return the correct diagnoses given an Encounter", () => {
-        const encounter = {
-          resourceType: "Encounter",
-          id: "3a1cb409-6f94-0231-86d6-FAKE1ecc5fda",
-        } as unknown as Encounter;
+        const encounter = BundleEcrMetadata.entry?.find(
+          ({ resource }) =>
+            resource?.resourceType === "Encounter" &&
+            resource.id === "3a1cb409-6f94-0231-86d6-FAKE1ecc5fda",
+        )?.resource as Encounter;
         const actual = evaluateEncounterDiagnosis(BundleEcrMetadata, encounter);
         expect(actual).toMatchSnapshot();
+      });
+
+      it("resolves an idless encounter diagnosis by URN and rejects the wrong resource type", () => {
+        const encounter = {
+          resourceType: "Encounter",
+          status: "finished",
+          class: {},
+          diagnosis: [
+            { condition: { reference: "urn:uuid:diagnosis-condition" } },
+            { condition: { reference: "urn:uuid:not-a-condition" } },
+          ],
+        } as Encounter;
+        const bundle: Bundle = {
+          resourceType: "Bundle",
+          type: "document",
+          entry: [
+            {
+              fullUrl: "urn:uuid:diagnosis-condition",
+              resource: {
+                resourceType: "Condition",
+                clinicalStatus: {
+                  coding: [{ code: "active" }],
+                },
+                code: { text: "URN diagnosis" },
+                subject: { reference: "Patient/example" },
+              },
+            },
+            {
+              fullUrl: "urn:uuid:not-a-condition",
+              resource: {
+                resourceType: "Observation",
+                status: "final",
+                code: { text: "Wrong diagnosis resource type" },
+              },
+            },
+          ],
+        };
+
+        expect(evaluateEncounterDiagnosis(bundle, encounter)).toBe(
+          "URN diagnosis",
+        );
       });
     });
   });
@@ -307,6 +349,58 @@ describe("Encounter Info service tests", () => {
       expect(
         screen.queryByText("Hospital Admission Diagnosis"),
       ).not.toBeInTheDocument();
+    });
+
+    it("resolves idless admission medications by their fullUrl URNs", () => {
+      const urnBundle = JSON.parse(
+        JSON.stringify(BundleWithAdmissionMedications),
+      ) as Bundle;
+      const medicationReferences = new Map<string, string>();
+
+      urnBundle.entry?.forEach((entry) => {
+        if (
+          entry.resource?.resourceType === "MedicationAdministration" &&
+          entry.resource.id &&
+          entry.fullUrl
+        ) {
+          medicationReferences.set(
+            `MedicationAdministration/${entry.resource.id}`,
+            entry.fullUrl,
+          );
+          delete entry.resource.id;
+        }
+      });
+
+      urnBundle.entry?.forEach((entry) => {
+        if (entry.resource?.resourceType !== "Composition") return;
+
+        entry.resource.section
+          ?.find((section) =>
+            section.code?.coding?.some(({ code }) => code === "42346-7"),
+          )
+          ?.entry?.forEach((reference) => {
+            const fullUrl = reference.reference
+              ? medicationReferences.get(reference.reference)
+              : undefined;
+            if (fullUrl) reference.reference = fullUrl;
+          });
+      });
+
+      const admissionMedications = evaluateHospitalEncounterData(
+        urnBundle,
+      ).availableData.find(({ title }) => title === "Admission Medications");
+
+      render(<>{admissionMedications?.value}</>);
+
+      expect(
+        screen.getByText("Acetaminophen 500 MG Oral Tablet"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Ibuprofen 200 MG Oral Tablet"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Atenolol 25 MG Oral Tablet"),
+      ).toBeInTheDocument();
     });
   });
 

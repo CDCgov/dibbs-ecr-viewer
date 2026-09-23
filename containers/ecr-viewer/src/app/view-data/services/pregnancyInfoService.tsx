@@ -7,6 +7,7 @@ import {
   MedicationAdministration,
   Observation,
   Procedure,
+  Resource,
 } from "fhir/r4";
 
 import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
@@ -19,11 +20,12 @@ import {
 } from "@/app/utils/data-utils";
 import {
   evaluateAll,
-  evaluateAllReferences,
+  evaluateAllReferencesByResourceType,
   evaluateOne,
   evaluateReference,
   evaluateReference2,
   evaluateValue,
+  isResourceType,
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toTitleCase } from "@/app/utils/format-utils";
@@ -55,7 +57,7 @@ export const evaluatePregnancyData = (
   fhirIndex: FhirIndex,
 ): CompleteData => {
   const data = [
-    ...evaluatePregnancyStatus(fhirBundle),
+    ...evaluatePregnancyStatus(fhirBundle, fhirIndex),
     {
       title: "Last Menstrual Period",
       value: evaluateLastMenstrualPeriod(fhirBundle),
@@ -93,14 +95,16 @@ export const evaluatePregnancyData = (
   return evaluateData(data);
 };
 
-const evaluatePregnancyStatus = (fhirBundle: Bundle) => {
+const evaluatePregnancyStatus = (fhirBundle: Bundle, fhirIndex: FhirIndex) => {
   // TODO: Ideally the `unavailableData` list would include all subfields of the different observations.
   // However the unavailable data section will need to be modified to handle nested fields like this (this
   // also applies to the occupational history in social history). This function will likely need to be
   // rewritten for the changes to the pregnancy section front-end, and whenever the unavailable data
   // section can handle nested sub-fields.
-  const pregnancyStatusObservationEntries =
-    evaluatePregnancyStatusEntries(fhirBundle);
+  const pregnancyStatusObservationEntries = evaluatePregnancyStatusEntries(
+    fhirBundle,
+    fhirIndex,
+  );
   const postpartumStatusObservationEntries = evaluateAll(
     fhirBundle,
     fhirPathMappings.postpartumStatus,
@@ -197,7 +201,10 @@ const evaluatePregnancyStatus = (fhirBundle: Bundle) => {
   return res;
 };
 
-const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
+const evaluatePregnancyStatusEntries = (
+  fhirBundle: Bundle,
+  fhirIndex: FhirIndex,
+) => {
   const pregnancyOutcomeObservations = evaluateAll(
     fhirBundle,
     fhirPathMappings.pregnancyOutcome,
@@ -240,9 +247,20 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
       }),
     );
 
-    const fullId = `${ob.resourceType}/${ob.id}`;
     const outcomes = pregnancyOutcomeObservations
-      .filter((ob) => ob.focus?.some(({ reference }) => reference === fullId))
+      .filter((outcome) =>
+        outcome.focus?.some(({ reference }) => {
+          const focusedResource = evaluateReference2<Resource>(
+            fhirIndex,
+            reference,
+          );
+
+          return (
+            isResourceType<Observation>(focusedResource, "Observation") &&
+            focusedResource === ob
+          );
+        }),
+      )
       .map((o) => {
         const outcomeItems = [
           {
@@ -395,19 +413,23 @@ const evaluatePregnancyMedicationsAdministered = (
   fhirIndex: FhirIndex,
 ) => {
   const pregnancyMedicationAdministrationRefs =
-    evaluateAllReferences<MedicationAdministration>(
+    evaluateAllReferencesByResourceType<MedicationAdministration>(
       fhirBundle,
       fhirPathMappings.pregnancyMedicationAdministrationRefs,
+      "MedicationAdministration",
     );
 
   const entries = pregnancyMedicationAdministrationRefs.map(
     (medicationAdministration) => {
       let medication: Medication | undefined;
       if (medicationAdministration?.medicationReference?.reference) {
-        medication = evaluateReference2(
+        const medicationResource = evaluateReference2<Resource>(
           fhirIndex,
           medicationAdministration.medicationReference.reference,
         );
+        if (isResourceType<Medication>(medicationResource, "Medication")) {
+          medication = medicationResource;
+        }
       }
 
       const name = formatCodeableConcept(medication?.code);
@@ -432,9 +454,9 @@ const evaluatePregnancySummary = (fhirBundle: Bundle, fhirIndex: FhirIndex) => {
   const pregnancySummaryObs: Observation[] = [];
 
   observation?.hasMember?.forEach((memberRef) => {
-    const memberObs = evaluateReference2<Observation>(fhirIndex, memberRef);
-    if (memberObs) {
-      pregnancySummaryObs.push(memberObs);
+    const memberResource = evaluateReference2<Resource>(fhirIndex, memberRef);
+    if (isResourceType<Observation>(memberResource, "Observation")) {
+      pregnancySummaryObs.push(memberResource);
     }
   });
 

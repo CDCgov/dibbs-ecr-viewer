@@ -6,6 +6,7 @@ import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import {
   evaluateAll,
   evaluateAllAndCheck,
+  evaluateAllReferencesByResourceType,
   evaluateOne,
   evaluateReference,
   evaluateReference2,
@@ -397,6 +398,61 @@ describe("Evaluate Reference", () => {
     expect(actual).toBe(resource);
     expect(consoleSpy).not.toHaveBeenCalled();
     consoleSpy.mockRestore();
+  });
+});
+
+describe("Evaluate references by resource type", () => {
+  it("resolves URN references before filtering by resource type", () => {
+    const observation = {
+      resourceType: "Observation",
+      status: "final",
+      code: { text: "Expected procedure observation" },
+    } as Observation;
+    const patient = {
+      resourceType: "Patient",
+      name: [{ text: "Wrong resource type" }],
+    } as Patient;
+    const bundle = {
+      resourceType: "Bundle",
+      type: "document",
+      entry: [
+        {
+          resource: {
+            resourceType: "Composition",
+            status: "final",
+            type: {},
+            date: "2026-01-01",
+            author: [],
+            title: "Test composition",
+            section: [
+              {
+                code: { coding: [{ code: "47519-4" }] },
+                entry: [
+                  { reference: "urn:uuid:procedure-observation" },
+                  { reference: "urn:uuid:wrong-resource-type" },
+                ],
+              },
+            ],
+          },
+        },
+        {
+          fullUrl: "urn:uuid:procedure-observation",
+          resource: observation,
+        },
+        {
+          fullUrl: "urn:uuid:wrong-resource-type",
+          resource: patient,
+        },
+      ],
+    } as Bundle;
+
+    expect(
+      evaluateAllReferencesByResourceType<Observation>(
+        bundle,
+        fhirPathMappings.procedureHistoryRefs,
+        "Observation",
+      ),
+    ).toEqual([observation]);
   });
 });
 

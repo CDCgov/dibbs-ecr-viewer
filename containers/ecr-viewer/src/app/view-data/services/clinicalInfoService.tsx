@@ -41,10 +41,11 @@ import {
 } from "@/app/utils/data-utils";
 import {
   evaluateAll,
-  evaluateAllReferences,
+  evaluateAllReferencesByResourceType,
   evaluateOne,
   evaluateReference,
   evaluateValue,
+  isResourceType,
 } from "@/app/utils/evaluate";
 import fhirPathMappings, { FhirPath } from "@/app/utils/evaluate/fhir-paths";
 import { makePlural, toSentenceCase } from "@/app/utils/format-utils";
@@ -394,28 +395,22 @@ const evaluatePlanOfTreatment = (
 ): React.ReactNode | undefined => {
   const plans = evaluateAll(fhirBundle, fhirPathMappings.planOfTreatment);
   const activities = [];
-  const procs = [];
-  const meds = [];
+  const procs: ServiceRequest[] = [];
+  const meds: MedicationRequest[] = [];
 
   for (const plan of plans) {
     if (plan.detail) {
       activities.push(plan);
-    } else if (plan.reference?.reference?.startsWith("ServiceRequest/")) {
-      const req = evaluateReference<ServiceRequest>(
-        fhirBundle,
-        plan.reference.reference,
-      );
-      if (req) {
-        procs.push(req);
-      }
-    } else if (plan.reference?.reference?.startsWith("MedicationRequest/")) {
-      const req = evaluateReference<MedicationRequest>(
-        fhirBundle,
-        plan.reference.reference,
-      );
-      if (req) {
-        meds.push(req);
-      }
+      continue;
+    }
+
+    const request = evaluateReference(fhirBundle, plan.reference);
+    if (isResourceType<ServiceRequest>(request, "ServiceRequest")) {
+      procs.push(request);
+    } else if (
+      isResourceType<MedicationRequest>(request, "MedicationRequest")
+    ) {
+      meds.push(request);
     }
   }
 
@@ -564,9 +559,10 @@ const evaluateAdministeredMedication = (
   fhirBundle: Bundle,
 ): AdministeredMedicationTableData[] => {
   const administeredMedications =
-    evaluateAllReferences<MedicationAdministration>(
+    evaluateAllReferencesByResourceType<MedicationAdministration>(
       fhirBundle,
       fhirPathMappings.adminMedicationsRefs,
+      "MedicationAdministration",
     );
 
   return administeredMedications.map((medicationAdministration) => {
@@ -612,10 +608,12 @@ const evaluateAdministeredMedication = (
  * @returns - A formatted table React element representing the list of Medications, or undefined if the array is empty.
  */
 export const returnMedicationsTable = (fhirBundle: Bundle) => {
-  const medicationStatements = evaluateAllReferences<MedicationStatement>(
-    fhirBundle,
-    fhirPathMappings.medicationStatementRefs,
-  );
+  const medicationStatements =
+    evaluateAllReferencesByResourceType<MedicationStatement>(
+      fhirBundle,
+      fhirPathMappings.medicationStatementRefs,
+      "MedicationStatement",
+    );
   if (medicationStatements.length === 0) return;
 
   sortResourcesByDate(medicationStatements, fhirPathMappings.effectiveX);
@@ -752,9 +750,10 @@ export const returnProceduresTable = (
   const procedures = evaluateAll(fhirBundle, fhirPathMappings.procedures);
 
   // References to Observations in the procedure history section
-  const obs = evaluateAllReferences<Observation>(
+  const obs = evaluateAllReferencesByResourceType<Observation>(
     fhirBundle,
     fhirPathMappings.procedureHistoryRefs,
+    "Observation",
   );
 
   if (procedures.length === 0 && obs.length === 0) {
