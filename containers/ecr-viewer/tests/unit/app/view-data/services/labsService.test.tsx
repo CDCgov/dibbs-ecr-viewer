@@ -5,6 +5,7 @@ import { Bundle, DiagnosticReport, Observation, Organization } from "fhir/r4";
 import _BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
 import _BundleLabInvalidResultsDiv from "../../../../../../../test-data/fhir/BundleLabInvalidResultsDiv.json";
 import _BundleLabNoLabIds from "../../../../../../../test-data/fhir/BundleLabNoLabIds.json";
+import _BundleLabObservationsOnly from "../../../../../../../test-data/fhir/BundleLabObservationsOnly.json";
 import { AccordionItem } from "@/app/types";
 import { HtmlTableJson } from "@/app/services/htmlTableService";
 import { noData } from "@/app/utils/data-utils";
@@ -25,6 +26,7 @@ import {
   getJsonLab,
   getAllLabJsonObjects,
   getObservations,
+  getLabResultGroups,
   matchesResultId,
   LabInterpretationTag,
 } from "@/app/view-data/services/labsService";
@@ -45,6 +47,12 @@ const fhirIndexBundleLabInvalidResultsDiv = getFhirIndex(
 
 const BundleLabNoLabIds = _BundleLabNoLabIds as unknown as Bundle;
 const fhirIndexBundleLabNoLabIds = getFhirIndex(BundleLabNoLabIds);
+
+const BundleLabObservationsOnly =
+  _BundleLabObservationsOnly as unknown as Bundle;
+const fhirIndexBundleLabObservationsOnly = getFhirIndex(
+  BundleLabObservationsOnly,
+);
 
 const pathLabReportNormal =
   "Bundle.entry.resource.where(resourceType = 'DiagnosticReport').where(id = 'c090d379-9aea-f26e-4ddc-378223841e3b')";
@@ -287,6 +295,27 @@ describe("LabsService tests", () => {
         const result = getJsonLab(jsonLabs, [], report);
 
         expect(result?.resultName).toBe("X-ray report");
+      });
+
+      it("matches an Observation-backed result to its narrative by identifier", () => {
+        const result = getJsonLab(
+          [
+            {
+              resultId: "Result.1.2.840.114350.4832279",
+              resultName: "Observation-backed result",
+              tables: [],
+            },
+          ],
+          [],
+          {
+            resourceType: "Observation",
+            status: "final",
+            code: {},
+            identifier: [{ value: "4832279" }],
+          },
+        );
+
+        expect(result?.resultName).toBe("Observation-backed result");
       });
 
       it("returns undefined for table without data-id", () => {
@@ -936,6 +965,153 @@ describe("LabsService tests", () => {
         .organizationDisplayDataProps;
       expect(props[3].title).toEqual("Number of Results");
       expect(props[3].value).toEqual(2);
+    });
+
+    it("builds lab groups from Results-section Observations when no DiagnosticReports exist", () => {
+      const groups = getLabResultGroups(fhirIndexBundleLabObservationsOnly);
+
+      expect(groups).toHaveLength(2);
+      expect(groups.map(({ source }) => source.resourceType)).toEqual([
+        "Observation",
+        "Observation",
+      ]);
+      expect(
+        groups.map(({ observations }) =>
+          observations.map(
+            (observation) =>
+              observation.code?.text ?? observation.code?.coding?.[0]?.display,
+          ),
+        ),
+      ).toEqual([
+        ["Panel component", "Lab Interpretation"],
+        ["Direct laboratory result"],
+      ]);
+    });
+
+    it("renders Observation-backed labs, specimens, values, and PractitionerRole organizations", () => {
+      const result = evaluateLabInfoData(fhirIndexBundleLabObservationsOnly);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].diagnosticReportDataItems).toHaveLength(2);
+      expect(result[0].organizationDisplayDataProps).toEqual([
+        {
+          title: "Lab Performing Name",
+          value: "Example Hospital Laboratory",
+        },
+        {
+          title: "Lab Address",
+          value: "100 Laboratory Way\nExample City, MD 20000",
+        },
+        { title: "Lab Contact", value: "202-555-0100" },
+        { title: "Number of Results", value: 2 },
+      ]);
+
+      render(
+        <>
+          {result[0].diagnosticReportDataItems.map((item) => (
+            <div key={item.id}>
+              {item.title}
+              {item.content}
+            </div>
+          ))}
+        </>,
+      );
+
+      expect(screen.getByText("Panel laboratory study")).toBeInTheDocument();
+      expect(screen.getAllByText("Direct laboratory result")).toHaveLength(2);
+      expect(screen.getByText(/Positive/)).toBeInTheDocument();
+      expect(screen.getByText(/DETECTED/)).toBeInTheDocument();
+      expect(screen.getAllByText("Abnormal")).toHaveLength(2);
+      expect(screen.getByText("Specimen (Source): Blood")).toBeInTheDocument();
+      expect(screen.getByText("Specimen (Source): Swab")).toBeInTheDocument();
+      expect(screen.getByText("Plain clinical comment")).toBeInTheDocument();
+      expect(screen.queryByText("No test reported")).not.toBeInTheDocument();
+      expect(
+        screen.queryByText("Unrelated observation"),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByText(/Serialized narrative row/),
+      ).not.toBeInTheDocument();
+    });
+
+    it("keeps DiagnosticReports as the primary lab representation", () => {
+      const report: DiagnosticReport = {
+        resourceType: "DiagnosticReport",
+        status: "final",
+        code: { text: "Report-backed lab" },
+      };
+
+      const groups = getLabResultGroups(fhirIndexBundleLabObservationsOnly, [
+        report,
+      ]);
+
+      expect(groups).toHaveLength(1);
+      expect(groups[0].source).toBe(report);
+    });
+
+    it("renders no labs when the caller explicitly supplies an empty report list", () => {
+      expect(
+        evaluateLabInfoData(fhirIndexBundleLabObservationsOnly, []),
+      ).toEqual([]);
+    });
+
+    it("deduplicates cyclic hasMember references", () => {
+      const cyclicBundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            fullUrl: "urn:uuid:composition",
+            resource: {
+              resourceType: "Composition",
+              section: [
+                {
+                  code: {
+                    coding: [{ system: "http://loinc.org", code: "30954-2" }],
+                  },
+                  entry: [{ reference: "urn:uuid:cycle-panel" }],
+                },
+              ],
+            },
+          },
+          {
+            fullUrl: "urn:uuid:cycle-panel",
+            resource: {
+              resourceType: "Observation",
+              status: "final",
+              category: [
+                {
+                  coding: [
+                    {
+                      system:
+                        "http://terminology.hl7.org/CodeSystem/observation-category",
+                      code: "laboratory",
+                    },
+                  ],
+                },
+              ],
+              code: { text: "Cycle panel" },
+              hasMember: [{ reference: "urn:uuid:cycle-result" }],
+            },
+          },
+          {
+            fullUrl: "urn:uuid:cycle-result",
+            resource: {
+              resourceType: "Observation",
+              status: "final",
+              code: { text: "Cycle result" },
+              valueString: "Detected",
+              hasMember: [{ reference: "urn:uuid:cycle-panel" }],
+            },
+          },
+        ],
+      } as unknown as Bundle;
+
+      const groups = getLabResultGroups(getFhirIndex(cyclicBundle));
+
+      expect(groups).toHaveLength(1);
+      expect(groups[0].observations).toHaveLength(1);
+      expect(groups[0].observations[0].code?.text).toBe("Cycle result");
     });
   });
 

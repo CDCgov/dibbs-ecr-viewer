@@ -8,6 +8,7 @@ import { axe } from "jest-axe";
 import * as _BundleAdmissionMedications from "@/../../../test-data/fhir/BundleAdmissionMedications.json";
 import BundleCareTeam from "@/../../../test-data/fhir/BundleCareTeam.json";
 import * as _BundleWithMiscNotes from "@/../../../test-data/fhir/BundleMiscNotes.json";
+import * as _BundleLabObservationsOnly from "@/../../../test-data/fhir/BundleLabObservationsOnly.json";
 import * as _BundleWithPatient from "@/../../../test-data/fhir/BundlePatient.json";
 import * as _BundleWithPendingResultsOnly from "@/../../../test-data/fhir/BundlePendingResultsOnly.json";
 import * as _BundleWithPlannedMedsOnly from "@/../../../test-data/fhir/BundlePlannedMedsOnly.json";
@@ -29,6 +30,7 @@ const fhirIndexBundleAdmissionMedications = getFhirIndex(
 const BundleWithPatient = _BundleWithPatient as Bundle;
 const BundleSample = _BundleSample as Bundle;
 const BundleWithMiscNotes = _BundleWithMiscNotes as Bundle;
+const BundleLabObservationsOnly = _BundleLabObservationsOnly as Bundle;
 const fhirIndexBundleWithMiscNotes = getFhirIndex(BundleWithMiscNotes);
 const BundleWithPendingResultsOnly = _BundleWithPendingResultsOnly as Bundle;
 const BundleWithPlannedMedsOnly = _BundleWithPlannedMedsOnly as Bundle;
@@ -137,6 +139,23 @@ describe("Tests for eCR Document", () => {
       getEcrDocumentAccordionItems(BundleSample, fhirIndexBundleSample);
 
     expect(ecrDocumentNavConfig).toEqual(expectedEcrDocumentNavConfig);
+  });
+
+  it("adds Lab Info navigation for Results-section Observations without DiagnosticReports", () => {
+    const fhirIndex = getFhirIndex(BundleLabObservationsOnly);
+
+    const { ecrDocumentNavConfig } = getEcrDocumentAccordionItems(
+      BundleLabObservationsOnly,
+      fhirIndex,
+    );
+    const labNav = ecrDocumentNavConfig.find(
+      ({ title }) => title === "Lab Info",
+    );
+
+    expect(labNav?.subNavItems).toHaveLength(1);
+    expect(labNav?.subNavItems[0]).toMatchObject({
+      title: "Lab Results from Example Hospital Laboratory",
+    });
   });
 
   describe("Evaluate Clinical Info", () => {

@@ -746,7 +746,7 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   diagnosticReportIdentifierValue: { type: "string", path: "identifier.value" },
   observationValue: {
     type: "string",
-    path: "(valueQuantity.value.toString() | valueString | valueCodeableConcept.coding.display | iif(valueQuantity.unit.exists(), iif(valueQuantity.unit = '%', valueQuantity.unit, ' ' + valueQuantity.unit), '') | iif(interpretation.coding.display.exists(), ' (' + interpretation.coding.display + ')', '')).join('')",
+    path: "(valueQuantity.value.toString() | valueString | iif(valueCodeableConcept.text.exists(), valueCodeableConcept.text, iif(valueCodeableConcept.coding.display.exists(), valueCodeableConcept.coding.display.first(), valueCodeableConcept.coding.code.first())) | iif(valueQuantity.unit.exists(), iif(valueQuantity.unit = '%', valueQuantity.unit, ' ' + valueQuantity.unit), '') | iif(interpretation.text.exists(), ' (' + interpretation.text.first() + ')', iif(interpretation.coding.display.exists(), ' (' + interpretation.coding.display.first() + ')', iif(interpretation.coding.code.exists(), ' (' + interpretation.coding.code.first() + ')', '')))).join('')",
   },
   observationReferenceRange: {
     type: "ObservationReferenceRange",

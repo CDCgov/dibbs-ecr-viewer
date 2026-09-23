@@ -1,0 +1,385 @@
+{
+  "resourceType": "Bundle",
+  "type": "document",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:composition",
+      "resource": {
+        "resourceType": "Composition",
+        "status": "final",
+        "type": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "55751-2"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:patient"
+        },
+        "date": "2026-06-10T14:00:45.000Z",
+        "author": [
+          {
+            "reference": "urn:uuid:device"
+          }
+        ],
+        "title": "Observation-backed labs",
+        "section": [
+          {
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "30954-2",
+                  "display": "Relevant diagnostic tests/laboratory data"
+                }
+              ]
+            },
+            "entry": [
+              {
+                "reference": "urn:uuid:panel-observation"
+              },
+              {
+                "reference": "urn:uuid:direct-observation"
+              },
+              {
+                "reference": "urn:uuid:no-test-observation"
+              },
+              {
+                "reference": "urn:uuid:unrelated-observation"
+              },
+              {
+                "reference": "urn:uuid:missing-observation"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient",
+      "resource": {
+        "resourceType": "Patient"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:device",
+      "resource": {
+        "resourceType": "Device"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:panel-observation",
+      "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "text": "Panel laboratory study"
+        },
+        "subject": {
+          "reference": "urn:uuid:patient"
+        },
+        "effectiveDateTime": "2026-06-10T13:59:00.000Z",
+        "hasMember": [
+          {
+            "reference": "urn:uuid:panel-result"
+          },
+          {
+            "reference": "urn:uuid:panel-interpretation"
+          },
+          {
+            "reference": "urn:uuid:missing-member"
+          }
+        ],
+        "performer": [
+          {
+            "reference": "urn:uuid:performing-organization-1"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:panel-result",
+      "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "code": {
+          "text": "Panel component"
+        },
+        "subject": {
+          "reference": "urn:uuid:patient"
+        },
+        "effectiveDateTime": "2026-06-10T14:00:00.000Z",
+        "specimen": {
+          "reference": "urn:uuid:blood-specimen"
+        },
+        "valueString": "Positive",
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "code": "A"
+              }
+            ],
+            "text": "Abnormal"
+          }
+        ],
+        "note": [
+          {
+            "text": "<tr><td>Serialized narrative row</td></tr>"
+          },
+          {
+            "text": "Plain clinical comment"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:panel-interpretation",
+      "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "56850-1",
+              "display": "Lab Interpretation"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:patient"
+        },
+        "effectiveDateTime": "2026-06-10T14:00:00.000Z",
+        "valueString": "Abnormal"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:direct-observation",
+      "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "97936-9"
+            }
+          ],
+          "text": "Direct laboratory result"
+        },
+        "subject": {
+          "reference": "urn:uuid:patient"
+        },
+        "effectiveDateTime": "2026-06-11T13:59:00.000Z",
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "260373001"
+            }
+          ],
+          "text": "DETECTED"
+        },
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "code": "A"
+              }
+            ],
+            "text": "Abnormal"
+          }
+        ],
+        "referenceRange": [
+          {
+            "text": "Not Detected"
+          }
+        ],
+        "specimen": {
+          "reference": "urn:uuid:swab-specimen"
+        },
+        "performer": [
+          {
+            "reference": "urn:uuid:performer-role"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:no-test-observation",
+      "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+              "valueCode": "not-applicable"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:patient"
+        },
+        "valueQuantity": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+              "valueCode": "not-applicable"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:unrelated-observation",
+      "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "vital-signs"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "text": "Unrelated observation"
+        },
+        "subject": {
+          "reference": "urn:uuid:patient"
+        },
+        "valueString": "Do not display"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:blood-specimen",
+      "resource": {
+        "resourceType": "Specimen",
+        "status": "available",
+        "type": {
+          "text": "Blood"
+        },
+        "subject": {
+          "reference": "urn:uuid:patient"
+        },
+        "receivedTime": "2026-06-10T13:59:00.000Z",
+        "collection": {
+          "collectedDateTime": "2026-06-10T13:58:00.000Z",
+          "bodySite": {
+            "text": "Venous blood specimen"
+          }
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:swab-specimen",
+      "resource": {
+        "resourceType": "Specimen",
+        "status": "available",
+        "type": {
+          "text": "Swab"
+        },
+        "subject": {
+          "reference": "urn:uuid:patient"
+        },
+        "receivedTime": "2026-06-11T13:59:00.000Z",
+        "collection": {
+          "collectedDateTime": "2026-06-11T13:58:00.000Z",
+          "bodySite": {
+            "text": "Bilateral axilla and groin"
+          }
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:performing-organization-1",
+      "resource": {
+        "resourceType": "Organization",
+        "identifier": [
+          {
+            "system": "urn:oid:2.16.840.1.113883.4.7",
+            "value": "12345"
+          }
+        ],
+        "name": "Example Hospital Laboratory",
+        "address": [
+          {
+            "line": ["100 Laboratory Way"],
+            "city": "Example City",
+            "state": "MD",
+            "postalCode": "20000"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:performer-role",
+      "resource": {
+        "resourceType": "PractitionerRole",
+        "organization": {
+          "reference": "urn:uuid:performing-organization-2"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:performing-organization-2",
+      "resource": {
+        "resourceType": "Organization",
+        "name": "Example Hospital Laboratory",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+1-202-555-0100"
+          }
+        ],
+        "address": [
+          {
+            "line": ["100 Laboratory Way"],
+            "city": "Example City",
+            "state": "MD",
+            "postalCode": "20000"
+          }
+        ]
+      }
+    }
+  ]
+}

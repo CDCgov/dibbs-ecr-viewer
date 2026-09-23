@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Bundle, DiagnosticReport } from "fhir/r4";
+import { Bundle } from "fhir/r4";
 
 import { AccordionItem } from "@/app/types";
 import { toKebabCase } from "@/app/utils/format-utils";
@@ -23,10 +23,7 @@ import { evaluateSocialData } from "@/app/view-data/services/socialHistoryServic
 import { evaluateDemographicsData } from "@/app/view-data/services/demographicsService";
 import { evaluatePregnancyData } from "@/app/view-data/services/pregnancyInfoService";
 import { evaluateLabInfoData } from "@/app/view-data/services/labsService";
-import {
-  FhirIndex,
-  getResourcesByType,
-} from "@/app/view-data/services/fhirResourcesIndexService";
+import { FhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
 import { evaluateClinicalData } from "@/app/view-data/services/clinicalInfoService";
 
@@ -59,11 +56,7 @@ export const getEcrDocumentAccordionItems = (
   const clinicalData = evaluateClinicalData(fhirBundle, fhirIndex);
   const ecrMetadata = evaluateEcrMetadata(fhirBundle);
   const facilityData = evaluateFacilityData(fhirBundle);
-  const diagnosticReports = getResourcesByType<DiagnosticReport>(
-    fhirIndex,
-    "DiagnosticReport",
-  );
-  const labInfoData = evaluateLabInfoData(fhirIndex, diagnosticReports);
+  const labInfoData = evaluateLabInfoData(fhirIndex);
 
   const hasUnavailableData = () => {
     const unavailableDataArrays = [
