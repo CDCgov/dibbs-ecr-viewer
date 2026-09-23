@@ -255,13 +255,11 @@ const evaluateEcrAuthorDetails = (fhirBundle: Bundle): DisplayDataProps[][] => {
 
   const authorDetails: DisplayDataProps[][] = [];
   authorRefs.forEach((ref) => {
-    if (ref.reference?.includes("PractitionerRole/")) {
-      const practitionerRoleRef = ref?.reference;
-      const { practitioner, organization } = evaluatePractitionerRoleReference(
-        fhirBundle,
-        practitionerRoleRef,
-      );
+    const practitionerRoleRef = ref.reference;
+    const { practitionerRole, practitioner, organization } =
+      evaluatePractitionerRoleReference(fhirBundle, practitionerRoleRef);
 
+    if (practitionerRole) {
       authorDetails.push([
         {
           title: "Author Name",

@@ -298,6 +298,64 @@ describe("Evaluate Ecr Metadata", () => {
       },
     ]);
   });
+  it("should resolve a PractitionerRole author through URN fullUrl references", () => {
+    const bundle = {
+      resourceType: "Bundle",
+      type: "document",
+      entry: [
+        {
+          fullUrl: "urn:uuid:composition",
+          resource: {
+            resourceType: "Composition",
+            status: "final",
+            type: {},
+            date: "2000-02-04T09:01:22-05:00",
+            title: "URN author test",
+            author: [
+              { reference: "urn:uuid:author-role" },
+              { reference: "urn:uuid:author-device" },
+            ],
+          },
+        },
+        {
+          fullUrl: "urn:uuid:author-role",
+          resource: {
+            resourceType: "PractitionerRole",
+            practitioner: { reference: "urn:uuid:author-practitioner" },
+            organization: { reference: "urn:uuid:author-organization" },
+          },
+        },
+        {
+          fullUrl: "urn:uuid:author-practitioner",
+          resource: {
+            resourceType: "Practitioner",
+            name: [{ given: ["Leia"], family: "Organa" }],
+          },
+        },
+        {
+          fullUrl: "urn:uuid:author-organization",
+          resource: {
+            resourceType: "Organization",
+            name: "Alderaan Medical Center",
+          },
+        },
+        {
+          fullUrl: "urn:uuid:author-device",
+          resource: {
+            resourceType: "Device",
+          },
+        },
+      ],
+    } as unknown as Bundle;
+
+    const actual = evaluateEcrMetadata(bundle);
+
+    expect(actual.eicrAuthorDetails).toHaveLength(1);
+    expect(actual.eicrAuthorDetails[0].availableData).toEqual([
+      { title: "Author Name", value: "Leia Organa" },
+      { title: "Author Facility Name", value: "Alderaan Medical Center" },
+    ]);
+  });
   it("should have two authors", () => {
     const actual = evaluateEcrMetadata(
       BundleMultipleAuthors as unknown as Bundle,

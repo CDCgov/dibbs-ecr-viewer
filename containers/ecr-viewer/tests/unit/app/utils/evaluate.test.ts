@@ -12,7 +12,10 @@ import {
   evaluateValue,
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
-import { FhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
+import {
+  FhirIndex,
+  getFhirIndex,
+} from "@/app/view-data/services/fhirResourcesIndexService";
 
 describe("evaluate", () => {
   let fhirPathEvaluateSpy: jest.SpyInstance;
@@ -373,6 +376,28 @@ describe("Evaluate Reference", () => {
     expect(actual?.id).toEqual("99999999-4p89-4b96-b6ab-c46406839cea");
     expect(actual?.resourceType).toEqual("Patient");
   });
+  it("should return a resource without an id using its exact fullUrl", () => {
+    const resource = {
+      resourceType: "Observation",
+      status: "final",
+      code: {},
+    } as Observation;
+    const bundle = {
+      resourceType: "Bundle",
+      type: "document",
+      entry: [{ fullUrl: "urn:uuid:observation-without-id", resource }],
+    } as Bundle;
+    const consoleSpy = jest.spyOn(console, "error");
+
+    const actual = evaluateReference<Observation>(
+      bundle,
+      "urn:uuid:observation-without-id",
+    );
+
+    expect(actual).toBe(resource);
+    expect(consoleSpy).not.toHaveBeenCalled();
+    consoleSpy.mockRestore();
+  });
 });
 
 describe("Evaluate Reference 2", () => {
@@ -401,6 +426,21 @@ describe("Evaluate Reference 2", () => {
       },
     },
   };
+  const resourceWithoutId = {
+    resourceType: "Observation",
+    status: "final",
+    code: {},
+  } as Observation;
+  const fhirIndexBundleWithUrn = getFhirIndex({
+    resourceType: "Bundle",
+    type: "document",
+    entry: [
+      {
+        fullUrl: "urn:uuid:observation-without-id",
+        resource: resourceWithoutId,
+      },
+    ],
+  });
 
   it("should return undefined if resource not found", () => {
     const actual = evaluateReference2<Observation>(
@@ -418,6 +458,25 @@ describe("Evaluate Reference 2", () => {
 
     expect(actual?.id).toEqual("2");
     expect(actual?.resourceType).toEqual("Observation");
+  });
+  it("should return a resource without an id using a URN Reference object", () => {
+    const consoleSpy = jest.spyOn(console, "error");
+
+    const actual = evaluateReference2<Observation>(fhirIndexBundleWithUrn, {
+      reference: "urn:uuid:observation-without-id",
+    });
+
+    expect(actual).toBe(resourceWithoutId);
+    expect(consoleSpy).not.toHaveBeenCalled();
+    consoleSpy.mockRestore();
+  });
+  it("should return undefined for a dangling URN reference", () => {
+    const actual = evaluateReference2<Observation>(
+      fhirIndexBundleWithUrn,
+      "urn:uuid:not-present",
+    );
+
+    expect(actual).toBeUndefined();
   });
   it("should error when resource is found but resourceType does not match expected resourceType", () => {
     const consoleSpy = jest

@@ -241,9 +241,17 @@ export const returnProblemsTable = (
   fhirIndex: FhirIndex,
   problemsArray: Condition[],
 ): React.JSX.Element | undefined => {
-  problemsArray = problemsArray.filter((entry) =>
-    entry.code?.coding?.some((c: Coding) => c?.display),
-  );
+  const hasRenderableProblemName = (condition: Condition): boolean => {
+    const hasText = Boolean(condition.code?.text?.trim());
+    const hasCodingDisplay =
+      condition.code?.coding?.some((coding) =>
+        Boolean(coding.display?.trim()),
+      ) ?? false;
+
+    return hasText || hasCodingDisplay;
+  };
+
+  problemsArray = problemsArray.filter(hasRenderableProblemName);
 
   if (problemsArray.length === 0) {
     return undefined;

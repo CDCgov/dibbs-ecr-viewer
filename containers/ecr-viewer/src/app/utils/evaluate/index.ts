@@ -2,6 +2,7 @@ import "server-only"; // fhirpath should only be used on the server
 
 import {
   Address,
+  Bundle,
   CodeableConcept,
   Coding,
   Element,
@@ -31,10 +32,13 @@ import { notEmpty } from "@/app/utils/data-utils";
 import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
 import {
   FhirIndex,
-  getResourceById,
+  getFhirIndex,
+  getReferenceResourceType,
+  getResourceByReference,
 } from "@/app/view-data/services/fhirResourcesIndexService";
 
 let evaluateCache = new WeakMap<object, Map<string, unknown[]>>();
+let fhirIndexCache = new WeakMap<Bundle, FhirIndex>();
 
 type FhirData = Element | Element[] | FhirResource | undefined;
 
@@ -162,10 +166,11 @@ export const evaluateOneAndCheck = <Result>(
 };
 
 /**
- * Reset the evaluate cache map
+ * Reset cached FHIRPath evaluations and derived FHIR indexes.
  */
 export const clearEvaluateCache = () => {
   evaluateCache = new WeakMap<object, Map<string, unknown[]>>();
+  fhirIndexCache = new WeakMap<Bundle, FhirIndex>();
 };
 
 /**
@@ -323,15 +328,12 @@ const isFhirDateTime = (str: string): boolean => {
 };
 
 /**
- * Evaluates a reference in a FHIR bundle. The resulting type of the expected resource
- * must be provided as a type parameter. This will also be checked at runtime and an
- * error logged if it does not match.
+ * Evaluates a relative reference or exact Bundle.entry.fullUrl in a FHIR
+ * bundle. For relative references, the declared resource type is checked
+ * against the resolved resource at runtime.
  *
- * Expects a single element to be returned from the reference. If more than one is evaluated, the
- * first will be returned and an error will be logged to the console with information
- * on the evaluation.
- * @param fhirData - The FHIR resource.
- * @param ref - The reference string (e.g., "Patient/123").
+ * @param fhirData - The FHIR Bundle containing the referenced resource.
+ * @param ref - A reference string (e.g., "Patient/123" or "urn:uuid:...").
  * @returns The FHIR Resource or undefined if not found.
  */
 export const evaluateReference = <T extends Resource>(
@@ -343,35 +345,28 @@ export const evaluateReference = <T extends Resource>(
   }
   if (!ref) return undefined;
 
-  const [resourceType, id] = ref.split("/");
-  const result = evaluateOneAndCheck<T>(
-    fhirData,
-    fhirPathMappings.resolve.path,
-    resourceType,
-    {
-      resourceType,
-      id,
-    },
-  );
-
-  if (result && result?.resourceType !== resourceType) {
-    console.error(
-      `Resource type mismatch: Expected ${resourceType}, but got ${result?.resourceType}`,
-    );
+  if (
+    !fhirData ||
+    Array.isArray(fhirData) ||
+    !("resourceType" in fhirData) ||
+    fhirData.resourceType !== "Bundle"
+  ) {
+    return undefined;
   }
 
-  return result;
+  return resolveReferenceFromIndex<T>(
+    getCachedFhirIndex(fhirData as Bundle),
+    ref,
+  );
 };
 
 /**
- * Evaluates a reference to return a resource. The resulting type of the expected resource
- * must be provided as a type parameter. This will also be checked at runtime and an
- * error logged if it does not match.
- *
- * Expects a single element to be returned from the reference.
+ * Evaluates a relative reference or exact Bundle.entry.fullUrl from a FHIR
+ * index. For relative references, the declared resource type is checked
+ * against the resolved resource at runtime.
  *
  * @param fhirIndex - FHIR resources indexed by type & by ID
- * @param ref - The reference string (e.g., "Patient/123").
+ * @param ref - A reference string (e.g., "Patient/123" or "urn:uuid:...").
  * @returns The FHIR Resource or undefined if not found.
  */
 // TODO: Eventually want this to replace evaluateReference completely
@@ -384,20 +379,37 @@ export const evaluateReference2 = <T extends Resource>(
   }
   if (!ref) return undefined;
 
-  const [resourceType, id] = ref.split("/");
-  const result = getResourceById<T>(
-    fhirIndex,
-    resourceType as T["resourceType"],
-    id,
-  );
+  return resolveReferenceFromIndex<T>(fhirIndex, ref);
+};
 
-  if (result && result?.resourceType !== resourceType) {
+const resolveReferenceFromIndex = <T extends Resource>(
+  fhirIndex: FhirIndex,
+  reference: string,
+): T | undefined => {
+  const result = getResourceByReference<T>(fhirIndex, reference);
+  const referencedResourceType = getReferenceResourceType(reference);
+
+  if (
+    result &&
+    referencedResourceType !== undefined &&
+    result.resourceType !== referencedResourceType
+  ) {
     console.error(
-      `Resource type mismatch: Expected ${resourceType}, but got ${result?.resourceType}`,
+      `Resource type mismatch: Expected ${referencedResourceType}, but got ${result.resourceType}`,
     );
   }
 
-  return result as T;
+  return result;
+};
+
+const getCachedFhirIndex = (fhirBundle: Bundle): FhirIndex => {
+  let fhirIndex = fhirIndexCache.get(fhirBundle);
+  if (!fhirIndex) {
+    fhirIndex = getFhirIndex(fhirBundle);
+    fhirIndexCache.set(fhirBundle, fhirIndex);
+  }
+
+  return fhirIndex;
 };
 
 type RefPathTypes = {

@@ -471,18 +471,24 @@ export const evaluateFacilityData = (fhirBundle: Bundle) => {
  * Evaluate practitioner role reference
  * @param fhirBundle - The FHIR bundle containing resources.
  * @param practitionerRoleRef - practitioner role reference to be searched.
- * @returns practitioner and organization
+ * @returns resolved practitioner role, practitioner, and organization
  */
 export const evaluatePractitionerRoleReference = (
   fhirBundle: Bundle,
   practitionerRoleRef?: string,
-): { practitioner?: Practitioner; organization?: Organization } => {
+): {
+  practitionerRole?: PractitionerRole;
+  practitioner?: Practitioner;
+  organization?: Organization;
+} => {
   if (!practitionerRoleRef) return {};
 
   const practitionerRole = evaluateReference<PractitionerRole>(
     fhirBundle,
     practitionerRoleRef,
   );
+  if (practitionerRole?.resourceType !== "PractitionerRole") return {};
+
   const practitioner = evaluateReference<Practitioner>(
     fhirBundle,
     practitionerRole?.practitioner?.reference,
@@ -492,7 +498,7 @@ export const evaluatePractitionerRoleReference = (
     practitionerRole?.organization?.reference,
   );
 
-  return { practitioner, organization };
+  return { practitionerRole, practitioner, organization };
 };
 
 /**

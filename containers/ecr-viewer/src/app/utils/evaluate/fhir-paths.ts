@@ -524,7 +524,19 @@ const _fhirPathMappings: { [K in FhirPathKeys]: Omit<FhirPath<K>, "name"> } = {
   },
   activeProblems: {
     type: "Condition",
-    path: "entry.resource.Condition.where(category.coding.exists(system = 'http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category' and code = 'problem-item-list'))",
+    path: `entry.resource.Condition.where(
+      category.coding.exists(
+        (
+          system = 'http://hl7.org/fhir/us/core/ValueSet/us-core-condition-category'
+          and code = 'problem-item-list'
+        )
+        or
+        (
+          system = 'http://terminology.hl7.org/CodeSystem/condition-category'
+          and code = 'problem-list-item'
+        )
+      )
+    )`,
   },
   activeProblemsStatus: {
     type: "string",
