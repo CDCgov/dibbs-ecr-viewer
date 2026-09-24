@@ -916,42 +916,15 @@ describe("LabsService tests", () => {
     });
     it("should combine the data into new format", () => {
       const testResultObject: ResultObject = {
-        "Organization/22c6cdd0-bde1-e220-9ba4-2c2802f795ad": [
-          {} as AccordionItem,
-        ],
+        "14394818-a1e9-4882-ca8b-FAKE793bb5cc": [{} as AccordionItem],
       };
       const result = combineOrgAndReportData(
         testResultObject,
         fhirIndexBundleLab,
       );
       expect(result[0].organizationDisplayDataProps).toBeArray();
-    });
-
-    it("should resolve an idless organization through its URN reference", () => {
-      const bundle = {
-        resourceType: "Bundle",
-        type: "document",
-        entry: [
-          {
-            fullUrl: "urn:uuid:idless-lab-organization",
-            resource: {
-              resourceType: "Organization",
-              name: "Idless Reference Lab",
-            },
-          },
-        ],
-      } as unknown as Bundle;
-      const fhirIndex = getFhirIndex(bundle);
-      const result = combineOrgAndReportData(
-        {
-          "urn:uuid:idless-lab-organization": [{} as AccordionItem],
-        },
-        fhirIndex,
-      );
-
-      expect(result[0].organizationId).toBe("urn:uuid:idless-lab-organization");
       expect(result[0].organizationDisplayDataProps[0].value).toBe(
-        "Idless Reference Lab",
+        "Tatooine Hospital",
       );
     });
   });
@@ -1019,29 +992,37 @@ describe("LabsService tests", () => {
     it("renders Observation-backed labs, specimens, values, and PractitionerRole organizations", () => {
       const result = evaluateLabInfoData(fhirIndexBundleLabObservationsOnly);
 
-      expect(result).toHaveLength(1);
-      expect(result[0].diagnosticReportDataItems).toHaveLength(2);
-      expect(result[0].organizationDisplayDataProps).toEqual([
-        {
-          title: "Lab Performing Name",
-          value: "Example Hospital Laboratory",
-        },
-        {
-          title: "Lab Address",
-          value: "100 Laboratory Way\nExample City, MD 20000",
-        },
-        { title: "Lab Contact", value: "202-555-0100" },
-        { title: "Number of Results", value: 2 },
+      expect(result).toHaveLength(2);
+      expect(result.map(({ organizationId }) => organizationId)).toEqual([
+        "performing-organization-1",
+        "performing-organization-2",
       ]);
+      result.forEach((organizationResult) => {
+        expect(organizationResult.diagnosticReportDataItems).toHaveLength(1);
+        expect(organizationResult.organizationDisplayDataProps).toEqual([
+          {
+            title: "Lab Performing Name",
+            value: "Example Hospital Laboratory",
+          },
+          {
+            title: "Lab Address",
+            value: "100 Laboratory Way\nExample City, MD 20000",
+          },
+          { title: "Lab Contact", value: "202-555-0100" },
+          { title: "Number of Results", value: 1 },
+        ]);
+      });
 
       render(
         <>
-          {result[0].diagnosticReportDataItems.map((item) => (
-            <div key={item.id}>
-              {item.title}
-              {item.content}
-            </div>
-          ))}
+          {result.flatMap(({ diagnosticReportDataItems }) =>
+            diagnosticReportDataItems.map((item) => (
+              <div key={item.id}>
+                {item.title}
+                {item.content}
+              </div>
+            )),
+          )}
         </>,
       );
 
@@ -1089,23 +1070,23 @@ describe("LabsService tests", () => {
         type: "document",
         entry: [
           {
-            fullUrl: "urn:uuid:composition",
             resource: {
               resourceType: "Composition",
+              id: "composition",
               section: [
                 {
                   code: {
                     coding: [{ system: "http://loinc.org", code: "30954-2" }],
                   },
-                  entry: [{ reference: "urn:uuid:cycle-panel" }],
+                  entry: [{ reference: "Observation/cycle-panel" }],
                 },
               ],
             },
           },
           {
-            fullUrl: "urn:uuid:cycle-panel",
             resource: {
               resourceType: "Observation",
+              id: "cycle-panel",
               status: "final",
               category: [
                 {
@@ -1119,17 +1100,17 @@ describe("LabsService tests", () => {
                 },
               ],
               code: { text: "Cycle panel" },
-              hasMember: [{ reference: "urn:uuid:cycle-result" }],
+              hasMember: [{ reference: "Observation/cycle-result" }],
             },
           },
           {
-            fullUrl: "urn:uuid:cycle-result",
             resource: {
               resourceType: "Observation",
+              id: "cycle-result",
               status: "final",
               code: { text: "Cycle result" },
               valueString: "Detected",
-              hasMember: [{ reference: "urn:uuid:cycle-panel" }],
+              hasMember: [{ reference: "Observation/cycle-panel" }],
             },
           },
         ],
@@ -1301,7 +1282,7 @@ describe("LabsService tests", () => {
     // Might be able to remove these tests down the line
     const fhirIndexEmpty: FhirIndex = {
       fhirIndexByType: {},
-      fhirIndexByTypeAndId: {},
+      fhirIndexByReference: {},
     };
     it("getAllLabJsonObjects should return [] when FhirIndex is empty", () => {
       const actual = getAllLabJsonObjects(fhirIndexEmpty);

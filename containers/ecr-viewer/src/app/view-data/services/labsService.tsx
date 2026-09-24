@@ -82,28 +82,9 @@ export interface LabReportElementData {
   };
 }
 
-const getOrganizationByIdOrReference = (
-  fhirIndex: FhirIndex,
-  idOrReference: string,
-): Organization | undefined => {
-  const referencedResource = evaluateReference2<Resource>(
-    fhirIndex,
-    idOrReference,
-  );
-  if (referencedResource?.resourceType === "Organization") {
-    return referencedResource as Organization;
-  }
+export type LabResultSource = DiagnosticReport | Observation;
 
-  return getResourceById<Organization>(
-    fhirIndex,
-    "Organization",
-    idOrReference,
-  );
-};
-
-type LabResultSource = DiagnosticReport | Observation;
-
-interface LabResultGroup {
+export interface LabResultGroup {
   source: LabResultSource;
   observations: Observation[];
 }
@@ -135,10 +116,30 @@ export const evaluateLabInfoData = (
   labReports?: DiagnosticReport[],
   accordionHeadingLevel: HeadingLevel = "h5",
 ): LabReportElementData[] => {
+  return evaluateLabResultGroups(
+    fhirIndex,
+    getLabResultGroups(fhirIndex, labReports),
+    accordionHeadingLevel,
+  );
+};
+
+/**
+ * Renders preselected lab result groups. This allows consumers such as the eCR
+ * summary to filter complete logical result groups without reimplementing lab
+ * discovery or hasMember traversal.
+ * @param fhirIndex - FHIR resources indexed by type & by ID
+ * @param groups - Lab result groups selected for rendering
+ * @param accordionHeadingLevel - Heading level for the lab accordion titles
+ * @returns Lab result elements grouped by performing organization
+ */
+export const evaluateLabResultGroups = (
+  fhirIndex: FhirIndex,
+  groups: LabResultGroup[],
+  accordionHeadingLevel: HeadingLevel = "h5",
+): LabReportElementData[] => {
   // The keys identify logical performing organizations and the values are the
   // report/result accordion items attributed to them.
   const organizationItems: ResultObject = {};
-  const groups = getLabResultGroups(fhirIndex, labReports);
   if (groups.length === 0) return [];
 
   const jsonLabs = getAllLabJsonObjects(fhirIndex);
@@ -213,14 +214,20 @@ export const getObservations = (
   );
 };
 
-const isLaboratoryObservation = (observation: Observation): boolean =>
-  observation.category?.some((category) =>
+const isLaboratoryObservation = (observation: Observation): boolean => {
+  if (!observation.category || observation.category.length === 0) {
+    return true;
+  }
+
+  return observation.category.some((category) =>
     category.coding?.some(
       (coding) =>
-        coding.system === LABORATORY_CATEGORY_SYSTEM &&
+        (coding.system === LABORATORY_CATEGORY_SYSTEM &&
+          coding.code === "laboratory") ||
         coding.code === "laboratory",
     ),
-  ) ?? false;
+  );
+};
 
 const hasRenderableCode = ({ code }: Pick<Observation, "code">): boolean =>
   Boolean(formatCodeableConcept(code));
@@ -796,16 +803,13 @@ export const evaluateOrganismsReportData = (
 const resolveOrganizationReference = (
   fhirIndex: FhirIndex,
   reference?: string,
-): { organization?: Organization; organizationReference?: string } => {
+): Organization | undefined => {
   const performer = evaluateReference2<Resource>(fhirIndex, reference);
   if (performer?.resourceType === "Organization") {
-    return {
-      organization: performer as Organization,
-      organizationReference: reference,
-    };
+    return performer as Organization;
   }
 
-  if (performer?.resourceType !== "PractitionerRole") return {};
+  if (performer?.resourceType !== "PractitionerRole") return undefined;
 
   const organizationReference = (performer as PractitionerRole).organization
     ?.reference;
@@ -815,8 +819,8 @@ const resolveOrganizationReference = (
   );
 
   return organization?.resourceType === "Organization"
-    ? { organization: organization as Organization, organizationReference }
-    : {};
+    ? (organization as Organization)
+    : undefined;
 };
 
 const normalizeOrganizationPart = (value?: string): string =>
@@ -824,34 +828,6 @@ const normalizeOrganizationPart = (value?: string): string =>
 
 const getOrganizationAddressKey = (organization: Organization): string =>
   normalizeOrganizationPart(formatAddress(organization.address?.[0]));
-
-const getOrganizationDetailsKey = (
-  organization: Organization,
-): string | undefined => {
-  const name = normalizeOrganizationPart(organization.name);
-  const address = getOrganizationAddressKey(organization);
-  return name && address ? `${name}|${address}` : undefined;
-};
-
-const getOrganizationGroupKey = (
-  organization?: Organization,
-  organizationReference?: string,
-): string => {
-  if (!organization) return "";
-  if (organization.id) return organization.id;
-
-  const detailsKey = getOrganizationDetailsKey(organization);
-  if (detailsKey) return `organization-details:${detailsKey}`;
-
-  const identifier = organization.identifier?.find(({ value }) =>
-    Boolean(value),
-  );
-  if (identifier?.value) {
-    return `organization-identifier:${identifier.system ?? ""}|${identifier.value}`;
-  }
-
-  return organizationReference ?? "";
-};
 
 const resolveLabOrganization = (
   group: LabResultGroup,
@@ -868,13 +844,8 @@ const resolveLabOrganization = (
     if (!reference || visitedReferences.has(reference)) continue;
     visitedReferences.add(reference);
 
-    const resolved = resolveOrganizationReference(fhirIndex, reference);
-    if (resolved.organization) {
-      return getOrganizationGroupKey(
-        resolved.organization,
-        resolved.organizationReference,
-      );
-    }
+    const organization = resolveOrganizationReference(fhirIndex, reference);
+    if (organization?.id) return organization.id;
   }
 
   return "";
@@ -909,8 +880,7 @@ export const combineOrgAndReportData = (
   fhirIndex: FhirIndex,
 ): LabReportElementData[] => {
   return Object.keys(organizationItems).map((key: string) => {
-    const organizationId =
-      getOrganizationByIdOrReference(fhirIndex, key)?.id ?? key;
+    const organizationId = key;
     const orgData = evaluateLabOrganizationData(
       key,
       fhirIndex,
@@ -921,13 +891,8 @@ export const combineOrgAndReportData = (
     const orgName = (orgData[0].value as string) || undefined;
     const displayOrg = (orgName || "Unknown Organization").trim();
     const subNavTitle = `Lab Results from ${displayOrg}`;
-    const subNavOrganizationId =
-      organizationId.startsWith("organization-") ||
-      organizationId.startsWith("urn:")
-        ? toKebabCase(organizationId)
-        : organizationId;
     const subNavId = `${toKebabCase(subNavTitle)}${
-      subNavOrganizationId ? `-${subNavOrganizationId}` : ""
+      organizationId ? `-${organizationId}` : ""
     }`;
 
     return {
@@ -940,14 +905,14 @@ export const combineOrgAndReportData = (
 };
 
 /**
- * Finds the Organization that matches an ID or exact reference and creates a DisplayDataProps array
- * @param idOrReference - organization logical ID or exact reference
+ * Finds the Organization that matches an ID and creates a DisplayDataProps array
+ * @param organizationId - organization logical ID
  * @param fhirIndex - FHIR resources indexed by type & by ID
  * @param labReportCount - A number representing the amount of lab reports for a specific organization
  * @returns The organization display data as an array
  */
 export const evaluateLabOrganizationData = (
-  idOrReference: string,
+  organizationId: string,
   fhirIndex: FhirIndex,
   labReportCount: number,
 ) => {
@@ -955,11 +920,11 @@ export const evaluateLabOrganizationData = (
     fhirIndex,
     "Organization",
   );
-  let matchingOrg =
-    getOrganizationByIdOrReference(fhirIndex, idOrReference) ??
-    orgMappings.find(
-      (organization) => getOrganizationGroupKey(organization) === idOrReference,
-    );
+  let matchingOrg = getResourceById<Organization>(
+    fhirIndex,
+    "Organization",
+    organizationId,
+  );
   if (matchingOrg) {
     matchingOrg = findIdenticalOrg(orgMappings, matchingOrg);
   }

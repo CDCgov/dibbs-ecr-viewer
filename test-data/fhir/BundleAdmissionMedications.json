@@ -4468,9 +4468,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:",
+      "fullUrl": "urn:uuid:test-practitioner",
       "resource": {
         "resourceType": "Practitioner",
+        "id": "test-practitioner",
         "meta": {
           "profile": [
             "http://hl7.org/fhir/us/core/StructureDefinition/us-core-practitioner"

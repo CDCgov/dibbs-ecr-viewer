@@ -297,47 +297,17 @@ def test_parse_message_success_referenced_resources(
     assert actual_response.json() == expected_reference_response
 
 
-def test_parse_message_resolves_idless_resource_by_full_url(
-    test_reference_schema, reference_bundle
-):
-    bundle = deepcopy(reference_bundle)
-    organization_entry = next(
-        entry
-        for entry in bundle["entry"]
-        if entry.get("resource", {}).get("resourceType") == "Organization"
-    )
-    organization_full_url = "urn:uuid:idu2-jd81-lqpp-172j-nx82"
-    organization_entry["fullUrl"] = organization_full_url
-    organization_entry["resource"].pop("id")
-
-    observation = next(
-        entry["resource"]
-        for entry in bundle["entry"]
-        if entry.get("resource", {}).get("resourceType") == "Observation"
-    )
-    observation["performer"][0]["reference"] = organization_full_url
-
-    request = {
-        "message_format": "fhir",
-        "parsing_schema": test_reference_schema,
-        "message": bundle,
-    }
-    actual_response = client.post("/parse_message", json=request)
-
-    assert actual_response.status_code == 200
-    assert actual_response.json() == expected_reference_response
-
-
-def test_parse_message_resolves_chained_idless_full_url_references():
-    observation_reference = "urn:uuid:observation-1"
-    specimen_reference = "urn:uuid:specimen-1"
+def test_parse_message_resolves_chained_canonical_references():
+    observation_reference = "Observation/observation-1"
+    specimen_reference = "Specimen/specimen-1"
     bundle = {
         "resourceType": "Bundle",
         "entry": [
             {
-                "fullUrl": observation_reference,
+                "fullUrl": "urn:uuid:observation-1",
                 "resource": {
                     "resourceType": "Observation",
+                    "id": "observation-1",
                     "category": {"coding": {"code": "laboratory"}},
                 },
             },
@@ -345,14 +315,16 @@ def test_parse_message_resolves_chained_idless_full_url_references():
                 "fullUrl": "urn:uuid:diagnostic-report-1",
                 "resource": {
                     "resourceType": "DiagnosticReport",
+                    "id": "diagnostic-report-1",
                     "result": [{"reference": observation_reference}],
                     "specimen": [{"reference": specimen_reference}],
                 },
             },
             {
-                "fullUrl": specimen_reference,
+                "fullUrl": "urn:uuid:specimen-1",
                 "resource": {
                     "resourceType": "Specimen",
+                    "id": "specimen-1",
                     "type": {"coding": [{"display": "Blood"}]},
                     "collection": {"collectedDateTime": "2025-01-02"},
                 },

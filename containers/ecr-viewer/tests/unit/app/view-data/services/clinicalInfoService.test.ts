@@ -123,7 +123,9 @@ describe("Render Medications table", () => {
                 code: {
                   coding: [{ code: "10160-0", system: "http://loinc.org" }],
                 },
-                entry: [{ reference: "urn:uuid:medication-with-notes" }],
+                entry: [
+                  { reference: "MedicationStatement/medication-with-notes" },
+                ],
               },
             ],
           },
@@ -132,8 +134,9 @@ describe("Render Medications table", () => {
           fullUrl: "urn:uuid:medication-with-notes",
           resource: {
             resourceType: "MedicationStatement",
+            id: "medication-with-notes",
             status: "active",
-            medicationReference: { reference: "urn:uuid:test-medication" },
+            medicationReference: { reference: "Medication/test-medication" },
             subject: {
               reference: "Patient/example",
             },
@@ -147,6 +150,7 @@ describe("Render Medications table", () => {
           fullUrl: "urn:uuid:test-medication",
           resource: {
             resourceType: "Medication",
+            id: "test-medication",
             code: { text: "Test medication" },
           },
         },
@@ -171,7 +175,7 @@ describe("Render Medications table", () => {
     );
   });
 
-  it("resolves idless plan requests by URN and classifies their resource types", () => {
+  it("resolves plan requests and classifies their resource types", () => {
     const bundle: Bundle = {
       resourceType: "Bundle",
       type: "document",
@@ -179,13 +183,20 @@ describe("Render Medications table", () => {
         {
           resource: {
             resourceType: "CarePlan",
+            id: "care-plan",
             status: "active",
             intent: "plan",
             subject: { reference: "Patient/example" },
             activity: [
-              { reference: { reference: "urn:uuid:planned-procedure" } },
-              { reference: { reference: "urn:uuid:planned-medication" } },
-              { reference: { reference: "urn:uuid:not-a-request" } },
+              {
+                reference: { reference: "ServiceRequest/planned-procedure" },
+              },
+              {
+                reference: {
+                  reference: "MedicationRequest/planned-medication",
+                },
+              },
+              { reference: { reference: "Observation/not-a-request" } },
             ],
           },
         },
@@ -193,26 +204,29 @@ describe("Render Medications table", () => {
           fullUrl: "urn:uuid:planned-procedure",
           resource: {
             resourceType: "ServiceRequest",
+            id: "planned-procedure",
             status: "active",
             intent: "order",
             subject: { reference: "Patient/example" },
-            code: { text: "URN procedure order" },
+            code: { text: "Procedure order" },
           },
         },
         {
           fullUrl: "urn:uuid:planned-medication",
           resource: {
             resourceType: "MedicationRequest",
+            id: "planned-medication",
             status: "active",
             intent: "order",
             subject: { reference: "Patient/example" },
-            medicationCodeableConcept: { text: "URN medication order" },
+            medicationCodeableConcept: { text: "Medication order" },
           },
         },
         {
           fullUrl: "urn:uuid:not-a-request",
           resource: {
             resourceType: "Observation",
+            id: "not-a-request",
             status: "final",
             code: { text: "Wrong plan resource type" },
           },
@@ -228,8 +242,8 @@ describe("Render Medications table", () => {
 
     render(planOfTreatment?.value as ReactElement);
 
-    expect(screen.getByText("URN procedure order")).toBeInTheDocument();
-    expect(screen.getByText("URN medication order")).toBeInTheDocument();
+    expect(screen.getByText("Procedure order")).toBeInTheDocument();
+    expect(screen.getByText("Medication order")).toBeInTheDocument();
     expect(
       screen.queryByText("Wrong plan resource type"),
     ).not.toBeInTheDocument();

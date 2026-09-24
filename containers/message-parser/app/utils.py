@@ -340,7 +340,6 @@ class FhirParser:
         self.response = response
         self.reference_lookup_cache = {}
         self.entry_by_reference = None
-        self.reference_by_resource_identity = None
         self.specimen_references_by_observation = None
 
     def parse(self) -> dict:
@@ -410,13 +409,11 @@ class FhirParser:
 
     def _reference_index(self):
         """
-        Builds indexes for resolving references and identifying Bundle resources.
+        Build an index for resolving canonical Bundle references.
 
-        A reference may match an entry's complete ``fullUrl`` (including a
-        ``urn:uuid``) or the conventional ``ResourceType/id`` form. The reverse
-        index records one complete reference for each resource so optimized
-        chained lookups can retain reference identity instead of reducing it to
-        an ID.
+        Converter-normalized Bundles identify resources and references using
+        ``ResourceType/id``. Index each entry by that complete reference so
+        callers can resolve the entry before evaluating its resource.
 
         :return: A dictionary of Bundle entries keyed by complete references.
         """
@@ -424,7 +421,6 @@ class FhirParser:
             return self.entry_by_reference
 
         self.entry_by_reference = {}
-        self.reference_by_resource_identity = {}
         if not isinstance(self.message, dict):
             return self.entry_by_reference
 
@@ -435,32 +431,16 @@ class FhirParser:
             if not isinstance(resource, dict):
                 continue
 
-            full_url = entry.get("fullUrl")
             resource_type = resource.get("resourceType")
             resource_id = resource.get("id")
-            relative_reference = (
-                f"{resource_type}/{resource_id}"
-                if resource_type and resource_id
-                else None
-            )
-
-            if isinstance(full_url, str) and full_url:
-                self.entry_by_reference[full_url] = entry
-                self.reference_by_resource_identity[id(resource)] = full_url
-            if relative_reference:
-                self.entry_by_reference[relative_reference] = entry
-                self.reference_by_resource_identity.setdefault(
-                    id(resource), relative_reference
-                )
+            if resource_type and resource_id:
+                self.entry_by_reference[f"{resource_type}/{resource_id}"] = entry
 
         return self.entry_by_reference
 
     def _resolve_reference(self, reference):
         """
-        Resolve a complete Bundle reference to its resource.
-
-        Both exact ``entry.fullUrl`` and ``ResourceType/id`` references are
-        supported.
+        Resolve a canonical Bundle reference to its resource.
 
         :param reference: A complete FHIR reference.
         :return: The referenced resource, or ``None`` when it is not in the Bundle.
@@ -471,34 +451,12 @@ class FhirParser:
         return entry.get("resource") if entry else None
 
     def _reference_for_resource(self, resource):
-        """Return a complete Bundle reference for a resource when available."""
-        self._reference_index()
-        reference = self.reference_by_resource_identity.get(id(resource))
-        if reference:
-            return reference
-
-        # fhirpathpy returns copied dictionaries for selected resources, so an
-        # identity lookup is not always possible. Match that copy back to its
-        # Bundle entry before falling back to ResourceType/id.
-        if isinstance(self.message, dict):
-            for entry in self.message.get("entry", []):
-                if isinstance(entry, dict) and entry.get("resource") == resource:
-                    full_url = entry.get("fullUrl")
-                    if isinstance(full_url, str) and full_url:
-                        return full_url
-
+        """Return the canonical reference for a resource when available."""
         resource_type = resource.get("resourceType")
         resource_id = resource.get("id")
         if resource_type and resource_id:
             return f"{resource_type}/{resource_id}"
         return None
-
-    def _reference_key(self, reference):
-        """Return a stable key that treats equivalent reference forms alike."""
-        resource = self._resolve_reference(reference)
-        if resource is not None:
-            return ("resource", id(resource))
-        return ("reference", str(reference))
 
     def _referenced_resource_path(self, fhir_path):
         """
@@ -553,10 +511,7 @@ class FhirParser:
         Specimen references. This index lets specimen fields skip the expensive
         FHIRPath search across DiagnosticReports.
 
-        Equivalent fullUrl and ResourceType/id references resolve to the same
-        Observation key.
-
-        :return: A dictionary keyed by Observation identity or reference.
+        :return: A dictionary keyed by canonical Observation reference.
         """
         if self.specimen_references_by_observation is not None:
             return self.specimen_references_by_observation
@@ -578,8 +533,7 @@ class FhirParser:
                 result_reference = result.get("reference")
                 if not result_reference:
                     continue
-                observation_key = self._reference_key(result_reference)
-                self.specimen_references_by_observation[observation_key].extend(
+                self.specimen_references_by_observation[result_reference].extend(
                     specimen_references
                 )
 
@@ -590,7 +544,7 @@ class FhirParser:
         Extracts values from a nested dictionary/list structure.
 
         The caller passes in the object to inspect, which may be the current Observation or a resource
-        retrieved from an index such as `resource_by_type_and_id`. The accessors
+        retrieved from an index such as `entry_by_reference`. The accessors
         describe the path to walk through that object. For example,
         `["code", "coding", "display"]` walks `Observation.code.coding.display`.
 
@@ -681,8 +635,7 @@ class FhirParser:
             and "DiagnosticReport" in fhir_path
             and ".specimen" in fhir_path
         ):
-            reference_key = self._reference_key(reference)
-            return list(self._specimen_reference_index().get(reference_key, []))
+            return list(self._specimen_reference_index().get(reference, []))
 
         if evaluation_phase != FHIR_PATH_VALUE_PHASE:
             return FAST_LOOKUP_MISS

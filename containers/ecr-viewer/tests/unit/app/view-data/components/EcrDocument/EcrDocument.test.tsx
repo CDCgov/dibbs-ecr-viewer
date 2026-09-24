@@ -152,10 +152,16 @@ describe("Tests for eCR Document", () => {
       ({ title }) => title === "Lab Info",
     );
 
-    expect(labNav?.subNavItems).toHaveLength(1);
-    expect(labNav?.subNavItems[0]).toMatchObject({
-      title: "Lab Results from Example Hospital Laboratory",
-    });
+    expect(labNav?.subNavItems).toEqual([
+      {
+        id: "lab-results-from-example-hospital-laboratory-performing-organization-1",
+        title: "Lab Results from Example Hospital Laboratory",
+      },
+      {
+        id: "lab-results-from-example-hospital-laboratory-performing-organization-2",
+        title: "Lab Results from Example Hospital Laboratory",
+      },
+    ]);
   });
 
   describe("Evaluate Clinical Info", () => {

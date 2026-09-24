@@ -71,6 +71,7 @@ describe("Snapshot tests", () => {
             fullUrl: "urn:uuid:2.16.840.1.113883.9.9.9.9.9",
             resource: {
               resourceType: "Composition",
+              id: "2.16.840.1.113883.9.9.9.9.9",
               date: "2020-11-07T09:44:21-05:00",
               title: "Initial Public Health Case Report",
               section: [

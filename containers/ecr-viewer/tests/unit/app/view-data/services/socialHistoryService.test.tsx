@@ -156,7 +156,7 @@ describe("Evaluate Patient Info: Social History", () => {
   it("should have no available data when there is no data", () => {
     const actual = evaluateSocialData(undefined as any, {
       fhirIndexByType: {},
-      fhirIndexByTypeAndId: {},
+      fhirIndexByReference: {},
     });
 
     expect(actual.availableData).toBeEmpty();

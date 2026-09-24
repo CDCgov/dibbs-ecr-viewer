@@ -849,9 +849,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:",
+      "fullUrl": "urn:uuid:test-care-team",
       "resource": {
         "resourceType": "CareTeam",
+        "id": "test-care-team",
         "subject": {
           "reference": "Patient/94abb041-5989-484a-848c-83012bcbfb3d"
         },
@@ -861,9 +862,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:",
+      "fullUrl": "urn:uuid:test-care-plan",
       "resource": {
         "resourceType": "CarePlan",
+        "id": "test-care-plan",
         "status": "unknown",
         "intent": "proposal",
         "subject": {
@@ -1130,9 +1132,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:",
+      "fullUrl": "urn:uuid:test-observation",
       "resource": {
         "resourceType": "Observation",
+        "id": "test-observation",
         "meta": {
           "profile": [
             "http://hl7.org/fhir/us/core/StructureDefinition/us-core-observationresults"

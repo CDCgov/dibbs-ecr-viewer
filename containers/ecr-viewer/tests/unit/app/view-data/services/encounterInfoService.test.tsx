@@ -50,14 +50,15 @@ describe("Encounter Info service tests", () => {
         expect(actual).toMatchSnapshot();
       });
 
-      it("resolves an idless encounter diagnosis by URN and rejects the wrong resource type", () => {
+      it("resolves an encounter diagnosis and rejects the wrong resource type", () => {
         const encounter = {
           resourceType: "Encounter",
+          id: "encounter",
           status: "finished",
           class: {},
           diagnosis: [
-            { condition: { reference: "urn:uuid:diagnosis-condition" } },
-            { condition: { reference: "urn:uuid:not-a-condition" } },
+            { condition: { reference: "Condition/diagnosis-condition" } },
+            { condition: { reference: "Observation/not-a-condition" } },
           ],
         } as Encounter;
         const bundle: Bundle = {
@@ -68,10 +69,11 @@ describe("Encounter Info service tests", () => {
               fullUrl: "urn:uuid:diagnosis-condition",
               resource: {
                 resourceType: "Condition",
+                id: "diagnosis-condition",
                 clinicalStatus: {
                   coding: [{ code: "active" }],
                 },
-                code: { text: "URN diagnosis" },
+                code: { text: "Diagnosis" },
                 subject: { reference: "Patient/example" },
               },
             },
@@ -79,6 +81,7 @@ describe("Encounter Info service tests", () => {
               fullUrl: "urn:uuid:not-a-condition",
               resource: {
                 resourceType: "Observation",
+                id: "not-a-condition",
                 status: "final",
                 code: { text: "Wrong diagnosis resource type" },
               },
@@ -86,9 +89,7 @@ describe("Encounter Info service tests", () => {
           ],
         };
 
-        expect(evaluateEncounterDiagnosis(bundle, encounter)).toBe(
-          "URN diagnosis",
-        );
+        expect(evaluateEncounterDiagnosis(bundle, encounter)).toBe("Diagnosis");
       });
     });
   });
@@ -351,43 +352,22 @@ describe("Encounter Info service tests", () => {
       ).not.toBeInTheDocument();
     });
 
-    it("resolves idless admission medications by their fullUrl URNs", () => {
-      const urnBundle = JSON.parse(
+    it("resolves admission medications without relying on their fullUrl", () => {
+      const canonicalBundle = JSON.parse(
         JSON.stringify(BundleWithAdmissionMedications),
       ) as Bundle;
-      const medicationReferences = new Map<string, string>();
 
-      urnBundle.entry?.forEach((entry) => {
+      canonicalBundle.entry?.forEach((entry) => {
         if (
           entry.resource?.resourceType === "MedicationAdministration" &&
-          entry.resource.id &&
-          entry.fullUrl
+          entry.resource.id
         ) {
-          medicationReferences.set(
-            `MedicationAdministration/${entry.resource.id}`,
-            entry.fullUrl,
-          );
-          delete entry.resource.id;
+          entry.fullUrl = `https://example.test/ignored/${entry.resource.id}`;
         }
       });
 
-      urnBundle.entry?.forEach((entry) => {
-        if (entry.resource?.resourceType !== "Composition") return;
-
-        entry.resource.section
-          ?.find((section) =>
-            section.code?.coding?.some(({ code }) => code === "42346-7"),
-          )
-          ?.entry?.forEach((reference) => {
-            const fullUrl = reference.reference
-              ? medicationReferences.get(reference.reference)
-              : undefined;
-            if (fullUrl) reference.reference = fullUrl;
-          });
-      });
-
       const admissionMedications = evaluateHospitalEncounterData(
-        urnBundle,
+        canonicalBundle,
       ).availableData.find(({ title }) => title === "Admission Medications");
 
       render(<>{admissionMedications?.value}</>);
@@ -574,6 +554,7 @@ describe("Encounter Info service tests", () => {
       };
       const composition: Composition = {
         resourceType: "Composition",
+        id: "composition-id",
         author: [],
         date: "",
         status: "final",

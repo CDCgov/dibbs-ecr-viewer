@@ -16,7 +16,7 @@ describe("Evaluate Patient Info: Pregnancy Info", () => {
   it("should have no available data when there is no data", () => {
     const actual = evaluatePregnancyData(undefined as any, {
       fhirIndexByType: {},
-      fhirIndexByTypeAndId: {},
+      fhirIndexByReference: {},
     });
 
     expect(actual.availableData).toBeEmpty();
@@ -63,64 +63,55 @@ describe("Evaluate Patient Info: Pregnancy Info", () => {
     };
     const actual = evaluatePregnancyData(pregnancyBundle, {
       fhirIndexByType: {},
-      fhirIndexByTypeAndId: {},
+      fhirIndexByReference: {},
     });
     render(actual.availableData[0].value);
     expect(screen.getAllByText("Pregnancy Status").length).toEqual(1);
   });
 
-  it.each(["urn", "relative"] as const)(
-    "should associate pregnancy outcomes through %s references",
-    (referenceStyle) => {
-      const statusReference =
-        referenceStyle === "relative"
-          ? "Observation/pregnancy-status"
-          : "urn:uuid:pregnancy-status";
-      const pregnancyBundle = {
-        resourceType: "Bundle",
-        type: "document",
-        entry: [
-          {
-            fullUrl: "urn:uuid:pregnancy-status",
-            resource: {
-              resourceType: "Observation",
-              id:
-                referenceStyle === "relative" ? "pregnancy-status" : undefined,
-              status: "final",
-              code: {
-                coding: [{ system: "http://loinc.org", code: "82810-3" }],
-              },
-              valueCodeableConcept: { text: "Pregnant" },
+  it("should associate pregnancy outcomes through canonical references", () => {
+    const pregnancyBundle = {
+      resourceType: "Bundle",
+      type: "document",
+      entry: [
+        {
+          fullUrl: "urn:uuid:pregnancy-status",
+          resource: {
+            resourceType: "Observation",
+            id: "pregnancy-status",
+            status: "final",
+            code: {
+              coding: [{ system: "http://loinc.org", code: "82810-3" }],
             },
+            valueCodeableConcept: { text: "Pregnant" },
           },
-          {
-            fullUrl: "urn:uuid:pregnancy-outcome",
-            resource: {
-              resourceType: "Observation",
-              id:
-                referenceStyle === "relative" ? "pregnancy-outcome" : undefined,
-              status: "final",
-              code: {
-                coding: [{ system: "http://loinc.org", code: "63893-2" }],
-              },
-              valueCodeableConcept: { text: "Live birth outcome" },
-              focus: [{ reference: statusReference }],
+        },
+        {
+          fullUrl: "urn:uuid:pregnancy-outcome",
+          resource: {
+            resourceType: "Observation",
+            id: "pregnancy-outcome",
+            status: "final",
+            code: {
+              coding: [{ system: "http://loinc.org", code: "63893-2" }],
             },
+            valueCodeableConcept: { text: "Live birth outcome" },
+            focus: [{ reference: "Observation/pregnancy-status" }],
           },
-        ],
-      } as unknown as Bundle;
+        },
+      ],
+    } as unknown as Bundle;
 
-      const actual = evaluatePregnancyData(
-        pregnancyBundle,
-        getFhirIndex(pregnancyBundle),
-      );
+    const actual = evaluatePregnancyData(
+      pregnancyBundle,
+      getFhirIndex(pregnancyBundle),
+    );
 
-      render(<PregnancyInfo pregnancyData={actual.availableData} />);
-      expect(screen.getByText("Live birth outcome")).toBeVisible();
-    },
-  );
+    render(<PregnancyInfo pregnancyData={actual.availableData} />);
+    expect(screen.getByText("Live birth outcome")).toBeVisible();
+  });
 
-  it("should resolve URN pregnancy section entries and filter by target type", () => {
+  it("should resolve pregnancy section entries and filter by target type", () => {
     const pregnancyBundle = {
       resourceType: "Bundle",
       type: "document",
@@ -129,6 +120,7 @@ describe("Evaluate Patient Info: Pregnancy Info", () => {
           fullUrl: "urn:uuid:composition",
           resource: {
             resourceType: "Composition",
+            id: "composition",
             status: "final",
             type: { text: "Pregnancy document" },
             date: "2020-01-05",
@@ -140,8 +132,11 @@ describe("Evaluate Patient Info: Pregnancy Info", () => {
                   coding: [{ system: "http://loinc.org", code: "90767-5" }],
                 },
                 entry: [
-                  { reference: "urn:uuid:medication-administration" },
-                  { reference: "urn:uuid:not-medication-administration" },
+                  {
+                    reference:
+                      "MedicationAdministration/medication-administration",
+                  },
+                  { reference: "Observation/not-medication-administration" },
                 ],
               },
             ],
@@ -151,15 +146,17 @@ describe("Evaluate Patient Info: Pregnancy Info", () => {
           fullUrl: "urn:uuid:medication-administration",
           resource: {
             resourceType: "MedicationAdministration",
+            id: "medication-administration",
             status: "completed",
-            medicationReference: { reference: "urn:uuid:medication" },
-            subject: { reference: "urn:uuid:patient" },
+            medicationReference: { reference: "Medication/medication" },
+            subject: { reference: "Patient/patient" },
           },
         },
         {
           fullUrl: "urn:uuid:medication",
           resource: {
             resourceType: "Medication",
+            id: "medication",
             code: { text: "Prenatal vitamin" },
           },
         },
@@ -167,6 +164,7 @@ describe("Evaluate Patient Info: Pregnancy Info", () => {
           fullUrl: "urn:uuid:not-medication-administration",
           resource: {
             resourceType: "Observation",
+            id: "not-medication-administration",
             status: "final",
             code: { text: "Not a medication administration" },
           },
@@ -201,7 +199,7 @@ describe("Evaluate Patient Info: Pregnancy Info", () => {
   it("should display nothing when no pregnancy data is available", () => {
     const actual = evaluatePregnancyData({} as unknown as Bundle, {
       fhirIndexByType: {},
-      fhirIndexByTypeAndId: {},
+      fhirIndexByReference: {},
     });
     expect(actual.availableData).toBeEmpty();
   });
@@ -230,7 +228,7 @@ describe("Evaluate Patient Info: Pregnancy Info", () => {
     };
     const actual = evaluatePregnancyData(pregnancyBundle, {
       fhirIndexByType: {},
-      fhirIndexByTypeAndId: {},
+      fhirIndexByReference: {},
     });
     render(<PregnancyInfo pregnancyData={actual.availableData} />);
     expect(screen.getAllByText("Postpartum Status").length).toEqual(1);
@@ -263,7 +261,7 @@ describe("Evaluate Patient Info: Pregnancy Info", () => {
     };
     const actual = evaluatePregnancyData(pregnancyBundle, {
       fhirIndexByType: {},
-      fhirIndexByTypeAndId: {},
+      fhirIndexByReference: {},
     });
     render(<PregnancyInfo pregnancyData={actual.availableData} />);
     expect(screen.getByText("Last Menstrual Period")).toBeVisible();

@@ -7,25 +7,14 @@ export type FhirIndexByType = {
   [K in ResourceType]?: ResourceWithType<K>[];
 };
 
-export type FhirIndexByTypeAndId = {
-  [K in ResourceType]?: Record<string, ResourceWithType<K>>;
-};
-
 export type FhirIndexByReference = Record<string, Resource>;
 
 export interface FhirIndex {
   fhirIndexByType: FhirIndexByType;
-  fhirIndexByTypeAndId: FhirIndexByTypeAndId;
-  /**
-   * Resources keyed by the exact references that can address them. This
-   * includes Bundle.entry.fullUrl and ResourceType/id when an id is present.
-   * Optional so callers with a hand-built/legacy index can still use the ID
-   * lookup fallback.
-   */
-  fhirIndexByReference?: FhirIndexByReference;
+  /** Resources keyed by their canonical ResourceType/id reference. */
+  fhirIndexByReference: FhirIndexByReference;
 }
 
-const URN_UUID_PREFIX = "urn:uuid:";
 const RELATIVE_REFERENCE_PATTERN =
   /^([A-Z][A-Za-z0-9]*)\/([^/]+)(?:\/_history\/[^/]+)?$/;
 
@@ -42,8 +31,7 @@ const parseRelativeReference = (
 };
 
 /**
- * Returns the resource type declared by a relative FHIR reference. Absolute
- * references and URNs do not declare a resource type and return undefined.
+ * Returns the resource type declared by a relative FHIR reference.
  */
 export const getReferenceResourceType = (
   reference: string,
@@ -55,19 +43,16 @@ export const getReferenceResourceType = (
  *
  * Extracts all resources from a given FHIR bundle and organizes them into maps:
  * 1. `fhirIndexByType` – a map keyed by `resourceType`, with an array of all resources of that type.
- * 2. `fhirIndexByTypeAndId` – a map of resources keyed by `resourceType` and then by `id`.
- * 3. `fhirIndexByReference` – a map keyed by exact fullUrl and ResourceType/id references.
+ * 2. `fhirIndexByReference` – a map keyed by canonical ResourceType/id references.
  *
  * @param fhirBundle - FHIR bundle
  * @returns A `FhirIndex` object containing:
  *   - `fhirIndexByType`: FHIR resources grouped by type as arrays.
- *   - `fhirIndexByTypeAndId`: FHIR resources grouped by type and ID for fast lookup.
- *   - `fhirIndexByReference`: FHIR resources keyed by exact references.
+ *   - `fhirIndexByReference`: FHIR resources keyed by canonical references.
  * The indexes contain empty arrays/objects when no matching resources exist.
  */
 export const getFhirIndex = (fhirBundle: Bundle): FhirIndex => {
   const fhirIndexByType: FhirIndexByType = {};
-  const fhirIndexByTypeAndId: FhirIndexByTypeAndId = {};
   const fhirIndexByReference: FhirIndexByReference = {};
 
   fhirBundle.entry?.forEach((entry) => {
@@ -76,26 +61,19 @@ export const getFhirIndex = (fhirBundle: Bundle): FhirIndex => {
     const resourceId = resource?.id;
 
     if (!resourceType) return;
+    if (!resourceId) {
+      throw new Error(
+        `Cannot index ${resourceType} resource without a canonical id.`,
+      );
+    }
 
-    // Resource.id is optional, so indexing by type must not depend on it.
     fhirIndexByType[resourceType] ??= [];
     fhirIndexByType[resourceType].push(resource);
-
-    if (entry.fullUrl) {
-      fhirIndexByReference[entry.fullUrl] = resource;
-    }
-
-    if (resourceId) {
-      fhirIndexByTypeAndId[resourceType] ??= {};
-      fhirIndexByTypeAndId[resourceType][resourceId] = resource;
-
-      fhirIndexByReference[`${resourceType}/${resourceId}`] = resource;
-    }
+    fhirIndexByReference[`${resourceType}/${resourceId}`] = resource;
   });
 
   return {
     fhirIndexByType,
-    fhirIndexByTypeAndId,
     fhirIndexByReference,
   };
 };
@@ -153,12 +131,8 @@ export function getOneResourceByType<T extends Resource>(
 }
 
 /**
- * Returns a FHIR resource by ID and checks its resource type. If no logical ID
- * match exists, a fullUrl reference (including a `urn:uuid:` plus the ID) is
- * used as a fallback.
+ * Returns a FHIR resource by ID and checks its resource type.
  * Expects only one resource to be returned.
- * NOTE: should only be accessed by evaluateReference2
- *
  * @template T - The expected FHIR Resource type (e.g., Observation, Patient).
  * @param fhirIndex - FHIR resources indexed by type & by ID
  * @param type - The resourceType to retrieve (e.g., "Observation").
@@ -172,43 +146,30 @@ export function getResourceById<T extends Resource>(
   type: T["resourceType"],
   id: string,
 ): T | undefined {
-  const resourceById = fhirIndex.fhirIndexByTypeAndId[type]?.[id];
-  if (resourceById) return resourceById as T;
-
-  const referenceCandidates = [id, `${type}/${id}`];
-  if (!id.startsWith(URN_UUID_PREFIX)) {
-    referenceCandidates.push(`${URN_UUID_PREFIX}${id}`);
-  }
-
-  for (const reference of referenceCandidates) {
-    const resource = fhirIndex.fhirIndexByReference?.[reference];
-    if (resource?.resourceType === type) return resource as T;
-  }
-
-  return undefined;
+  const resource = fhirIndex.fhirIndexByReference[`${type}/${id}`];
+  return resource?.resourceType === type ? (resource as T) : undefined;
 }
 
 /**
- * Resolves either an exact Bundle.entry.fullUrl (including urn:uuid values) or
- * a relative ResourceType/id reference from a FHIR index.
+ * Resolves a canonical or version-specific relative reference from a FHIR index.
  *
- * @param fhirIndex - FHIR resources indexed by type, ID, and reference.
- * @param reference - Exact fullUrl or relative FHIR reference.
+ * @param fhirIndex - FHIR resources indexed by type and canonical reference.
+ * @param reference - Relative ResourceType/id reference, optionally version-specific.
  * @returns The referenced resource, or undefined when no target exists.
  */
 export function getResourceByReference<T extends Resource>(
   fhirIndex: FhirIndex,
   reference: string,
 ): T | undefined {
-  const resourceByExactReference = fhirIndex.fhirIndexByReference?.[reference];
-  if (resourceByExactReference) return resourceByExactReference as T;
+  const resource = fhirIndex.fhirIndexByReference[reference];
+  if (resource) return resource as T;
 
+  // Version-specific references address the same logical resource indexed by
+  // its canonical ResourceType/id reference.
   const relativeReference = parseRelativeReference(reference);
   if (!relativeReference) return undefined;
 
-  return getResourceById<T>(
-    fhirIndex,
-    relativeReference.resourceType as T["resourceType"],
-    relativeReference.id,
-  );
+  return fhirIndex.fhirIndexByReference[
+    `${relativeReference.resourceType}/${relativeReference.id}`
+  ] as T | undefined;
 }

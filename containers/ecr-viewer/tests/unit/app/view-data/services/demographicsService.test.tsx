@@ -53,10 +53,8 @@ describe("Evaluate Patient Info: Demographics", () => {
         fhirIndexByType: {
           Patient: [resource1.resource],
         },
-        fhirIndexByTypeAndId: {
-          Patient: {
-            "1": resource1.resource,
-          },
+        fhirIndexByReference: {
+          "Patient/1": resource1.resource,
         },
       };
       const actual = getPatient(fhirIndexPatient);
@@ -66,7 +64,7 @@ describe("Evaluate Patient Info: Demographics", () => {
     it("should return undefined of no Patient resource exists", () => {
       const fhirIndexEmpty = {
         fhirIndexByType: {},
-        fhirIndexByTypeAndId: {},
+        fhirIndexByReference: {},
       };
       const actual = getPatient(fhirIndexEmpty);
       expect(actual).toEqual(undefined);
@@ -230,6 +228,7 @@ describe("Evaluate Patient Info: Demographics", () => {
           {
             resource: {
               resourceType: "Composition",
+              id: "composition",
               author: [],
               date: "1924-03-01",
               status: "preliminary",
@@ -281,6 +280,7 @@ describe("Evaluate Patient Info: Demographics", () => {
           {
             resource: {
               resourceType: "Composition",
+              id: "composition",
               author: [],
               date: "1924-03-01",
               status: "preliminary",
@@ -335,6 +335,7 @@ describe("Evaluate Patient Info: Demographics", () => {
           {
             resource: {
               resourceType: "Composition",
+              id: "composition",
               author: [],
               date: "1924-03-01",
               status: "preliminary",
@@ -389,6 +390,7 @@ describe("Evaluate Patient Info: Demographics", () => {
           {
             resource: {
               resourceType: "Composition",
+              id: "composition",
               author: [{}],
               date: "1924-03-12",
               status: "final",

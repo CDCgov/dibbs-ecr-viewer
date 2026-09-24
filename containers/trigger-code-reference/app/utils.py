@@ -173,7 +173,7 @@ def read_json_from_assets(filename: str) -> dict:
 
 
 def _entry_reference_index(bundle: dict) -> dict[str, dict]:
-    """Index Bundle entries by exact fullUrl and ResourceType/id reference."""
+    """Index Bundle entries by canonical ResourceType/id reference."""
     entries = {}
     for entry in bundle.get("entry", []):
         if not isinstance(entry, dict):
@@ -181,10 +181,6 @@ def _entry_reference_index(bundle: dict) -> dict[str, dict]:
         resource = entry.get("resource")
         if not isinstance(resource, dict):
             continue
-
-        full_url = entry.get("fullUrl")
-        if isinstance(full_url, str) and full_url:
-            entries[full_url] = entry
 
         resource_type = resource.get("resourceType")
         resource_id = resource.get("id")

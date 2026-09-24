@@ -9,6 +9,7 @@ import _BundleEcrMetadata from "../../../../../../../test-data/fhir/BundleEcrMet
 import _BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
 import _BundlePatient from "../../../../../../../test-data/fhir/BundlePatient.json";
 import _BundleRRConditionValueString from "../../../../../../../test-data/fhir/BundleRRConditionValueString.json";
+import _FhirSample2 from "../../../../../seed-scripts/baseECR/fhir-samples/fhir-sample-2/bundle.json";
 import {
   evaluateEcrSummaryPatient,
   evaluateEcrSummaryEncounter,
@@ -105,87 +106,175 @@ describe("ecrSummaryService Tests", () => {
       expect(actual).toBeEmpty();
     });
 
-    it.each(["urn", "relative"] as const)(
-      "should find condition-linked reports through %s references",
-      (referenceStyle) => {
-        const observationId =
-          referenceStyle === "relative" ? "condition-result" : undefined;
-        const observationReference =
-          referenceStyle === "relative"
-            ? "Observation/condition-result"
-            : "urn:uuid:condition-result";
-        const bundle = {
-          resourceType: "Bundle",
-          type: "document",
-          entry: [
-            {
-              fullUrl: "urn:uuid:direct-report",
-              resource: {
-                resourceType: "DiagnosticReport",
-                id: referenceStyle === "relative" ? "direct-report" : undefined,
-                status: "final",
-                code: { text: "Directly linked report" },
-                extension: [
-                  {
-                    url: "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
-                    valueCoding: { code: "test-snomed" },
-                  },
-                ],
-                result: [{ reference: observationReference }],
-              },
+    it("should find condition-linked reports through canonical references", () => {
+      const bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            fullUrl: "urn:uuid:direct-report",
+            resource: {
+              resourceType: "DiagnosticReport",
+              id: "direct-report",
+              status: "final",
+              code: { text: "Directly linked report" },
+              extension: [
+                {
+                  url: "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+                  valueCoding: { code: "test-snomed" },
+                },
+              ],
+              result: [{ reference: "Observation/condition-result" }],
             },
-            {
-              fullUrl: "urn:uuid:observation-linked-report",
-              resource: {
-                resourceType: "DiagnosticReport",
-                id:
-                  referenceStyle === "relative"
-                    ? "observation-linked-report"
-                    : undefined,
-                status: "final",
-                code: { text: "Observation-linked report" },
-                result: [{ reference: observationReference }],
-              },
+          },
+          {
+            fullUrl: "urn:uuid:observation-linked-report",
+            resource: {
+              resourceType: "DiagnosticReport",
+              id: "observation-linked-report",
+              status: "final",
+              code: { text: "Observation-linked report" },
+              result: [{ reference: "Observation/condition-result" }],
             },
-            {
-              fullUrl: "urn:uuid:condition-result",
-              resource: {
-                resourceType: "Observation",
-                id: observationId,
-                status: "final",
-                code: { text: "Condition-linked result" },
-                valueString: "Detected",
-                extension: [
-                  {
-                    url: "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
-                    valueCoding: { code: "test-snomed" },
-                  },
-                ],
-              },
+          },
+          {
+            fullUrl: "urn:uuid:condition-result",
+            resource: {
+              resourceType: "Observation",
+              id: "condition-result",
+              status: "final",
+              code: { text: "Condition-linked result" },
+              valueString: "Detected",
+              extension: [
+                {
+                  url: "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+                  valueCoding: { code: "test-snomed" },
+                },
+              ],
             },
-          ],
-        } as unknown as Bundle;
+          },
+        ],
+      } as unknown as Bundle;
 
-        const result = evaluateEcrSummaryRelevantLabResults(
-          bundle,
-          getFhirIndex(bundle),
-          "test-snomed",
-        );
+      const result = evaluateEcrSummaryRelevantLabResults(
+        bundle,
+        getFhirIndex(bundle),
+        "test-snomed",
+      );
 
-        expect(result).toHaveLength(3); // 2 results, plus last item is divider line
-        render(
-          <>
-            {result.map((item, index) => (
-              <React.Fragment key={index}>{item.value}</React.Fragment>
-            ))}
-          </>,
-        );
-        expect(screen.getByText("Directly linked report")).toBeInTheDocument();
-        expect(
-          screen.getByText("Observation-linked report"),
-        ).toBeInTheDocument();
-      },
-    );
+      expect(result).toHaveLength(3); // 2 results, plus last item is divider line
+      render(
+        <>
+          {result.map((item, index) => (
+            <React.Fragment key={index}>{item.value}</React.Fragment>
+          ))}
+        </>,
+      );
+      expect(screen.getByText("Directly linked report")).toBeInTheDocument();
+      expect(screen.getByText("Observation-linked report")).toBeInTheDocument();
+    });
+
+    it("renders only condition-linked Observation-backed lab groups", () => {
+      const bundle = {
+        resourceType: "Bundle",
+        type: "document",
+        entry: [
+          {
+            resource: {
+              resourceType: "Composition",
+              id: "composition",
+              status: "final",
+              type: { text: "eICR" },
+              date: "2024-01-01",
+              title: "eICR",
+              section: [
+                {
+                  code: {
+                    coding: [
+                      {
+                        system: "http://loinc.org",
+                        code: "30954-2",
+                      },
+                    ],
+                  },
+                  entry: [
+                    { reference: "Observation/relevant-panel" },
+                    { reference: "Observation/unrelated-result" },
+                  ],
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Observation",
+              id: "relevant-panel",
+              status: "final",
+              category: [{ coding: [{ code: "laboratory" }] }],
+              code: { text: "Relevant panel" },
+              hasMember: [{ reference: "Observation/relevant-result" }],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Observation",
+              id: "relevant-result",
+              status: "final",
+              category: [{ coding: [{ code: "laboratory" }] }],
+              code: { text: "Condition-linked result" },
+              valueString: "Detected",
+              extension: [
+                {
+                  url: "https://reportstream.cdc.gov/fhir/StructureDefinition/condition-code",
+                  valueCoding: { code: "test-snomed" },
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Observation",
+              id: "unrelated-result",
+              status: "final",
+              category: [{ coding: [{ code: "laboratory" }] }],
+              code: { text: "Unrelated lab" },
+              valueString: "Negative",
+            },
+          },
+        ],
+      } as unknown as Bundle;
+
+      const result = evaluateEcrSummaryRelevantLabResults(
+        bundle,
+        getFhirIndex(bundle),
+        "test-snomed",
+      );
+
+      expect(result).toHaveLength(2); // One result plus the final divider.
+      render(result[0].value);
+      expect(screen.getByText("Relevant panel")).toBeInTheDocument();
+      expect(screen.getByText("Condition-linked result")).toBeInTheDocument();
+      expect(screen.queryByText("Unrelated lab")).not.toBeInTheDocument();
+    });
+
+    it("renders a condition-linked root Observation from a native FHIR eICR", () => {
+      const bundle = _FhirSample2 as unknown as Bundle;
+
+      const result = evaluateEcrSummaryRelevantLabResults(
+        bundle,
+        getFhirIndex(bundle),
+        "865929003",
+      );
+
+      expect(result).toHaveLength(2); // One result plus the final divider.
+      render(result[0].value);
+      expect(
+        screen.getByText(
+          "Candida auris qualitative molecular study, axilla, groin, nares",
+        ),
+      ).toBeInTheDocument();
+      expect(screen.queryByText("Anti-B Titer")).not.toBeInTheDocument();
+    });
 
     it("should return the correct lab result(s) when the provided SNOMED code matches", () => {
       const result = evaluateEcrSummaryRelevantLabResults(
@@ -318,6 +407,7 @@ describe("ecrSummaryService Tests", () => {
             fullUrl: "urn:uuid:6689c3f5-f256-9c28-bd98-89905630f28d",
             resource: {
               resourceType: "Immunization",
+              id: "6689c3f5-f256-9c28-bd98-89905630f28d",
               vaccineCode: {
                 coding: [
                   {

@@ -6,6 +6,7 @@
       "fullUrl": "urn:uuid:composition",
       "resource": {
         "resourceType": "Composition",
+        "id": "composition",
         "status": "final",
         "type": {
           "coding": [
@@ -16,12 +17,12 @@
           ]
         },
         "subject": {
-          "reference": "urn:uuid:patient"
+          "reference": "Patient/patient"
         },
         "date": "2026-06-10T14:00:45.000Z",
         "author": [
           {
-            "reference": "urn:uuid:device"
+            "reference": "Device/device"
           }
         ],
         "title": "Observation-backed labs",
@@ -38,16 +39,16 @@
             },
             "entry": [
               {
-                "reference": "urn:uuid:panel-observation"
+                "reference": "Observation/panel-observation"
               },
               {
-                "reference": "urn:uuid:direct-observation"
+                "reference": "Observation/direct-observation"
               },
               {
-                "reference": "urn:uuid:no-test-observation"
+                "reference": "Observation/no-test-observation"
               },
               {
-                "reference": "urn:uuid:unrelated-observation"
+                "reference": "Observation/unrelated-observation"
               },
               {
                 "reference": "urn:uuid:missing-observation"
@@ -60,19 +61,22 @@
     {
       "fullUrl": "urn:uuid:patient",
       "resource": {
-        "resourceType": "Patient"
+        "resourceType": "Patient",
+        "id": "patient"
       }
     },
     {
       "fullUrl": "urn:uuid:device",
       "resource": {
-        "resourceType": "Device"
+        "resourceType": "Device",
+        "id": "device"
       }
     },
     {
       "fullUrl": "urn:uuid:panel-observation",
       "resource": {
         "resourceType": "Observation",
+        "id": "panel-observation",
         "status": "final",
         "category": [
           {
@@ -88,15 +92,15 @@
           "text": "Panel laboratory study"
         },
         "subject": {
-          "reference": "urn:uuid:patient"
+          "reference": "Patient/patient"
         },
         "effectiveDateTime": "2026-06-10T13:59:00.000Z",
         "hasMember": [
           {
-            "reference": "urn:uuid:panel-result"
+            "reference": "Observation/panel-result"
           },
           {
-            "reference": "urn:uuid:panel-interpretation"
+            "reference": "Observation/panel-interpretation"
           },
           {
             "reference": "urn:uuid:missing-member"
@@ -104,7 +108,7 @@
         ],
         "performer": [
           {
-            "reference": "urn:uuid:performing-organization-1"
+            "reference": "Organization/performing-organization-1"
           }
         ]
       }
@@ -113,16 +117,17 @@
       "fullUrl": "urn:uuid:panel-result",
       "resource": {
         "resourceType": "Observation",
+        "id": "panel-result",
         "status": "final",
         "code": {
           "text": "Panel component"
         },
         "subject": {
-          "reference": "urn:uuid:patient"
+          "reference": "Patient/patient"
         },
         "effectiveDateTime": "2026-06-10T14:00:00.000Z",
         "specimen": {
-          "reference": "urn:uuid:blood-specimen"
+          "reference": "Specimen/blood-specimen"
         },
         "valueString": "Positive",
         "interpretation": [
@@ -150,6 +155,7 @@
       "fullUrl": "urn:uuid:panel-interpretation",
       "resource": {
         "resourceType": "Observation",
+        "id": "panel-interpretation",
         "status": "final",
         "code": {
           "coding": [
@@ -161,7 +167,7 @@
           ]
         },
         "subject": {
-          "reference": "urn:uuid:patient"
+          "reference": "Patient/patient"
         },
         "effectiveDateTime": "2026-06-10T14:00:00.000Z",
         "valueString": "Abnormal"
@@ -171,6 +177,7 @@
       "fullUrl": "urn:uuid:direct-observation",
       "resource": {
         "resourceType": "Observation",
+        "id": "direct-observation",
         "status": "final",
         "category": [
           {
@@ -192,7 +199,7 @@
           "text": "Direct laboratory result"
         },
         "subject": {
-          "reference": "urn:uuid:patient"
+          "reference": "Patient/patient"
         },
         "effectiveDateTime": "2026-06-11T13:59:00.000Z",
         "valueCodeableConcept": {
@@ -221,11 +228,11 @@
           }
         ],
         "specimen": {
-          "reference": "urn:uuid:swab-specimen"
+          "reference": "Specimen/swab-specimen"
         },
         "performer": [
           {
-            "reference": "urn:uuid:performer-role"
+            "reference": "PractitionerRole/performer-role"
           }
         ]
       }
@@ -234,6 +241,7 @@
       "fullUrl": "urn:uuid:no-test-observation",
       "resource": {
         "resourceType": "Observation",
+        "id": "no-test-observation",
         "status": "final",
         "category": [
           {
@@ -254,7 +262,7 @@
           ]
         },
         "subject": {
-          "reference": "urn:uuid:patient"
+          "reference": "Patient/patient"
         },
         "valueQuantity": {
           "extension": [
@@ -270,6 +278,7 @@
       "fullUrl": "urn:uuid:unrelated-observation",
       "resource": {
         "resourceType": "Observation",
+        "id": "unrelated-observation",
         "status": "final",
         "category": [
           {
@@ -285,7 +294,7 @@
           "text": "Unrelated observation"
         },
         "subject": {
-          "reference": "urn:uuid:patient"
+          "reference": "Patient/patient"
         },
         "valueString": "Do not display"
       }
@@ -294,12 +303,13 @@
       "fullUrl": "urn:uuid:blood-specimen",
       "resource": {
         "resourceType": "Specimen",
+        "id": "blood-specimen",
         "status": "available",
         "type": {
           "text": "Blood"
         },
         "subject": {
-          "reference": "urn:uuid:patient"
+          "reference": "Patient/patient"
         },
         "receivedTime": "2026-06-10T13:59:00.000Z",
         "collection": {
@@ -314,12 +324,13 @@
       "fullUrl": "urn:uuid:swab-specimen",
       "resource": {
         "resourceType": "Specimen",
+        "id": "swab-specimen",
         "status": "available",
         "type": {
           "text": "Swab"
         },
         "subject": {
-          "reference": "urn:uuid:patient"
+          "reference": "Patient/patient"
         },
         "receivedTime": "2026-06-11T13:59:00.000Z",
         "collection": {
@@ -334,6 +345,7 @@
       "fullUrl": "urn:uuid:performing-organization-1",
       "resource": {
         "resourceType": "Organization",
+        "id": "performing-organization-1",
         "identifier": [
           {
             "system": "urn:oid:2.16.840.1.113883.4.7",
@@ -355,8 +367,9 @@
       "fullUrl": "urn:uuid:performer-role",
       "resource": {
         "resourceType": "PractitionerRole",
+        "id": "performer-role",
         "organization": {
-          "reference": "urn:uuid:performing-organization-2"
+          "reference": "Organization/performing-organization-2"
         }
       }
     },
@@ -364,6 +377,7 @@
       "fullUrl": "urn:uuid:performing-organization-2",
       "resource": {
         "resourceType": "Organization",
+        "id": "performing-organization-2",
         "name": "Example Hospital Laboratory",
         "telecom": [
           {

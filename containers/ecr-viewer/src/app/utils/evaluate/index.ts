@@ -326,12 +326,11 @@ const isFhirDateTime = (str: string): boolean => {
 };
 
 /**
- * Evaluates a relative reference or exact Bundle.entry.fullUrl in a FHIR
- * bundle. For relative references, the declared resource type is checked
- * against the resolved resource at runtime.
+ * Evaluates a relative ResourceType/id reference in a FHIR bundle. The
+ * declared resource type is checked against the resolved resource at runtime.
  *
  * @param fhirData - The FHIR Bundle containing the referenced resource.
- * @param ref - A reference string (e.g., "Patient/123" or "urn:uuid:...").
+ * @param ref - A relative reference string (e.g., "Patient/123").
  * @returns The FHIR Resource or undefined if not found.
  */
 export const evaluateReference = <T extends Resource>(
@@ -359,12 +358,11 @@ export const evaluateReference = <T extends Resource>(
 };
 
 /**
- * Evaluates a relative reference or exact Bundle.entry.fullUrl from a FHIR
- * index. For relative references, the declared resource type is checked
- * against the resolved resource at runtime.
+ * Evaluates a relative ResourceType/id reference from a FHIR index. The
+ * declared resource type is checked against the resolved resource at runtime.
  *
  * @param fhirIndex - FHIR resources indexed by type & by ID
- * @param ref - A reference string (e.g., "Patient/123" or "urn:uuid:...").
+ * @param ref - A relative reference string (e.g., "Patient/123").
  * @returns The FHIR Resource or undefined if not found.
  */
 // TODO: Eventually want this to replace evaluateReference completely
@@ -440,8 +438,8 @@ export const isResourceType = <T extends Resource>(
 
 /**
  * Resolves references and keeps only targets of the requested resource type.
- * Type validation happens after resolution so references without an encoded
- * type, including urn:uuid fullUrl references, are supported.
+ * Runtime type validation happens after resolution instead of trusting the
+ * resource type encoded in the reference string.
  */
 export const resolveReferencesByResourceType = <T extends Resource>(
   fhirData: FhirData,
@@ -457,9 +455,8 @@ export const resolveReferencesByResourceType = <T extends Resource>(
 
 /**
  * Evaluates references, resolves their targets, and keeps only resources of
- * the requested type. Unlike filtering the reference string, this also works
- * for references whose type is not encoded in the value, such as urn:uuid
- * Bundle.entry.fullUrl references.
+ * the requested type. Runtime type validation happens after resolution instead
+ * of trusting the resource type encoded in the reference string.
  *
  * @param fhirData - The FHIR resource containing the references.
  * @param pathToRef - A FHIRPath mapping that returns references.

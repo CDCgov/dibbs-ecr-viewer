@@ -39,21 +39,9 @@ const fhirIndexBundleSample = {
     Composition: [resource1.resource],
     Observation: [resource2.resource, resource3.resource],
   },
-  fhirIndexByTypeAndId: {
-    Composition: {
-      "1": resource1.resource,
-    },
-    Observation: {
-      "2": resource2.resource,
-      "3": resource3.resource,
-    },
-  },
   fhirIndexByReference: {
-    "urn:uuid:1": resource1.resource,
     "Composition/1": resource1.resource,
-    "urn:uuid:observation-full-url": resource2.resource,
     "Observation/2": resource2.resource,
-    "urn:uuid:3": resource3.resource,
     "Observation/3": resource3.resource,
   },
 };
@@ -70,12 +58,11 @@ describe("fhirResourcesIndexService Tests", () => {
       const actual = getFhirIndex(bundleEmpty);
       const expected = {
         fhirIndexByType: {},
-        fhirIndexByTypeAndId: {},
         fhirIndexByReference: {},
       };
       expect(actual).toEqual(expected);
     });
-    it("Indexes a resource by type and fullUrl when it has no id", () => {
+    it("fails when a typed resource has no canonical id", () => {
       const resourceNoId = {
         fullUrl: "urn:uuid:no-id",
         resource: {
@@ -87,38 +74,9 @@ describe("fhirResourcesIndexService Tests", () => {
         entry: [...(BundleSample.entry ?? []), resourceNoId],
       } as Bundle;
 
-      const actual = getFhirIndex(bundleWithResourceNoId);
-      expect(getResourcesByType<Observation>(actual, "Observation")).toEqual([
-        resource2.resource,
-        resource3.resource,
-        resourceNoId.resource,
-      ]);
-      expect(actual.fhirIndexByReference?.["urn:uuid:no-id"]).toEqual(
-        resourceNoId.resource,
+      expect(() => getFhirIndex(bundleWithResourceNoId)).toThrow(
+        "Cannot index Observation resource without a canonical id.",
       );
-      expect(
-        getResourceById<Observation>(actual, "Observation", "no-id"),
-      ).toEqual(resourceNoId.resource);
-    });
-    it("Indexes a typed resource without an id or fullUrl by type only", () => {
-      const resourceWithoutIdentity = {
-        resource: {
-          resourceType: "Observation",
-        },
-      };
-      const bundle = {
-        ...BundleSample,
-        entry: [...(BundleSample.entry ?? []), resourceWithoutIdentity],
-      } as Bundle;
-
-      const actual = getFhirIndex(bundle);
-
-      expect(getResourcesByType<Observation>(actual, "Observation")).toContain(
-        resourceWithoutIdentity.resource,
-      );
-      expect(
-        getResourceByReference<Observation>(actual, "urn:uuid:not-present"),
-      ).toBeUndefined();
     });
     it("Does not index resources with no resourceType", () => {
       // Note: this should not be possible. Adding test for safeguarding anyways
@@ -157,7 +115,7 @@ describe("fhirResourcesIndexService Tests", () => {
     it("Returns an empty array when FHIR index is empty", () => {
       const fhirIndexEmpty: FhirIndex = {
         fhirIndexByType: {},
-        fhirIndexByTypeAndId: {},
+        fhirIndexByReference: {},
       };
       const actual = getResourcesByType<Patient>(fhirIndexEmpty, "Patient");
       expect(actual).toEqual([]);
@@ -212,21 +170,13 @@ describe("fhirResourcesIndexService Tests", () => {
     it("Returns undefined if when FHIR index is empty", () => {
       const fhirIndexEmpty: FhirIndex = {
         fhirIndexByType: {},
-        fhirIndexByTypeAndId: {},
+        fhirIndexByReference: {},
       };
       const actual = getResourceById<Patient>(fhirIndexEmpty, "Patient", "1");
       expect(actual).toEqual(undefined);
     });
   });
   describe("getResourceByReference Tests", () => {
-    it("Returns a resource for an exact fullUrl reference", () => {
-      const actual = getResourceByReference<Observation>(
-        fhirIndexBundleSample,
-        "urn:uuid:observation-full-url",
-      );
-
-      expect(actual).toEqual(resource2.resource);
-    });
     it("Returns a resource for a relative reference", () => {
       const actual = getResourceByReference<Observation>(
         fhirIndexBundleSample,
@@ -235,10 +185,18 @@ describe("fhirResourcesIndexService Tests", () => {
 
       expect(actual).toEqual(resource2.resource);
     });
-    it("Returns undefined for a dangling URN reference", () => {
+    it("Returns a resource for a version-specific relative reference", () => {
       const actual = getResourceByReference<Observation>(
         fhirIndexBundleSample,
-        "urn:uuid:not-present",
+        "Observation/2/_history/7",
+      );
+
+      expect(actual).toEqual(resource2.resource);
+    });
+    it("Returns undefined for a non-canonical reference", () => {
+      const actual = getResourceByReference<Observation>(
+        fhirIndexBundleSample,
+        "urn:uuid:observation-full-url",
       );
 
       expect(actual).toBeUndefined();

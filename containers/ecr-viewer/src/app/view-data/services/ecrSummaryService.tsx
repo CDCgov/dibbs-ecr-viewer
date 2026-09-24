@@ -3,13 +3,11 @@ import React from "react";
 import {
   Bundle,
   Condition,
-  DiagnosticReport,
   DomainResource,
   Encounter,
   Observation,
   Organization,
   Patient,
-  Resource,
 } from "fhir/r4";
 
 import {
@@ -29,8 +27,6 @@ import {
   evaluateOne,
   evaluateOneReference,
   evaluateReference,
-  evaluateReference2,
-  isResourceType,
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toTitleCase } from "@/app/utils/format-utils";
@@ -56,9 +52,9 @@ import {
   evaluatePatientDOB,
   evaluatePatientVitalStatus,
 } from "@/app/view-data/services/demographicsService";
-import { evaluateLabInfoData } from "./labsService";
+import { evaluateLabResultGroups, getLabResultGroups } from "./labsService";
 import { getReportabilityRulesReasons } from "./reportabilityService";
-import { FhirIndex, getResourcesByType } from "./fhirResourcesIndexService";
+import { FhirIndex } from "./fhirResourcesIndexService";
 
 /**
  * Evaluates and retrieves patient details from the FHIR bundle using the provided path mappings.
@@ -343,48 +339,18 @@ export const evaluateEcrSummaryRelevantLabResults = (
     return [];
   }
 
-  const labReports = getResourcesByType<DiagnosticReport>(
-    fhirIndex,
-    "DiagnosticReport",
-  );
-  const labsWithCode = getRelevantResources(labReports, snomedCode);
-  const labsWithCodeSet = new Set(labsWithCode);
-
-  const observationsList = getResourcesByType<Observation>(
-    fhirIndex,
-    "Observation",
-  );
-  const relevantObservations = new Set(
-    getRelevantResources(observationsList, snomedCode),
+  const relevantLabGroups = getLabResultGroups(fhirIndex).filter(
+    (group) =>
+      getRelevantResources([group.source, ...group.observations], snomedCode)
+        .length > 0,
   );
 
-  const labsFromObsWithCode = labReports.filter((lab) => {
-    // already accounted for - skip
-    if (labsWithCodeSet.has(lab)) {
-      return false;
-    }
-
-    return lab.result?.some((result) => {
-      const resource = evaluateReference2<Resource>(
-        fhirIndex,
-        result.reference,
-      );
-
-      return (
-        isResourceType<Observation>(resource, "Observation") &&
-        relevantObservations.has(resource)
-      );
-    });
-  });
-
-  const relevantLabs = labsWithCode.concat(labsFromObsWithCode);
-
-  if (relevantLabs.length === 0) {
+  if (relevantLabGroups.length === 0) {
     return [];
   }
-  const relevantLabElements = evaluateLabInfoData(
+  const relevantLabElements = evaluateLabResultGroups(
     fhirIndex,
-    relevantLabs,
+    relevantLabGroups,
     "h4",
   );
 

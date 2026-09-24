@@ -13,10 +13,7 @@ import {
   evaluateValue,
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
-import {
-  FhirIndex,
-  getFhirIndex,
-} from "@/app/view-data/services/fhirResourcesIndexService";
+import { FhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
 describe("evaluate", () => {
   let fhirPathEvaluateSpy: jest.SpyInstance;
@@ -377,23 +374,23 @@ describe("Evaluate Reference", () => {
     expect(actual?.id).toEqual("99999999-4p89-4b96-b6ab-c46406839cea");
     expect(actual?.resourceType).toEqual("Patient");
   });
-  it("should return a resource without an id using its exact fullUrl", () => {
+  it("should return a resource using a canonical Reference object", () => {
     const resource = {
       resourceType: "Observation",
+      id: "observation-1",
       status: "final",
       code: {},
     } as Observation;
     const bundle = {
       resourceType: "Bundle",
       type: "document",
-      entry: [{ fullUrl: "urn:uuid:observation-without-id", resource }],
+      entry: [{ fullUrl: "urn:uuid:observation-1", resource }],
     } as Bundle;
     const consoleSpy = jest.spyOn(console, "error");
 
-    const actual = evaluateReference<Observation>(
-      bundle,
-      "urn:uuid:observation-without-id",
-    );
+    const actual = evaluateReference<Observation>(bundle, {
+      reference: "Observation/observation-1",
+    });
 
     expect(actual).toBe(resource);
     expect(consoleSpy).not.toHaveBeenCalled();
@@ -402,14 +399,16 @@ describe("Evaluate Reference", () => {
 });
 
 describe("Evaluate references by resource type", () => {
-  it("resolves URN references before filtering by resource type", () => {
+  it("resolves references before filtering by resource type", () => {
     const observation = {
       resourceType: "Observation",
+      id: "procedure-observation",
       status: "final",
       code: { text: "Expected procedure observation" },
     } as Observation;
     const patient = {
       resourceType: "Patient",
+      id: "wrong-resource-type",
       name: [{ text: "Wrong resource type" }],
     } as Patient;
     const bundle = {
@@ -419,6 +418,7 @@ describe("Evaluate references by resource type", () => {
         {
           resource: {
             resourceType: "Composition",
+            id: "composition",
             status: "final",
             type: {},
             date: "2026-01-01",
@@ -428,8 +428,8 @@ describe("Evaluate references by resource type", () => {
               {
                 code: { coding: [{ code: "47519-4" }] },
                 entry: [
-                  { reference: "urn:uuid:procedure-observation" },
-                  { reference: "urn:uuid:wrong-resource-type" },
+                  { reference: "Observation/procedure-observation" },
+                  { reference: "Patient/wrong-resource-type" },
                 ],
               },
             ],
@@ -475,28 +475,11 @@ describe("Evaluate Reference 2", () => {
     fhirIndexByType: {
       Observation: [resource1.resource, resource2.resource],
     },
-    fhirIndexByTypeAndId: {
-      Observation: {
-        "1": resource1.resource,
-        "2": resource2.resource,
-      },
+    fhirIndexByReference: {
+      "Observation/1": resource1.resource,
+      "Observation/2": resource2.resource,
     },
   };
-  const resourceWithoutId = {
-    resourceType: "Observation",
-    status: "final",
-    code: {},
-  } as Observation;
-  const fhirIndexBundleWithUrn = getFhirIndex({
-    resourceType: "Bundle",
-    type: "document",
-    entry: [
-      {
-        fullUrl: "urn:uuid:observation-without-id",
-        resource: resourceWithoutId,
-      },
-    ],
-  });
 
   it("should return undefined if resource not found", () => {
     const actual = evaluateReference2<Observation>(
@@ -515,21 +498,21 @@ describe("Evaluate Reference 2", () => {
     expect(actual?.id).toEqual("2");
     expect(actual?.resourceType).toEqual("Observation");
   });
-  it("should return a resource without an id using a URN Reference object", () => {
+  it("should return a resource using a canonical Reference object", () => {
     const consoleSpy = jest.spyOn(console, "error");
 
-    const actual = evaluateReference2<Observation>(fhirIndexBundleWithUrn, {
-      reference: "urn:uuid:observation-without-id",
+    const actual = evaluateReference2<Observation>(fhirIndexBundleSample, {
+      reference: "Observation/2",
     });
 
-    expect(actual).toBe(resourceWithoutId);
+    expect(actual).toBe(resource2.resource);
     expect(consoleSpy).not.toHaveBeenCalled();
     consoleSpy.mockRestore();
   });
-  it("should return undefined for a dangling URN reference", () => {
+  it("should return undefined for a dangling canonical reference", () => {
     const actual = evaluateReference2<Observation>(
-      fhirIndexBundleWithUrn,
-      "urn:uuid:not-present",
+      fhirIndexBundleSample,
+      "Observation/not-present",
     );
 
     expect(actual).toBeUndefined();
@@ -542,10 +525,8 @@ describe("Evaluate Reference 2", () => {
       fhirIndexByType: {
         Patient: [resource1.resource], // Resource 1 = Observation
       },
-      fhirIndexByTypeAndId: {
-        Patient: {
-          "1": resource1.resource,
-        },
+      fhirIndexByReference: {
+        "Patient/1": resource1.resource,
       },
     };
     evaluateReference2<Patient>(fhirIndexMismatch, "Patient/1");

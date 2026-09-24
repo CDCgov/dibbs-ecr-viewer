@@ -298,7 +298,7 @@ describe("Evaluate Ecr Metadata", () => {
       },
     ]);
   });
-  it("should resolve a PractitionerRole author through URN fullUrl references", () => {
+  it("should resolve a PractitionerRole author and exclude Device authors", () => {
     const bundle = {
       resourceType: "Bundle",
       type: "document",
@@ -307,13 +307,14 @@ describe("Evaluate Ecr Metadata", () => {
           fullUrl: "urn:uuid:composition",
           resource: {
             resourceType: "Composition",
+            id: "composition",
             status: "final",
             type: {},
             date: "2000-02-04T09:01:22-05:00",
-            title: "URN author test",
+            title: "Author test",
             author: [
-              { reference: "urn:uuid:author-role" },
-              { reference: "urn:uuid:author-device" },
+              { reference: "PractitionerRole/author-role" },
+              { reference: "Device/author-device" },
             ],
           },
         },
@@ -321,14 +322,16 @@ describe("Evaluate Ecr Metadata", () => {
           fullUrl: "urn:uuid:author-role",
           resource: {
             resourceType: "PractitionerRole",
-            practitioner: { reference: "urn:uuid:author-practitioner" },
-            organization: { reference: "urn:uuid:author-organization" },
+            id: "author-role",
+            practitioner: { reference: "Practitioner/author-practitioner" },
+            organization: { reference: "Organization/author-organization" },
           },
         },
         {
           fullUrl: "urn:uuid:author-practitioner",
           resource: {
             resourceType: "Practitioner",
+            id: "author-practitioner",
             name: [{ given: ["Leia"], family: "Organa" }],
           },
         },
@@ -336,6 +339,7 @@ describe("Evaluate Ecr Metadata", () => {
           fullUrl: "urn:uuid:author-organization",
           resource: {
             resourceType: "Organization",
+            id: "author-organization",
             name: "Alderaan Medical Center",
           },
         },
@@ -343,6 +347,7 @@ describe("Evaluate Ecr Metadata", () => {
           fullUrl: "urn:uuid:author-device",
           resource: {
             resourceType: "Device",
+            id: "author-device",
           },
         },
       ],
