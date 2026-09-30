@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`LabInfo when labResults is DisplayDataProps[] should match snapshot test 1`] = `
+exports[`LabInfo when labResults contains reports without narrative IDs should match snapshot test 1`] = `
 <div>
   <div
     class="margin-top-0"

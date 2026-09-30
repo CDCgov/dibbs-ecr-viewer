@@ -172,9 +172,9 @@ def read_json_from_assets(filename: str) -> dict:
     return json.load(open(Path(__file__).parent.parent / "assets" / filename))
 
 
-def _entry_reference_index(bundle: dict) -> dict[str, dict]:
-    """Index Bundle entries by canonical ResourceType/id reference."""
-    entries = {}
+def _resource_reference_index(bundle: dict) -> dict[str, dict]:
+    """Index Bundle resources by canonical ResourceType/id reference."""
+    resources = {}
     for entry in bundle.get("entry", []):
         if not isinstance(entry, dict):
             continue
@@ -185,9 +185,9 @@ def _entry_reference_index(bundle: dict) -> dict[str, dict]:
         resource_type = resource.get("resourceType")
         resource_id = resource.get("id")
         if resource_type and resource_id:
-            entries[f"{resource_type}/{resource_id}"] = entry
+            resources[f"{resource_type}/{resource_id}"] = resource
 
-    return entries
+    return resources
 
 
 def find_conditions(bundle: dict) -> set[str]:
@@ -202,14 +202,13 @@ def find_conditions(bundle: dict) -> set[str]:
         "Bundle.entry.resource.where(resourceType='Composition').section.where(title = 'Reportability Response Information Section').entry"
     )
     trigger_entries = path_to_reportability_response_info_section(bundle)
-    entries_by_reference = _entry_reference_index(bundle)
+    resources_by_reference = _resource_reference_index(bundle)
     codes = set()
     for trigger_entry in trigger_entries:
         reference = trigger_entry.get("reference")
-        referenced_entry = entries_by_reference.get(reference)
-        if referenced_entry is None:
+        resource = resources_by_reference.get(reference)
+        if resource is None:
             continue
-        resource = referenced_entry["resource"]
 
         for coding in resource.get("valueCodeableConcept", {}).get("coding", []):
             if coding.get("system") == "http://snomed.info/sct" and coding.get("code"):

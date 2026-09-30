@@ -88,7 +88,6 @@ describe("ecrSummaryService Tests", () => {
   describe("Evaluate eCR Summary Relevant Lab Results", () => {
     it("should return an empty list when no SNOMED code is provided", () => {
       const actual = evaluateEcrSummaryRelevantLabResults(
-        BundleLab,
         fhirIndexBundleLab,
         "",
       );
@@ -96,9 +95,8 @@ describe("ecrSummaryService Tests", () => {
       expect(actual).toBeEmpty();
     });
 
-    it("should return 'No Data' string when the provided SNOMED code has no matches", () => {
+    it("returns an empty list when the provided SNOMED code has no matches", () => {
       const actual = evaluateEcrSummaryRelevantLabResults(
-        BundleLab,
         fhirIndexBundleLab,
         "invalid-snomed-code",
       );
@@ -112,7 +110,6 @@ describe("ecrSummaryService Tests", () => {
         type: "document",
         entry: [
           {
-            fullUrl: "urn:uuid:direct-report",
             resource: {
               resourceType: "DiagnosticReport",
               id: "direct-report",
@@ -128,7 +125,6 @@ describe("ecrSummaryService Tests", () => {
             },
           },
           {
-            fullUrl: "urn:uuid:observation-linked-report",
             resource: {
               resourceType: "DiagnosticReport",
               id: "observation-linked-report",
@@ -138,7 +134,6 @@ describe("ecrSummaryService Tests", () => {
             },
           },
           {
-            fullUrl: "urn:uuid:condition-result",
             resource: {
               resourceType: "Observation",
               id: "condition-result",
@@ -157,7 +152,6 @@ describe("ecrSummaryService Tests", () => {
       } as unknown as Bundle;
 
       const result = evaluateEcrSummaryRelevantLabResults(
-        bundle,
         getFhirIndex(bundle),
         "test-snomed",
       );
@@ -245,7 +239,6 @@ describe("ecrSummaryService Tests", () => {
       } as unknown as Bundle;
 
       const result = evaluateEcrSummaryRelevantLabResults(
-        bundle,
         getFhirIndex(bundle),
         "test-snomed",
       );
@@ -261,7 +254,6 @@ describe("ecrSummaryService Tests", () => {
       const bundle = _FhirSample2 as unknown as Bundle;
 
       const result = evaluateEcrSummaryRelevantLabResults(
-        bundle,
         getFhirIndex(bundle),
         "865929003",
       );
@@ -278,7 +270,6 @@ describe("ecrSummaryService Tests", () => {
 
     it("should return the correct lab result(s) when the provided SNOMED code matches", () => {
       const result = evaluateEcrSummaryRelevantLabResults(
-        BundleLab,
         fhirIndexBundleLab,
         "test-snomed",
       );
@@ -299,7 +290,6 @@ describe("ecrSummaryService Tests", () => {
 
     it("should not include the last empty divider line when lastDividerLine is false", () => {
       const result = evaluateEcrSummaryRelevantLabResults(
-        BundleLab,
         fhirIndexBundleLab,
         "test-snomed",
         false,

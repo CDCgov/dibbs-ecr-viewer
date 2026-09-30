@@ -90,9 +90,6 @@ export interface LabResultGroup {
 }
 
 const LAB_RESULTS_SECTION_CODE = "30954-2";
-const LABORATORY_CATEGORY_SYSTEM =
-  "http://terminology.hl7.org/CodeSystem/observation-category";
-
 const ABNORMAL_OBSERVATION_INTERPRETATIONS: Record<string, string> = {
   A: "Abnormal",
   AA: "Critical Abnormal",
@@ -105,20 +102,16 @@ const ABNORMAL_OBSERVATION_INTERPRETATIONS: Record<string, string> = {
 /**
  * Evaluates lab information and RR data from the provided FHIR bundle and mappings.
  * @param fhirIndex - FHIR resources indexed by type & by ID
- * @param labReports - DiagnosticReports to render. When omitted, reports are
- * discovered from the index and the Composition Results section is used as an
- * Observation-backed fallback when none exist.
  * @param accordionHeadingLevel - Heading level for the title of AccordionLabResults.
  * @returns An array of the Diagnostic reports Elements and Organization Display Data
  */
 export const evaluateLabInfoData = (
   fhirIndex: FhirIndex,
-  labReports?: DiagnosticReport[],
   accordionHeadingLevel: HeadingLevel = "h5",
 ): LabReportElementData[] => {
   return evaluateLabResultGroups(
     fhirIndex,
-    getLabResultGroups(fhirIndex, labReports),
+    getLabResultGroups(fhirIndex),
     accordionHeadingLevel,
   );
 };
@@ -220,12 +213,7 @@ const isLaboratoryObservation = (observation: Observation): boolean => {
   }
 
   return observation.category.some((category) =>
-    category.coding?.some(
-      (coding) =>
-        (coding.system === LABORATORY_CATEGORY_SYSTEM &&
-          coding.code === "laboratory") ||
-        coding.code === "laboratory",
-    ),
+    category.coding?.some((coding) => coding.code === "laboratory"),
   );
 };
 
@@ -293,14 +281,12 @@ const getResultsSectionReferences = (composition: Composition): Reference[] =>
  * laboratory Observations explicitly listed in the Composition Results
  * section, avoiding duplicate groups for their hasMember children.
  */
-export const getLabResultGroups = (
-  fhirIndex: FhirIndex,
-  labReports?: DiagnosticReport[],
-): LabResultGroup[] => {
-  const reports =
-    labReports ??
-    getResourcesByType<DiagnosticReport>(fhirIndex, "DiagnosticReport");
-  if (reports.length > 0 || labReports !== undefined) {
+export const getLabResultGroups = (fhirIndex: FhirIndex): LabResultGroup[] => {
+  const reports = getResourcesByType<DiagnosticReport>(
+    fhirIndex,
+    "DiagnosticReport",
+  );
+  if (reports.length > 0) {
     return reports.map((report) => ({
       source: report,
       observations: getObservations(report, fhirIndex),

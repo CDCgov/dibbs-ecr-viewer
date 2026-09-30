@@ -257,7 +257,6 @@ export const evaluateEcrSummaryCondition = (
         conditionsListKey,
       ),
       labDetails: evaluateEcrSummaryRelevantLabResults(
-        fhirBundle,
         fhirIndex,
         conditionsListKey,
         false,
@@ -321,20 +320,16 @@ export const evaluateEcrSummaryRelevantClinicalDetails = (
 
 /**
  * Evaluates and retrieves relevant lab results from the FHIR bundle using the provided SNOMED code and path mappings.
- * @param fhirBundle - The FHIR bundle containing patient data.
  * @param fhirIndex - FHIR resources indexed by type & by ID
  * @param snomedCode - String containing the SNOMED code search parameter.
  * @param lastDividerLine - Boolean to determine if a divider line should be added to the end of the lab results. Default to true
  * @returns An array of lab result details objects containing title and value pairs.
  */
 export const evaluateEcrSummaryRelevantLabResults = (
-  fhirBundle: Bundle,
   fhirIndex: FhirIndex,
   snomedCode: string,
   lastDividerLine: boolean = true,
 ): DisplayDataProps[] => {
-  let resultsArray: DisplayDataProps[] = [];
-
   if (!snomedCode) {
     return [];
   }
@@ -354,17 +349,14 @@ export const evaluateEcrSummaryRelevantLabResults = (
     "h4",
   );
 
-  resultsArray = relevantLabElements.flatMap((element) =>
+  const results = relevantLabElements.flatMap((element) =>
     element.diagnosticReportDataItems.map((reportItem) => ({
       value: <LabAccordion items={[reportItem]} />,
       dividerLine: false,
     })),
   );
 
-  if (lastDividerLine) {
-    resultsArray.push({ dividerLine: true });
-  }
-  return resultsArray;
+  return lastDividerLine ? [...results, { dividerLine: true }] : results;
 };
 
 const evaluateEcrSummaryRelevantImmunizations = (

@@ -304,7 +304,6 @@ def test_parse_message_resolves_chained_canonical_references():
         "resourceType": "Bundle",
         "entry": [
             {
-                "fullUrl": "urn:uuid:observation-1",
                 "resource": {
                     "resourceType": "Observation",
                     "id": "observation-1",
@@ -312,7 +311,6 @@ def test_parse_message_resolves_chained_canonical_references():
                 },
             },
             {
-                "fullUrl": "urn:uuid:diagnostic-report-1",
                 "resource": {
                     "resourceType": "DiagnosticReport",
                     "id": "diagnostic-report-1",
@@ -321,7 +319,6 @@ def test_parse_message_resolves_chained_canonical_references():
                 },
             },
             {
-                "fullUrl": "urn:uuid:specimen-1",
                 "resource": {
                     "resourceType": "Specimen",
                     "id": "specimen-1",

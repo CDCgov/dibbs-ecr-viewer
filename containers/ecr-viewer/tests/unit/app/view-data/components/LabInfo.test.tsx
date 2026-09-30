@@ -2,19 +2,16 @@ import React from "react";
 
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Bundle, DiagnosticReport } from "fhir/r4";
+import { Bundle } from "fhir/r4";
 
 import _BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
 import _BundleLabNoLabIds from "../../../../../../../test-data/fhir/BundleLabNoLabIds.json";
-import { LabInfo, LabNavItem } from "@/app/view-data/components/LabInfo";
+import { LabInfo } from "@/app/view-data/components/LabInfo";
 import {
   evaluateLabInfoData,
   LabReportElementData,
 } from "@/app/view-data/services/labsService";
-import {
-  getFhirIndex,
-  getResourcesByType,
-} from "@/app/view-data/services/fhirResourcesIndexService";
+import { getFhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
 
 const BundleLab = _BundleLab as unknown as Bundle;
 const fhirIndexBundleLab = getFhirIndex(BundleLab);
@@ -25,24 +22,10 @@ describe("LabInfo", () => {
   describe("when labResults is LabReportElementData[]", () => {
     let labInfoJsx: React.ReactElement;
     beforeAll(() => {
-      const diagnosticReports = getResourcesByType<DiagnosticReport>(
-        fhirIndexBundleLab,
-        "DiagnosticReport",
-      );
-      const labInfoOrg = evaluateLabInfoData(
-        fhirIndexBundleLab,
-        diagnosticReports,
-      ) as LabReportElementData[];
+      const labInfoOrg = evaluateLabInfoData(fhirIndexBundleLab);
 
       // Empty out one of the lab names for testing
       labInfoOrg[0].organizationDisplayDataProps[0].value = "";
-
-      const subNavLabs = labInfoOrg.map(({ subNavMetadata }) => {
-        return {
-          title: subNavMetadata.title,
-          id: subNavMetadata.id,
-        };
-      }) as LabNavItem[];
 
       labInfoJsx = <LabInfo labResults={labInfoOrg} />;
     });
@@ -117,25 +100,10 @@ describe("LabInfo", () => {
     });
   });
 
-  describe("when labResults is DisplayDataProps[]", () => {
+  describe("when labResults contains reports without narrative IDs", () => {
     let labInfo: LabReportElementData[];
-    let subNavLabs: LabNavItem[];
     beforeAll(() => {
-      const diagnosticReports = getResourcesByType<DiagnosticReport>(
-        fhirIndexBundleLabNoLabIds,
-        "DiagnosticReport",
-      );
-      labInfo = evaluateLabInfoData(
-        fhirIndexBundleLabNoLabIds,
-        diagnosticReports,
-      );
-
-      subNavLabs = labInfo.map(({ subNavMetadata }) => {
-        return {
-          title: subNavMetadata.title,
-          id: subNavMetadata.id,
-        };
-      }) as LabNavItem[];
+      labInfo = evaluateLabInfoData(fhirIndexBundleLabNoLabIds);
     });
     it("should be collapsed by default", () => {
       render(<LabInfo labResults={labInfo} />);

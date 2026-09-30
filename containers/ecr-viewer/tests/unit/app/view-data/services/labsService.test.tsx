@@ -22,7 +22,6 @@ import {
   evaluateLabInfoData,
   findIdenticalOrg,
   returnAnalysisTime,
-  LabReportElementData,
   getJsonLab,
   getAllLabJsonObjects,
   getObservations,
@@ -931,39 +930,20 @@ describe("LabsService tests", () => {
 
   describe("Evaluate the lab info section", () => {
     it("should return a list of LabReportElementData if the lab results in the HTML table have ID's", () => {
-      const result = evaluateLabInfoData(
-        fhirIndexBundleLab,
-        getResourcesByType<DiagnosticReport>(
-          fhirIndexBundleLab,
-          "DiagnosticReport",
-        ),
-      );
+      const result = evaluateLabInfoData(fhirIndexBundleLab);
       expect(result[0]).toHaveProperty("diagnosticReportDataItems");
       expect(result[0]).toHaveProperty("organizationDisplayDataProps");
     });
 
     it("should return a list of LabReportElementData even if the lab results in the HTML table do not have ID's", () => {
-      const result = evaluateLabInfoData(
-        fhirIndexBundleLabNoLabIds,
-        getResourcesByType<DiagnosticReport>(
-          fhirIndexBundleLabNoLabIds,
-          "DiagnosticReport",
-        ),
-      );
+      const result = evaluateLabInfoData(fhirIndexBundleLabNoLabIds);
       expect(result[0]).toHaveProperty("diagnosticReportDataItems");
       expect(result[0]).toHaveProperty("organizationDisplayDataProps");
     });
 
     it("should properly count the number of labs", () => {
-      const result = evaluateLabInfoData(
-        fhirIndexBundleLab,
-        getResourcesByType<DiagnosticReport>(
-          fhirIndexBundleLab,
-          "DiagnosticReport",
-        ),
-      );
-      const props = (result[0] as LabReportElementData)
-        .organizationDisplayDataProps;
+      const result = evaluateLabInfoData(fhirIndexBundleLab);
+      const props = result[0].organizationDisplayDataProps;
       expect(props[3].title).toEqual("Number of Results");
       expect(props[3].value).toEqual(2);
     });
@@ -1044,24 +1024,14 @@ describe("LabsService tests", () => {
     });
 
     it("keeps DiagnosticReports as the primary lab representation", () => {
-      const report: DiagnosticReport = {
-        resourceType: "DiagnosticReport",
-        status: "final",
-        code: { text: "Report-backed lab" },
-      };
+      const groups = getLabResultGroups(fhirIndexBundleLab);
 
-      const groups = getLabResultGroups(fhirIndexBundleLabObservationsOnly, [
-        report,
-      ]);
-
-      expect(groups).toHaveLength(1);
-      expect(groups[0].source).toBe(report);
-    });
-
-    it("renders no labs when the caller explicitly supplies an empty report list", () => {
+      expect(groups).not.toBeEmpty();
       expect(
-        evaluateLabInfoData(fhirIndexBundleLabObservationsOnly, []),
-      ).toEqual([]);
+        groups.every(
+          ({ source }) => source.resourceType === "DiagnosticReport",
+        ),
+      ).toBe(true);
     });
 
     it("deduplicates cyclic hasMember references", () => {

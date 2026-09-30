@@ -64,15 +64,11 @@ export class OrchestrationError extends Error {
  * @returns name of the orchestration config
  */
 const getOrchestrationConfigName = () => {
-  if (!!dbDialect()) {
-    if (dbSchema() === "extended") {
-      return "bundle-metadata-extended.json";
-    } else {
-      return "bundle-metadata-core.json";
-    }
-  } else {
-    return "bundle-only.json";
-  }
+  if (!dbDialect()) return "bundle-only.json";
+
+  return dbSchema() === "extended"
+    ? "bundle-metadata-extended.json"
+    : "bundle-metadata-core.json";
 };
 
 interface RequestBody {
@@ -180,17 +176,17 @@ export const getOrchestrationResponse = async (
       messageInTimestamp,
       messageOutTimestamp,
     );
-  } else {
-    const resp = (await response.json()) as OrchestrationRawResponse;
-    const messageOutTimestamp = new Date().toISOString();
-    return {
-      ecr: resp.processed_values.responses[0].stamped_ecr.extended_bundle,
-      metadata:
-        resp.processed_values.responses?.[1]?.metadata_values.parsed_values,
-      messageInTimestamp,
-      messageOutTimestamp,
-    };
   }
+
+  const resp = (await response.json()) as OrchestrationRawResponse;
+  const messageOutTimestamp = new Date().toISOString();
+  return {
+    ecr: resp.processed_values.responses[0].stamped_ecr.extended_bundle,
+    metadata:
+      resp.processed_values.responses?.[1]?.metadata_values.parsed_values,
+    messageInTimestamp,
+    messageOutTimestamp,
+  };
 };
 
 /**
@@ -204,17 +200,12 @@ const saveToSource = (
   metadata: BundleMetadata | BundleExtendedMetadata | undefined,
 ) => {
   const identifier = bundle.identifier;
+  if (!identifier) throw new Error("eCR bundle contains no identifier.");
 
-  if (identifier) {
-    const ecrId = getEcrIdFromIdentifier(identifier);
-    if (metadata) {
-      return saveWithMetadata(bundle, ecrId, process.env.SOURCE, metadata);
-    } else {
-      return saveToStorage(bundle, ecrId, process.env.SOURCE, "fhir");
-    }
-  } else {
-    throw new Error("eCR bundle contains no identifier.");
-  }
+  const ecrId = getEcrIdFromIdentifier(identifier);
+  return metadata
+    ? saveWithMetadata(bundle, ecrId, process.env.SOURCE, metadata)
+    : saveToStorage(bundle, ecrId, process.env.SOURCE, "fhir");
 };
 
 /**
@@ -472,40 +463,27 @@ export const getEcrIdFromXml = async (body: RequestBody): Promise<string> => {
  */
 export const zipAndSaveXml = async (body: RequestBody, ecrId: string) => {
   if (body.ecr instanceof File && isZipFile(body.ecr)) {
-    // Already Zipped
-    const arrayBuffer = await body.ecr.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    return await saveToStorage(buffer, ecrId, process.env.SOURCE, "xml");
+    const buffer = Buffer.from(await body.ecr.arrayBuffer());
+    return saveToStorage(buffer, ecrId, process.env.SOURCE, "xml");
   }
 
-  if (typeof body.ecr === "string") {
-    // XML String path
-    const zip = new JSZip();
-    zip.file(`${ecrId}-eICR.xml`, body.ecr);
-
-    // add RR if exists and is string
-    if (typeof body.rr === "string") {
-      zip.file(`${ecrId}-RR.xml`, body.rr);
-    }
-
-    const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
-    return await saveToStorage(zipBuffer, ecrId, process.env.SOURCE, "xml");
-  }
-
-  // XML file path
   const zip = new JSZip();
+  const ecrContents =
+    typeof body.ecr === "string"
+      ? body.ecr
+      : Buffer.from(await body.ecr.arrayBuffer());
+  zip.file(`${ecrId}-eICR.xml`, ecrContents);
 
-  const ecrArrayBuf = await body.ecr.arrayBuffer();
-  zip.file(`${ecrId}-eICR.xml`, Buffer.from(ecrArrayBuf));
-
-  if (body.rr instanceof File) {
-    const rrArrayBuf = await body.rr.arrayBuffer();
-    zip.file(`${ecrId}-RR.xml`, Buffer.from(rrArrayBuf));
+  if (body.rr !== undefined) {
+    const rrContents =
+      typeof body.rr === "string"
+        ? body.rr
+        : Buffer.from(await body.rr.arrayBuffer());
+    zip.file(`${ecrId}-RR.xml`, rrContents);
   }
 
   const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
-  return await saveToStorage(zipBuffer, ecrId, process.env.SOURCE, "xml");
+  return saveToStorage(zipBuffer, ecrId, process.env.SOURCE, "xml");
 };
 
 /**
