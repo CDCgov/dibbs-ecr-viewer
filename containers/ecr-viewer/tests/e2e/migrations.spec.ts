@@ -31,7 +31,7 @@ test.describe("migrations", () => {
     await logIn(page, { expectedHeading: "eCR Viewer setup is incomplete" });
 
     const token = process.env.CONFIG_NAME.endsWith("_DUAL")
-      ? process.env.DUMMY_NBS_JWT
+      ? process.env.DUMMY_NBS_API_JWT
       : await getToken(request);
 
     const headers = {

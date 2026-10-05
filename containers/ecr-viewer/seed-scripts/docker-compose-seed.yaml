@@ -117,5 +117,6 @@ services:
       - AUTH_ADMIN_USER
       - AUTH_ADMIN_PASSWORD
       - DUMMY_NBS_JWT
+      - DUMMY_NBS_API_JWT
     extra_hosts:
       - host.docker.internal:host-gateway
