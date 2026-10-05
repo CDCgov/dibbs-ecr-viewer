@@ -118,7 +118,7 @@ const handleViewData = async (
   end: ChainableProxy,
 ): Promise<NextResponse> => {
   const payload = await getVerifiedPayload(request);
-  
+
   // JWT failed verification
   if (!payload) return next(request);
   const requestedId = request.nextUrl.searchParams.get("id");
@@ -173,7 +173,6 @@ const handleViewDataChild = async (
   if (payload.ecr_id && requestedId && payload.ecr_id !== requestedId) {
     return next(request);
   }
-
 
   const ecrIdCookie = request.cookies.get(JWT_ECR_ID_COOKIE)?.value;
 
