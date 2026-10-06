@@ -49,7 +49,7 @@ def _process_files():
         "NON_INTEGRATED"
     ):
         print("using integrated auth")
-        token = os.getenv("DUMMY_NBS_JWT")
+        token = os.getenv("DUMMY_NBS_API_JWT")
     elif os.getenv("AUTH_PROVIDER") == "keycloak":
         print("using keycloak auth")
         token_req = rqsts.post(

@@ -158,7 +158,7 @@ test.describe("auth", () => {
 
     const resp = await request.post(`/ecr-viewer/api/migrate-db`, {
       headers: {
-        Authorization: `Bearer ${process.env.DUMMY_NBS_JWT}`,
+        Authorization: `Bearer ${process.env.DUMMY_NBS_API_JWT}`,
       },
     });
     // This means we got past auth and failed on a bad migration call - this is good
