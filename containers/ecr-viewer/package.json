@@ -68,7 +68,7 @@
     "sanitize-html": "^2.17.7",
     "saxes": "^6.0.0",
     "server-only": "^0.0.1",
-    "sharp": "^0.35.4",
+    "sharp": "^0.35.5",
     "tarn": "^3.1.2",
     "tedious": "^20.0.0",
     "undici": "^8.10.2",
@@ -153,8 +153,8 @@
       "@parcel/watcher#2.6.0": true,
       "eslint-config-next>eslint-import-resolver-typescript>unrs-resolver#1.12.2": true,
       "fhirpath#5.2.0": false,
-      "next>sharp#0.34.5": true,
-      "sharp#0.34.5": true
+      "next>sharp#0.35.5": true,
+      "sharp#0.35.5": true
     }
   }
 }
