@@ -50,7 +50,7 @@ const resolveKey = (
  *   3. For /api/ routes, verifies a Bearer token against JWT_API_PUB_KEY.
  *
  * Environment variables:
- *   JWT_PUB_KEY     — RSA public key (SPKI PEM) for view-data page auth
+ *   JWT_PUB_KEY     — RSA public key (SPKI PEM) for view-data page and child route auth
  *   JWT_API_PUB_KEY — RSA public key (SPKI PEM) for /api/ route auth
  *
  * Deprecated (kept for backwards compatibility — rename to the above):
@@ -81,6 +81,9 @@ export const withJwtAuth: ProxyFactory = (
     if (pathname.endsWith("/view-data")) {
       return handleViewData(request, next, end);
     }
+    if (pathname.includes("/view-data/")) {
+      return handleViewDataChild(request, next, end);
+    }
     if (pathname.includes("/api/")) {
       return handleApi(request, next, end);
     }
@@ -88,29 +91,36 @@ export const withJwtAuth: ProxyFactory = (
   };
 };
 
-const handleViewData = async (
+const getVerifiedPayload = async (
   request: NextRequest,
-  next: ChainableProxy,
-  end: ChainableProxy,
-): Promise<NextResponse> => {
+): Promise<Record<string, unknown> | null> => {
   const pubKey = resolveKey("JWT_PUB_KEY", "NBS_PUB_KEY");
-  if (!pubKey) return next(request);
+  if (!pubKey) return null;
 
   const token = request.cookies.get(JWT_AUTH_COOKIE)?.value;
-  if (!token) return next(request);
+  if (!token) return null;
 
-  let payload: Record<string, unknown>;
   try {
     const result = await jwtVerify(
       token,
       await importSPKI(pubKey.trim(), "RS256"),
     );
-    payload = result.payload as Record<string, unknown>;
+    return result.payload as Record<string, unknown>;
   } catch {
     request.headers.set(JWT_AUTH_HEADER, "false");
-    return next(request);
+    return null;
   }
+};
 
+const handleViewData = async (
+  request: NextRequest,
+  next: ChainableProxy,
+  end: ChainableProxy,
+): Promise<NextResponse> => {
+  const payload = await getVerifiedPayload(request);
+
+  // JWT failed verification
+  if (!payload) return next(request);
   const requestedId = request.nextUrl.searchParams.get("id");
 
   if (requestedId) {
@@ -148,30 +158,45 @@ const handleViewData = async (
   return end(request);
 };
 
+const handleViewDataChild = async (
+  request: NextRequest,
+  next: ChainableProxy,
+  end: ChainableProxy,
+): Promise<NextResponse> => {
+  const payload = await getVerifiedPayload(request);
+
+  // JWT failed verification
+  if (!payload) return next(request);
+  const requestedId = request.nextUrl.searchParams.get("id");
+
+  // eCR ID in JWT, Epitrax flow
+  if (payload.ecr_id && requestedId && payload.ecr_id !== requestedId) {
+    return next(request);
+  }
+
+  const ecrIdCookie = request.cookies.get(JWT_ECR_ID_COOKIE)?.value;
+
+  // eCR ID in cookie set by view-data middleware, NBS flow
+  if (ecrIdCookie && requestedId && ecrIdCookie !== requestedId) {
+    return next(request);
+  }
+
+  return end(request);
+};
+
 const handleApi = async (
   request: NextRequest,
   next: ChainableProxy,
   end: ChainableProxy,
 ): Promise<NextResponse> => {
   const apiPubKey = resolveKey("JWT_API_PUB_KEY", "NBS_API_PUB_KEY");
-  const bearerToken = getTokenFromHeaders(request);
+  if (!apiPubKey) return next(request);
 
-  if (apiPubKey && bearerToken) {
-    try {
-      await jwtVerify(bearerToken, await importSPKI(apiPubKey.trim(), "RS256"));
-      return end(request);
-    } catch {
-      return next(request);
-    }
-  }
-
-  // If no Bearer token try the JWT cookie for subsequent API calls
-  // (e.g. View XML button), verified against the same API key.
-  const cookieToken = request.cookies.get(JWT_AUTH_COOKIE)?.value;
-  if (!cookieToken || !apiPubKey) return next(request);
+  const token = getTokenFromHeaders(request);
+  if (!token) return next(request);
 
   try {
-    await jwtVerify(cookieToken, await importSPKI(apiPubKey.trim(), "RS256"));
+    await jwtVerify(token, await importSPKI(apiPubKey.trim(), "RS256"));
     return end(request);
   } catch {
     return next(request);

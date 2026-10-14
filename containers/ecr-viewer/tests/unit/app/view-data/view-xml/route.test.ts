@@ -6,7 +6,7 @@ import JSZip from "jszip";
 import { NextRequest } from "next/server";
 
 import { s3Client } from "@/app/data/blobStorage/s3Client";
-import { GET } from "@/app/api/view-xml/route";
+import { GET } from "@/app/view-data/view-xml/route";
 
 jest.mock("@/app/data/blobStorage/s3Client", () => ({
   s3Client: { send: jest.fn() },
@@ -23,10 +23,10 @@ const makeZipBody = async (files: Record<string, string>) => {
 
 const makeRequest = (id?: string) =>
   new NextRequest(
-    `http://localhost:3000/ecr-viewer/api/view-xml${id ? `?id=${id}` : ""}`,
+    `http://localhost:3000/ecr-viewer/view-data/view-xml${id ? `?id=${id}` : ""}`,
   );
 
-describe("GET /api/view-xml", () => {
+describe("GET /view-data/view-xml", () => {
   const ORIG_ENV = { ...process.env };
 
   beforeEach(() => {

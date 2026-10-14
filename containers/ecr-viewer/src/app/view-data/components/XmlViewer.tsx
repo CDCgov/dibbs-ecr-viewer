@@ -20,7 +20,7 @@ interface XmlViewerProps {
 
 const XmlViewer = ({ children, sideNav, ecrId }: XmlViewerProps) => {
   const xmlApiUrl = ecrId
-    ? `${process.env.BASE_PATH}/api/view-xml?id=${ecrId}`
+    ? `${process.env.BASE_PATH}/view-data/view-xml?id=${ecrId}`
     : undefined;
   const [showXml, setShowXml] = useState(false);
   const [xmls, setXmls] = useState<EcrXmls | null>(null);

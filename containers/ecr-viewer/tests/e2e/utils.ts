@@ -157,6 +157,11 @@ const logInToAd = async (page: Page, userName: string, password: string) => {
  */
 export const nbsAuthParam = `auth=${process.env.DUMMY_NBS_JWT}`;
 
+/**
+ * non-expiring auth api key for testing local nbs auth
+ */
+export const nbsApiAuthParam = `auth=${process.env.DUMMY_NBS_API_JWT}`;
+
 // Instead of going to IDP to to get a token on every request, store the token
 // globally and re-use once acquired
 let apiToken = "";

@@ -24,7 +24,7 @@ class ProcessEcrUser(HttpUser):
         """
         Upload a zip file to the /process-ecr endpoint
         """
-        token = os.getenv("DUMMY_NBS_JWT")
+        token = os.getenv("DUMMY_NBS_API_JWT")
         file = self.files[random.randint(0, self.len_files - 1)]
 
         with open(file, "rb") as opened_file:
@@ -58,7 +58,7 @@ class ViewEcrUser(HttpUser):
 
     def on_start(self):
         """zip all files and process all eCRs in baseECR/star-wars"""
-        token = os.getenv("DUMMY_NBS_JWT")
+        token = os.getenv("DUMMY_NBS_API_JWT")
 
         self.files = get_zipped_files()
         for file in self.files:

@@ -96,9 +96,9 @@ services:
   migrator:
     image: curlimages/curl
     environment:
-      - DUMMY_NBS_JWT=${DUMMY_NBS_JWT}
+      - DUMMY_NBS_API_JWT=${DUMMY_NBS_API_JWT}
     command: >
-      sh -c "echo 'Running migrations' && curl -v -X POST http://host.docker.internal:3000/ecr-viewer/api/migrate-db -H 'Authorization: Bearer '"$DUMMY_NBS_JWT" -F 'migration_secret=test' -F 'init_admin_email=ecr-viewer@admin.com' && echo 'Migrations complete' exit 0"
+      sh -c "echo 'Running migrations' && curl -v -X POST http://host.docker.internal:3000/ecr-viewer/api/migrate-db -H 'Authorization: Bearer '"$DUMMY_NBS_API_JWT" -F 'migration_secret=test' -F 'init_admin_email=ecr-viewer@admin.com' && echo 'Migrations complete' exit 0"
     depends_on:
       ecr-viewer:
         condition: service_healthy
@@ -117,6 +117,7 @@ services:
       --host http://host.docker.internal:3000/ecr-viewer
     environment:
       - DUMMY_NBS_JWT=${DUMMY_NBS_JWT}
+      - DUMMY_NBS_API_JWT=${DUMMY_NBS_API_JWT}
     depends_on:
       migrator:
         condition: service_completed_successfully

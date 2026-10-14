@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-import { nbsAuthParam } from "../utils";
+import { nbsAuthParam, nbsApiAuthParam } from "../utils";
 
 // all integrated tests should start with 'integrated -' in order to match successfully in npm run test:e2e:integrated
 // test:e2e:integrated is only required since CONFIG_NAME needs to be changed. This can be removed when dual boot (nbs auth & idp auth) is supported
@@ -48,7 +48,7 @@ test.describe("integrated - nbs auth", () => {
   }) => {
     const resp = await request.post(`/ecr-viewer/api/migrate-db`, {
       headers: {
-        Authorization: `Bearer ${process.env.DUMMY_NBS_JWT}`,
+        Authorization: `Bearer ${process.env.DUMMY_NBS_API_JWT}`,
       },
     });
 
@@ -65,7 +65,7 @@ test.describe("integrated - nbs auth", () => {
     request,
   }) => {
     const resp = await request.post(
-      `/ecr-viewer/api/migrate-db?${nbsAuthParam}`,
+      `/ecr-viewer/api/migrate-db?${nbsApiAuthParam}`,
     );
 
     expect(await resp.json()).toEqual(

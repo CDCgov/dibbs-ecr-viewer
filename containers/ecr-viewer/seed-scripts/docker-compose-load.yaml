@@ -13,3 +13,4 @@ services:
       --host https://dev7.dibbs.cloud/ecr-viewer
     environment:
       - DUMMY_NBS_JWT=${DUMMY_NBS_JWT}
+      - DUMMY_NBS_API_JWT=${DUMMY_NBS_API_JWT}

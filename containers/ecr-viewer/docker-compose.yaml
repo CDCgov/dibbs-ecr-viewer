@@ -16,7 +16,7 @@ services:
       - JWT_API_PUB_KEY
       - NBS_PUB_KEY
       - NBS_API_PUB_KEY
-      - SAVE_XML=false
+      - SAVE_XML=${SAVE_XML:-false}
       # METADATA DATABASE
       - DATABASE_URL=${DATABASE_URL:-postgres://postgres:pw@localhost:5432/ecr_viewer_db}
       - METADATA_DATABASE_SCHEMA
