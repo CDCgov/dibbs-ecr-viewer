@@ -1,7 +1,6 @@
 import {
   Kysely,
   ExpressionBuilder,
-  OrderByExpression,
   SelectQueryBuilder,
   Transaction,
   sql,
@@ -16,7 +15,7 @@ import { DateRangePeriod } from "@/app/utils/date-utils";
 
 import { audit } from "./auditLogService";
 import { UserFacingError } from "./errorService";
-import { formatDate, formatDateTime } from "./formatDateService";
+import { formatDate } from "./formatDateService";
 import { getLoggedInUser } from "./loggedInUserService";
 
 export interface MetadataModel {
@@ -341,7 +340,7 @@ export const processMetadata = (responseBody: MetadataModel[]) => {
       reportable_conditions: object.conditions || [],
       rule_summaries: object.rule_summaries || [],
       date_created: object.date_created
-        ? formatDateTime(object.date_created.toISOString())
+        ? object.date_created.toISOString()
         : "",
       eicr_set_id: object.set_id,
       eicr_version_number: object.eicr_version_number,
@@ -353,7 +352,7 @@ export const processMetadata = (responseBody: MetadataModel[]) => {
         ? formatDate(object.birth_date.toISOString())
         : "",
       patient_report_date: object.encounter_start_date
-        ? formatDateTime(object.encounter_start_date.toISOString())
+        ? object.encounter_start_date.toISOString()
         : "",
     };
   });

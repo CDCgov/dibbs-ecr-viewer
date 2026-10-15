@@ -13,6 +13,61 @@ const fhirIndexBundleWithPregnancyStatus = getFhirIndex(
 );
 
 describe("Evaluate Patient Info: Pregnancy Info", () => {
+  it.each([
+    { value: "Unknown", effectiveDateTime: undefined, available: false },
+    {
+      value: "Not planning pregnancy",
+      effectiveDateTime: undefined,
+      available: true,
+    },
+    {
+      value: "Unknown",
+      effectiveDateTime: "2024-01-01T12:00:00Z",
+      available: true,
+    },
+  ])(
+    "marks '$value' as available=$available when the effective date is $effectiveDateTime",
+    ({ value, effectiveDateTime, available }) => {
+      const bundle: Bundle = {
+        resourceType: "Bundle",
+        type: "collection",
+        entry: [
+          {
+            resource: {
+              resourceType: "Observation",
+              status: "final",
+              code: {
+                coding: [{ system: "http://loinc.org", code: "86645-9" }],
+              },
+              valueString: value,
+              effectiveDateTime,
+            },
+          },
+        ],
+      };
+      const result = evaluatePregnancyData(bundle, getFhirIndex(bundle));
+      const title = "Pregnancy Intention in the Next Year";
+
+      expect(result.availableData.some((item) => item.title === title)).toBe(
+        available,
+      );
+      expect(result.unavailableData.some((item) => item.title === title)).toBe(
+        !available,
+      );
+      if (available) {
+        const { container } = render(
+          result.availableData.find((item) => item.title === title)?.value,
+        );
+        expect(container.textContent).toContain(value);
+        if (effectiveDateTime)
+          expect(container.querySelector("time")).toHaveAttribute(
+            "dateTime",
+            effectiveDateTime,
+          );
+      }
+    },
+  );
+
   it("should have no available data when there is no data", () => {
     const actual = evaluatePregnancyData(undefined as any, {
       fhirIndexByType: {},

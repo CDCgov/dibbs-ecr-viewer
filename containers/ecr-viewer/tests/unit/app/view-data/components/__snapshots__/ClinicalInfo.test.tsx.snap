@@ -145,7 +145,17 @@ exports[`Snapshot tests Snapshot test for Active Problems Table should match sna
         <td
           class="text-top text-pre-line"
         >
-          08/19/2018 1:00 PM
+          <time
+            aria-busy="false"
+            class="dateTime"
+            datetime="08/19/2018 1:00 PM"
+          >
+            <span
+              class="value"
+            >
+              08/19/2018 1:00 PM
+            </span>
+          </time>
         </td>
         <td
           class="text-top text-pre-line"
@@ -574,7 +584,19 @@ exports[`Snapshot tests Snapshot test for Immunizations Table should match snaps
         <td
           class="text-top text-pre-line"
         >
-          11/10/2020 6:20 AM EST
+          <time
+            aria-busy="false"
+            class="dateTime"
+            datetime="2020-11-10T07:20:00-04:00"
+          >
+            <span
+              class="value"
+            >
+              11/10/2020 6:20 AM 
+              <wbr />
+              EST
+            </span>
+          </time>
         </td>
         <td
           class="text-top text-pre-line"
@@ -903,7 +925,19 @@ exports[`Snapshot tests Snapshot test for Procedures (Treatment Details) should 
                           <td
                             class="text-top text-pre-line"
                           >
-                            06/24/2022 12:50 PM EDT
+                            <time
+                              aria-busy="false"
+                              class="dateTime"
+                              datetime="2022-06-24T12:50:00-04:00"
+                            >
+                              <span
+                                class="value"
+                              >
+                                06/24/2022 12:50 PM 
+                                <wbr />
+                                EDT
+                              </span>
+                            </time>
                           </td>
                           <td
                             class="text-top text-pre-line"
@@ -1027,8 +1061,32 @@ exports[`Snapshot tests Snapshot test for Procedures (Treatment Details) should 
                           <td
                             class="text-top text-pre-line"
                           >
-                            Start: 11/01/2016 10:34 PM
-End: 11/02/2016 2:43 AM
+                            Start: 
+                            <time
+                              aria-busy="false"
+                              class="dateTime"
+                              datetime="201611012234"
+                            >
+                              <span
+                                class="value"
+                              >
+                                11/01/2016 10:34 PM
+                              </span>
+                            </time>
+                            
+
+                            End: 
+                            <time
+                              aria-busy="false"
+                              class="dateTime"
+                              datetime="201611020243"
+                            >
+                              <span
+                                class="value"
+                              >
+                                11/02/2016 2:43 AM
+                              </span>
+                            </time>
                           </td>
                           <td
                             class="text-top text-pre-line"
@@ -1455,9 +1513,15 @@ exports[`Snapshot tests Snapshot tests for Clinical Info components should match
                   <div
                     class="grid-col maxw7 text-pre-line p-list"
                   >
-                    Start: 11/01/2020
-Type: Employee desk distance from mail sorter
-Result: 2 m
+                    Start: 
+                    11/01/2020
+                    
+
+                    Type: Employee desk distance from mail sorter
+                    
+
+                    Result: 
+                    2 m
                   </div>
                 </div>
                 <div
@@ -1536,7 +1600,19 @@ Result: 2 m
                           <td
                             class="text-top text-pre-line"
                           >
-                            02/04/2025 12:53 PM EST
+                            <time
+                              aria-busy="false"
+                              class="dateTime"
+                              datetime="2025-02-04T17:53:00Z"
+                            >
+                              <span
+                                class="value"
+                              >
+                                02/04/2025 12:53 PM 
+                                <wbr />
+                                EST
+                              </span>
+                            </time>
                           </td>
                           <td
                             class="text-top text-pre-line"
@@ -1616,7 +1692,19 @@ Result: 2 m
                           <td
                             class="text-top text-pre-line"
                           >
-                            02/04/2024 4:08 PM EST
+                            <time
+                              aria-busy="false"
+                              class="dateTime"
+                              datetime="202402041708-0400"
+                            >
+                              <span
+                                class="value"
+                              >
+                                02/04/2024 4:08 PM 
+                                <wbr />
+                                EST
+                              </span>
+                            </time>
                           </td>
                           <td
                             class="text-top text-pre-line"
@@ -1637,7 +1725,19 @@ Result: 2 m
                           <td
                             class="text-top text-pre-line"
                           >
-                            02/04/2024 3:03 PM EST
+                            <time
+                              aria-busy="false"
+                              class="dateTime"
+                              datetime="20240204160302-0400"
+                            >
+                              <span
+                                class="value"
+                              >
+                                02/04/2024 3:03 PM 
+                                <wbr />
+                                EST
+                              </span>
+                            </time>
                           </td>
                           <td
                             class="text-top text-pre-line"
@@ -1723,7 +1823,19 @@ Result: 2 m
                             </span>
                           </td>
                           <td>
-                            02/01/2025 11:00 PM EST
+                            <time
+                              aria-busy="false"
+                              class="dateTime"
+                              datetime="2025-02-02T04:00:00Z"
+                            >
+                              <span
+                                class="value"
+                              >
+                                02/01/2025 11:00 PM 
+                                <wbr />
+                                EST
+                              </span>
+                            </time>
                           </td>
                           <td>
                             325 mg
@@ -1840,7 +1952,8 @@ Result: 2 m
                             <div
                               class="grid-col maxw7 text-pre-line p-list"
                             >
-                              02/25/2026 12:00 AM
+                              Start: 
+                              02/25/2026
                             </div>
                           </div>
                         </div>
@@ -2206,7 +2319,20 @@ Result: 2 m
                       <td
                         class="text-top text-pre-line"
                       >
-                        02/04/2025 12:48 PM EST
+                        Start: 
+                        <time
+                          aria-busy="false"
+                          class="dateTime"
+                          datetime="2025-02-04T13:48:00-04:00"
+                        >
+                          <span
+                            class="value"
+                          >
+                            02/04/2025 12:48 PM 
+                            <wbr />
+                            EST
+                          </span>
+                        </time>
                       </td>
                     </tr>
                     <tr>
@@ -2223,7 +2349,19 @@ Result: 2 m
                       <td
                         class="text-top text-pre-line"
                       >
-                        02/04/2025 12:48 PM EST
+                        <time
+                          aria-busy="false"
+                          class="dateTime"
+                          datetime="2025-02-04T13:48:00-04:00"
+                        >
+                          <span
+                            class="value"
+                          >
+                            02/04/2025 12:48 PM 
+                            <wbr />
+                            EST
+                          </span>
+                        </time>
                       </td>
                     </tr>
                     <tr>
@@ -2240,7 +2378,19 @@ Result: 2 m
                       <td
                         class="text-top text-pre-line"
                       >
-                        02/04/2025 12:48 PM EST
+                        <time
+                          aria-busy="false"
+                          class="dateTime"
+                          datetime="2025-02-04T13:48:00-04:00"
+                        >
+                          <span
+                            class="value"
+                          >
+                            02/04/2025 12:48 PM 
+                            <wbr />
+                            EST
+                          </span>
+                        </time>
                       </td>
                     </tr>
                     <tr>
@@ -2257,7 +2407,19 @@ Result: 2 m
                       <td
                         class="text-top text-pre-line"
                       >
-                        02/04/2025 12:48 PM EST
+                        <time
+                          aria-busy="false"
+                          class="dateTime"
+                          datetime="2025-02-04T13:48:00-04:00"
+                        >
+                          <span
+                            class="value"
+                          >
+                            02/04/2025 12:48 PM 
+                            <wbr />
+                            EST
+                          </span>
+                        </time>
                       </td>
                     </tr>
                     <tr>
@@ -2274,7 +2436,19 @@ Result: 2 m
                       <td
                         class="text-top text-pre-line"
                       >
-                        02/04/2025 12:48 PM EST
+                        <time
+                          aria-busy="false"
+                          class="dateTime"
+                          datetime="2025-02-04T13:48:00-04:00"
+                        >
+                          <span
+                            class="value"
+                          >
+                            02/04/2025 12:48 PM 
+                            <wbr />
+                            EST
+                          </span>
+                        </time>
                       </td>
                     </tr>
                   </tbody>

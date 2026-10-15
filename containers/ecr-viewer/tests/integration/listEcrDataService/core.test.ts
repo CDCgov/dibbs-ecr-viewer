@@ -19,7 +19,7 @@ import { seedUserProgramData } from "../helpers/seed";
 import { getDb } from "@/app/data/metadataDb/database";
 import { Core, NewCoreECR } from "@/app/data/metadataDb/types/core";
 import { dbNamespace } from "@/app/data/metadataDb/utils/db-config";
-import { formatDate, formatDateTime } from "@/app/services/formatDateService";
+import { formatDate } from "@/app/services/formatDateService";
 import {
   MetadataModel,
   generateFilterConditionsStatement,
@@ -156,11 +156,11 @@ describe("process Metadata", () => {
       {
         ecrId: "ecr1",
         facility_name: "Hospital A",
-        date_created: formatDateTime(date1.toISOString()),
+        date_created: date1.toISOString(),
         patient_first_name: "Test",
         patient_last_name: "Person",
         patient_date_of_birth: formatDate(date2.toISOString()),
-        patient_report_date: formatDateTime(date3.toISOString()),
+        patient_report_date: date3.toISOString(),
         reportable_conditions: expect.arrayContaining(["Long"]),
         rule_summaries: expect.arrayContaining([
           { condition: "Long", rule_summaries: ["Longer"] },
@@ -172,11 +172,11 @@ describe("process Metadata", () => {
       {
         ecrId: "ecr2",
         facility_name: "",
-        date_created: formatDateTime(date1.toISOString()),
+        date_created: date1.toISOString(),
         patient_first_name: "Another",
         patient_last_name: "Test",
         patient_date_of_birth: formatDate(date2.toISOString()),
-        patient_report_date: formatDateTime(date3.toISOString()),
+        patient_report_date: date3.toISOString(),
         reportable_conditions: expect.arrayContaining(["Stuff"]),
         rule_summaries: expect.arrayContaining([
           {
@@ -210,13 +210,13 @@ describe("generate sort statement", () => {
 
 describe("listEcrData - core", () => {
   const expectedEcr: EcrDisplay = {
-    date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
+    date_created: "2024-12-02T12:00:00.000Z",
     ecrId: "12345",
     facility_name: "Hospital A",
     patient_date_of_birth: "12/01/2024",
     patient_first_name: "Billy",
     patient_last_name: "Bob",
-    patient_report_date: "12/02/2024 7:00\u00A0AM\u00A0EST",
+    patient_report_date: "2024-12-02T12:00:00.000Z",
     reportable_conditions: ["Condition1"],
     rule_summaries: [{ condition: "Condition1", rule_summaries: ["Rule1"] }],
     eicr_set_id: "123",

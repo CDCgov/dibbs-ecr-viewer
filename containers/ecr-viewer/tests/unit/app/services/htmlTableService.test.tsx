@@ -27,7 +27,8 @@ describe("htmlTableService tests", () => {
                     },
                   },
                   "Analysis Time": {
-                    value: "01/01/2024 3:00\u00A0PM\u00A0EST",
+                    value: "01/01/2024 1:00 PM PDT",
+                    dateTime: true,
                     metadata: {},
                   },
                 },
@@ -39,7 +40,8 @@ describe("htmlTableService tests", () => {
                     },
                   },
                   "Analysis Time": {
-                    value: "01/01/2024 3:00\u00A0PM\u00A0EST",
+                    value: "01/01/2024 1:00 PM PDT",
+                    dateTime: true,
                     metadata: {},
                   },
                 },
@@ -53,11 +55,13 @@ describe("htmlTableService tests", () => {
                     },
                   },
                   "Collection Time": {
-                    value: "01/01/2024 2:00\u00A0PM\u00A0EST",
+                    value: "01/01/2024 12:00 PM PDT",
+                    dateTime: true,
                     metadata: {},
                   },
                   "Received Time": {
-                    value: "01/01/2024 2:00\u00A0PM\u00A0EST",
+                    value: "01/01/2024 12:00 PM PDT",
+                    dateTime: true,
                     metadata: {},
                   },
                 },
@@ -88,7 +92,8 @@ describe("htmlTableService tests", () => {
                     },
                   },
                   "Analysis Time": {
-                    value: "01/01/2024 3:00\u00A0PM\u00A0EST",
+                    value: "01/01/2024 1:00 PM PDT",
+                    dateTime: true,
                     metadata: {},
                   },
                 },
@@ -100,7 +105,8 @@ describe("htmlTableService tests", () => {
                     },
                   },
                   "Analysis Time": {
-                    value: "01/01/2024 3:00\u00A0PM\u00A0EST",
+                    value: "01/01/2024 1:00 PM PDT",
+                    dateTime: true,
                     metadata: {},
                   },
                 },
@@ -114,11 +120,13 @@ describe("htmlTableService tests", () => {
                     },
                   },
                   "Collection Time": {
-                    value: "01/01/2024 2:00\u00A0PM\u00A0EST",
+                    value: "01/01/2024 12:00 PM PDT",
+                    dateTime: true,
                     metadata: {},
                   },
                   "Received Time": {
-                    value: "01/01/2024 2:00\u00A0PM\u00A0EST",
+                    value: "01/01/2024 12:00 PM PDT",
+                    dateTime: true,
                     metadata: {},
                   },
                 },
@@ -174,7 +182,8 @@ describe("htmlTableService tests", () => {
                     },
                   },
                   "Analysis Time": {
-                    value: "01/01/2024 3:00\u00A0PM\u00A0EST",
+                    value: "01/01/2024 1:00 PM PDT",
+                    dateTime: true,
                     metadata: {},
                   },
                 },
@@ -186,7 +195,8 @@ describe("htmlTableService tests", () => {
                     },
                   },
                   "Analysis Time": {
-                    value: "01/01/2024 3:00\u00A0PM\u00A0EST",
+                    value: "01/01/2024 1:00 PM PDT",
+                    dateTime: true,
                     metadata: {},
                   },
                 },
@@ -200,11 +210,13 @@ describe("htmlTableService tests", () => {
                     },
                   },
                   "Collection Time": {
-                    value: "01/01/2024 2:00\u00A0PM\u00A0EST",
+                    value: "01/01/2024 12:00 PM PDT",
+                    dateTime: true,
                     metadata: {},
                   },
                   "Received Time": {
-                    value: "01/01/2024 2:00\u00A0PM\u00A0EST",
+                    value: "01/01/2024 12:00 PM PDT",
+                    dateTime: true,
                     metadata: {},
                   },
                 },
@@ -235,7 +247,8 @@ describe("htmlTableService tests", () => {
                     },
                   },
                   "Analysis Time": {
-                    value: "01/01/2024 3:00\u00A0PM\u00A0EST",
+                    value: "01/01/2024 1:00 PM PDT",
+                    dateTime: true,
                     metadata: {},
                   },
                 },
@@ -247,7 +260,8 @@ describe("htmlTableService tests", () => {
                     },
                   },
                   "Analysis Time": {
-                    value: "01/01/2024 3:00\u00A0PM\u00A0EST",
+                    value: "01/01/2024 1:00 PM PDT",
+                    dateTime: true,
                     metadata: {},
                   },
                 },
@@ -261,11 +275,13 @@ describe("htmlTableService tests", () => {
                     },
                   },
                   "Collection Time": {
-                    value: "01/01/2024 2:00\u00A0PM\u00A0EST",
+                    value: "01/01/2024 12:00 PM PDT",
+                    dateTime: true,
                     metadata: {},
                   },
                   "Received Time": {
-                    value: "01/01/2024 2:00\u00A0PM\u00A0EST",
+                    value: "01/01/2024 12:00 PM PDT",
+                    dateTime: true,
                     metadata: {},
                   },
                 },
