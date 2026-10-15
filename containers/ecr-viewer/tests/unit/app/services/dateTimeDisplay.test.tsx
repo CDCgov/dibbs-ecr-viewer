@@ -22,12 +22,12 @@ describe("formatDateTimeDisplay", () => {
     expect(formatDateTimeDisplay(value)).toBe(expected);
   });
 
-  it.each([
-    "Unknown",
-    "2026-99-99T12:00:00Z",
-  ])("returns unrecognized date text unchanged: %p", (value) => {
-    expect(formatDateTimeDisplay(value)).toBe(value);
-  });
+  it.each(["Unknown", "2026-99-99T12:00:00Z"])(
+    "returns unrecognized date text unchanged: %p",
+    (value) => {
+      expect(formatDateTimeDisplay(value)).toBe(value);
+    },
+  );
 });
 
 describe("formatStartEndDateTimeDisplay", () => {
