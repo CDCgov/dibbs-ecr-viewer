@@ -61,7 +61,17 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-01
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-01"
+        >
+          <span
+            class="value"
+          >
+            01/01/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -165,13 +175,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-02
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-02"
+        >
+          <span
+            class="value"
+          >
+            01/02/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-02
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-02"
+        >
+          <span
+            class="value"
+          >
+            01/02/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -261,13 +291,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-03
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-03"
+        >
+          <span
+            class="value"
+          >
+            01/03/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-03
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-03"
+        >
+          <span
+            class="value"
+          >
+            01/03/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -357,13 +407,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-04
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-04"
+        >
+          <span
+            class="value"
+          >
+            01/04/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-04
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-04"
+        >
+          <span
+            class="value"
+          >
+            01/04/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -453,13 +523,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-05
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-05"
+        >
+          <span
+            class="value"
+          >
+            01/05/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-05
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-05"
+        >
+          <span
+            class="value"
+          >
+            01/05/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -549,13 +639,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-06
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-06"
+        >
+          <span
+            class="value"
+          >
+            01/06/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-06
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-06"
+        >
+          <span
+            class="value"
+          >
+            01/06/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -645,13 +755,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-07
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-07"
+        >
+          <span
+            class="value"
+          >
+            01/07/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-07
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-07"
+        >
+          <span
+            class="value"
+          >
+            01/07/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -741,13 +871,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-08
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-08"
+        >
+          <span
+            class="value"
+          >
+            01/08/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-08
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-08"
+        >
+          <span
+            class="value"
+          >
+            01/08/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -837,13 +987,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-09
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-09"
+        >
+          <span
+            class="value"
+          >
+            01/09/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-09
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-09"
+        >
+          <span
+            class="value"
+          >
+            01/09/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -933,13 +1103,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-01
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-01"
+        >
+          <span
+            class="value"
+          >
+            01/01/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-01
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-01"
+        >
+          <span
+            class="value"
+          >
+            01/01/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -1029,13 +1219,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-02
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-02"
+        >
+          <span
+            class="value"
+          >
+            01/02/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-02
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-02"
+        >
+          <span
+            class="value"
+          >
+            01/02/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -1125,13 +1335,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-03
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-03"
+        >
+          <span
+            class="value"
+          >
+            01/03/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-03
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-03"
+        >
+          <span
+            class="value"
+          >
+            01/03/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -1221,13 +1451,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-04
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-04"
+        >
+          <span
+            class="value"
+          >
+            01/04/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-04
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-04"
+        >
+          <span
+            class="value"
+          >
+            01/04/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -1317,13 +1567,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-05
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-05"
+        >
+          <span
+            class="value"
+          >
+            01/05/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-05
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-05"
+        >
+          <span
+            class="value"
+          >
+            01/05/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -1413,13 +1683,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-06
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-06"
+        >
+          <span
+            class="value"
+          >
+            01/06/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-06
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-06"
+        >
+          <span
+            class="value"
+          >
+            01/06/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -1509,13 +1799,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-07
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-07"
+        >
+          <span
+            class="value"
+          >
+            01/07/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-07
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-07"
+        >
+          <span
+            class="value"
+          >
+            01/07/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -1605,13 +1915,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-08
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-08"
+        >
+          <span
+            class="value"
+          >
+            01/08/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-08
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-08"
+        >
+          <span
+            class="value"
+          >
+            01/08/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -1701,13 +2031,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-09
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-09"
+        >
+          <span
+            class="value"
+          >
+            01/09/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-09
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-09"
+        >
+          <span
+            class="value"
+          >
+            01/09/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -1797,13 +2147,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-01
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-01"
+        >
+          <span
+            class="value"
+          >
+            01/01/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-01
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-01"
+        >
+          <span
+            class="value"
+          >
+            01/01/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -1893,13 +2263,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-02
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-02"
+        >
+          <span
+            class="value"
+          >
+            01/02/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-02
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-02"
+        >
+          <span
+            class="value"
+          >
+            01/02/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -1989,13 +2379,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-03
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-03"
+        >
+          <span
+            class="value"
+          >
+            01/03/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-03
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-03"
+        >
+          <span
+            class="value"
+          >
+            01/03/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -2085,13 +2495,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-04
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-04"
+        >
+          <span
+            class="value"
+          >
+            01/04/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-04
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-04"
+        >
+          <span
+            class="value"
+          >
+            01/04/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -2181,13 +2611,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-05
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-05"
+        >
+          <span
+            class="value"
+          >
+            01/05/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-05
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-05"
+        >
+          <span
+            class="value"
+          >
+            01/05/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -2277,13 +2727,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-06
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-06"
+        >
+          <span
+            class="value"
+          >
+            01/06/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-06
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-06"
+        >
+          <span
+            class="value"
+          >
+            01/06/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -2373,13 +2843,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 1`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-07
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-07"
+        >
+          <span
+            class="value"
+          >
+            01/07/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-07
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-07"
+        >
+          <span
+            class="value"
+          >
+            01/07/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -2472,7 +2962,17 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-01
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-01"
+        >
+          <span
+            class="value"
+          >
+            01/01/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -2543,9 +3043,21 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         colspan="999"
         role="gridcell"
       >
-        7:00 PM EST
-         
-        12/31/2020
+        <time
+          aria-busy="false"
+          class="dateTime related"
+          datetime="2021-01-01T00:00:00.000Z"
+        >
+          <span
+            class="value"
+          >
+            7:00 PM 
+            <wbr />
+            EST
+             
+            12/31/2020
+          </span>
+        </time>
       </td>
     </tr>
     <tr
@@ -2577,11 +3089,23 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         colspan="999"
         role="gridcell"
       >
-        <strong>
-          7:00 PM EST
-        </strong>
-         
-        01/01/2021
+        <time
+          aria-busy="false"
+          class="dateTime related"
+          datetime="2021-01-02T00:00:00.000Z"
+        >
+          <span
+            class="value"
+          >
+            <strong>
+              7:00 PM 
+              <wbr />
+              EST
+            </strong>
+             
+            01/01/2021
+          </span>
+        </time>
       </td>
     </tr>
     <tr
@@ -2613,9 +3137,21 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         colspan="999"
         role="gridcell"
       >
-        7:00 PM EST
-         
-        01/02/2021
+        <time
+          aria-busy="false"
+          class="dateTime related"
+          datetime="2021-01-03T00:00:00.000Z"
+        >
+          <span
+            class="value"
+          >
+            7:00 PM 
+            <wbr />
+            EST
+             
+            01/02/2021
+          </span>
+        </time>
       </td>
     </tr>
     <tr
@@ -2647,9 +3183,21 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         colspan="999"
         role="gridcell"
       >
-        7:00 PM EST
-         
-        01/03/2021
+        <time
+          aria-busy="false"
+          class="dateTime related"
+          datetime="2021-01-04T00:00:00.000Z"
+        >
+          <span
+            class="value"
+          >
+            7:00 PM 
+            <wbr />
+            EST
+             
+            01/03/2021
+          </span>
+        </time>
       </td>
     </tr>
     <tr
@@ -2681,9 +3229,21 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         colspan="999"
         role="gridcell"
       >
-        7:00 PM EST
-         
-        01/04/2021
+        <time
+          aria-busy="false"
+          class="dateTime related"
+          datetime="2021-01-05T00:00:00.000Z"
+        >
+          <span
+            class="value"
+          >
+            7:00 PM 
+            <wbr />
+            EST
+             
+            01/04/2021
+          </span>
+        </time>
       </td>
     </tr>
     <tr
@@ -2771,13 +3331,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-02
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-02"
+        >
+          <span
+            class="value"
+          >
+            01/02/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-02
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-02"
+        >
+          <span
+            class="value"
+          >
+            01/02/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -2867,13 +3447,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-03
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-03"
+        >
+          <span
+            class="value"
+          >
+            01/03/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-03
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-03"
+        >
+          <span
+            class="value"
+          >
+            01/03/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -2963,13 +3563,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-04
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-04"
+        >
+          <span
+            class="value"
+          >
+            01/04/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-04
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-04"
+        >
+          <span
+            class="value"
+          >
+            01/04/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -3059,13 +3679,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-05
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-05"
+        >
+          <span
+            class="value"
+          >
+            01/05/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-05
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-05"
+        >
+          <span
+            class="value"
+          >
+            01/05/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -3155,13 +3795,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-06
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-06"
+        >
+          <span
+            class="value"
+          >
+            01/06/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-06
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-06"
+        >
+          <span
+            class="value"
+          >
+            01/06/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -3251,13 +3911,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-07
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-07"
+        >
+          <span
+            class="value"
+          >
+            01/07/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-07
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-07"
+        >
+          <span
+            class="value"
+          >
+            01/07/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -3347,13 +4027,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-08
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-08"
+        >
+          <span
+            class="value"
+          >
+            01/08/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-08
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-08"
+        >
+          <span
+            class="value"
+          >
+            01/08/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -3443,13 +4143,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-09
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-09"
+        >
+          <span
+            class="value"
+          >
+            01/09/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-09
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-09"
+        >
+          <span
+            class="value"
+          >
+            01/09/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -3539,13 +4259,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-01
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-01"
+        >
+          <span
+            class="value"
+          >
+            01/01/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-01
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-01"
+        >
+          <span
+            class="value"
+          >
+            01/01/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -3635,13 +4375,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-02
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-02"
+        >
+          <span
+            class="value"
+          >
+            01/02/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-02
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-02"
+        >
+          <span
+            class="value"
+          >
+            01/02/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -3731,13 +4491,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-03
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-03"
+        >
+          <span
+            class="value"
+          >
+            01/03/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-03
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-03"
+        >
+          <span
+            class="value"
+          >
+            01/03/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -3827,13 +4607,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-04
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-04"
+        >
+          <span
+            class="value"
+          >
+            01/04/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-04
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-04"
+        >
+          <span
+            class="value"
+          >
+            01/04/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -3923,13 +4723,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-05
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-05"
+        >
+          <span
+            class="value"
+          >
+            01/05/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-05
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-05"
+        >
+          <span
+            class="value"
+          >
+            01/05/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -4019,13 +4839,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-06
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-06"
+        >
+          <span
+            class="value"
+          >
+            01/06/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-06
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-06"
+        >
+          <span
+            class="value"
+          >
+            01/06/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -4115,13 +4955,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-07
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-07"
+        >
+          <span
+            class="value"
+          >
+            01/07/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-07
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-07"
+        >
+          <span
+            class="value"
+          >
+            01/07/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -4211,13 +5071,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-08
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-08"
+        >
+          <span
+            class="value"
+          >
+            01/08/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-08
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-08"
+        >
+          <span
+            class="value"
+          >
+            01/08/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -4307,13 +5187,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-09
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-09"
+        >
+          <span
+            class="value"
+          >
+            01/09/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-09
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-09"
+        >
+          <span
+            class="value"
+          >
+            01/09/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -4403,13 +5303,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-01
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-01"
+        >
+          <span
+            class="value"
+          >
+            01/01/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-01
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-01"
+        >
+          <span
+            class="value"
+          >
+            01/01/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -4499,13 +5419,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-02
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-02"
+        >
+          <span
+            class="value"
+          >
+            01/02/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-02
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-02"
+        >
+          <span
+            class="value"
+          >
+            01/02/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -4595,13 +5535,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-03
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-03"
+        >
+          <span
+            class="value"
+          >
+            01/03/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-03
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-03"
+        >
+          <span
+            class="value"
+          >
+            01/03/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -4691,13 +5651,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-04
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-04"
+        >
+          <span
+            class="value"
+          >
+            01/04/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-04
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-04"
+        >
+          <span
+            class="value"
+          >
+            01/04/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -4787,13 +5767,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-05
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-05"
+        >
+          <span
+            class="value"
+          >
+            01/05/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-05
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-05"
+        >
+          <span
+            class="value"
+          >
+            01/05/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -4883,13 +5883,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-06
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-06"
+        >
+          <span
+            class="value"
+          >
+            01/06/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-06
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-06"
+        >
+          <span
+            class="value"
+          >
+            01/06/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -4979,13 +5999,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 2`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-07
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-07"
+        >
+          <span
+            class="value"
+          >
+            01/07/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-07
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-07"
+        >
+          <span
+            class="value"
+          >
+            01/07/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -5078,7 +6118,17 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-01
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-01"
+        >
+          <span
+            class="value"
+          >
+            01/01/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -5149,9 +6199,21 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         colspan="999"
         role="gridcell"
       >
-        7:00 PM EST
-         
-        12/31/2020
+        <time
+          aria-busy="false"
+          class="dateTime related"
+          datetime="2021-01-01T00:00:00.000Z"
+        >
+          <span
+            class="value"
+          >
+            7:00 PM 
+            <wbr />
+            EST
+             
+            12/31/2020
+          </span>
+        </time>
       </td>
     </tr>
     <tr
@@ -5183,11 +6245,23 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         colspan="999"
         role="gridcell"
       >
-        <strong>
-          7:00 PM EST
-        </strong>
-         
-        01/01/2021
+        <time
+          aria-busy="false"
+          class="dateTime related"
+          datetime="2021-01-02T00:00:00.000Z"
+        >
+          <span
+            class="value"
+          >
+            <strong>
+              7:00 PM 
+              <wbr />
+              EST
+            </strong>
+             
+            01/01/2021
+          </span>
+        </time>
       </td>
     </tr>
     <tr
@@ -5219,9 +6293,21 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         colspan="999"
         role="gridcell"
       >
-        7:00 PM EST
-         
-        01/02/2021
+        <time
+          aria-busy="false"
+          class="dateTime related"
+          datetime="2021-01-03T00:00:00.000Z"
+        >
+          <span
+            class="value"
+          >
+            7:00 PM 
+            <wbr />
+            EST
+             
+            01/02/2021
+          </span>
+        </time>
       </td>
     </tr>
     <tr
@@ -5253,9 +6339,21 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         colspan="999"
         role="gridcell"
       >
-        7:00 PM EST
-         
-        01/03/2021
+        <time
+          aria-busy="false"
+          class="dateTime related"
+          datetime="2021-01-04T00:00:00.000Z"
+        >
+          <span
+            class="value"
+          >
+            7:00 PM 
+            <wbr />
+            EST
+             
+            01/03/2021
+          </span>
+        </time>
       </td>
     </tr>
     <tr
@@ -5287,9 +6385,21 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         colspan="999"
         role="gridcell"
       >
-        7:00 PM EST
-         
-        01/04/2021
+        <time
+          aria-busy="false"
+          class="dateTime related"
+          datetime="2021-01-05T00:00:00.000Z"
+        >
+          <span
+            class="value"
+          >
+            7:00 PM 
+            <wbr />
+            EST
+             
+            01/04/2021
+          </span>
+        </time>
       </td>
     </tr>
     <tr
@@ -5321,9 +6431,21 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         colspan="999"
         role="gridcell"
       >
-        7:00 PM EST
-         
-        01/05/2021
+        <time
+          aria-busy="false"
+          class="dateTime related"
+          datetime="2021-01-06T00:00:00.000Z"
+        >
+          <span
+            class="value"
+          >
+            7:00 PM 
+            <wbr />
+            EST
+             
+            01/05/2021
+          </span>
+        </time>
       </td>
     </tr>
     <tr
@@ -5355,9 +6477,21 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         colspan="999"
         role="gridcell"
       >
-        7:00 PM EST
-         
-        01/06/2021
+        <time
+          aria-busy="false"
+          class="dateTime related"
+          datetime="2021-01-07T00:00:00.000Z"
+        >
+          <span
+            class="value"
+          >
+            7:00 PM 
+            <wbr />
+            EST
+             
+            01/06/2021
+          </span>
+        </time>
       </td>
     </tr>
     <tr
@@ -5422,13 +6556,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-02
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-02"
+        >
+          <span
+            class="value"
+          >
+            01/02/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-02
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-02"
+        >
+          <span
+            class="value"
+          >
+            01/02/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -5518,13 +6672,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-03
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-03"
+        >
+          <span
+            class="value"
+          >
+            01/03/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-03
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-03"
+        >
+          <span
+            class="value"
+          >
+            01/03/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -5614,13 +6788,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-04
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-04"
+        >
+          <span
+            class="value"
+          >
+            01/04/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-04
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-04"
+        >
+          <span
+            class="value"
+          >
+            01/04/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -5710,13 +6904,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-05
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-05"
+        >
+          <span
+            class="value"
+          >
+            01/05/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-05
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-05"
+        >
+          <span
+            class="value"
+          >
+            01/05/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -5806,13 +7020,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-06
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-06"
+        >
+          <span
+            class="value"
+          >
+            01/06/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-06
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-06"
+        >
+          <span
+            class="value"
+          >
+            01/06/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -5902,13 +7136,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-07
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-07"
+        >
+          <span
+            class="value"
+          >
+            01/07/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-07
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-07"
+        >
+          <span
+            class="value"
+          >
+            01/07/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -5998,13 +7252,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-08
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-08"
+        >
+          <span
+            class="value"
+          >
+            01/08/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-08
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-08"
+        >
+          <span
+            class="value"
+          >
+            01/08/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -6094,13 +7368,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-09
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-09"
+        >
+          <span
+            class="value"
+          >
+            01/09/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-09
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-09"
+        >
+          <span
+            class="value"
+          >
+            01/09/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -6190,13 +7484,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-01
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-01"
+        >
+          <span
+            class="value"
+          >
+            01/01/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-01
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-01"
+        >
+          <span
+            class="value"
+          >
+            01/01/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -6286,13 +7600,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-02
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-02"
+        >
+          <span
+            class="value"
+          >
+            01/02/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-02
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-02"
+        >
+          <span
+            class="value"
+          >
+            01/02/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -6382,13 +7716,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-03
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-03"
+        >
+          <span
+            class="value"
+          >
+            01/03/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-03
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-03"
+        >
+          <span
+            class="value"
+          >
+            01/03/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -6478,13 +7832,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-04
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-04"
+        >
+          <span
+            class="value"
+          >
+            01/04/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-04
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-04"
+        >
+          <span
+            class="value"
+          >
+            01/04/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -6574,13 +7948,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-05
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-05"
+        >
+          <span
+            class="value"
+          >
+            01/05/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-05
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-05"
+        >
+          <span
+            class="value"
+          >
+            01/05/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -6670,13 +8064,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-06
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-06"
+        >
+          <span
+            class="value"
+          >
+            01/06/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-06
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-06"
+        >
+          <span
+            class="value"
+          >
+            01/06/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -6766,13 +8180,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-07
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-07"
+        >
+          <span
+            class="value"
+          >
+            01/07/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-07
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-07"
+        >
+          <span
+            class="value"
+          >
+            01/07/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -6862,13 +8296,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-08
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-08"
+        >
+          <span
+            class="value"
+          >
+            01/08/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-08
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-08"
+        >
+          <span
+            class="value"
+          >
+            01/08/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -6958,13 +8412,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-09
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-09"
+        >
+          <span
+            class="value"
+          >
+            01/09/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-09
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-09"
+        >
+          <span
+            class="value"
+          >
+            01/09/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -7054,13 +8528,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-01
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-01"
+        >
+          <span
+            class="value"
+          >
+            01/01/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-01
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-01"
+        >
+          <span
+            class="value"
+          >
+            01/01/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -7150,13 +8644,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-02
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-02"
+        >
+          <span
+            class="value"
+          >
+            01/02/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-02
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-02"
+        >
+          <span
+            class="value"
+          >
+            01/02/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -7246,13 +8760,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-03
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-03"
+        >
+          <span
+            class="value"
+          >
+            01/03/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-03
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-03"
+        >
+          <span
+            class="value"
+          >
+            01/03/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -7342,13 +8876,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-04
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-04"
+        >
+          <span
+            class="value"
+          >
+            01/04/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-04
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-04"
+        >
+          <span
+            class="value"
+          >
+            01/04/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -7438,13 +8992,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-05
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-05"
+        >
+          <span
+            class="value"
+          >
+            01/05/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-05
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-05"
+        >
+          <span
+            class="value"
+          >
+            01/05/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -7534,13 +9108,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-06
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-06"
+        >
+          <span
+            class="value"
+          >
+            01/06/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-06
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-06"
+        >
+          <span
+            class="value"
+          >
+            01/06/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
@@ -7630,13 +9224,33 @@ exports[`EcrTableContent load with an eCR should match snapshot 3`] = `
         role="gridcell"
         rowspan="1"
       >
-        2021-01-07
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-07"
+        >
+          <span
+            class="value"
+          >
+            01/07/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"
         rowspan="1"
       >
-        2021-01-07
+        <time
+          aria-busy="false"
+          class="dateTime dateOnly"
+          datetime="2021-01-07"
+        >
+          <span
+            class="value"
+          >
+            01/07/2021
+          </span>
+        </time>
       </td>
       <td
         role="gridcell"

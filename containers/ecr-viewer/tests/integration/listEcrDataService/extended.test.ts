@@ -8,7 +8,7 @@ import {
   getLastAuditLog,
 } from "../helpers/core";
 import { buildExtended, dropExisting, clearEcrExtended } from "../helpers/ddl";
-import { createExtendedEcr, createEcrImmunization } from "../helpers/extended";
+import { createExtendedEcr } from "../helpers/extended";
 import { seedUserProgramData } from "../helpers/seed";
 import { NewExtendedECR } from "@/app/data/metadataDb/types/extended";
 import {
@@ -101,13 +101,13 @@ afterAll(async () => {
 
 describe("listEcrData - extended", () => {
   const expectedEcr: EcrDisplay = {
-    date_created: "12/02/2024 7:00\u00A0AM\u00A0EST",
+    date_created: "2024-12-02T12:00:00.000Z",
     ecrId: "12345",
     facility_name: "Jedi Temple",
     patient_date_of_birth: "12/31/2024",
     patient_first_name: "Obi-Wan",
     patient_last_name: "Kenobi",
-    patient_report_date: "12/02/2024 12:00\u00A0AM\u00A0EST",
+    patient_report_date: "2024-12-02T05:00:00.000Z",
     reportable_conditions: ["Condition1"],
     rule_summaries: [{ condition: "Condition1", rule_summaries: ["Rule1"] }],
     eicr_set_id: "123",

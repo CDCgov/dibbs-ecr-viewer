@@ -6,8 +6,11 @@ import { motion, Transition } from "motion/react";
 import Link from "next/link";
 
 import { ExpandMore } from "@/app/components/Icon";
+import {
+  LocalDateTime,
+  LocalRelatedDateTime,
+} from "@/app/components/LocalDateTime";
 import { useLibraryQueryParam } from "@/app/hooks/useQueryParam";
-import { formatDate, formatDateTime } from "@/app/services/formatDateService";
 import { EcrDisplay, RelatedEcr } from "@/app/types";
 import { noData } from "@/app/utils/data-utils";
 import { makePlural } from "@/app/utils/format-utils";
@@ -93,10 +96,14 @@ export const EcrTableDataRow = ({
           </div>
         </motion.td>
         <motion.td layout="position" role="gridcell" rowSpan={numGroups}>
-          {item.date_created}
+          <LocalDateTime value={item.date_created} />
         </motion.td>
         <motion.td layout="position" role="gridcell" rowSpan={numGroups}>
-          {item.patient_report_date || noData}
+          {item.patient_report_date ? (
+            <LocalDateTime value={item.patient_report_date} />
+          ) : (
+            noData
+          )}
         </motion.td>
         <motion.td layout="position" role="gridcell" rowSpan={numGroups}>
           {item.facility_name || noData}
@@ -233,10 +240,6 @@ const RelatedRow = ({
   numRows: number;
   index: number;
 }) => {
-  const mainDate = formatDate(mainDateCreated);
-  const ecrDateTime = formatDateTime(ecr.date_created.toISOString());
-  const [ecrDate, ecrTime] = ecrDateTime.split(" ");
-
   return (
     <SlidingRow
       id={ecr.eicr_id}
@@ -252,7 +255,10 @@ const RelatedRow = ({
         )}
       </td>
       <td role="gridcell" colSpan={999}>
-        {ecrDate === mainDate ? <strong>{ecrTime}</strong> : ecrTime} {ecrDate}
+        <LocalRelatedDateTime
+          value={ecr.date_created.toISOString()}
+          mainValue={mainDateCreated}
+        />
       </td>
     </SlidingRow>
   );

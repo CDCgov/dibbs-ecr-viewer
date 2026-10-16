@@ -17,17 +17,16 @@ import {
 } from "@/app/components/DetailsSidePanel";
 import FilterGroup from "@/app/components/FilterGroup";
 import { Folder, Person } from "@/app/components/Icon";
+import { LocalDateTime } from "@/app/components/LocalDateTime";
 import {
   PaginatedSortableTable,
   TableColumn,
 } from "@/app/components/table/PaginatedSortableTable";
 import { USER_TYPE, USER_TYPE_DISPLAY } from "@/app/constants";
 import { ServerActionResult } from "@/app/services/errorService";
-import { formatDateTime } from "@/app/services/formatDateService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
 import { ListedUser, NamedUserProgramArea } from "@/app/services/userService";
 import { makePlural, stringSort } from "@/app/utils/format-utils";
-import { ForceClient } from "@/app/view-data/components/ForceClient";
 
 const ADMIN_USER_TYPE_FILTER_OPTIONS: Record<string, string> = {
   all: "All users",
@@ -161,11 +160,8 @@ export const UserTable = ({
       className: "minw-23",
       dataSortable: true,
       sortDirection: "",
-      formatter: (d: Date | null) => (
-        <ForceClient loading={null}>
-          {formatDateTime(d?.toISOString())}
-        </ForceClient>
-      ),
+      formatter: (d: Date | null) =>
+        d ? <LocalDateTime value={d.toISOString()} /> : <></>,
     },
   ];
 
@@ -175,11 +171,18 @@ export const UserTable = ({
         isLoggedInUserAdmin={isLoggedInUserAdmin}
         detailsRef={detailsRef}
         title={selectedUser?.name ? selectedUser?.name : selectedUser?.email!}
-        subtitle={`Last logged in: ${
-          selectedUser?.date_of_last_login
-            ? formatDateTime(selectedUser?.date_of_last_login?.toISOString())
-            : "Never"
-        }`}
+        subtitle={
+          <>
+            Last logged in:{" "}
+            {selectedUser?.date_of_last_login ? (
+              <LocalDateTime
+                value={selectedUser.date_of_last_login.toISOString()}
+              />
+            ) : (
+              "Never"
+            )}
+          </>
+        }
         editHref={`/admin/user/edit?uuid=${selectedUser?.uuid}`}
         itemType="user"
         deleteAction={async () => await deleteAction(selectedUser?.uuid!)}

@@ -1,0 +1,41 @@
+.dateTime {
+  display: inline-block;
+  position: relative;
+  vertical-align: top;
+  min-width: min-content;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+
+  // Keep invisible sample text in the layout so the size stays stable after hydration.
+  // Spaces allow line breaks between the date, time, and timezone.
+  // Leave room for timezone labels such as GMT+12:45.
+  &::before {
+    content: "00/00/0000 00:00\00a0 AM GMT+00:00";
+    visibility: hidden;
+    // Use equal-width digits for sizing without changing the visible text.
+    font-variant-numeric: tabular-nums;
+  }
+
+  &[aria-busy="true"] {
+    background-color: #f0f0f0;
+    border-radius: 0.125rem;
+  }
+}
+
+.dateOnly::before {
+  content: "00/00/0000";
+}
+
+.related::before {
+  content: "00:00\00a0 AM GMT+00:00 00/00/0000";
+  // Allow enough space for the bold time used when report dates match.
+  font-weight: bold;
+}
+
+.value {
+  // Let the invisible sample text set the size, and overlay the visible value.
+  position: absolute;
+  inset: 0;
+}

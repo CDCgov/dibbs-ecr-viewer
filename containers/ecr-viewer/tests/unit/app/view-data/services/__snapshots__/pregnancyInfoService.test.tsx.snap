@@ -61,7 +61,8 @@ exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data
             class="text-base"
             style="font-size: 1rem;"
           >
-            Start: 08/26/2017
+            Start: 
+            08/26/2017
           </span>
         </div>
       </button>
@@ -102,7 +103,8 @@ exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data
           <div
             class="grid-col maxw7 text-pre-line p-list"
           >
-            Start: 08/26/2017
+            Start: 
+            08/26/2017
           </div>
         </div>
         <div
@@ -247,7 +249,17 @@ exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data
                     <div
                       class="grid-col maxw7 text-pre-line p-list"
                     >
-                      01/05/2020 8:50 AM
+                      <time
+                        aria-busy="false"
+                        class="dateTime"
+                        datetime="2020-01-05T08:50:00"
+                      >
+                        <span
+                          class="value"
+                        >
+                          01/05/2020 8:50 AM
+                        </span>
+                      </time>
                     </div>
                   </div>
                 </div>
@@ -264,7 +276,9 @@ exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data
                       class="grid-col maxw7 text-pre-line p-list"
                     >
                       Complete breech delivery
-Performed Date/Time: 01/05/2018
+                      
+Performed Date/Time: 
+                      01/05/2018
                     </div>
                   </div>
                 </div>
@@ -410,7 +424,17 @@ Flinn Anatomy: AC 28%, EFW 31% (542g), placenta anterior/high, normal anatomy - 
             class="text-base"
             style="font-size: 1rem;"
           >
-            01/05/2020 10:15 AM
+            <time
+              aria-busy="false"
+              class="dateTime"
+              datetime="2020-01-05T10:15:00"
+            >
+              <span
+                class="value"
+              >
+                01/05/2020 10:15 AM
+              </span>
+            </time>
           </span>
         </div>
       </button>
@@ -451,7 +475,17 @@ Flinn Anatomy: AC 28%, EFW 31% (542g), placenta anterior/high, normal anatomy - 
           <div
             class="grid-col maxw7 text-pre-line p-list"
           >
-            01/05/2020 10:15 AM
+            <time
+              aria-busy="false"
+              class="dateTime"
+              datetime="2020-01-05T10:15:00"
+            >
+              <span
+                class="value"
+              >
+                01/05/2020 10:15 AM
+              </span>
+            </time>
           </div>
         </div>
       </div>
@@ -492,7 +526,17 @@ exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data
         <td
           class="text-top text-pre-line"
         >
-          01/05/2020 10:15 AM
+          <time
+            aria-busy="false"
+            class="dateTime"
+            datetime="2020-01-05T10:15:00"
+          >
+            <span
+              class="value"
+            >
+              01/05/2020 10:15 AM
+            </span>
+          </time>
         </td>
       </tr>
     </tbody>
@@ -503,8 +547,14 @@ exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data
 exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data  3`] = `
 <div>
   No desire to become pregnant
-Start: 01/07/2017
-End: 01/07/2018
+  
+
+  Start: 
+  01/07/2017
+  
+
+  End: 
+  01/07/2018
 </div>
 `;
 
@@ -529,7 +579,10 @@ exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data
 exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data  7`] = `
 <div>
   13 ML Rho(D) immune globulin, human 1154 UNT/ML Injection [WinRho]
-Start: 06/18/2017
+  
+
+  Start: 
+  06/18/2017
 </div>
 `;
 
@@ -576,7 +629,17 @@ exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data
         <td
           class="text-top text-pre-line"
         >
-          01/05/2018 10:15 AM
+          <time
+            aria-busy="false"
+            class="dateTime"
+            datetime="2018-01-05T10:15:00"
+          >
+            <span
+              class="value"
+            >
+              01/05/2018 10:15 AM
+            </span>
+          </time>
         </td>
       </tr>
       <tr>
@@ -593,7 +656,17 @@ exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data
         <td
           class="text-top text-pre-line"
         >
-          01/05/2018 10:15 AM
+          <time
+            aria-busy="false"
+            class="dateTime"
+            datetime="2018-01-05T10:15:00"
+          >
+            <span
+              class="value"
+            >
+              01/05/2018 10:15 AM
+            </span>
+          </time>
         </td>
       </tr>
       <tr>
@@ -610,7 +683,17 @@ exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data
         <td
           class="text-top text-pre-line"
         >
-          01/05/2018 10:15 AM
+          <time
+            aria-busy="false"
+            class="dateTime"
+            datetime="2018-01-05T10:15:00"
+          >
+            <span
+              class="value"
+            >
+              01/05/2018 10:15 AM
+            </span>
+          </time>
         </td>
       </tr>
       <tr>
@@ -627,7 +710,17 @@ exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data
         <td
           class="text-top text-pre-line"
         >
-          01/05/2018 10:15 AM
+          <time
+            aria-busy="false"
+            class="dateTime"
+            datetime="2018-01-05T10:15:00"
+          >
+            <span
+              class="value"
+            >
+              01/05/2018 10:15 AM
+            </span>
+          </time>
         </td>
       </tr>
       <tr>
@@ -644,7 +737,17 @@ exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data
         <td
           class="text-top text-pre-line"
         >
-          01/05/2018 10:15 AM
+          <time
+            aria-busy="false"
+            class="dateTime"
+            datetime="2018-01-05T10:15:00"
+          >
+            <span
+              class="value"
+            >
+              01/05/2018 10:15 AM
+            </span>
+          </time>
         </td>
       </tr>
       <tr>
@@ -661,7 +764,17 @@ exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data
         <td
           class="text-top text-pre-line"
         >
-          01/05/2018 10:15 AM
+          <time
+            aria-busy="false"
+            class="dateTime"
+            datetime="2018-01-05T10:15:00"
+          >
+            <span
+              class="value"
+            >
+              01/05/2018 10:15 AM
+            </span>
+          </time>
         </td>
       </tr>
       <tr>
@@ -678,7 +791,17 @@ exports[`Evaluate Patient Info: Pregnancy Info should display all pregnancy data
         <td
           class="text-top text-pre-line"
         >
-          01/05/2018 10:15 AM
+          <time
+            aria-busy="false"
+            class="dateTime"
+            datetime="2018-01-05T10:15:00"
+          >
+            <span
+              class="value"
+            >
+              01/05/2018 10:15 AM
+            </span>
+          </time>
         </td>
       </tr>
     </tbody>

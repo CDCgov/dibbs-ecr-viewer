@@ -3,7 +3,8 @@ import "server-only"; // FHIR evaluation should be done server side
 import { Bundle, Coding, Encounter, Patient, RelatedPerson } from "fhir/r4";
 import { DateTime } from "luxon";
 
-import { formatDate, formatDateTime } from "@/app/services/formatDateService";
+import { formatDateTimeDisplay } from "@/app/services/dateTimeDisplay";
+import { formatDate, parseDateTime } from "@/app/services/formatDateService";
 import {
   formatAddressList,
   formatCoding,
@@ -25,6 +26,7 @@ import {
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toTitleCase } from "@/app/utils/format-utils";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+
 import {
   FhirIndex,
   getOneResourceByType,
@@ -98,7 +100,10 @@ export const calculatePatientAge = (
 
   // If date is provided by caller, use that.
   if (givenDate) {
-    return calculateAge(DateTime.fromJSDate(new Date(givenDate)), patientDOB);
+    return calculateAge(
+      DateTime.fromJSDate(parseDateTime(givenDate)),
+      patientDOB,
+    );
   }
 
   // Default to current date if no encounter date is available
@@ -364,7 +369,9 @@ export const evaluateDemographicsData = (
     },
     {
       title: "Death Date/Time",
-      value: formatDateTime(evaluateOne(patient, fhirPathMappings.patientDOD)),
+      value: formatDateTimeDisplay(
+        evaluateOne(patient, fhirPathMappings.patientDOD),
+      ),
     },
     {
       title: "Sex",

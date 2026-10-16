@@ -9,10 +9,10 @@ import {
   QuestionnaireResponse,
   Organization,
 } from "fhir/r4";
-import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
-import { HtmlTableJsonRow } from "@/app/services/htmlTableService";
-import { JsonTable } from "@/app/view-data/components/JsonTable";
 
+import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
+import { formatDateTimeDisplay } from "@/app/services/dateTimeDisplay";
+import { formatPeriodDate } from "@/app/services/formatDateService";
 import {
   formatAddress,
   formatCoding,
@@ -20,12 +20,14 @@ import {
   formatCurrentAddress,
   formatPatientContactList,
 } from "@/app/services/formatService";
+import { HtmlTableJsonRow } from "@/app/services/htmlTableService";
 import { evaluateData, noData, notEmpty } from "@/app/utils/data-utils";
 import {
   evaluateAll,
   evaluateOne,
   evaluateReference,
   evaluateValue,
+  evaluateDisplayValue,
 } from "@/app/utils/evaluate";
 import fhirPathMappings, { ValueX } from "@/app/utils/evaluate/fhir-paths";
 import { toSentenceCase } from "@/app/utils/format-utils";
@@ -38,14 +40,12 @@ import EvaluateTable, {
   BaseTable,
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
+import { JsonTable } from "@/app/view-data/components/JsonTable";
 import { UnstyledDividedList } from "@/app/view-data/components/UnstyledDividedList";
+import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
+
+import { getPatient } from "./demographicsService";
 import { FhirIndex } from "./fhirResourcesIndexService";
-import { getPatient } from "@/app/view-data/services/demographicsService";
-import {
-  formatDateTime,
-  formatPeriodDate,
-} from "@/app/services/formatDateService";
-import { sortResourcesByDate } from "../utils/fhir-data-utils";
 
 /**
  * Evaluates social data from the FHIR bundle and formats it into structured data for display.
@@ -276,7 +276,7 @@ export const evaluateTobaccoUse = (fhirBundle: Bundle) => {
       observations.map((observation) => ({
         detail,
         observation: formatObservation(observation),
-        date: evaluateValue(observation, fhirPathMappings.effectiveX),
+        date: evaluateDisplayValue(observation, fhirPathMappings.effectiveX),
       })),
   );
 
@@ -404,7 +404,7 @@ export const evaluateOccupationHistory = (fhirBundle: Bundle) => {
                 title: "Dates",
                 value: obs.effectivePeriod
                   ? formatPeriodDate(obs.effectivePeriod)
-                  : formatDateTime(obs.effectiveDateTime),
+                  : formatDateTimeDisplay(obs.effectiveDateTime),
               }}
             />
             <DataDisplay
@@ -600,11 +600,11 @@ const TransportationDetails = ({
   const baseInfo = [
     {
       title: "Transportation Vehicle Type",
-      value: evaluateValue(transportObs, fhirPathMappings.valueX),
+      value: evaluateDisplayValue(transportObs, fhirPathMappings.valueX),
     },
     {
       title: "Dates",
-      value: evaluateValue(transportObs, fhirPathMappings.effectiveX),
+      value: evaluateDisplayValue(transportObs, fhirPathMappings.effectiveX),
     },
   ];
 
@@ -618,7 +618,7 @@ const TransportationDetails = ({
         fhirPathMappings.code,
         "Observation.component",
       ),
-      value: evaluateValue(
+      value: evaluateDisplayValue(
         component,
         fhirPathMappings.valueX,
         "Observation.component",
@@ -678,11 +678,14 @@ const ExposureDetails = ({
     },
     {
       title: "Specific Exposure",
-      value: evaluateValue(exposureObs, fhirPathMappings.valueX) || noData,
+      value:
+        evaluateDisplayValue(exposureObs, fhirPathMappings.valueX) || noData,
     },
     {
       title: "Dates",
-      value: evaluateValue(exposureObs, fhirPathMappings.effectiveX) || noData,
+      value:
+        evaluateDisplayValue(exposureObs, fhirPathMappings.effectiveX) ||
+        noData,
     },
   ];
 
@@ -921,7 +924,7 @@ export const evaluateSocialDeterminantsOfHealth = (fhirBundle: Bundle) => {
               <span>{domainTitle}</span>
 
               <span className="font-size-xs text-base">
-                {evaluateValue(domain, fhirPathMappings.effectiveX)}
+                {evaluateDisplayValue(domain, fhirPathMappings.effectiveX)}
               </span>
             </div>
           ),

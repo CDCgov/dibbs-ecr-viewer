@@ -7,13 +7,13 @@ import {
   DetailsTrigger,
   useDetailsRef,
 } from "@/app/components/DetailsSidePanel";
+import { LocalDateTime } from "@/app/components/LocalDateTime";
 import {
   PaginatedSortableTable,
   TableColumn,
 } from "@/app/components/table/PaginatedSortableTable";
 import { ConditionReference } from "@/app/data/metadataDb/types/core";
 import { ServerActionResult } from "@/app/services/errorService";
-import { formatDateTime } from "@/app/services/formatDateService";
 import { ListedProgramArea } from "@/app/services/programAreaService";
 import { makePlural } from "@/app/utils/format-utils";
 
@@ -69,9 +69,14 @@ export const ProgramTable = ({
         isLoggedInUserAdmin={isLoggedInUserAdmin}
         detailsRef={detailsRef}
         title={selectedProgramArea?.name!}
-        subtitle={`Created on ${formatDateTime(
-          selectedProgramArea?.date_created.toISOString(),
-        )}`}
+        subtitle={
+          <>
+            Created on{" "}
+            <LocalDateTime
+              value={selectedProgramArea?.date_created.toISOString()}
+            />
+          </>
+        }
         editHref={`/admin/program/edit?uuid=${selectedProgramArea?.uuid}`}
         itemType="program area"
         deleteAction={async () =>
