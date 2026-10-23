@@ -1,3 +1,6 @@
+import { Fragment } from "react";
+
+import classNames from "classnames";
 import {
   Bundle,
   CareTeamParticipant,
@@ -19,9 +22,14 @@ import {
   ServiceRequest,
 } from "fhir/r4";
 
+import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
 import {
-  formatDateTime,
+  formatDateTimeDisplay,
+  formatStartEndDateTimeDisplay,
+} from "@/app/services/dateTimeDisplay";
+import {
   formatStartEndDate,
+  parseDateTime,
 } from "@/app/services/formatDateService";
 import {
   formatAddress,
@@ -45,6 +53,7 @@ import {
   evaluateOne,
   evaluateReference,
   evaluateValue,
+  evaluateDisplayValue,
 } from "@/app/utils/evaluate";
 import fhirPathMappings, { FhirPath } from "@/app/utils/evaluate/fhir-paths";
 import { makePlural, toSentenceCase } from "@/app/utils/format-utils";
@@ -59,16 +68,12 @@ import {
 import EvaluateTable, {
   ColumnInfoInput,
 } from "@/app/view-data/components/EvaluateTable";
+import { FieldValue } from "@/app/view-data/components/FieldValue";
 import { JsonTable } from "@/app/view-data/components/JsonTable";
 import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
-import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
-import { FhirIndex } from "@/app/view-data/services/fhirResourcesIndexService";
-import classNames from "classnames";
-import { FieldValue } from "../components/FieldValue";
-import {
-  calculatePatientAge,
-  getPatient,
-} from "@/app/view-data/services/demographicsService";
+
+import { calculatePatientAge, getPatient } from "./demographicsService";
+import { FhirIndex } from "./fhirResourcesIndexService";
 
 // =============================================================================
 // Clinical Info (Overall)
@@ -255,7 +260,11 @@ export const returnProblemsTable = (
       infoPath: "code",
     },
     { columnName: "Status", infoPath: "activeProblemsStatus" },
-    { columnName: "Onset Date/Time", infoPath: "conditionOnsetDate" },
+    {
+      columnName: "Onset Date/Time",
+      infoPath: "conditionOnsetDate",
+      applyToValue: formatDateTimeDisplay,
+    },
     { columnName: "Onset Age", infoPath: "activeProblemsOnsetAge" },
     {
       columnName: "Comments",
@@ -274,8 +283,8 @@ export const returnProblemsTable = (
 
   conditions.sort(
     (a, b) =>
-      new Date(b.onsetDateTime ?? "").getTime() -
-      new Date(a.onsetDateTime ?? "").getTime(),
+      parseDateTime(b.onsetDateTime ?? "").getTime() -
+      parseDateTime(a.onsetDateTime ?? "").getTime(),
   );
 
   return (
@@ -305,14 +314,11 @@ const createFormattedCondition = (
   fhirBundle: Bundle,
   fhirIndex: FhirIndex,
 ): ConditionWithFormattedOnsetAge => {
-  const formattedOnsetDateTime = formatDateTime(condition.onsetDateTime);
-
   const formattedCondition: ConditionWithFormattedOnsetAge = {
     ...condition,
-    onsetDateTime: formattedOnsetDateTime,
     onsetAge: getFormattedOnsetAge(
       condition.onsetAge,
-      formattedOnsetDateTime,
+      condition.onsetDateTime,
       fhirBundle,
       fhirIndex,
     ),
@@ -343,38 +349,49 @@ const getFormattedOnsetAge = (
   };
 };
 
-const evaluateOutbreakInfo = (fhirBundle: Bundle): string => {
+const evaluateOutbreakInfo = (fhirBundle: Bundle) => {
   const outbreakInfos = evaluateAll(
     fhirBundle,
     fhirPathMappings.emergencyOutbreakInfo,
   );
 
-  return outbreakInfos
-    .map((outbreakInfo) => {
-      const lines = [];
+  if (!outbreakInfos.length) return "";
+  const entries = outbreakInfos.map((outbreakInfo, index) => {
+    const lines = [];
 
-      if (outbreakInfo.effectiveDateTime) {
-        lines.push(
-          "Date/Time: " + formatDateTime(outbreakInfo.effectiveDateTime),
-        );
-      } else if (outbreakInfo.effectivePeriod) {
-        lines.push(formatStartEndDate(outbreakInfo.effectivePeriod));
-      }
+    if (outbreakInfo.effectiveDateTime) {
+      lines.push(
+        <>Date/Time: {formatDateTimeDisplay(outbreakInfo.effectiveDateTime)}</>,
+      );
+    } else if (outbreakInfo.effectivePeriod) {
+      lines.push(formatStartEndDateTimeDisplay(outbreakInfo.effectivePeriod));
+    }
 
-      // Get the first display value from the coding array
-      const coding = outbreakInfo.code?.coding?.find((c) => c.display);
-      if (coding?.display) {
-        lines.push("Type: " + coding.display);
-      }
+    // Get the first display value from the coding array
+    const coding = outbreakInfo.code?.coding?.find((c) => c.display);
+    if (coding?.display) {
+      lines.push("Type: " + coding.display);
+    }
 
-      const value = evaluateValue(outbreakInfo, fhirPathMappings.valueX);
-      if (value) {
-        lines.push("Result: " + value);
-      }
+    const value = evaluateDisplayValue(outbreakInfo, fhirPathMappings.valueX);
+    if (value) {
+      lines.push(<>Result: {value}</>);
+    }
 
-      return lines.join("\n");
-    })
-    .join("\n\n");
+    if (!lines.length) return null;
+    return (
+      <Fragment key={outbreakInfo.id ?? index}>
+        {index > 0 && "\n\n"}
+        {lines.map((line, lineIndex) => (
+          <Fragment key={lineIndex}>
+            {lineIndex > 0 && "\n"}
+            {line}
+          </Fragment>
+        ))}
+      </Fragment>
+    );
+  });
+  return entries.some(Boolean) ? <>{entries}</> : "";
 };
 
 // =============================================================================
@@ -651,8 +668,9 @@ export const returnMedicationsTable = (fhirBundle: Bundle) => {
           {
             title: "Date/Time",
             value:
-              formatDateTime(
-                evaluateValue(medicationStatement, fhirPathMappings.effectiveX),
+              evaluateDisplayValue(
+                medicationStatement,
+                fhirPathMappings.effectiveX,
               ) || noData,
           },
           {
@@ -809,7 +827,7 @@ const evaluateProcedureDetails = (fhirBundle: Bundle, procedure: Element) => {
     },
     {
       title: "Outcome",
-      value: evaluateValue(procedure, fhirPathMappings.valueX),
+      value: evaluateDisplayValue(procedure, fhirPathMappings.valueX),
     },
     {
       title: "Complication",
@@ -958,10 +976,6 @@ export const returnImmunizations = (
         ...initialImmunization,
       };
 
-      newImmunization.occurrenceDateTime = formatDateTime(
-        initialImmunization.occurrenceDateTime,
-      );
-
       const manufacturer = evaluateReference<Organization>(
         fhirBundle,
         initialImmunization.manufacturer?.reference,
@@ -1021,7 +1035,6 @@ export const returnVitalsTable = (fhirBundle: Bundle) => {
     {
       columnName: "Date/Time",
       infoPath: "effectiveX",
-      applyToValue: formatDateTime,
     },
   ];
 

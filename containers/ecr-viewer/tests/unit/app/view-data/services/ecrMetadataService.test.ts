@@ -30,6 +30,10 @@ describe("Evaluate Ecr Metadata", () => {
       BundleWithEcrMetadata as unknown as Bundle,
     );
 
+    const { container } = render(
+      actual.eicrDetails.availableData[1].value as ReactElement,
+    );
+    expect(container.textContent).toEqual("02/04/2000 9:01\u00A0AM\u00A0EST");
     expect(actual.eicrDetails.availableData.slice(0, 3)).toEqual([
       {
         title: "eICR ID",
@@ -39,7 +43,7 @@ describe("Evaluate Ecr Metadata", () => {
       },
       {
         title: "Date/Time eCR Created",
-        value: "02/04/2000 9:01\u00A0AM\u00A0EST",
+        value: expect.any(Object),
       },
       { title: "eICR Release Version", value: "12/12/2016" },
     ]);

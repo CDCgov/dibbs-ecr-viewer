@@ -104,7 +104,7 @@ export const DetailsSidePanel = ({
   detailsRef: RefObject<ModalRef | null>;
   details: Detail[];
   title: string;
-  subtitle: string;
+  subtitle: ReactNode;
   editHref?: string;
   itemType: string;
   deleteAction: () => Promise<ServerActionResult<void>>;

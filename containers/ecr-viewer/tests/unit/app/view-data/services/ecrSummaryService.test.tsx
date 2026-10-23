@@ -4,11 +4,12 @@ import { render, screen } from "@testing-library/react";
 import { Bundle } from "fhir/r4";
 
 import _BundleWithClinicalInfo from "../../../../../../../test-data/fhir/BundleClinicalInfo.json";
-import _BundleEcrSummary from "../../../../../../../test-data/fhir/BundleEcrSummary.json";
 import _BundleEcrMetadata from "../../../../../../../test-data/fhir/BundleEcrMetadata.json";
+import _BundleEcrSummary from "../../../../../../../test-data/fhir/BundleEcrSummary.json";
 import _BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
 import _BundlePatient from "../../../../../../../test-data/fhir/BundlePatient.json";
 import _BundleRRConditionValueString from "../../../../../../../test-data/fhir/BundleRRConditionValueString.json";
+import { evaluateData, noDataSummary } from "@/app/utils/data-utils";
 import {
   evaluateEcrSummaryPatient,
   evaluateEcrSummaryEncounter,
@@ -20,7 +21,6 @@ import {
   FhirIndex,
   getFhirIndex,
 } from "@/app/view-data/services/fhirResourcesIndexService";
-import { evaluateData, noDataSummary } from "@/app/utils/data-utils";
 
 const BundleLab = _BundleLab as unknown as Bundle;
 const fhirIndexBundleLab = getFhirIndex(BundleLab);
@@ -354,9 +354,10 @@ describe("ecrSummaryService Tests", () => {
       expect(
         deceasedSummary.find((d) => d.title === "Vital Status")?.value,
       ).toEqual("Deceased");
-      expect(
+      const { container } = render(
         deceasedSummary.find((d) => d.title === "Death Date/Time")?.value,
-      ).toEqual("07/01/2026 8:45\u00A0AM\u00A0EDT");
+      );
+      expect(container.textContent).toEqual("07/01/2026 8:45\u00A0AM\u00A0EDT");
     });
 
     it("should show parent/guardian info if minor", () => {

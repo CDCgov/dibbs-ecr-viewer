@@ -44,6 +44,18 @@ const reformatNumericTimestampToISO = (dateTimeString: string) => {
 };
 
 /**
+ * Parse a date string, including numeric HL7 timestamps such as "20240101120000+0000".
+ * @param value Date or timestamp to parse.
+ * @returns A Date object, or an invalid Date if parsing fails.
+ */
+export const parseDateTime = (value: string): Date => {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? new Date(reformatNumericTimestampToISO(value))
+    : date;
+};
+
+/**
  * Format a datetime string to "MM/DD/YYYY HH:MM AM/PM Z" where "Z" is the timezone abbreviation.If
  * the input string contains a UTC offset then the returned string will be in the format
  * "MM/DD/YYYY HH:MM AM/PM ZZZ". If there is no timezone indicated on the input date string, none will
@@ -126,8 +138,12 @@ export const formatDate = (dateString?: string): string | undefined => {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
-      timeZone: "UTC",
-    }); // UTC, otherwise will have timezone issues
+      // JavaScript reads YYYY-MM-DD as UTC and MM/DD/YYYY as local midnight.
+      // Format in the same timezone so the calendar day does not change.
+      timeZone: /^\d{1,2}\/\d{1,2}\/\d{2}(?:\d{2})?$/.test(dateString)
+        ? undefined
+        : "UTC",
+    });
   }
 };
 

@@ -5,10 +5,15 @@ import { Bundle, DiagnosticReport, Observation, Organization } from "fhir/r4";
 import _BundleLab from "../../../../../../../test-data/fhir/BundleLab.json";
 import _BundleLabInvalidResultsDiv from "../../../../../../../test-data/fhir/BundleLabInvalidResultsDiv.json";
 import _BundleLabNoLabIds from "../../../../../../../test-data/fhir/BundleLabNoLabIds.json";
-import { AccordionItem } from "@/app/types";
 import { HtmlTableJson } from "@/app/services/htmlTableService";
+import { AccordionItem } from "@/app/types";
 import { noData } from "@/app/utils/data-utils";
 import { evaluateAllAndCheck, evaluateOneAndCheck } from "@/app/utils/evaluate";
+import {
+  FhirIndex,
+  getFhirIndex,
+  getResourcesByType,
+} from "@/app/view-data/services/fhirResourcesIndexService";
 import {
   checkAbnormalTag,
   searchResultRecord,
@@ -28,11 +33,6 @@ import {
   matchesResultId,
   LabInterpretationTag,
 } from "@/app/view-data/services/labsService";
-import {
-  FhirIndex,
-  getFhirIndex,
-  getResourcesByType,
-} from "@/app/view-data/services/fhirResourcesIndexService";
 
 const BundleLab = _BundleLab as unknown as Bundle;
 const fhirIndexBundleLab = getFhirIndex(BundleLab);
@@ -139,11 +139,13 @@ const labReportNormalJsonObject = {
         },
         "Collection Method / Volume": { value: "", metadata: {} },
         "Collection Time": {
-          value: "09/28/2000 4:51\u00A0PM\u00A0EDT",
+          value: "09/28/2000 1:51 PM PDT",
+          dateTime: true,
           metadata: {},
         },
         "Received Time": {
-          value: "09/28/2000 4:51\u00A0PM\u00A0EDT",
+          value: "09/28/2000 1:51 PM PDT",
+          dateTime: true,
           metadata: {},
         },
       },
@@ -619,7 +621,19 @@ describe("LabsService tests", () => {
 
       const result = searchResultRecord(labHTMLJson, searchKey);
 
-      expect(result).toStrictEqual(expectedResult);
+      const { container } = render(result);
+      expect(container.textContent).toStrictEqual(expectedResult);
+    });
+
+    it("shows one collection time for duplicate timestamps with different offsets", () => {
+      const rows = [
+        "2026-07-01T15:00:00Z",
+        "2026-07-01T15:00:00Z",
+        "2026-07-01T11:00:00-04:00",
+      ].map((value) => ({ "Collection Time": { value, dateTime: true } }));
+      const { container } = render(searchResultRecord(rows, "Collection Time"));
+      expect(container.textContent).toBe("07/01/2026 11:00\u00a0AM\u00a0EDT");
+      expect(container.querySelectorAll("time")).toHaveLength(1);
     });
 
     it("returns an empty string of results if none are found for search key", () => {
@@ -633,12 +647,34 @@ describe("LabsService tests", () => {
   });
 
   describe("returnAnalysisTime", () => {
+    it("shows each analysis time once, including timestamps with different offsets", () => {
+      const values = [
+        "2026-07-01T15:00:00Z",
+        "2026-07-01T11:00:00-04:00",
+        "2026-07-01T16:00:00Z",
+      ];
+      const report = {
+        tables: [
+          values.map((value) => ({
+            "Analysis Time": { value, dateTime: true },
+          })),
+        ],
+      };
+      const { container } = render(returnAnalysisTime(report, "Analysis Time"));
+
+      expect(container.querySelectorAll("time")).toHaveLength(2);
+      expect(container.textContent).toBe(
+        "07/01/2026 11:00\u00a0AM\u00a0EDT, 07/01/2026 12:00\u00a0PM\u00a0EDT",
+      );
+    });
+
     it("extracts and formats correct field value from within a lab report", () => {
       const fieldName = "Analysis Time";
 
       const result = returnAnalysisTime(labReportNormalJsonObject, fieldName);
 
-      expect(result).toEqual("09/28/2000 4:59\u00A0PM\u00A0EDT");
+      const { container } = render(result);
+      expect(container.textContent).toEqual("09/28/2000 4:59\u00A0PM\u00A0EDT");
     });
 
     it("extracts returns noData if unavailable", () => {
@@ -679,7 +715,8 @@ describe("LabsService tests", () => {
         fieldName,
       );
 
-      expect(result).toEqual(
+      const { container } = render(result);
+      expect(container.textContent).toEqual(
         "09/28/2000 4:59\u00A0PM\u00A0EDT, 09/28/2000 5:59\u00A0PM\u00A0EDT",
       );
     });
@@ -712,7 +749,8 @@ describe("LabsService tests", () => {
         fieldName,
       );
 
-      expect(result).toEqual(
+      const { container } = render(result);
+      expect(container.textContent).toEqual(
         "09/28/2000 4:59\u00A0PM\u00A0EDT, 09/28/2000 5:59\u00A0PM\u00A0EDT",
       );
     });

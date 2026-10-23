@@ -8,13 +8,12 @@ import {
   Encounter,
   Observation,
   Organization,
-  Patient,
 } from "fhir/r4";
 
 import {
-  formatDateTime,
-  formatStartEndDateTime,
-} from "@/app/services/formatDateService";
+  formatDateTimeDisplay,
+  formatStartEndDateTimeDisplay,
+} from "@/app/services/dateTimeDisplay";
 import {
   formatCodeableConcept,
   formatCoding,
@@ -34,15 +33,11 @@ import { toTitleCase } from "@/app/utils/format-utils";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
 import { ConditionSummary } from "@/app/view-data/components/EcrSummary";
 import { LabAccordion } from "@/app/view-data/components/LabAccordion";
+
 import {
   returnImmunizations,
   returnProblemsTable,
-} from "@/app/view-data/services/clinicalInfoService";
-
-import {
-  evaluateEncounterDiagnosis,
-  getLocationName,
-} from "@/app/view-data/services/encounterInfoService";
+} from "./clinicalInfoService";
 import {
   evaluatePatientName,
   evaluatePatientRace,
@@ -52,10 +47,14 @@ import {
   getPatient,
   evaluatePatientDOB,
   evaluatePatientVitalStatus,
-} from "@/app/view-data/services/demographicsService";
+} from "./demographicsService";
+import {
+  evaluateEncounterDiagnosis,
+  getLocationName,
+} from "./encounterInfoService";
+import { FhirIndex, getResourcesByType } from "./fhirResourcesIndexService";
 import { evaluateLabInfoData } from "./labsService";
 import { getReportabilityRulesReasons } from "./reportabilityService";
-import { FhirIndex, getResourcesByType } from "./fhirResourcesIndexService";
 
 /**
  * Evaluates and retrieves patient details from the FHIR bundle using the provided path mappings.
@@ -105,7 +104,7 @@ export const evaluateEcrSummaryPatient = (
           {
             title: "Death Date/Time",
             value:
-              formatDateTime(
+              formatDateTimeDisplay(
                 evaluateOne(patient, fhirPathMappings.patientDOD),
               ) || noDataSummary,
           },
@@ -159,7 +158,7 @@ export const evaluateEcrSummaryEncounter = (fhirBundle: Bundle) => {
   return [
     {
       title: "Encounter Date/Time",
-      value: formatStartEndDateTime(encounter?.period) || noDataSummary,
+      value: formatStartEndDateTimeDisplay(encounter?.period) || noDataSummary,
     },
     {
       title: "Encounter Type",

@@ -14,7 +14,9 @@ import {
   Specimen,
 } from "fhir/r4";
 
-import { formatDateTime } from "@/app/services/formatDateService";
+import { LocalDateTime } from "@/app/components/LocalDateTime";
+import { formatDateTimeDisplay } from "@/app/services/dateTimeDisplay";
+import { parseDateTime } from "@/app/services/formatDateService";
 import {
   formatAddress,
   formatCodeableConcept,
@@ -39,6 +41,7 @@ import {
   evaluateOne,
   evaluateReference2,
   evaluateValue,
+  evaluateDisplayValue,
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import {
@@ -55,11 +58,12 @@ import EvaluateTable, {
 } from "@/app/view-data/components/EvaluateTable";
 import { FieldValue } from "@/app/view-data/components/FieldValue";
 import { sortResourcesByDate } from "@/app/view-data/utils/fhir-data-utils";
+
 import {
   FhirIndex,
   getOneResourceByType,
   getResourcesByType,
-} from "@/app/view-data/services/fhirResourcesIndexService";
+} from "./fhirResourcesIndexService";
 
 export interface ResultObject {
   [key: string]: AccordionItem[];
@@ -126,7 +130,7 @@ export const evaluateLabInfoData = (
             className="text-base flex-shrink-0"
             style={{ fontSize: "1rem" }}
           >
-            {evaluateValue(report, fhirPathMappings.effectiveX)}
+            {evaluateDisplayValue(report, fhirPathMappings.effectiveX)}
           </span>
         </div>
       ),
@@ -407,45 +411,77 @@ export const LabInterpretationTag = ({
 };
 
 /**
- * Recursively searches through a nested array of objects to find values associated with a specified search key.
- * @param result - The array of objects to search through.
- * @param searchKey - The key to search for within the objects.
- * @returns - A comma-separated string containing unique search key values.
- * @example result - JSON object that contains the tables for all lab reports
- * @example searchKey - Ex. "Analysis Time" or the field that we are searching data for.
+ * Find a named field in the first matching lab table.
+ * @param result Tables parsed from the lab report's HTML.
+ * @param searchKey Field name, such as "Analysis Time".
+ * @returns Matching cells from the first table that has a value for this field.
+ */
+const findResultFields = (
+  result: HtmlTableJsonRow[] | HtmlTableJsonRow[][],
+  searchKey: string,
+): HtmlTableJsonRow[string][] => {
+  const fields: HtmlTableJsonRow[string][] = [];
+  for (const table of result) {
+    if (Array.isArray(table)) {
+      const nestedFields = findResultFields(table, searchKey);
+      if (nestedFields.some(({ value }) => Boolean(value))) return nestedFields;
+    } else if (
+      table.hasOwnProperty(searchKey) &&
+      table[searchKey].hasOwnProperty("value")
+    ) {
+      fields.push(table[searchKey]);
+    }
+  }
+  return fields;
+};
+
+/**
+ * Give timestamps that refer to the same moment the same comparison key.
+ * @param value Timestamp to compare.
+ * @returns Milliseconds since January 1, 1970, or the original text if parsing fails.
+ */
+const timestampKey = (value: string) => {
+  const time = parseDateTime(value).getTime();
+  return Number.isNaN(time) ? value : time;
+};
+
+/**
+ * Find a lab field's unique values and format its timestamps in the browser.
+ * @param result Tables parsed from the lab report's HTML.
+ * @param searchKey Field name, such as "Analysis Time".
+ * @returns The field's values as text or React elements, or an empty string if none are found.
  */
 export function searchResultRecord(
   result: HtmlTableJsonRow[] | HtmlTableJsonRow[][],
   searchKey: string,
 ): RenderableNode {
   const resultsArray: RenderableNode[] = [];
-
-  // Loop through each table
-  for (const table of result) {
-    // For each table, recursively search through all nodes
-    if (Array.isArray(table)) {
-      const nestedResult = searchResultRecord(table, searchKey);
-      if (nestedResult) {
-        return nestedResult;
-      }
-    } else if (
-      table.hasOwnProperty(searchKey) &&
-      table[searchKey].hasOwnProperty("value")
-    ) {
-      resultsArray.push(table[searchKey].value);
-    }
+  const seenValues = new Set<RenderableNode | number>();
+  for (const { value, dateTime } of findResultFields(result, searchKey)) {
+    if (!value) continue;
+    const key =
+      dateTime && typeof value === "string" ? timestampKey(value) : value;
+    if (seenValues.has(key)) continue;
+    seenValues.add(key);
+    resultsArray.push(
+      dateTime && typeof value === "string" ? (
+        <React.Fragment key={resultsArray.length}>
+          {formatDateTimeDisplay(value)}
+        </React.Fragment>
+      ) : (
+        value
+      ),
+    );
   }
 
-  // Remove empties and duplicates
-  const res = [...new Set(resultsArray.filter(Boolean))];
-  return arrayToElement(res);
+  return arrayToElement(resultsArray);
 }
 
 /**
- * Extracts and formats a field value from within a lab report (sourced from HTML string).
- * @param labReportJson - A JSON object representing the lab report HTML string
- * @param fieldName - A string containing the field name for which the value is being searched.
- * @returns A comma-separated string of unique collection times, or a 'No data' JSX element if none are found.
+ * Find a named field in a lab report's parsed HTML tables.
+ * @param labReportJson Tables parsed from the lab report's HTML.
+ * @param fieldName Name of the field to display.
+ * @returns The field's values as text or React elements, or the "No data" element if none are found.
  */
 export const returnFieldValueFromLabHtmlString = (
   labReportJson: HtmlTableJson | undefined,
@@ -465,22 +501,16 @@ export const returnFieldValueFromLabHtmlString = (
 };
 
 /**
- * Extracts and formats the analysis date/time(s) from within a lab report (sourced from HTML string).
- * @param labReportJson - A JSON object representing the lab report HTML string
- * @param fieldName - A string containing the field name for Analysis Time
- * @returns A comma-separated string of unique collection times, or a 'No data' JSX element if none are found.
+ * Display each unique analysis time in the browser's timezone.
+ * @param labReportJson Tables parsed from the lab report's HTML.
+ * @param fieldName Name of the analysis time field.
+ * @returns Comma-separated local dates and times, or the "No data" element if none are found.
  */
 export const returnAnalysisTime = (
   labReportJson: HtmlTableJson | undefined,
   fieldName: string,
 ): RenderableNode => {
-  const fieldVal = returnFieldValueFromLabHtmlString(labReportJson, fieldName);
-
-  if (fieldVal === noData) {
-    return noData;
-  }
-
-  // recursively pull out strings in the element
+  // Some lab reports have timestamps inside nested HTML elements.
   const getDateTimes = (el: RenderableNode): string[] => {
     if (typeof el === "string") return [el];
     if (!el?.props?.children) return [];
@@ -492,9 +522,25 @@ export const returnAnalysisTime = (
     }
   };
 
-  const dts = getDateTimes(fieldVal);
-  return (
-    [...new Set(dts.map(formatDateTime).filter(Boolean))].join(", ") || noData
+  const dts = findResultFields(labReportJson?.tables ?? [], fieldName).flatMap(
+    ({ value }) => getDateTimes(value),
+  );
+  const dates = [
+    ...new Map(
+      dts.filter(Boolean).map((value) => [timestampKey(value), value]),
+    ).values(),
+  ];
+  return dates.length ? (
+    <>
+      {dates.map((value, index) => (
+        <React.Fragment key={value}>
+          {index > 0 && ", "}
+          <LocalDateTime value={value} />
+        </React.Fragment>
+      ))}
+    </>
+  ) : (
+    noData
   );
 };
 
@@ -783,15 +829,17 @@ const getLabsContent = (
     {
       title: "Received Time",
       value:
-        evaluateValue(specimen, fhirPathMappings.specimenReceivedTime) ||
+        evaluateDisplayValue(specimen, fhirPathMappings.specimenReceivedTime) ||
         noData,
       className: "lab-text-content",
     },
     {
       title: "Collection Time",
       value:
-        evaluateValue(specimen, fhirPathMappings.specimenCollectionTime) ||
-        noData,
+        evaluateDisplayValue(
+          specimen,
+          fhirPathMappings.specimenCollectionTime,
+        ) || noData,
       className: "lab-text-content",
     },
     {
@@ -809,7 +857,8 @@ const getLabsContent = (
   const rrInfo: DisplayDataProps[] = [
     {
       title: "Observation Time",
-      value: evaluateValue(report, fhirPathMappings.effectiveX) || noData,
+      value:
+        evaluateDisplayValue(report, fhirPathMappings.effectiveX) || noData,
       className: "lab-text-content",
     },
     {

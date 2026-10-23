@@ -2,8 +2,6 @@ import { parse, HTMLElement, Node, NodeType } from "node-html-parser";
 
 import { RenderableNode, safeParse } from "@/app/utils/data-utils";
 
-import { formatDateTime } from "./formatDateService";
-
 interface Metadata {
   [key: string]: string;
 }
@@ -12,6 +10,7 @@ export interface HtmlTableJsonRow {
   [key: string]: {
     value: RenderableNode;
     metadata?: Metadata;
+    dateTime?: boolean;
   };
 }
 
@@ -179,15 +178,13 @@ function processTable(table: HTMLElement): HtmlTableJsonRow[] {
           metadata[attrName.toLowerCase()] = attrValue.toString();
         }
       }
-      let value = getElementContent(cell);
-      if (
+      const value = getElementContent(cell);
+      // Keep the original value and mark date columns for formatting in the browser.
+      const dateTime =
         typeof value === "string" &&
         (key.toLowerCase().includes("date") ||
-          key.toLowerCase().includes("time"))
-      ) {
-        value = formatDateTime(value);
-      }
-      obj[key] = { value, metadata };
+          key.toLowerCase().includes("time"));
+      obj[key] = { value, metadata, ...(dateTime ? { dateTime: true } : {}) };
     });
     jsonArray.push(obj);
   });

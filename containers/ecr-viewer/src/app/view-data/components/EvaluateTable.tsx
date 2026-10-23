@@ -4,7 +4,12 @@ import { Table } from "@trussworks/react-uswds";
 import classNames from "classnames";
 import { Element } from "fhir/r4";
 
-import { evaluateValue } from "@/app/utils/evaluate";
+import { parseDateTime } from "@/app/services/formatDateService";
+import {
+  evaluateDisplayValue,
+  evaluateOneAndCheck,
+  isFhirDateTime,
+} from "@/app/utils/evaluate";
 import fhirPathMappings, { FhirPath } from "@/app/utils/evaluate/fhir-paths";
 
 import EvaluateTableRow from "./EvaluateTableRow";
@@ -68,8 +73,8 @@ const EvaluateTable = ({
     if (!sortFn) return;
 
     tableRowData.sort((aRow, bRow) => {
-      const a = aRow.rowCellsData[i].data;
-      const b = bRow.rowCellsData[i].data;
+      const a = aRow.rowCellsData[i].sortData ?? aRow.rowCellsData[i].data;
+      const b = bRow.rowCellsData[i].sortData ?? bRow.rowCellsData[i].data;
       if (typeof a !== "string" || typeof b !== "string") return 0;
       return sortFn(a, b);
     });
@@ -220,15 +225,18 @@ export const evaluateTableRowCell = (
   if (column?.value) {
     data = column.value;
   } else if (column?.infoPath) {
-    const strData: string = evaluateValue(
+    const displayValue = evaluateDisplayValue(
       entry,
       mappings[column.infoPath],
       resourceBasePath,
-    ).replaceAll("<br/>", "\n");
-    if (strData && column.applyToValue) {
-      data = column.applyToValue(strData);
+    );
+    // Date components handle their own formatting. Apply text formatting only to strings.
+    if (typeof displayValue === "string") {
+      const strData = displayValue.replaceAll("<br/>", "\n");
+      data =
+        strData && column.applyToValue ? column.applyToValue(strData) : strData;
     } else {
-      data = strData;
+      data = displayValue;
     }
   } else if (column?.evaluateEntry) {
     data = column.evaluateEntry(entry);
@@ -246,7 +254,39 @@ export const evaluateTableRowCell = (
     data = column.hiddenBaseText;
   }
 
-  return { data, hidden, hiddenRow };
+  // Displayed dates can be React elements, so keep a timestamp string for sorting.
+  // Check date strings as well as TimeX paths because some date fields are typed as strings.
+  let sortData: string | undefined;
+  if (column.sortFn && column.infoPath) {
+    const path = mappings[column.infoPath];
+    const raw = evaluateOneAndCheck<unknown>(
+      entry,
+      typeof path === "string" ? path : path.path,
+      typeof path === "string" ? "ValueX" : path.type,
+      undefined,
+      resourceBasePath,
+    );
+    if (
+      typeof raw === "string" &&
+      ((typeof path !== "string" && path.type === "TimeX") ||
+        isFhirDateTime(raw))
+    ) {
+      const date = parseDateTime(raw);
+      sortData = Number.isNaN(date.getTime()) ? raw : date.toISOString();
+    } else if (
+      raw &&
+      typeof raw === "object" &&
+      ("start" in raw || "end" in raw)
+    ) {
+      const period = raw as { start?: string; end?: string };
+      const value = period.start ?? period.end;
+      if (value) {
+        const date = parseDateTime(value);
+        sortData = Number.isNaN(date.getTime()) ? value : date.toISOString();
+      }
+    }
+  }
+  return { data, hidden, hiddenRow, sortData };
 };
 
 export default EvaluateTable;

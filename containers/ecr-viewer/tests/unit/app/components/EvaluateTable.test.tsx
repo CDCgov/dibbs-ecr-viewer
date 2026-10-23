@@ -1,6 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { Procedure } from "fhir/r4";
 
+import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import EvaluateTable, {
   BaseTable,
   ColumnInfoInput,
@@ -270,4 +272,49 @@ describe("BaseTable", () => {
 
     expect(screen.getByText(tooltipTextContent)).toBeInTheDocument();
   });
+});
+
+it("sorts dates from newest to oldest and displays periods with only an end", () => {
+  const procedures: Procedure[] = [
+    {
+      resourceType: "Procedure",
+      status: "completed",
+      subject: { reference: "Patient/patient" },
+      id: "numeric",
+      performedDateTime: "20260701160000+0000",
+    },
+    {
+      resourceType: "Procedure",
+      status: "completed",
+      subject: { reference: "Patient/patient" },
+      id: "older",
+      performedPeriod: { end: "2026-07-01T16:00:00+02:00" },
+    },
+    {
+      resourceType: "Procedure",
+      status: "completed",
+      subject: { reference: "Patient/patient" },
+      id: "newer",
+      performedDateTime: "2026-07-01T10:00:00-05:00",
+    },
+  ];
+  const { container } = render(
+    <EvaluateTable
+      resources={procedures}
+      mappings={{ name: "id", date: fhirPathMappings.procedureDate }}
+      columns={[
+        { columnName: "Name", infoPath: "name" },
+        {
+          columnName: "Date",
+          infoPath: "date",
+          sortFn: (a, b) => Date.parse(b) - Date.parse(a),
+        },
+      ]}
+    />,
+  );
+  const rows = container.querySelectorAll("tbody tr");
+  expect(rows[0]).toHaveTextContent("numeric");
+  expect(rows[1]).toHaveTextContent("newer");
+  expect(rows[2]).toHaveTextContent("End: 07/01/2026 10:00 AM EDT");
+  expect(rows[2]).not.toHaveTextContent("Start:");
 });
