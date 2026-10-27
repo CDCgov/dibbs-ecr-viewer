@@ -25,7 +25,9 @@ export const formatDateTimeDisplay = (value?: string) => {
     Number.isNaN(Date.parse(value)) &&
     !/^\d{8}(?:\d{2}){1,3}(?:[+-]\d{4})?$/.test(value)
   )
+{
     return value;
+}
   return <LocalDateTime value={value} />;
 };
 
