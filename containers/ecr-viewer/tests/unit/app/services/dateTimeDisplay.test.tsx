@@ -35,11 +35,8 @@ describe("formatDateTimeDisplay", () => {
     const value = "2026-01-01T15:00:00Z";
     const actual = formatDateTimeDisplay(value);
 
-    expect(actual).toEqual(
-      <LocalDateTime value={value} />,
-    );
+    expect(actual).toEqual(<LocalDateTime value={value} />);
   });
-  
 });
 
 describe("formatStartEndDateTimeDisplay", () => {
