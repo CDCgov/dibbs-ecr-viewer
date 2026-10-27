@@ -1,13 +1,14 @@
 import { LocalDateTime } from "@/app/components/LocalDateTime";
 
 import { formatDateTime } from "./formatDateService";
+import { RenderableNode } from "../utils/data-utils";
 
 /**
  * Prepare a value for display, formatting timestamps in the browser.
  * @param value Date, timestamp, or fallback text to display.
  * @returns A formatted calendar date, unchanged text, a local datetime component, or an empty string.
  */
-export const formatDateTimeDisplay = (value?: string) => {
+export const formatDateTimeDisplay = (value?: string): RenderableNode => {
   if (!value) return "";
 
   // Dates without a time keep their calendar day and can be formatted on the server.
