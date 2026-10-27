@@ -1,5 +1,7 @@
 import { render } from "@testing-library/react";
 
+import { LocalDateTime } from "@/app/components/LocalDateTime";
+
 import {
   formatDateTimeDisplay,
   formatStartEndDateTimeDisplay,
@@ -28,6 +30,16 @@ describe("formatDateTimeDisplay", () => {
       expect(formatDateTimeDisplay(value)).toBe(value);
     },
   );
+
+  it("returns a LocalDateTime component if value contains a date and time", () => {
+    const value = "2026-01-01T15:00:00Z";
+    const actual = formatDateTimeDisplay(value);
+
+    expect(actual).toEqual(
+      <LocalDateTime value={value} />,
+    );
+  });
+  
 });
 
 describe("formatStartEndDateTimeDisplay", () => {
@@ -57,10 +69,6 @@ describe("formatStartEndDateTimeDisplay", () => {
   it.each([
     { period: { start: "2026-07-02T02:00:00Z" }, label: "Start" },
     { period: { end: "2026-07-02T02:00:00Z" }, label: "End" },
-    {
-      period: { start: "2026-07-02T02:00:00Z", aqswwqend: "" },
-      label: "Start",
-    },
     { period: { start: "", end: "2026-07-02T02:00:00Z" }, label: "End" },
   ])(
     "displays only $label when the other date is missing: $period",

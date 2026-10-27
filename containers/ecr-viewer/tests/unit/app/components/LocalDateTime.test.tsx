@@ -42,12 +42,24 @@ describe("LocalDateTime", () => {
 
 describe("LocalRelatedDateTime", () => {
   it("bolds related report times only when the local dates match", () => {
-    const { container, rerender } = render(
+    const element =
       <LocalRelatedDateTime
         value="2026-07-02T02:00:00Z"
         mainValue="2026-07-01T20:00:00Z"
-      />,
+      />;
+    
+    const html = renderToString(element);
+
+    expect(html).toContain('aria-busy="true"');
+    expect(html).toContain("Loading date and time");
+
+    const {container, rerender} = render(element);
+
+    expect(container.querySelector("time")).toHaveAttribute(
+      "aria-busy",
+      "false",
     );
+
     // These timestamps have different UTC dates but both fall on July 1 locally.
     expect(container.querySelector("strong")).toHaveTextContent("10:00 PM EDT");
     expect(container.textContent).toBe("10:00\u00a0PM\u00a0EDT 07/01/2026");
