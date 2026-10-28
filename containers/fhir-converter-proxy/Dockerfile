@@ -1,4 +1,4 @@
-FROM haproxy:3.4.4-alpine
+FROM haproxy:3.4.6-alpine
 COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
 
 USER root
