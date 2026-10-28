@@ -42,10 +42,16 @@ updates:
       npm-minor-and-patch:
         applies-to: version-updates
         update-types: ["minor", "patch"]
+      npm-per-dependency:
+        # Everything the group above doesn't take (majors, and constraint-only
+        # updates Dependabot can't classify): one PR per dependency, covering
+        # every directory that uses it.
+        applies-to: version-updates
+        patterns: ["*"]
+        group-by: dependency-name
 
   - package-ecosystem: "pip"
     directories:
-      - "/containers/ecr-viewer/seed-scripts"
       - "/containers/ingestion"
       - "/containers/message-parser"
       - "/containers/orchestration"
@@ -65,6 +71,13 @@ updates:
       python-minor-and-patch:
         applies-to: version-updates
         update-types: ["minor", "patch"]
+      python-per-dependency:
+        # Everything the group above doesn't take (majors, and constraint-only
+        # updates Dependabot can't classify): one PR per dependency, covering
+        # every directory that uses it.
+        applies-to: version-updates
+        patterns: ["*"]
+        group-by: dependency-name
 
   - package-ecosystem: "docker"
     directories:
@@ -91,6 +104,13 @@ updates:
       docker-minor-and-patch:
         applies-to: version-updates
         update-types: ["minor", "patch"]
+      docker-per-dependency:
+        # Everything the group above doesn't take (majors, and constraint-only
+        # updates Dependabot can't classify): one PR per dependency, covering
+        # every directory that uses it.
+        applies-to: version-updates
+        patterns: ["*"]
+        group-by: dependency-name
 
   - package-ecosystem: "docker-compose"
     directory: "/containers/ecr-viewer"
