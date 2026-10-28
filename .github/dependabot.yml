@@ -1,68 +1,110 @@
-# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
-
+# https://docs.github.com/code-security/dependabot/working-with-dependabot/dependabot-options-reference
+#
+# Shared DIBBs conventions: every ecosystem runs weekly on Monday at 12:00 UTC
+# (07:00/08:00 US Eastern), minor and patch version updates are grouped into one
+# PR per ecosystem, majors get their own PRs, and version updates wait out a
+# 5-day cooldown. Security updates are not grouped or delayed.
 version: 2
-
-multi-ecosystem-groups:
-  all-updates:
-    schedule:
-      interval: "weekly"
-      day: "sunday"
-    open-pull-requests-limit: 1
-
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
-    patterns: ["*"]
-    multi-ecosystem-group: "all-updates"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "12:00"
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 5
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    groups:
+      actions-minor-and-patch:
+        applies-to: version-updates
+        update-types: ["minor", "patch"]
+
   - package-ecosystem: "npm"
+    directories:
+      - "/"
+      - "/containers/ecr-viewer"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "12:00"
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 5
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    groups:
+      npm-minor-and-patch:
+        applies-to: version-updates
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: "pip"
+    directories:
+      - "/containers/ecr-viewer/seed-scripts"
+      - "/containers/ingestion"
+      - "/containers/message-parser"
+      - "/containers/orchestration"
+      - "/containers/trigger-code-reference"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "12:00"
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 5
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    groups:
+      python-minor-and-patch:
+        applies-to: version-updates
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: "docker"
+    directories:
+      - "/containers/ecr-viewer"
+      - "/containers/ecr-viewer/seed-scripts"
+      - "/containers/ecr-viewer/seed-scripts/sql/sqlserver"
+      - "/containers/fhir-converter"
+      - "/containers/fhir-converter-proxy"
+      - "/containers/ingestion"
+      - "/containers/message-parser"
+      - "/containers/orchestration"
+      - "/containers/trigger-code-reference"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "12:00"
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 5
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    groups:
+      docker-minor-and-patch:
+        applies-to: version-updates
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: "docker-compose"
     directory: "/containers/ecr-viewer"
-    patterns: ["*"]
-    multi-ecosystem-group: "all-updates"
-  - package-ecosystem: "docker"
-    directory: "/containers/ecr-viewer"
-    patterns: ["*"]
-    multi-ecosystem-group: "all-updates"
-  - package-ecosystem: "pip"
-    directory: "/containers/orchestration"
-    patterns: ["*"]
-    multi-ecosystem-group: "all-updates"
-  - package-ecosystem: "docker"
-    directory: "/containers/orchestration"
-    patterns: ["*"]
-    multi-ecosystem-group: "all-updates"
-  - package-ecosystem: "pip"
-    directory: "/containers/fhir-converter"
-    patterns: ["*"]
-    multi-ecosystem-group: "all-updates"
-  - package-ecosystem: "docker"
-    directory: "/containers/fhir-converter"
-    patterns: ["*"]
-    multi-ecosystem-group: "all-updates"
-  - package-ecosystem: "pip"
-    directory: "/containers/ingestion"
-    patterns: ["*"]
-    multi-ecosystem-group: "all-updates"
-  - package-ecosystem: "docker"
-    directory: "/containers/ingestion"
-    patterns: ["*"]
-    multi-ecosystem-group: "all-updates"
-  - package-ecosystem: "pip"
-    directory: "/containers/message-parser"
-    patterns: ["*"]
-    multi-ecosystem-group: "all-updates"
-  - package-ecosystem: "docker"
-    directory: "/containers/message-parser"
-    patterns: ["*"]
-    multi-ecosystem-group: "all-updates"
-  - package-ecosystem: "pip"
-    directory: "/containers/trigger-code-reference"
-    patterns: ["*"]
-    multi-ecosystem-group: "all-updates"
-  - package-ecosystem: "docker"
-    directory: "/containers/trigger-code-reference"
-    patterns: ["*"]
-    multi-ecosystem-group: "all-updates"
-  - package-ecosystem: "docker"
-    directory: "/containers/fhir-converter-proxy"
-    patterns: ["*"]
-    multi-ecosystem-group: "all-updates"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "12:00"
+    open-pull-requests-limit: 5
+    cooldown:
+      default-days: 5
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    groups:
+      docker-compose-minor-and-patch:
+        applies-to: version-updates
+        update-types: ["minor", "patch"]
