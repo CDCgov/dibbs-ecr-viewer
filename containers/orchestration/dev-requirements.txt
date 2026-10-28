@@ -1,4 +1,4 @@
-httpx2>=2.13.0 # preferred backend for Starlette's TestClient
+httpx2>=2.16.0 # preferred backend for Starlette's TestClient
 pytest>=9.1.1
 pytest-env>=1.7.1
 testcontainers>=4.15.0
