@@ -13,10 +13,10 @@ import {
 } from "fhir/r4";
 
 import {
-  formatDateTime,
-  formatStartEndDate,
-  formatStartEndDateTime,
-} from "@/app/services/formatDateService";
+  formatDateTimeDisplay,
+  formatStartEndDateTimeDisplay,
+} from "@/app/services/dateTimeDisplay";
+import { formatStartEndDate } from "@/app/services/formatDateService";
 import {
   formatAddress,
   formatAddressList,
@@ -132,7 +132,7 @@ export const evaluateEncounterData = (fhirBundle: Bundle) => {
   const encounterData = [
     {
       title: "Encounter Date/Time",
-      value: formatStartEndDateTime(encounter?.period),
+      value: formatStartEndDateTimeDisplay(encounter?.period),
     },
     {
       title: "Encounter Type",
@@ -187,7 +187,7 @@ const evaluateEncounterDiagnosisData = (
     {
       columnName: "Date/Time",
       infoPath: "conditionOnsetDate",
-      applyToValue: formatDateTime,
+      applyToValue: formatDateTimeDisplay,
     },
   ];
 
@@ -227,9 +227,9 @@ export const returnAdmissionMedicationsTable = (
     {
       columnName: "Start Date",
       evaluateEntry: (el) => {
-        return evaluateValue(el, fhirPathMappings.effectiveX).replace(
-          "Start: ",
-          "",
+        const effective = evaluateOne(el, fhirPathMappings.effectiveX);
+        return formatDateTimeDisplay(
+          typeof effective === "string" ? effective : effective?.start,
         );
       },
     },

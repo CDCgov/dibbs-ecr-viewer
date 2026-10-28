@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 import "server-only"; // FHIR evaluation should be done server side
 
 import { Tag } from "@trussworks/react-uswds";
@@ -10,7 +12,7 @@ import {
 } from "fhir/r4";
 
 import { ExpandCollapseAccordion } from "@/app/components/ExpandCollapseAccordion";
-import { formatDateTime } from "@/app/services/formatDateService";
+import { formatDateTimeDisplay } from "@/app/services/dateTimeDisplay";
 import { formatCodeableConcept } from "@/app/services/formatService";
 import {
   CompleteData,
@@ -24,6 +26,7 @@ import {
   evaluateReference,
   evaluateReference2,
   evaluateValue,
+  evaluateDisplayValue,
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { toTitleCase } from "@/app/utils/format-utils";
@@ -39,6 +42,7 @@ import {
   compareResourcesByDate,
   sortResourcesByDate,
 } from "@/app/view-data/utils/fhir-data-utils";
+
 import { FhirIndex } from "./fhirResourcesIndexService";
 
 // =============================================================================
@@ -116,7 +120,7 @@ const evaluatePregnancyStatus = (fhirBundle: Bundle) => {
         },
         {
           title: "Effective Date/Time",
-          value: evaluateValue(ob, fhirPathMappings.effectiveX),
+          value: evaluateDisplayValue(ob, fhirPathMappings.effectiveX),
         },
       ].filter(isDataAvailable),
     };
@@ -176,7 +180,7 @@ const evaluatePregnancyStatus = (fhirBundle: Bundle) => {
 
                   {/** inline style due to existing css rules on this button text */}
                   <span className="text-base" style={{ fontSize: "1rem" }}>
-                    {evaluateValue(
+                    {evaluateDisplayValue(
                       obs.observation,
                       fhirPathMappings.effectiveX,
                     )}
@@ -211,11 +215,14 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
       },
       {
         title: "Effective Date/Time",
-        value: evaluateValue(ob, fhirPathMappings.effectiveX),
+        value: evaluateDisplayValue(ob, fhirPathMappings.effectiveX),
       },
       {
         title: "Pregnancy Determination Date/Time",
-        value: evaluateValue(ob, fhirPathMappings.pregnancyDeterminationDate),
+        value: evaluateDisplayValue(
+          ob,
+          fhirPathMappings.pregnancyDeterminationDate,
+        ),
       },
       {
         title: "Pregnancy Determination Method",
@@ -232,7 +239,7 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
             "Observation.component",
           ),
         ),
-        value: evaluateValue(
+        value: evaluateDisplayValue(
           component,
           fhirPathMappings.valueX,
           "Observation.component",
@@ -251,11 +258,11 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
           },
           {
             title: "Outcome",
-            value: evaluateValue(o, fhirPathMappings.valueX),
+            value: evaluateDisplayValue(o, fhirPathMappings.valueX),
           },
           {
             title: "Date/Time",
-            value: evaluateValue(o, fhirPathMappings.effectiveX),
+            value: evaluateDisplayValue(o, fhirPathMappings.effectiveX),
           },
         ];
 
@@ -267,13 +274,19 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
 
         procedures?.forEach((procedure) => {
           const procedureName = evaluateValue(procedure, fhirPathMappings.code);
-          const procedureDate = evaluateValue(
+          const procedureDate = evaluateDisplayValue(
             procedure,
             fhirPathMappings.procedureDate,
           );
           outcomeItems.push({
             title: "Procedure",
-            value: procedureName + "\nPerformed Date/Time: " + procedureDate,
+            value: (
+              <>
+                {procedureName}
+                {"\nPerformed Date/Time: "}
+                {procedureDate}
+              </>
+            ),
           });
         });
 
@@ -306,7 +319,10 @@ const evaluatePregnancyStatusEntries = (fhirBundle: Bundle) => {
         title: toTitleCase(
           evaluateValue(supplementalObservation, fhirPathMappings.code),
         ),
-        value: evaluateValue(supplementalObservation, fhirPathMappings.valueX),
+        value: evaluateDisplayValue(
+          supplementalObservation,
+          fhirPathMappings.valueX,
+        ),
       });
     });
 
@@ -338,7 +354,7 @@ const evaluateLastMenstrualPeriod = (fhirBundle: Bundle) => {
     {
       columnName: "First Date of the Last Period",
       infoPath: "valueX",
-      applyToValue: formatDateTime,
+      applyToValue: formatDateTimeDisplay,
     },
     {
       columnName: "Collection Date/Time",
@@ -354,10 +370,23 @@ const evaluatePregnancyIntention = (fhirBundle: Bundle) => {
 
   if (!observation) return;
 
-  const value = evaluateValue(observation, fhirPathMappings.valueX);
-  const effective = evaluateValue(observation, fhirPathMappings.effectiveX);
+  const value = evaluateDisplayValue(observation, fhirPathMappings.valueX);
+  const effective = evaluateDisplayValue(
+    observation,
+    fhirPathMappings.effectiveX,
+  );
 
-  return value + "\n" + effective;
+  // Keep plain text as a string so "Unknown" is still treated as unavailable.
+  if (typeof value === "string" && typeof effective === "string")
+    return `${value}\n${effective}`;
+
+  return (
+    <>
+      {value}
+      {"\n"}
+      {effective}
+    </>
+  );
 };
 
 const evaluateDateOfLastLiveBirth = (fhirBundle: Bundle) => {
@@ -368,7 +397,7 @@ const evaluateDateOfLastLiveBirth = (fhirBundle: Bundle) => {
 
   if (!observation) return;
 
-  const value = evaluateValue(observation, fhirPathMappings.valueX);
+  const value = evaluateDisplayValue(observation, fhirPathMappings.valueX);
   return value;
 };
 
@@ -411,16 +440,32 @@ const evaluatePregnancyMedicationsAdministered = (
       }
 
       const name = formatCodeableConcept(medication?.code);
-      const effective = evaluateValue(
+      const effective = evaluateDisplayValue(
         medicationAdministration,
         fhirPathMappings.effectiveX,
       );
 
-      return name + "\n" + effective;
+      return (
+        <>
+          {name}
+          {"\n"}
+          {effective}
+        </>
+      );
     },
   );
 
-  return entries.join("\n\n");
+  if (!entries.length) return "";
+  return (
+    <>
+      {entries.map((entry, index) => (
+        <Fragment key={index}>
+          {index > 0 && "\n\n"}
+          {entry}
+        </Fragment>
+      ))}
+    </>
+  );
 };
 
 const evaluatePregnancySummary = (fhirBundle: Bundle, fhirIndex: FhirIndex) => {

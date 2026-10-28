@@ -16,6 +16,10 @@ import { Context, evaluate as fhirPathEvaluate } from "fhirpath";
 import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 
 import {
+  formatDateTimeDisplay,
+  formatStartEndDateTimeDisplay,
+} from "@/app/services/dateTimeDisplay";
+import {
   formatDateTime,
   formatStartEndDateTime,
 } from "@/app/services/formatDateService";
@@ -27,12 +31,12 @@ import {
   formatReference,
 } from "@/app/services/formatService";
 import { notEmpty } from "@/app/utils/data-utils";
-
-import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
 import {
   FhirIndex,
   getResourceById,
 } from "@/app/view-data/services/fhirResourcesIndexService";
+
+import fhirPathMappings, { PathTypes, ValueX, FhirPath } from "./fhir-paths";
 
 let evaluateCache = new WeakMap<object, Map<string, unknown[]>>();
 
@@ -220,6 +224,40 @@ export const evaluateOne = <K extends keyof PathTypes>(
 };
 
 /**
+ * Evaluate a FHIR field for display, formatting timestamps and periods in the browser.
+ * @param entry FHIR resource or element containing the field.
+ * @param path Path of the field to evaluate.
+ * @param base Base FHIR path for nested elements, if needed.
+ * @returns A formatted string or a component that displays local dates and times.
+ */
+export const evaluateDisplayValue = (
+  entry: FhirData,
+  path: string | FhirPath<string>,
+  base?: string,
+) => {
+  const [fhirPath, type] =
+    typeof path === "string" ? [path, "ValueX"] : [path.path, path.type];
+  const value =
+    evaluateOneAndCheck<ValueX | Period>(
+      entry,
+      fhirPath,
+      type,
+      undefined,
+      base,
+    ) ?? "";
+  if (
+    typeof value === "string" &&
+    (type === "TimeX" || isFhirDateTime(value))
+  ) {
+    return formatDateTimeDisplay(value);
+  }
+  const valuePath = (value as { __path__?: NodeInfo })?.__path__?.path;
+  if (typeof value === "object" && isPeriod(value, valuePath ?? ""))
+    return formatStartEndDateTimeDisplay(value);
+  return evaluateValue(entry, path, base);
+};
+
+/**
  * Evaluates the FHIR path and formats it as an appropriate string value (may be empty). Supports
  * choice elements (e.g. using `.value` in path to get valueString or valueCoding) or
  * elements of type string, number, boolean, Coding, CodeableConcept, or Quantity.
@@ -301,7 +339,12 @@ const isReference = (v: object, p: string): v is Reference => p === "Reference";
 const isPeriod = (v: object, p: string): v is Period => p === "Period";
 const isAddress = (v: object, p: string): v is Address => p === "Address";
 
-const isFhirDateTime = (str: string): boolean => {
+/**
+ * Check whether a string matches the supported FHIR date/time format.
+ * @param str Value to check.
+ * @returns Whether the value matches the FHIR pattern and can be parsed as a date.
+ */
+export const isFhirDateTime = (str: string): boolean => {
   const trimmed = str.trim();
 
   // Official HL7 FHIR specification pattern matching regex (timezone offset segment made optional)
@@ -369,7 +412,6 @@ export const evaluateReference = <T extends Resource>(
  * error logged if it does not match.
  *
  * Expects a single element to be returned from the reference.
- *
  * @param fhirIndex - FHIR resources indexed by type & by ID
  * @param ref - The reference string (e.g., "Patient/123").
  * @returns The FHIR Resource or undefined if not found.

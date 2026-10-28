@@ -1,6 +1,6 @@
 import React from "react";
 
-import { formatDateTime } from "@/app/services/formatDateService";
+import { formatDateTimeDisplay } from "@/app/services/dateTimeDisplay";
 import { noData } from "@/app/utils/data-utils";
 
 import { BaseTable } from "./EvaluateTable";
@@ -59,7 +59,7 @@ export const AdministeredMedication = ({
       {medicationData.map((entry, index: number) => (
         <tr key={`table-row-${index}`}>
           <td>{entry?.name ?? noData}</td>
-          <td>{formatDateTime(entry?.date) ?? noData}</td>
+          <td>{formatDateTimeDisplay(entry?.date) || noData}</td>
           <td>{entry?.dose ?? noData}</td>
           <td>{entry?.route ?? noData}</td>
           <td>{entry?.therapeuticResponse ?? noData}</td>

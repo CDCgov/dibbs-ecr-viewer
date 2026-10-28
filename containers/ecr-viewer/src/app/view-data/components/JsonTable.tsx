@@ -2,6 +2,7 @@ import { JSX } from "react";
 
 import classNames from "classnames";
 
+import { formatDateTimeDisplay } from "@/app/services/dateTimeDisplay";
 import {
   HtmlTableJson,
   HtmlTableJsonRow,
@@ -67,8 +68,12 @@ export const JsonTable = ({
     >
       {flattenedTable.map((row, i) => (
         <tr key={`table-row-${i}`}>
-          {Object.values(row).map(({ value }, j) => (
-            <td key={`table-col-${j}`}>{value ?? noData}</td>
+          {Object.values(row).map(({ value, dateTime }, j) => (
+            <td key={`table-col-${j}`}>
+              {dateTime && typeof value === "string"
+                ? formatDateTimeDisplay(value)
+                : (value ?? noData)}
+            </td>
           ))}
         </tr>
       ))}

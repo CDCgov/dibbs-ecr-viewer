@@ -149,7 +149,9 @@ exports[`Evaluate Patient Info: Social History Evaluate Occupation History shoul
             item={
               {
                 "title": "Dates",
-                "value": "01/04/2025 3:00 AM EST",
+                "value": <LocalDateTime
+                  value="2025-01-04T08:00:00Z"
+                />,
               }
             }
           />
@@ -1966,8 +1968,12 @@ exports[`Travel History should display a table  1`] = `
         <td
           class="text-top text-pre-line"
         >
-          Start: 01/18/1888
-End: 02/18/1898
+          Start: 
+          01/18/1888
+          
+
+          End: 
+          02/18/1898
         </td>
         <td
           class="text-top text-pre-line"
@@ -1993,7 +1999,8 @@ End: 02/18/1898
         <td
           class="text-top text-pre-line"
         >
-          Start: 01/19/1888
+          Start: 
+          01/19/1888
         </td>
         <td
           class="text-top text-pre-line"
@@ -2024,8 +2031,12 @@ FJ
         <td
           class="text-top text-pre-line"
         >
-          Start: 01/01/1888
-End: 01/20/1888
+          Start: 
+          01/01/1888
+          
+
+          End: 
+          01/20/1888
         </td>
         <td
           class="text-top text-pre-line"
@@ -2110,8 +2121,12 @@ End: 01/20/1888
                         <div
                           class="grid-col maxw7 text-pre-line p-list"
                         >
-                          Start: 01/01/1888
-End: 01/10/1888
+                          Start: 
+                          01/01/1888
+                          
+
+                          End: 
+                          01/10/1888
                         </div>
                       </div>
                     </div>
@@ -2179,8 +2194,12 @@ End: 01/10/1888
                         <div
                           class="grid-col maxw7 text-pre-line p-list"
                         >
-                          Start: 01/10/1888
-End: 01/20/1888
+                          Start: 
+                          01/10/1888
+                          
+
+                          End: 
+                          01/20/1888
                         </div>
                       </div>
                     </div>
@@ -2286,8 +2305,12 @@ End: 01/20/1888
                         <div
                           class="grid-col maxw7 text-pre-line p-list"
                         >
-                          Start: 01/01/1888
-End: 01/10/1888
+                          Start: 
+                          01/01/1888
+                          
+
+                          End: 
+                          01/10/1888
                         </div>
                       </div>
                     </div>
@@ -2339,8 +2362,12 @@ End: 01/10/1888
                         <div
                           class="grid-col maxw7 text-pre-line p-list"
                         >
-                          Start: 01/10/1888
-End: 01/20/1888
+                          Start: 
+                          01/10/1888
+                          
+
+                          End: 
+                          01/20/1888
                         </div>
                       </div>
                     </div>
@@ -2392,8 +2419,32 @@ End: 01/20/1888
                         <div
                           class="grid-col maxw7 text-pre-line p-list"
                         >
-                          Start: 11/10/1989 6:00 PM
-End: 11/10/1989 9:30 PM
+                          Start: 
+                          <time
+                            aria-busy="false"
+                            class="dateTime"
+                            datetime="1989-11-10T18:00:00"
+                          >
+                            <span
+                              class="value"
+                            >
+                              11/10/1989 6:00 PM
+                            </span>
+                          </time>
+                          
+
+                          End: 
+                          <time
+                            aria-busy="false"
+                            class="dateTime"
+                            datetime="1989-11-10T21:30:00"
+                          >
+                            <span
+                              class="value"
+                            >
+                              11/10/1989 9:30 PM
+                            </span>
+                          </time>
                         </div>
                       </div>
                     </div>

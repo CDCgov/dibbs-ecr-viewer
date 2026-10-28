@@ -1,6 +1,6 @@
 import { Bundle, Observation, Organization } from "fhir/r4";
 
-import { formatDateTime } from "@/app/services/formatDateService";
+import { formatDateTimeDisplay } from "@/app/services/dateTimeDisplay";
 import {
   formatAddress,
   formatContactPoint,
@@ -24,13 +24,12 @@ import {
 } from "@/app/utils/evaluate";
 import fhirPathMappings from "@/app/utils/evaluate/fhir-paths";
 import { DisplayDataProps } from "@/app/view-data/components/DataDisplay";
+import EvaluateTable, {
+  ColumnInfoInput,
+} from "@/app/view-data/components/EvaluateTable";
 
-import { evaluatePractitionerRoleReference } from "@/app/view-data/services/encounterInfoService";
-import {
-  evaluateRRInfo,
-  ReportableConditions,
-} from "@/app/view-data/services/reportabilityService";
-import EvaluateTable, { ColumnInfoInput } from "../components/EvaluateTable";
+import { evaluatePractitionerRoleReference } from "./encounterInfoService";
+import { evaluateRRInfo, ReportableConditions } from "./reportabilityService";
 
 interface EcrMetadata {
   eicrDetails: CompleteData;
@@ -162,7 +161,7 @@ export const evaluateEcrMetadata = (fhirBundle: Bundle): EcrMetadata => {
     },
     {
       title: "Date/Time eCR Created",
-      value: formatDateTime(
+      value: formatDateTimeDisplay(
         evaluateOne(fhirBundle, fhirPathMappings.dateTimeEcrCreated),
       ),
     },
