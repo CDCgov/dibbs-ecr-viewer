@@ -18,7 +18,7 @@
     "eslint-plugin-jsdoc": "^64.5.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-unused-imports": "^4.4.1",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "overrides": {
     "eslint-plugin-import": {
