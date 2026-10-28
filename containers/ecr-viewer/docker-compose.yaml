@@ -130,7 +130,7 @@ services:
       - GCP_SQLSERVER_DUAL
 
   aws-storage:
-    image: gresau/localstack-persist:3
+    image: gresau/localstack-persist:4
     ports:
       - "4566:4566"
     volumes:
