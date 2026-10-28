@@ -1,7 +1,7 @@
 # Explicit security floor retained for CVE-2026-48710.
-fastapi>=0.141.1
+fastapi>=0.162.0
 fhirpathpy>=2.2.4
-pydantic>=2.13.5 # Transitive dependency, minimum version specified for security reasons
+pydantic>=2.14.1 # Transitive dependency, minimum version specified for security reasons
 requests>=2.34.2
-starlette>=1.6.0 # Transitive dependency, minimum version specified for security reasons
-uvicorn[standard]>=0.53.0
+starlette>=1.9.0 # Transitive dependency, minimum version specified for security reasons
+uvicorn[standard]>=0.54.0
