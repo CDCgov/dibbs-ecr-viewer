@@ -1,4 +1,4 @@
-azure-identity>=1.25.3
+azure-identity>=1.26.0
 cryptography>=50.0.1 # Transitive dependency, minimum version specified for security reasons
 gevent>=26.8.0 # Transitive dependency, minimum version specified for security reasons
 grequests>=0.7.0
