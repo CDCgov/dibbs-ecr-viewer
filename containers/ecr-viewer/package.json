@@ -110,7 +110,7 @@
     "eslint-config-next": "^16.3.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-jsdoc": "^64.3.5",
+    "eslint-plugin-jsdoc": "^65.3.12",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-unused-imports": "^4.4.1",
     "get-port": "^7.2.0",
