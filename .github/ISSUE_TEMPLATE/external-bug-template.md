@@ -17,6 +17,7 @@ A clear and concise description of what feature is not working
 -->
 
 ## 💥 Impact
+
 <!--
 Describe the impact this bug is causing to your program or organization
 -->
@@ -36,6 +37,7 @@ Example: steps to reproduce the behavior:
 1. ...
 
 ## 🌃 Environment
+
 <!--
 Example:
 - OS: Ubuntu 20.04
@@ -59,6 +61,7 @@ Explain what's happening now when the bug is present. Attach screenshot if appli
 -->
 
 ## 🪵 Logs
+
 <!--
 If applicable, please attach logs to help describe your problem.
 -->
