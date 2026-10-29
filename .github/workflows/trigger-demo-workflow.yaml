@@ -15,6 +15,16 @@ on:
           - deploy
         description: "The event type to trigger the workflow."
         required: true
+  workflow_call:
+    inputs:
+      container_tag:
+        type: string
+        description: "The container tag to deploy. Example: `8.4.0`"
+        required: true
+      event_type:
+        type: string
+        description: 'The event type to trigger the workflow ("plan" or "deploy").'
+        default: deploy
 
 jobs:
   trigger_demo_workflow:
