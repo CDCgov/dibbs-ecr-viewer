@@ -1,32 +1,56 @@
 ---
-name: Streamline Task Template 🚧
+name: 👷 Task Template
 about: A generic template for any task that can be adapted for multiple uses
-title: ""
-labels: Streamline eCR
+title: "[TASK] <title>"
+labels: dibbs-ecr-viewer
 assignees: ""
 ---
 
-## What needs to be done
+## 🚧 What needs to be done
 
-_Provide a summary of the task that needs to be completed_
+<!--
+Provide a summary of the task that needs to be completed
+-->
 
-## Why it needs to be done
+## 🤔 Why it needs to be done
 
-_Describe the importance or impact of completing this task_
+<!--
+Describe the importance or impact of completing this task
+-->
 
-## Acceptance Criteria
+## 🏗️ Acceptance Criteria
 
-_List out all expected functionality/requirements_
+<!--
+List out all expected functionality/requirements
 
--
+- [ ] Page numbers display correctly for all search result sets
+- [ ] "Next" and "Previous" buttons function properly
+- [ ] Current page is visually highlighted in the pagination controls
+- [ ] User remains on current page when applying search filters
+- [ ] Page size selector (10/25/50 results) works correctly
+- [ ] URL parameters update to reflect current page and filters
+- [ ] Pagination controls are properly aligned on mobile devices
+- [ ] Screen readers can interpret pagination controls correctly
+-->
 
-## Technical Notes
+- [ ] ...
 
-_Owned by eng team - write out any important technical considerations such as: architecture plan/notes, data dependencies, testing plan, etc. Also link any tickets that are dependent on or related to this task_
+## ⚙️ Technical Notes
 
--
+<!--
+Owned by eng team - write out any important technical considerations such as: architecture plan/notes, data dependencies, testing plan, etc. Also link any tickets that are dependent on or related to this task
 
-## Additional context
+Example:
+- Architecture Plan/Notes
+  - This feature will integrate with the existing **Service** and will require updates to the **API Gateway** to expose new endpoints
+-->
 
-[OPTIONAL, delete if not needed]
-_Include any additional context or information here that doesn't fit into other parts of the template_
+- ...
+
+## 📜 Additional context
+
+<!--
+Optional, delete if not needed
+
+Include any additional context or information here that doesn't fit into other parts of the template
+-->
