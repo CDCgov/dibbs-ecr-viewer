@@ -138,7 +138,6 @@ services:
       - ./seed-scripts/aws:/etc/localstack/init/ready.d
     environment:
       - SERVICES=s3
-      - PROVIDER_OVERRIDE_S3=asf
       - DEBUG=1
     profiles:
       - AWS_INTEGRATED
