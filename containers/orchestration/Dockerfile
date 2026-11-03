@@ -17,7 +17,7 @@ RUN python -m pip install --upgrade --no-cache-dir pip --break-system-packages &
     python -m pip uninstall --yes setuptools wheel && \
     python -m pip check && \
     python -m pip uninstall --yes pip && \
-    rm -rf /root/.cache/pip /usr/local/lib/python3.14/ensurepip
+    rm -rf /root/.cache/pip /usr/local/lib/python3.15/ensurepip
 
 COPY ./app /code/app
 COPY ./assets /code/assets
