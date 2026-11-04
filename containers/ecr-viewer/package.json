@@ -75,7 +75,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.13.0",
+    "@axe-core/playwright": "^4.14.0",
     "@dotenvx/dotenvx": "^2.23.0",
     "@dword-design/eslint-plugin-import-alias": "^8.1.8",
     "@eslint/compat": "^2.1.1",
