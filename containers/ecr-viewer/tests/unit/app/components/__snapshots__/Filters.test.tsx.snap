@@ -59,7 +59,7 @@ exports[`Filter by Condition Search search flow 1`] = `
           <button
             aria-expanded="true"
             aria-haspopup="listbox"
-            aria-label="Filter by reportable condition"
+            aria-label="Filter by reportable condition, 3 selected"
             class="usa-button margin-right-0 filter-button"
             data-testid="button"
             type="button"
@@ -87,6 +87,7 @@ exports[`Filter by Condition Search search flow 1`] = `
             >
               Reportable condition
             </span>
+             
             <span
               class="usa-tag padding-05 bg-base-darker radius-md"
               data-testid="filter-tag"
@@ -479,7 +480,7 @@ exports[`Filter by Date Component - custom dates Renders correctly after opening
           <button
             aria-expanded="false"
             aria-haspopup="listbox"
-            aria-label="Filter by reportable condition"
+            aria-label="Filter by reportable condition, 3 selected"
             class="usa-button margin-right-0 filter-button"
             data-testid="button"
             type="button"
@@ -507,6 +508,7 @@ exports[`Filter by Date Component - custom dates Renders correctly after opening
             >
               Reportable condition
             </span>
+             
             <span
               class="usa-tag padding-05 bg-base-darker radius-md"
               data-testid="filter-tag"
@@ -745,7 +747,7 @@ exports[`Filter by Date Component Renders correctly after opening Filter by Date
           <button
             aria-expanded="false"
             aria-haspopup="listbox"
-            aria-label="Filter by reportable condition"
+            aria-label="Filter by reportable condition, 3 selected"
             class="usa-button margin-right-0 filter-button"
             data-testid="button"
             type="button"
@@ -773,6 +775,7 @@ exports[`Filter by Date Component Renders correctly after opening Filter by Date
             >
               Reportable condition
             </span>
+             
             <span
               class="usa-tag padding-05 bg-base-darker radius-md"
               data-testid="filter-tag"
@@ -846,7 +849,7 @@ exports[`Filter by Reportable Conditions Component with 'No conditions reported'
           <button
             aria-expanded="true"
             aria-haspopup="listbox"
-            aria-label="Filter by reportable condition"
+            aria-label="Filter by reportable condition, 3 selected"
             class="usa-button margin-right-0 filter-button"
             data-testid="button"
             type="button"
@@ -874,6 +877,7 @@ exports[`Filter by Reportable Conditions Component with 'No conditions reported'
             >
               Reportable condition
             </span>
+             
             <span
               class="usa-tag padding-05 bg-base-darker radius-md"
               data-testid="filter-tag"
@@ -1127,7 +1131,7 @@ exports[`Filter by Reportable Conditions Component with no filterable conditions
           <button
             aria-expanded="true"
             aria-haspopup="listbox"
-            aria-label="Filter by reportable condition"
+            aria-label="Filter by reportable condition, 0 selected"
             class="usa-button margin-right-0 filter-button"
             data-testid="button"
             type="button"
@@ -1155,6 +1159,7 @@ exports[`Filter by Reportable Conditions Component with no filterable conditions
             >
               Reportable condition
             </span>
+             
             <span
               class="usa-tag padding-05 bg-base-darker radius-md"
               data-testid="filter-tag"
@@ -1214,9 +1219,9 @@ exports[`Filter by Reportable Conditions Component with no filterable conditions
                     <button
                       class="usa-button usa-button--unstyled action-text font-size-xs margin-x-105 margin-bottom-1 margin-top-1"
                       data-testid="button"
+                      disabled=""
                       type="button"
                     >
-                      Select 
                       0
                        
                       condition
@@ -1325,7 +1330,7 @@ exports[`Filter by Reportable Conditions Component with only 'No conditions repo
           <button
             aria-expanded="true"
             aria-haspopup="listbox"
-            aria-label="Filter by reportable condition"
+            aria-label="Filter by reportable condition, 1 selected"
             class="usa-button margin-right-0 filter-button"
             data-testid="button"
             type="button"
@@ -1353,6 +1358,7 @@ exports[`Filter by Reportable Conditions Component with only 'No conditions repo
             >
               Reportable condition
             </span>
+             
             <span
               class="usa-tag padding-05 bg-base-darker radius-md"
               data-testid="filter-tag"
@@ -1564,7 +1570,7 @@ exports[`Filter by Reportable Conditions Component with only regular conditions 
           <button
             aria-expanded="true"
             aria-haspopup="listbox"
-            aria-label="Filter by reportable condition"
+            aria-label="Filter by reportable condition, 2 selected"
             class="usa-button margin-right-0 filter-button"
             data-testid="button"
             type="button"
@@ -1592,6 +1598,7 @@ exports[`Filter by Reportable Conditions Component with only regular conditions 
             >
               Reportable condition
             </span>
+             
             <span
               class="usa-tag padding-05 bg-base-darker radius-md"
               data-testid="filter-tag"

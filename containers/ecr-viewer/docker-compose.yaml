@@ -130,7 +130,7 @@ services:
       - GCP_SQLSERVER_DUAL
 
   aws-storage:
-    image: gresau/localstack-persist:3
+    image: gresau/localstack-persist:4
     ports:
       - "4566:4566"
     volumes:
@@ -138,7 +138,6 @@ services:
       - ./seed-scripts/aws:/etc/localstack/init/ready.d
     environment:
       - SERVICES=s3
-      - PROVIDER_OVERRIDE_S3=asf
       - DEBUG=1
     profiles:
       - AWS_INTEGRATED
@@ -209,7 +208,7 @@ services:
 
   # Keycloak for authentication
   keycloak:
-    image: quay.io/keycloak/keycloak:26.1.2
+    image: quay.io/keycloak/keycloak:26.8.1-1
     command:
       - "start-dev"
       - "--import-realm"

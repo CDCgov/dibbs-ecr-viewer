@@ -92,9 +92,7 @@ export const Filter = ({
           className={`margin-right-0 ${
             isActive ? "filters-applied" : "filter-button"
           }`}
-          aria-label={
-            `Filter by ${type}` + getSelectedFiltersLabel(isActive, title, tag)
-          }
+          aria-label={`Filter by ${type}` + getSelectedFiltersLabel(title, tag)}
           aria-haspopup="listbox"
           aria-expanded={isFilterBoxOpen}
           onClick={() => {
@@ -107,12 +105,15 @@ export const Filter = ({
           </span>
           <span className="text-ink">{title || toSentenceCase(type)}</span>
           {tag && (
-            <span
-              className="usa-tag padding-05 bg-base-darker radius-md"
-              data-testid="filter-tag"
-            >
-              {tag}
-            </span>
+            <>
+              {" "}
+              <span
+                className="usa-tag padding-05 bg-base-darker radius-md"
+                data-testid="filter-tag"
+              >
+                {tag}
+              </span>
+            </>
           )}
         </Button>
 
@@ -202,22 +203,10 @@ const ApplyFilterButton = ({
   );
 };
 
-const getSelectedFiltersLabel = (
-  isActive: boolean,
-  title?: string,
-  tag?: ReactNode,
-) => {
-  if (isActive) {
-    if (title?.length) {
-      return `, ${title} selected`;
-    }
-
-    if (tag) {
-      return `, ${tag} selected`;
-    }
-  }
-
-  return "";
+const getSelectedFiltersLabel = (title?: string, tag?: ReactNode) => {
+  // The visible count remains part of the label when all options are selected.
+  const parts = [title, tag].filter(Boolean);
+  return parts.length ? `, ${parts.join(" ")} selected` : "";
 };
 
 /**

@@ -212,7 +212,7 @@ describe.each([
 
         await user.click(checkbox);
         expect(toggleFilterButton.getAttribute("aria-label")).toBe(
-          "Filter by reportable condition",
+          `Filter by reportable condition, ${conditions.length} selected`,
         );
       });
 
@@ -378,7 +378,7 @@ describe("Filter by Condition Search", () => {
     );
   });
 
-  it.only("search flow", async () => {
+  it("search flow", async () => {
     const user = userEvent.setup();
     const mockPush = jest.fn();
     (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
