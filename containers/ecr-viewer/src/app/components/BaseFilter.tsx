@@ -205,15 +205,8 @@ const ApplyFilterButton = ({
 
 const getSelectedFiltersLabel = (title?: string, tag?: ReactNode) => {
   // The visible count remains part of the label when all options are selected.
-  if (tag) {
-    return `, ${title ? `${title} ` : ""}${tag} selected`;
-  }
-
-  if (title?.length) {
-    return `, ${title} selected`;
-  }
-
-  return "";
+  const parts = [title, tag].filter(Boolean);
+  return parts.length ? `, ${parts.join(" ")} selected` : "";
 };
 
 /**
