@@ -36,6 +36,9 @@ RUN npm run build
 # Production image, copy all the files and run next
 FROM base AS runner
 
+# npm is only needed to build. Removing npm and npx removes vulnerable node modules from the container
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx
+
 WORKDIR /app
 
 # Inherits APP_VERSION from base
