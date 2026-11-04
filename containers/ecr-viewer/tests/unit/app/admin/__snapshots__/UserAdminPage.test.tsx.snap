@@ -1226,7 +1226,7 @@ exports[`User Admin Page for an admin, should list all users and program areas 1
                 <button
                   aria-expanded="false"
                   aria-haspopup="listbox"
-                  aria-label="Filter by program area"
+                  aria-label="Filter by program area, Program area 4 selected"
                   class="usa-button margin-right-0 filter-button"
                   data-testid="button"
                   type="button"
@@ -1254,6 +1254,7 @@ exports[`User Admin Page for an admin, should list all users and program areas 1
                   >
                     Program area
                   </span>
+                   
                   <span
                     class="usa-tag padding-05 bg-base-darker radius-md"
                     data-testid="filter-tag"
