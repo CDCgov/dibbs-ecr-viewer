@@ -55,6 +55,14 @@ jobs:
           build-args: |
             APP_VERSION=${{ steps.meta.outputs.version }}
 
+  deploy-to-demo:
+    needs:
+      - tag-containers-for-release
+    uses: ./.github/workflows/trigger-demo-workflow.yaml
+    with:
+      container_tag: ${{ needs.tag-containers-for-release.outputs.version }}
+    secrets: inherit
+
   # Create updated container docs for the latest release
   generate-and-update-python-container-docs:
     needs:
