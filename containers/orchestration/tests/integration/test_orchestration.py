@@ -59,7 +59,9 @@ def test_process_message_endpoint(setup):
         "config_file_name": "test-no-save.json",
         "message": message,
     }
-    orchestration_response = httpx2.post(PROCESS_MESSAGE_ENDPOINT, json=request)
+    orchestration_response = httpx2.post(
+        PROCESS_MESSAGE_ENDPOINT, json=request, timeout=10
+    )
     assert orchestration_response.status_code == 200, (
         f"Expected status code 200, but got {orchestration_response.status_code}. Response content is {orchestration_response.content}"
     )
