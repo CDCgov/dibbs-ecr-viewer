@@ -128,7 +128,7 @@
     "prettier": "^3.9.10",
     "react-is": "^19.3.1",
     "sass": "^1.107.0",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "overrides": {
     "glob@>=9 <14.0.2": "^14.0.2",
