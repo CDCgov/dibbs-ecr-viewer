@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 
 # Download FHIR-Converter
 
@@ -10,13 +10,15 @@ RUN dotnet restore
 RUN dotnet publish \
   src/Dibbs.FhirConverterApi/Dibbs.FhirConverterApi.csproj \
   -c Release \
-  -r linux-x64 \
-  --self-contained true \
+  -r linux-musl-x64 \
+  --self-contained false \
+  -p:UseAppHost=false \
   -o output
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0
+# Keep ICU and time-zone data while providing curl for Docker health checks.
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine-extra
 WORKDIR /App
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+RUN apk upgrade --no-cache && apk add --no-cache curl
 COPY --from=build /App/output .
 COPY --from=build /App/data/Templates ./templates
 
@@ -30,9 +32,10 @@ RUN grep -rlF \
   -e 'l2D4kF501KKaU73yqWjgom7C12yxow+ev+to51byrvLjKzg6CYG1a4XXvi3tPxq3' \
   /etc /usr /var; \
   test $? -eq 1
+USER app
 EXPOSE 8080
 
 ENV TEMPLATES_PATH=./templates/eCR
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD curl -f http://localhost:8080/ || exit 1
+  CMD ["curl", "--fail", "--silent", "--show-error", "http://localhost:8080/"]
 ENTRYPOINT ["dotnet", "Dibbs.FhirConverterApi.dll"]
