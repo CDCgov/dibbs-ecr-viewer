@@ -4,5 +4,8 @@ fastapi>=0.162.0
 starlette>=1.10.0 # Transitive dependency, minimum version specified for security reasons
 python-multipart>=0.0.32 # required by fastapi
 uvicorn[standard]>=0.54.0
+# Minimum versions with Python 3.15 Alpine wheels for uvicorn's standard extras.
+pyyaml>=6.0.4
+uvloop>=0.23.0; sys_platform != "win32" and platform_python_implementation == "CPython"
 httpx2[http2]>=2.16.0
 python-dotenv>=1.2.4
