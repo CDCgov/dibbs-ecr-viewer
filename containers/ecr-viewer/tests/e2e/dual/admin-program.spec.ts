@@ -1,6 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect, Page } from "@playwright/test";
 
+import { selectUnassignedCondition } from "../program-utils";
 import { logIn } from "../utils";
 
 test.describe("program management page", () => {
@@ -58,33 +59,12 @@ test.describe("program management page", () => {
     const accessibilityScanResultsBase = await axe.analyze();
     expect(accessibilityScanResultsBase.violations).toEqual([]);
 
-    // search for a condition (but not too specifically due to randomness)
+    // Exercise search while selecting a condition no existing program owns.
     await page.getByPlaceholder("Search condition or category").fill("i");
     await expect(page.locator(".result-count")).toHaveText(/[1-9]\d* results?/);
 
-    // Wait for checkboxes to attach and use .count() / .nth() to avoid stale elements
-    await expect(page.getByRole("checkbox").first()).toBeAttached();
-    const count = await page.getByRole("checkbox").count();
-    const index = Math.floor(Math.random() * count);
-
-    const checkbox = page.getByRole("checkbox").nth(index);
-    const conditionName = await checkbox.inputValue();
-
-    await checkbox.scrollIntoViewIfNeeded();
-    await checkbox.dispatchEvent("click");
-
-    // Conditionally handle the reassignment modal if we randomly picked an assigned condition
-    try {
-      const yesButton = page.getByRole("button", {
-        name: "Yes, add condition",
-      });
-      await yesButton.waitFor({ state: "visible", timeout: 1500 });
-      await yesButton.click();
-    } catch (e) {
-      // Modal didn't appear, move on!
-    }
-
-    const programName = `Program ${conditionName}`;
+    const { conditionCode } = await selectUnassignedCondition(page);
+    const programName = `Program ${conditionCode}`;
 
     await page.getByLabel("Program area name").fill(programName);
 
@@ -127,9 +107,8 @@ test.describe("program management page", () => {
       page.getByText(/Condition in .*/).filter({ hasText: programName }),
     ).toBeVisible();
 
-    // Re-grab the checkbox dynamically. The old 'checkbox' variable is stale!
-    await expect(page.getByRole("checkbox").first()).toBeAttached();
-    const checkboxAgain = page.getByRole("checkbox").nth(index);
+    // Deliberately reselect the condition this test assigned to its own program.
+    const checkboxAgain = page.locator(`#condition-${conditionCode}`);
 
     await checkboxAgain.scrollIntoViewIfNeeded();
     await checkboxAgain.dispatchEvent("click");
@@ -244,9 +223,7 @@ test.describe("program management page", () => {
     page,
     browserName,
   }) => {
-    const restrictedProgram = await createRandomProgramArea(page, browserName, [
-      "covid",
-    ]);
+    const restrictedProgram = await createRandomProgramArea(page, browserName);
 
     await page.getByRole("button", { name: restrictedProgram.name }).click();
     await page.getByRole("dialog").getByText("Edit program area").click();
@@ -282,13 +259,8 @@ test.describe("program management page", () => {
     page,
     browserName,
   }) => {
-    const targetProgram = await createRandomProgramArea(page, browserName, [
-      "covid",
-    ]);
-    const sourceProgram = await createRandomProgramArea(page, browserName, [
-      targetProgram.conditionName,
-      "covid",
-    ]);
+    const targetProgram = await createRandomProgramArea(page, browserName);
+    const sourceProgram = await createRandomProgramArea(page, browserName);
 
     // Assign both programs to program admin
     await page.goto("/ecr-viewer/admin/user");
@@ -346,9 +318,8 @@ test.describe("program management page", () => {
       .getByText(`Condition in ${sourceProgram.name}`)
       .first();
     await expect(sourceConditionInSource).toBeVisible();
-    const sourceConditionCheckbox = await page.getByLabel(
-      sourceProgram.conditionName,
-      { exact: true },
+    const sourceConditionCheckbox = page.locator(
+      `#condition-${sourceProgram.conditionCode}`,
     );
     await sourceConditionCheckbox.scrollIntoViewIfNeeded();
     await sourceConditionCheckbox.dispatchEvent("click");
@@ -375,70 +346,17 @@ test.describe("program management page", () => {
   });
 });
 
-const createRandomProgramArea = async (
-  page: Page,
-  browserName: string,
-  conditionNamesToAvoid: string[] = [],
-) => {
+const createRandomProgramArea = async (page: Page, browserName: string) => {
   const random = Math.floor(Math.random() * 10000);
   const name = `Prog admin-program-${browserName}-${random}`;
 
   await page.goto("/ecr-viewer/admin/program/create");
   await page.getByLabel("Program area name").fill(name);
 
-  const triedConditionNames = new Set(conditionNamesToAvoid);
-  let conditionName: string | undefined;
-
-  while (!conditionName) {
-    const checkboxes = await page.getByRole("checkbox").all();
-    if (triedConditionNames.size >= checkboxes.length) {
-      throw new Error("Could not find an unassigned condition");
-    }
-
-    const checkbox = checkboxes[Math.floor(Math.random() * checkboxes.length)];
-    const selectedConditionName = await checkbox
-      .locator("..")
-      .locator("p")
-      .first()
-      .innerText();
-    if (triedConditionNames.has(selectedConditionName)) continue;
-
-    triedConditionNames.add(selectedConditionName);
-    const conditionIsAssigned =
-      (await checkbox
-        .locator("../..")
-        .getByText(/Condition in /)
-        .count()) > 0;
-    if (conditionIsAssigned) continue;
-
-    await checkbox.scrollIntoViewIfNeeded();
-    await checkbox.evaluate((element) => (element as HTMLInputElement).click());
-
-    const reassignmentModal = page
-      .getByRole("dialog")
-      .filter({ hasText: "Are you sure you want to add" });
-    let requiresReassignment = false;
-    try {
-      await reassignmentModal.waitFor({ state: "visible", timeout: 1000 });
-      requiresReassignment = true;
-    } catch {
-      // No reassignment modal appeared, so this condition is unassigned.
-    }
-
-    if (requiresReassignment) {
-      await reassignmentModal
-        .getByRole("button", { name: "Close this window" })
-        .click();
-      // Wait for the close animation to finish so the modal's overlay
-      // doesn't swallow the next iteration's checkbox click.
-      await reassignmentModal.waitFor({ state: "hidden" });
-    } else {
-      conditionName = selectedConditionName;
-    }
-  }
+  const condition = await selectUnassignedCondition(page);
 
   await page.getByRole("button", { name: "Save program area" }).first().click();
   await page.waitForURL("/ecr-viewer/admin/program");
 
-  return { name, conditionName };
+  return { name, ...condition };
 };
