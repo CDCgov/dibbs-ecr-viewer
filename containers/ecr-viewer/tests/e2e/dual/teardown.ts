@@ -39,7 +39,7 @@ const matcher: Record<string, RegExp> = {
 );
 
 const deleteItem = async (itemType: string, page: Page, item: string) => {
-  await page.getByRole("button", { name: item }).click();
+  await page.getByRole("button", { name: item, exact: true }).click();
   await page.getByRole("button", { name: `Remove ${itemType}` }).click();
   await page.getByRole("button", { name: `Yes, remove ${itemType}` }).click();
 };
