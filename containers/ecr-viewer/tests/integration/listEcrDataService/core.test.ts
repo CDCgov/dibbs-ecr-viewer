@@ -316,7 +316,8 @@ describe("listEcrData - core", () => {
 
     it("should return authorized data", async () => {
       await createListEcrFixture({ conditionCode: "123" });
-      await expectListResults([expectedEcr]);
+      // The prior version has no authorized condition of its own.
+      await expectListResults([{ ...expectedEcr, related_ecrs: [] }]);
     });
   });
 

@@ -101,10 +101,28 @@ const executeSearchQuery = async (
   filterConditions?: string[],
 ) => {
   const user = await getLoggedInUser(db);
-  const mainQuery = db.with("ecr_sets", (db) =>
+  // Authorize individual versions before selecting sets or expanding metadata.
+  // Sharing a set ID (or version number) does not grant access to another eCR.
+  const authorizedQuery = db.with("authorized_ecrs", (db) =>
     db
       .selectFrom("ecr_data")
       .$call((qb) => limitEcrDataToUser(user, qb))
+      .select([
+        "ecr_data.eicr_id",
+        "ecr_data.set_id",
+        "ecr_data.eicr_version_number",
+        "ecr_data.first_name",
+        "ecr_data.last_name",
+        "ecr_data.birth_date",
+        "ecr_data.facility_name",
+        "ecr_data.encounter_start_date",
+        "ecr_data.date_created",
+      ])
+      .distinct(),
+  );
+  const mainQuery = authorizedQuery.with("ecr_sets", (db) =>
+    db
+      .selectFrom("authorized_ecrs as ecr_data")
       .select([
         "ecr_data.set_id",
         sql<number>`MAX(${versionForComparison("ecr_data.eicr_version_number")})`.as(
@@ -126,7 +144,7 @@ const executeSearchQuery = async (
   const ecrQuery = mainQuery.with("ecrs", (db) =>
     db
       .selectFrom("ecr_sets")
-      .leftJoin("ecr_data", (join) =>
+      .leftJoin("authorized_ecrs as ecr_data", (join) =>
         join
           .onRef("ecr_data.set_id", "=", "ecr_sets.set_id")
           .on("ecr_sets.max_version_number", "=", () =>
@@ -146,7 +164,7 @@ const executeSearchQuery = async (
       ])
       .$call((qb) => {
         generateSortStatement(sortColumn, sortDirection).forEach((sort) => {
-          qb = qb.orderBy(sort.column as any, sort.direction);
+          qb = qb.orderBy(sql.ref(sort.column), sort.direction);
         });
         return qb;
       })
@@ -192,6 +210,7 @@ const limitEcrDataToUser = (
 // So we cast everything to a Kysely<EcrsCte> which has the same functionality and types we need.
 // It's a bit gross, but it reduces the code repetition substantially
 interface EcrsCte extends Core {
+  authorized_ecrs: ecr_data;
   ecrs: ecr_data;
   ecr_sets: { set_id: string; max_version_number: number };
 }
@@ -236,12 +255,12 @@ const getMetaModelData = async (
     "conditions" | "rule_summaries" | "related_ecrs"
   >[] = await mainQuery.selectFrom("ecrs").selectAll().execute();
 
-  // Expand through the returned version and all previous versions in the same
-  // set so conditions across earlier versions are returned on the main row.
+  // Expand through the returned version and authorized previous versions in
+  // the same set so their conditions are returned on the main row.
   // When a condition filter is set, conditions from later versions are excluded.
   const conditions = await mainQuery
     .selectFrom("ecrs")
-    .innerJoin("ecr_data", (join) =>
+    .innerJoin("authorized_ecrs as ecr_data", (join) =>
       join
         .onRef("ecr_data.set_id", "=", "ecrs.set_id")
         .on((eb) =>
@@ -263,7 +282,7 @@ const getMetaModelData = async (
 
   const rule_summaries = await mainQuery
     .selectFrom("ecrs")
-    .innerJoin("ecr_data", (join) =>
+    .innerJoin("authorized_ecrs as ecr_data", (join) =>
       join
         .onRef("ecr_data.set_id", "=", "ecrs.set_id")
         .on((eb) =>
@@ -295,7 +314,11 @@ const getMetaModelData = async (
 
   const related_ecrs = await mainQuery
     .selectFrom("ecr_sets")
-    .innerJoin("ecr_data", "ecr_sets.set_id", "ecr_data.set_id")
+    .innerJoin(
+      "authorized_ecrs as ecr_data",
+      "ecr_sets.set_id",
+      "ecr_data.set_id",
+    )
     .select([
       "ecr_data.eicr_id",
       "ecr_data.set_id",
