@@ -90,13 +90,14 @@ describe("getFhirData", () => {
           download: () =>
             Promise.reject(
               new GaxiosError(
-                {
-                  code: 404,
-                } as any,
+                "Not found",
                 {
                   url: new URL("https://ecr-viewer.test/1234.json"),
                   headers: new Headers(),
-                }),
+                },
+                undefined,
+                { code: 404 },
+              ),
             ),
         }),
       });
