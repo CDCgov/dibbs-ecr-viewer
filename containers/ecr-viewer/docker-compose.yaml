@@ -213,10 +213,6 @@ services:
       - "start-dev"
       - "--import-realm"
       - "--health-enabled=true"
-    environment:
-      # Mitigates CVE-2026-114938 (JDK Base64 intrinsic overflow). Remove once
-      # the image ships a patched JDK. See keycloak/keycloak#55293.
-      JAVA_OPTS_APPEND: "-XX:-UseBASE64Intrinsics"
     volumes:
       - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
     ports:
