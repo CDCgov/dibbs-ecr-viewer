@@ -1,6 +1,6 @@
 import { GetObjectCommand, S3ServiceException } from "@aws-sdk/client-s3";
 import { BlobClient, BlobDownloadResponseParsed } from "@azure/storage-blob";
-import { ApiError } from "@google-cloud/storage";
+import { GaxiosError } from "@google-cloud/storage";
 import { Bundle } from "fhir/r4";
 
 import { azureBlobContainerClient } from "@/app/data/blobStorage/azureClient";
@@ -173,7 +173,7 @@ const getGcp = async (ecr_id: string | null): Promise<FhirDataResponse> => {
       error,
     );
 
-    if (error instanceof ApiError && error.code === 404) {
+    if (error instanceof GaxiosError && error.code === 404) {
       return { payload: { message: UNKNOWN_ECR_ID }, status: 404 };
     }
 
