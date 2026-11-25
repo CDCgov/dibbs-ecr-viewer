@@ -3,7 +3,7 @@
  */
 import { S3ServiceException } from "@aws-sdk/client-s3";
 import { BlobServiceClient } from "@azure/storage-blob";
-import { ApiError } from "@google-cloud/storage";
+import { GaxiosError } from "@google-cloud/storage";
 
 import { gcpClient } from "@/app/data/blobStorage/gcpClient";
 import { s3Client } from "@/app/data/blobStorage/s3Client";
@@ -89,9 +89,15 @@ describe("getFhirData", () => {
         file: () => ({
           download: () =>
             Promise.reject(
-              new ApiError({
-                code: 404,
-              } as any),
+              new GaxiosError(
+                "Not found",
+                {
+                  url: new URL("https://ecr-viewer.test/1234.json"),
+                  headers: new Headers(),
+                },
+                undefined,
+                { code: 404 },
+              ),
             ),
         }),
       });

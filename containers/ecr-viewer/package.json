@@ -40,7 +40,7 @@
     "@azure/identity": "^4.14.1",
     "@azure/storage-blob": "^12.34.0",
     "@fullhuman/postcss-purgecss": "^9.1.0",
-    "@google-cloud/storage": "^8.4.0",
+    "@google-cloud/storage": "^9.0.0",
     "@next/bundle-analyzer": "^16.4.6",
     "@parcel/watcher": "2.6.0",
     "@trussworks/react-uswds": "^13.0.0",
