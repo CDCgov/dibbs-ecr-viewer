@@ -72,7 +72,7 @@ describe("getFhirData", () => {
     });
 
     it("should return 200 when the file is found", async () => {
-      jest.spyOn(console, "error").mockImplementation(() => { });
+      jest.spyOn(console, "error").mockImplementation(() => {});
       (gcpClient as jest.Mock).mockReturnValue({
         file: () => ({ download: () => "Some text" }),
       });
@@ -84,7 +84,7 @@ describe("getFhirData", () => {
     });
 
     it("should return 404 when file not found", async () => {
-      jest.spyOn(console, "error").mockImplementation(() => { });
+      jest.spyOn(console, "error").mockImplementation(() => {});
       (gcpClient as jest.Mock).mockReturnValue({
         file: () => ({
           download: () =>
@@ -109,7 +109,7 @@ describe("getFhirData", () => {
     });
 
     it("should return 500 when an error is thrown", async () => {
-      jest.spyOn(console, "error").mockImplementation(() => { });
+      jest.spyOn(console, "error").mockImplementation(() => {});
       (gcpClient as jest.Mock).mockReturnValue({
         file: () => ({
           download: () => Promise.reject(new Error("Something went wrong!")),
@@ -125,7 +125,7 @@ describe("getFhirData", () => {
     });
 
     it("should return 500 when a string is thrown", async () => {
-      jest.spyOn(console, "error").mockImplementation(() => { });
+      jest.spyOn(console, "error").mockImplementation(() => {});
       (gcpClient as jest.Mock).mockReturnValue({
         file: () => ({
           download: () => Promise.reject("Uh oh :|"),
@@ -142,7 +142,7 @@ describe("getFhirData", () => {
 
     it("should return 500 ECR_BUCKET_NAME is not set", async () => {
       process.env.ECR_BUCKET_NAME = "";
-      jest.spyOn(console, "error").mockImplementation(() => { });
+      jest.spyOn(console, "error").mockImplementation(() => {});
 
       const response = await getFhirData({ eicr_id: "1234" });
 
@@ -182,7 +182,7 @@ describe("getS3", () => {
   });
 
   it("should return a 404 error response when id is unknown", async () => {
-    jest.spyOn(console, "error").mockImplementation(() => { });
+    jest.spyOn(console, "error").mockImplementation(() => {});
 
     s3Client.send = jest.fn().mockImplementation(async () => {
       throw new S3ServiceException({
@@ -199,7 +199,7 @@ describe("getS3", () => {
   });
 
   it("should return a 500 error response when an unexpected error occurs", async () => {
-    jest.spyOn(console, "error").mockImplementation(() => { });
+    jest.spyOn(console, "error").mockImplementation(() => {});
 
     s3Client.send = jest.fn().mockImplementation(async () => {
       throw new S3ServiceException({
@@ -216,7 +216,7 @@ describe("getS3", () => {
   });
 
   it("should return a 500 error response when error is not an S3ServiceException", async () => {
-    jest.spyOn(console, "error").mockImplementation(() => { });
+    jest.spyOn(console, "error").mockImplementation(() => {});
 
     s3Client.send = jest.fn().mockImplementation(async () => {
       throw new Error("test error");
@@ -280,7 +280,7 @@ describe("getAzure", () => {
   });
 
   it("should return a 404 error response when id unknown", async () => {
-    jest.spyOn(console, "error").mockImplementation(() => { });
+    jest.spyOn(console, "error").mockImplementation(() => {});
 
     blockBlobClient.download = jest.fn().mockImplementation(async () => {
       throw { statusCode: 404, code: "ResourceNotFound" };
@@ -292,7 +292,7 @@ describe("getAzure", () => {
   });
 
   it("should return a 500 error response when database query fails", async () => {
-    jest.spyOn(console, "error").mockImplementation(() => { });
+    jest.spyOn(console, "error").mockImplementation(() => {});
 
     blockBlobClient.download = jest.fn().mockImplementation(async () => {
       throw { statusCode: 409, message: "Oh no!" };
@@ -304,7 +304,7 @@ describe("getAzure", () => {
   });
 
   it("should return a 500 error response when azure is not setup", async () => {
-    jest.spyOn(console, "error").mockImplementation(() => { });
+    jest.spyOn(console, "error").mockImplementation(() => {});
 
     blockBlobClient.download = jest.fn().mockImplementation(async () => {
       throw { statusCode: 409, message: "Oh no!" };
