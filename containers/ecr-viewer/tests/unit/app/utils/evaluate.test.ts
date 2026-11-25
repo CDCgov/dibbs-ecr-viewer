@@ -4,9 +4,12 @@ import fhirpath_r4_model from "fhirpath/fhir-context/r4";
 import BundleMiscNotes from "../../../../../../test-data/fhir/BundleMiscNotes.json";
 import BundlePatient from "../../../../../../test-data/fhir/BundlePatient.json";
 import {
+  clearEvaluateCache,
   evaluateAll,
   evaluateAllAndCheck,
+  evaluateAllReferences,
   evaluateOne,
+  evaluateOneReference,
   evaluateReference,
   evaluateReference2,
   evaluateValue,
@@ -356,6 +359,103 @@ describe("evaluate value", () => {
 });
 
 describe("Evaluate Reference", () => {
+  const patient: Patient = { resourceType: "Patient", id: "1" };
+  const makeBundle = (resources: Resource[] = [patient]): Bundle => ({
+    resourceType: "Bundle",
+    type: "collection",
+    entry: resources.map((resource) => ({ resource })),
+  });
+
+  it("resolves unique references without evaluating FHIRPath", () => {
+    const spy = jest.spyOn(require("fhirpath"), "evaluate");
+    try {
+      const otherPatient: Patient = { resourceType: "Patient", id: "2" };
+      const bundle = makeBundle([patient, otherPatient]);
+
+      expect(evaluateReference(bundle, "Patient/1")).toBe(patient);
+      expect(evaluateReference(bundle, { reference: "Patient/2" })).toBe(
+        otherPatient,
+      );
+      expect(evaluateReference(bundle, "Patient/1")).toBe(patient);
+      expect(evaluateReference(bundle, "Patient/missing")).toBeUndefined();
+      expect(spy).not.toHaveBeenCalled();
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
+  it("keeps resources with the same ID in different bundles separate", () => {
+    const otherPatient: Patient = { ...patient, active: false };
+    expect(evaluateReference(makeBundle(), "Patient/1")).toBe(patient);
+    expect(evaluateReference(makeBundle([otherPatient]), "Patient/1")).toBe(
+      otherPatient,
+    );
+  });
+
+  it("clears the reference index along with cached evaluations", () => {
+    const bundle = makeBundle();
+    expect(evaluateReference(bundle, "Patient/2")).toBeUndefined();
+    const otherPatient: Patient = { resourceType: "Patient", id: "2" };
+    bundle.entry!.push({ resource: otherPatient });
+
+    clearEvaluateCache();
+
+    expect(evaluateReference(bundle, "Patient/2")).toBe(otherPatient);
+  });
+
+  it("returns the first duplicate and preserves the diagnostic", () => {
+    const spy = jest.spyOn(console, "error").mockImplementation(() => {});
+    try {
+      const duplicate: Patient = { ...patient, active: false };
+      expect(
+        evaluateReference(makeBundle([patient, duplicate]), "Patient/1"),
+      ).toBe(patient);
+      expect(spy).toHaveBeenCalledWith(
+        expect.stringContaining("Expected one result, but got 2."),
+      );
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
+  it("preserves support for array inputs", () => {
+    expect(evaluateReference([makeBundle()], "Patient/1")).toBe(patient);
+  });
+
+  it("supports the single and multiple reference helpers", () => {
+    const linkedPatient: Patient = { resourceType: "Patient", id: "2" };
+    const referringPatient: Patient = {
+      ...patient,
+      link: [
+        { other: { reference: "Patient/2" }, type: "seealso" },
+        { other: { reference: "Patient/missing" }, type: "seealso" },
+      ],
+    };
+    const bundle = makeBundle([referringPatient, linkedPatient]);
+    const path = {
+      ...fhirPathMappings.compositionAuthorRefs,
+      path: "entry.resource.Patient.link.other",
+    };
+
+    expect(evaluateAllReferences(bundle, path)).toEqual([linkedPatient]);
+    expect(
+      evaluateOneReference(bundle, { ...path, path: `${path.path}.first()` }),
+    ).toBe(linkedPatient);
+  });
+
+  it.each([
+    undefined,
+    {},
+    "Patient/missing",
+    "Observation/1",
+    "Patient/toString",
+  ])(
+    "returns undefined for an absent reference or resource: %p",
+    (reference) => {
+      expect(evaluateReference(makeBundle(), reference)).toBeUndefined();
+    },
+  );
+
   it("should return undefined if resource not found", () => {
     const actual = evaluateReference<Observation>(
       BundleMiscNotes as unknown as Bundle,

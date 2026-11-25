@@ -14,16 +14,25 @@ export type FhirIndexByTypeAndId = {
 export interface FhirIndex {
   fhirIndexByType: FhirIndexByType;
   fhirIndexByTypeAndId: FhirIndexByTypeAndId;
+  hasDuplicateIds?: boolean;
 }
+
+let indexCache = new WeakMap<Bundle, FhirIndex>();
+
+/** Reset cached indexes when clearing evaluations of mutated bundles. */
+export const clearFhirIndexCache = () => {
+  indexCache = new WeakMap<Bundle, FhirIndex>();
+};
 
 /**
  * Builds an index of FHIR resources from a given FHIR bundle.
  * NOTE: Index should only be accessed indirectly via helper functions below.
+ * Reuses the index for the same bundle object. Entries and resource IDs/types must
+ * remain unchanged until the evaluation caches are cleared.
  *
  * Extracts all resources from a given FHIR bundle and organizes them into two maps:
  * 1. `fhirIndexByType` – an map of resources keyed by `resourceType` mapping to an array of all resources of that type.
  * 2. `fhirIndexByTypeAndId` – a map of resources keyed by `resourceType` and then by `id`.
- *
  * @param fhirBundle - FHIR bundle
  * @returns A `FhirIndex` object containing:
  *   - `fhirIndexByType`: FHIR resources grouped by type as arrays.
@@ -31,8 +40,12 @@ export interface FhirIndex {
  * Both will return empty arrays/objects if no resources of a given type exist.
  */
 export const getFhirIndex = (fhirBundle: Bundle): FhirIndex => {
-  const fhirIndexByType: FhirIndexByType = {};
-  const fhirIndexByTypeAndId: FhirIndexByTypeAndId = {};
+  const cached = indexCache.get(fhirBundle);
+  if (cached) return cached;
+
+  const fhirIndexByType: FhirIndexByType = Object.create(null);
+  const fhirIndexByTypeAndId: FhirIndexByTypeAndId = Object.create(null);
+  const index: FhirIndex = { fhirIndexByType, fhirIndexByTypeAndId };
 
   fhirBundle.entry?.forEach((entry) => {
     const resource = entry.resource;
@@ -45,21 +58,25 @@ export const getFhirIndex = (fhirBundle: Bundle): FhirIndex => {
       fhirIndexByType[resourceType].push(resource);
 
       // by Type and ID (map)
-      fhirIndexByTypeAndId[resourceType] ??= {};
-      fhirIndexByTypeAndId[resourceType][resourceId] = resource;
+      const resourcesById: Record<string, Resource> = (fhirIndexByTypeAndId[
+        resourceType
+      ] ??= Object.create(null));
+      if (Object.hasOwn(resourcesById, resourceId)) {
+        index.hasDuplicateIds = true;
+      }
+      resourcesById[resourceId] = resource;
     }
   });
 
-  return { fhirIndexByType, fhirIndexByTypeAndId };
+  indexCache.set(fhirBundle, index);
+  return index;
 };
 
 /**
  * Returns array of all resources of a specific type (i.e. "Observation").
- *
  * @template T - The expected FHIR Resource type (e.g., Observation, Patient).
  * @param fhirIndex - FHIR resources indexed by type & by ID
  * @param type - The resourceType to retrieve (e.g., "Observation").
- *
  * @returns Array of FHIR resources of type `T`, or empty array if
  * no resources of specified type exist.
  */
@@ -77,11 +94,9 @@ export function getResourcesByType<T extends Resource>(
 /**
  * Returns a single resources of a specific type (i.e. "Patient").
  * Expects one result or none. If multiple results, will error.
- *
  * @template T - The expected FHIR Resource type (e.g. Patient).
  * @param fhirIndex - FHIR resources indexed by type & by ID
  * @param type - The resourceType to retrieve (e.g., "Patient").
- *
  * @returns A single FHIR resource of type `T`, or undefined if
  * no resources of specified type exist.
  * @error When multiple resources are found for the resource type
@@ -109,12 +124,10 @@ export function getOneResourceByType<T extends Resource>(
  * Returns FHIR resource by ID and check resource type.
  * Expects only one resource to be returned.
  * NOTE: should only be accessed by evaluateReference2
- *
  * @template T - The expected FHIR Resource type (e.g., Observation, Patient).
  * @param fhirIndex - FHIR resources indexed by type & by ID
  * @param type - The resourceType to retrieve (e.g., "Observation").
  * @param id - The unique identifier of the resource.
- *
  * @returns FHIR resource of type `T` if it exists and resourceType matches `type`
  * Returns undefined if no resource exists with given ID and resourceType
  */
@@ -123,6 +136,9 @@ export function getResourceById<T extends Resource>(
   type: T["resourceType"],
   id: string,
 ): T | undefined {
-  const resource = fhirIndex.fhirIndexByTypeAndId[type]?.[id];
-  return resource as T | undefined;
+  if (!Object.hasOwn(fhirIndex.fhirIndexByTypeAndId, type)) return undefined;
+  const resources = fhirIndex.fhirIndexByTypeAndId[type];
+  return resources && Object.hasOwn(resources, id)
+    ? (resources[id] as T)
+    : undefined;
 }

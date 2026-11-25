@@ -33,6 +33,8 @@ import {
 import { notEmpty } from "@/app/utils/data-utils";
 import {
   FhirIndex,
+  clearFhirIndexCache,
+  getFhirIndex,
   getResourceById,
 } from "@/app/view-data/services/fhirResourcesIndexService";
 
@@ -166,10 +168,11 @@ export const evaluateOneAndCheck = <Result>(
 };
 
 /**
- * Reset the evaluate cache map
+ * Reset evaluation results and bundle indexes.
  */
 export const clearEvaluateCache = () => {
   evaluateCache = new WeakMap<object, Map<string, unknown[]>>();
+  clearFhirIndexCache();
 };
 
 /**
@@ -387,6 +390,18 @@ export const evaluateReference = <T extends Resource>(
   if (!ref) return undefined;
 
   const [resourceType, id] = ref.split("/");
+  if (
+    resourceType &&
+    id &&
+    fhirData &&
+    "resourceType" in fhirData &&
+    fhirData.resourceType === "Bundle"
+  ) {
+    const index = getFhirIndex(fhirData);
+    // Preserve the legacy first-match result and diagnostic for duplicate IDs.
+    if (!index.hasDuplicateIds) return evaluateReference2<T>(index, ref);
+  }
+
   const result = evaluateOneAndCheck<T>(
     fhirData,
     fhirPathMappings.resolve.path,

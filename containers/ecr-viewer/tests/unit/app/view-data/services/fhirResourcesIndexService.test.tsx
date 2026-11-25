@@ -1,6 +1,8 @@
 import { Bundle, Composition, Observation, Patient } from "fhir/r4";
+
 import {
   FhirIndex,
+  clearFhirIndexCache,
   getFhirIndex,
   getOneResourceByType,
   getResourceById,
@@ -51,6 +53,58 @@ const fhirIndexBundleSample = {
 
 describe("fhirResourcesIndexService Tests", () => {
   describe("getFhirIndex Tests", () => {
+    it("reuses the index only for the same bundle object", () => {
+      const index = getFhirIndex(BundleSample);
+      expect(getFhirIndex(BundleSample)).toBe(index);
+      expect(getFhirIndex({ ...BundleSample })).not.toBe(index);
+    });
+    it("rebuilds the index when its cache is cleared", () => {
+      const index = getFhirIndex(BundleSample);
+      clearFhirIndexCache();
+      expect(getFhirIndex(BundleSample)).not.toBe(index);
+    });
+    it("flags duplicate IDs within a resource type and keeps the existing indexed result", () => {
+      const duplicate: Observation = {
+        resourceType: "Observation",
+        id: "2",
+        status: "final",
+        code: {},
+      };
+      const index = getFhirIndex({
+        ...BundleSample,
+        entry: [...BundleSample.entry!, { resource: duplicate }],
+      });
+
+      expect(index.hasDuplicateIds).toBe(true);
+      expect(getResourceById(index, "Observation", "2")).toBe(duplicate);
+      expect(getResourcesByType(index, "Observation")).toHaveLength(3);
+    });
+    it("distinguishes resource types that share an ID", () => {
+      const patient: Patient = { resourceType: "Patient", id: "2" };
+      const index = getFhirIndex({
+        ...BundleSample,
+        entry: [...BundleSample.entry!, { resource: patient }],
+      });
+
+      expect(index.hasDuplicateIds).toBeUndefined();
+      expect(getResourceById(index, "Patient", "2")).toBe(patient);
+      expect(getResourceById(index, "Observation", "2")).toBe(
+        resource2.resource,
+      );
+    });
+    it.each(["__proto__", "constructor", "toString"])(
+      "indexes a resource with the ID %s without treating it as a duplicate",
+      (id) => {
+        const patient: Patient = { resourceType: "Patient", id };
+        const index = getFhirIndex({
+          ...BundleSample,
+          entry: [{ resource: patient }],
+        });
+
+        expect(index.hasDuplicateIds).toBeUndefined();
+        expect(getResourceById(index, "Patient", id)).toBe(patient);
+      },
+    );
     it("Returns a valid FhirIndex", () => {
       const actual = getFhirIndex(BundleSample);
 
@@ -146,6 +200,14 @@ describe("fhirResourcesIndexService Tests", () => {
     });
   });
   describe("getResourceById Tests", () => {
+    it("does not resolve inherited object properties as resources", () => {
+      expect(
+        getResourceById(fhirIndexBundleSample, "Observation", "toString"),
+      ).toBeUndefined();
+      expect(
+        getResourceById(fhirIndexBundleSample, "constructor" as "Patient", "1"),
+      ).toBeUndefined();
+    });
     it("Returns resource with specified ID", () => {
       const actual = getResourceById<Composition>(
         fhirIndexBundleSample,
